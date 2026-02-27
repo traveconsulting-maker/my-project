@@ -16,11 +16,24 @@
         body {
             font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
             min-height: 100vh;
+            background: #0a0a1a;
+            overflow-x: hidden;
+        }
+
+        /* ===== LANDING PAGE ===== */
+        #landingPage {
+            min-height: 100vh;
             display: flex;
             align-items: center;
             justify-content: center;
-            background: #0a0a1a;
-            overflow: hidden;
+            transition: opacity 0.4s, transform 0.4s;
+        }
+
+        #landingPage.hidden {
+            opacity: 0;
+            transform: scale(0.96);
+            pointer-events: none;
+            position: absolute;
         }
 
         /* Animated background */
@@ -233,9 +246,7 @@
             box-shadow: 0 8px 25px rgba(0, 0, 0, 0.3);
         }
 
-        .links a.github:hover {
-            background: rgba(255, 255, 255, 0.12);
-        }
+        .links a.github:hover { background: rgba(255, 255, 255, 0.12); }
         .links a.github:hover svg { fill: #fff; }
 
         .links a.telegram:hover {
@@ -278,7 +289,7 @@
             fill: currentColor;
         }
 
-        /* Register button (top right) */
+        /* Login button (top right) */
         .reg-btn {
             position: fixed;
             top: 24px;
@@ -345,6 +356,7 @@
             box-shadow: 0 30px 80px rgba(0, 0, 0, 0.5);
             transform: translateY(30px) scale(0.96);
             transition: transform 0.4s cubic-bezier(0.16, 1, 0.3, 1);
+            position: relative;
         }
 
         .modal-overlay.active .modal {
@@ -423,6 +435,28 @@
             background: rgba(108, 92, 231, 0.06);
         }
 
+        .form-group input.error {
+            border-color: #ef4444;
+            background: rgba(239, 68, 68, 0.06);
+        }
+
+        .error-msg {
+            display: none;
+            margin-top: 12px;
+            padding: 12px 16px;
+            background: rgba(239, 68, 68, 0.1);
+            border: 1px solid rgba(239, 68, 68, 0.2);
+            border-radius: 12px;
+            color: #f87171;
+            font-size: 13px;
+            font-weight: 500;
+            text-align: center;
+        }
+
+        .error-msg.show {
+            display: block;
+        }
+
         .submit-btn {
             width: 100%;
             padding: 16px;
@@ -492,64 +526,294 @@
             flex-shrink: 0;
         }
 
-        .modal-footer {
-            margin-top: 24px;
-            font-size: 13px;
-            color: rgba(255, 255, 255, 0.35);
-        }
-
-        .modal-footer a {
-            color: #a78bfa;
-            text-decoration: none;
-            font-weight: 600;
-            cursor: pointer;
-        }
-
-        .modal-footer a:hover {
-            color: #c4b5fd;
-        }
-
-        /* Success state */
-        .success-msg {
+        /* ===== DASHBOARD ===== */
+        #dashboard {
             display: none;
-            flex-direction: column;
-            align-items: center;
-            gap: 16px;
-            padding: 20px 0;
+            min-height: 100vh;
+            animation: fadeIn 0.6s cubic-bezier(0.16, 1, 0.3, 1) both;
         }
 
-        .success-msg.show {
+        #dashboard.show {
             display: flex;
         }
 
-        .success-icon {
-            width: 64px;
+        @keyframes fadeIn {
+            from { opacity: 0; }
+        }
+
+        /* Dashboard topbar */
+        .dash-topbar {
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 280px;
             height: 64px;
-            border-radius: 50%;
-            background: rgba(52, 211, 153, 0.12);
+            background: rgba(10, 10, 26, 0.8);
+            backdrop-filter: blur(20px);
+            -webkit-backdrop-filter: blur(20px);
+            border-bottom: 1px solid rgba(255, 255, 255, 0.06);
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            padding: 0 32px;
+            z-index: 50;
+        }
+
+        .dash-logo {
+            font-size: 18px;
+            font-weight: 800;
+            color: #fff;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .dash-logo-icon {
+            width: 32px;
+            height: 32px;
+            border-radius: 10px;
+            background: linear-gradient(135deg, #6c5ce7, #a855f7);
             display: flex;
             align-items: center;
             justify-content: center;
-        }
-
-        .success-icon svg {
-            width: 32px;
-            height: 32px;
-            fill: #34d399;
-        }
-
-        .success-msg h3 {
-            font-size: 22px;
-            font-weight: 700;
+            font-size: 16px;
+            font-weight: 800;
             color: #fff;
         }
 
-        .success-msg p {
+        .dash-user {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+        }
+
+        .dash-user-name {
             font-size: 14px;
-            color: rgba(255, 255, 255, 0.45);
+            font-weight: 600;
+            color: rgba(255, 255, 255, 0.7);
+        }
+
+        .dash-logout {
+            padding: 8px 16px;
+            background: rgba(255, 255, 255, 0.06);
+            border: 1px solid rgba(255, 255, 255, 0.08);
+            border-radius: 10px;
+            color: rgba(255, 255, 255, 0.6);
+            font-family: inherit;
+            font-size: 13px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.2s;
+        }
+
+        .dash-logout:hover {
+            background: rgba(239, 68, 68, 0.1);
+            border-color: rgba(239, 68, 68, 0.2);
+            color: #f87171;
+        }
+
+        /* Sidebar (right) */
+        .sidebar {
+            position: fixed;
+            top: 0;
+            right: 0;
+            width: 280px;
+            height: 100vh;
+            background: rgba(255, 255, 255, 0.02);
+            border-left: 1px solid rgba(255, 255, 255, 0.06);
+            padding: 32px 0;
+            z-index: 51;
+            display: flex;
+            flex-direction: column;
+        }
+
+        .sidebar-header {
+            padding: 0 24px 28px;
+            border-bottom: 1px solid rgba(255, 255, 255, 0.06);
+            margin-bottom: 8px;
+        }
+
+        .sidebar-header h3 {
+            font-size: 13px;
+            font-weight: 700;
+            color: rgba(255, 255, 255, 0.3);
+            text-transform: uppercase;
+            letter-spacing: 1.2px;
+        }
+
+        .sidebar-nav {
+            list-style: none;
+            padding: 8px 12px;
+            flex: 1;
+        }
+
+        .sidebar-nav li {
+            margin-bottom: 2px;
+        }
+
+        .sidebar-nav a {
+            display: flex;
+            align-items: center;
+            gap: 14px;
+            padding: 14px 16px;
+            border-radius: 14px;
+            color: rgba(255, 255, 255, 0.5);
+            text-decoration: none;
+            font-size: 14px;
+            font-weight: 500;
+            transition: all 0.2s;
+            cursor: pointer;
+        }
+
+        .sidebar-nav a:hover {
+            color: rgba(255, 255, 255, 0.8);
+            background: rgba(255, 255, 255, 0.04);
+        }
+
+        .sidebar-nav a.active {
+            color: #fff;
+            background: rgba(108, 92, 231, 0.15);
+            font-weight: 600;
+        }
+
+        .sidebar-nav a.active .nav-icon {
+            background: linear-gradient(135deg, #6c5ce7, #a855f7);
+        }
+
+        .sidebar-nav a.active .nav-icon svg {
+            fill: #fff;
+        }
+
+        .nav-icon {
+            width: 36px;
+            height: 36px;
+            border-radius: 10px;
+            background: rgba(255, 255, 255, 0.06);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            flex-shrink: 0;
+            transition: background 0.2s;
+        }
+
+        .nav-icon svg {
+            width: 18px;
+            height: 18px;
+            fill: rgba(255, 255, 255, 0.45);
+            transition: fill 0.2s;
+        }
+
+        /* Main content area */
+        .dash-content {
+            flex: 1;
+            margin-top: 64px;
+            margin-right: 280px;
+            padding: 40px;
+            min-height: calc(100vh - 64px);
+        }
+
+        .dash-content h1 {
+            font-size: 28px;
+            font-weight: 800;
+            color: #fff;
+            margin-bottom: 8px;
+        }
+
+        .dash-content .subtitle {
+            font-size: 15px;
+            color: rgba(255, 255, 255, 0.4);
+            margin-bottom: 40px;
+        }
+
+        /* Skillbase cards */
+        .skill-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(260px, 1fr));
+            gap: 20px;
+        }
+
+        .skill-card {
+            background: rgba(255, 255, 255, 0.03);
+            border: 1px solid rgba(255, 255, 255, 0.06);
+            border-radius: 20px;
+            padding: 28px;
+            transition: all 0.3s cubic-bezier(0.16, 1, 0.3, 1);
+        }
+
+        .skill-card:hover {
+            background: rgba(255, 255, 255, 0.05);
+            transform: translateY(-4px);
+            box-shadow: 0 12px 40px rgba(0, 0, 0, 0.2);
+        }
+
+        .skill-card-icon {
+            width: 48px;
+            height: 48px;
+            border-radius: 14px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin-bottom: 20px;
+            font-size: 22px;
+        }
+
+        .skill-card h3 {
+            font-size: 16px;
+            font-weight: 700;
+            color: #fff;
+            margin-bottom: 8px;
+        }
+
+        .skill-card p {
+            font-size: 13px;
+            color: rgba(255, 255, 255, 0.4);
+            line-height: 1.6;
+        }
+
+        .skill-card-tag {
+            display: inline-block;
+            margin-top: 16px;
+            padding: 6px 14px;
+            border-radius: 8px;
+            font-size: 12px;
+            font-weight: 600;
+        }
+
+        .tag-active {
+            background: rgba(52, 211, 153, 0.12);
+            color: #34d399;
+        }
+
+        .tag-draft {
+            background: rgba(251, 191, 36, 0.12);
+            color: #fbbf24;
+        }
+
+        .tag-new {
+            background: rgba(108, 92, 231, 0.15);
+            color: #a78bfa;
         }
 
         /* Responsive */
+        @media (max-width: 768px) {
+            .sidebar {
+                width: 100%;
+                height: auto;
+                position: relative;
+                border-left: none;
+                border-top: 1px solid rgba(255, 255, 255, 0.06);
+            }
+            .dash-topbar {
+                right: 0;
+            }
+            .dash-content {
+                margin-right: 0;
+            }
+            #dashboard.show {
+                flex-direction: column;
+            }
+        }
+
         @media (max-width: 480px) {
             .card {
                 padding: 36px 24px;
@@ -567,91 +831,101 @@
                 padding: 36px 24px;
                 border-radius: 24px;
             }
+            .dash-content {
+                padding: 24px 16px;
+            }
+            .dash-content h1 {
+                font-size: 22px;
+            }
         }
     </style>
 </head>
 <body>
-    <div class="bg">
-        <div class="bg-orb"></div>
-        <div class="bg-orb"></div>
-        <div class="bg-orb"></div>
-    </div>
+    <!-- ===== LANDING PAGE ===== -->
+    <div id="landingPage">
+        <div class="bg">
+            <div class="bg-orb"></div>
+            <div class="bg-orb"></div>
+            <div class="bg-orb"></div>
+        </div>
 
-    <div class="card">
-        <div class="avatar">В</div>
-        <div class="name">Вячеслав</div>
-        <div class="title">Код это к Славе</div>
+        <div class="card">
+            <div class="avatar">В</div>
+            <div class="name">Вячеслав</div>
+            <div class="title">Код это к Славе</div>
 
-        <ul class="info">
-            <li>
-                <span class="icon icon-mail">
-                    <svg viewBox="0 0 24 24"><path d="M20 4H4c-1.1 0-2 .9-2 2v12c0 1.1.9 2 2 2h16c1.1 0 2-.9 2-2V6c0-1.1-.9-2-2-2zm0 4l-8 5-8-5V6l8 5 8-5v2z"/></svg>
-                </span>
-                <a href="mailto:monax_06@bk.ru">monax_06@bk.ru</a>
-            </li>
-            <li>
-                <span class="icon icon-phone">
-                    <svg viewBox="0 0 24 24"><path d="M6.62 10.79a15.05 15.05 0 006.59 6.59l2.2-2.2a1 1 0 011.01-.24c1.12.37 2.33.57 3.58.57a1 1 0 011 1V20a1 1 0 01-1 1A17 17 0 013 4a1 1 0 011-1h3.5a1 1 0 011 1c0 1.25.2 2.46.57 3.58a1 1 0 01-.24 1.01l-2.2 2.2z"/></svg>
-                </span>
-                <a href="tel:89518143881">8 951 814-38-81</a>
-            </li>
-            <li>
-                <span class="icon icon-tg">
+            <ul class="info">
+                <li>
+                    <span class="icon icon-mail">
+                        <svg viewBox="0 0 24 24"><path d="M20 4H4c-1.1 0-2 .9-2 2v12c0 1.1.9 2 2 2h16c1.1 0 2-.9 2-2V6c0-1.1-.9-2-2-2zm0 4l-8 5-8-5V6l8 5 8-5v2z"/></svg>
+                    </span>
+                    <a href="mailto:monax_06@bk.ru">monax_06@bk.ru</a>
+                </li>
+                <li>
+                    <span class="icon icon-phone">
+                        <svg viewBox="0 0 24 24"><path d="M6.62 10.79a15.05 15.05 0 006.59 6.59l2.2-2.2a1 1 0 011.01-.24c1.12.37 2.33.57 3.58.57a1 1 0 011 1V20a1 1 0 01-1 1A17 17 0 013 4a1 1 0 011-1h3.5a1 1 0 011 1c0 1.25.2 2.46.57 3.58a1 1 0 01-.24 1.01l-2.2 2.2z"/></svg>
+                    </span>
+                    <a href="tel:89518143881">8 951 814-38-81</a>
+                </li>
+                <li>
+                    <span class="icon icon-tg">
+                        <svg viewBox="0 0 24 24"><path d="M9.78 18.65l.28-4.23 7.68-6.92c.34-.31-.07-.46-.52-.19L7.74 13.3 3.64 12c-.88-.25-.89-.86.2-1.3l15.97-6.16c.73-.33 1.43.18 1.15 1.3l-2.72 12.81c-.19.91-.74 1.13-1.5.71L12.6 16.3l-1.99 1.93c-.23.23-.42.42-.83.42z"/></svg>
+                    </span>
+                    <a href="https://t.me/maksimov_ofc" target="_blank">Telegram</a>
+                </li>
+                <li>
+                    <span class="icon icon-loc">
+                        <svg viewBox="0 0 24 24"><path d="M12 2C8.13 2 5 5.13 5 9c0 5.25 7 13 7 13s7-7.75 7-13c0-3.87-3.13-7-7-7zm0 9.5A2.5 2.5 0 1112 6.999 2.5 2.5 0 0112 11.5z"/></svg>
+                    </span>
+                    Москва
+                </li>
+            </ul>
+
+            <div class="links">
+                <a href="#" class="github" title="GitHub">
+                    <svg viewBox="0 0 24 24"><path d="M12 2A10 10 0 002 12a10 10 0 006.84 9.49c.5.09.68-.22.68-.48v-1.7C6.73 19.91 6.14 18 6.14 18A2.69 2.69 0 005 16.5c-.91-.62.07-.61.07-.61a2.13 2.13 0 011.53 1.03 2.14 2.14 0 002.91.83 2.16 2.16 0 01.63-1.34c-2.22-.25-4.55-1.11-4.55-4.94a3.89 3.89 0 011.03-2.68 3.6 3.6 0 01.1-2.65s.84-.27 2.75 1.02a9.58 9.58 0 015 0c1.91-1.29 2.75-1.02 2.75-1.02a3.6 3.6 0 01.1 2.65 3.86 3.86 0 011.02 2.68c0 3.84-2.34 4.69-4.57 4.93a2.39 2.39 0 01.68 1.86v2.77c0 .27.18.58.69.48A10 10 0 0012 2z"/></svg>
+                </a>
+                <a href="https://t.me/maksimov_ofc" target="_blank" class="telegram" title="Telegram">
                     <svg viewBox="0 0 24 24"><path d="M9.78 18.65l.28-4.23 7.68-6.92c.34-.31-.07-.46-.52-.19L7.74 13.3 3.64 12c-.88-.25-.89-.86.2-1.3l15.97-6.16c.73-.33 1.43.18 1.15 1.3l-2.72 12.81c-.19.91-.74 1.13-1.5.71L12.6 16.3l-1.99 1.93c-.23.23-.42.42-.83.42z"/></svg>
-                </span>
-                <a href="https://t.me/maksimov_ofc" target="_blank">Telegram</a>
-            </li>
-            <li>
-                <span class="icon icon-loc">
-                    <svg viewBox="0 0 24 24"><path d="M12 2C8.13 2 5 5.13 5 9c0 5.25 7 13 7 13s7-7.75 7-13c0-3.87-3.13-7-7-7zm0 9.5A2.5 2.5 0 1112 6.999 2.5 2.5 0 0112 11.5z"/></svg>
-                </span>
-                Москва
-            </li>
-        </ul>
+                </a>
+                <a href="#" class="linkedin" title="LinkedIn">
+                    <svg viewBox="0 0 24 24"><path d="M19 3a2 2 0 012 2v14a2 2 0 01-2 2H5a2 2 0 01-2-2V5a2 2 0 012-2h14m-.5 15.5v-5.3a3.26 3.26 0 00-3.26-3.26c-.85 0-1.84.52-2.32 1.3v-1.11h-2.79v8.37h2.79v-4.93c0-.77.62-1.4 1.39-1.4a1.4 1.4 0 011.4 1.4v4.93h2.79M6.88 8.56a1.68 1.68 0 001.68-1.68c0-.93-.75-1.69-1.68-1.69a1.69 1.69 0 00-1.69 1.69c0 .93.76 1.68 1.69 1.68m1.39 9.94v-8.37H5.5v8.37h2.77z"/></svg>
+                </a>
+            </div>
 
-        <div class="links">
-            <a href="#" class="github" title="GitHub">
-                <svg viewBox="0 0 24 24"><path d="M12 2A10 10 0 002 12a10 10 0 006.84 9.49c.5.09.68-.22.68-.48v-1.7C6.73 19.91 6.14 18 6.14 18A2.69 2.69 0 005 16.5c-.91-.62.07-.61.07-.61a2.13 2.13 0 011.53 1.03 2.14 2.14 0 002.91.83 2.16 2.16 0 01.63-1.34c-2.22-.25-4.55-1.11-4.55-4.94a3.89 3.89 0 011.03-2.68 3.6 3.6 0 01.1-2.65s.84-.27 2.75 1.02a9.58 9.58 0 015 0c1.91-1.29 2.75-1.02 2.75-1.02a3.6 3.6 0 01.1 2.65 3.86 3.86 0 011.02 2.68c0 3.84-2.34 4.69-4.57 4.93a2.39 2.39 0 01.68 1.86v2.77c0 .27.18.58.69.48A10 10 0 0012 2z"/></svg>
-            </a>
-            <a href="https://t.me/maksimov_ofc" target="_blank" class="telegram" title="Telegram">
-                <svg viewBox="0 0 24 24"><path d="M9.78 18.65l.28-4.23 7.68-6.92c.34-.31-.07-.46-.52-.19L7.74 13.3 3.64 12c-.88-.25-.89-.86.2-1.3l15.97-6.16c.73-.33 1.43.18 1.15 1.3l-2.72 12.81c-.19.91-.74 1.13-1.5.71L12.6 16.3l-1.99 1.93c-.23.23-.42.42-.83.42z"/></svg>
-            </a>
-            <a href="#" class="linkedin" title="LinkedIn">
-                <svg viewBox="0 0 24 24"><path d="M19 3a2 2 0 012 2v14a2 2 0 01-2 2H5a2 2 0 01-2-2V5a2 2 0 012-2h14m-.5 15.5v-5.3a3.26 3.26 0 00-3.26-3.26c-.85 0-1.84.52-2.32 1.3v-1.11h-2.79v8.37h2.79v-4.93c0-.77.62-1.4 1.39-1.4a1.4 1.4 0 011.4 1.4v4.93h2.79M6.88 8.56a1.68 1.68 0 001.68-1.68c0-.93-.75-1.69-1.68-1.69a1.69 1.69 0 00-1.69 1.69c0 .93.76 1.68 1.69 1.68m1.39 9.94v-8.37H5.5v8.37h2.77z"/></svg>
+            <a href="mailto:monax_06@bk.ru" class="btn">
+                <svg viewBox="0 0 24 24"><path d="M20 4H4c-1.1 0-2 .9-2 2v12c0 1.1.9 2 2 2h16c1.1 0 2-.9 2-2V6c0-1.1-.9-2-2-2zm0 4l-8 5-8-5V6l8 5 8-5v2z"/></svg>
+                Написать мне
             </a>
         </div>
 
-        <a href="mailto:monax_06@bk.ru" class="btn">
-            <svg viewBox="0 0 24 24"><path d="M20 4H4c-1.1 0-2 .9-2 2v12c0 1.1.9 2 2 2h16c1.1 0 2-.9 2-2V6c0-1.1-.9-2-2-2zm0 4l-8 5-8-5V6l8 5 8-5v2z"/></svg>
-            Написать мне
-        </a>
+        <!-- Login button -->
+        <button class="reg-btn" onclick="openModal()">
+            <svg viewBox="0 0 24 24"><path d="M11 7L9.6 8.4l2.6 2.6H2v2h10.2l-2.6 2.6L11 17l5-5-5-5zm9 12h-8v2h8c1.1 0 2-.9 2-2V5c0-1.1-.9-2-2-2h-8v2h8v14z"/></svg>
+            Войти
+        </button>
     </div>
-    <!-- Registration button -->
-    <button class="reg-btn" onclick="openModal()">
-        <svg viewBox="0 0 24 24"><path d="M15 12c2.21 0 4-1.79 4-4s-1.79-4-4-4-4 1.79-4 4 1.79 4 4 4zm-9-2V7H4v3H1v2h3v3h2v-3h3v-2H6zm9 4c-2.67 0-8 1.34-8 4v2h16v-2c0-2.66-5.33-4-8-4z"/></svg>
-        Регистрация
-    </button>
 
-    <!-- Registration modal -->
+    <!-- ===== LOGIN MODAL ===== -->
     <div class="modal-overlay" id="modal" onclick="closeOnOverlay(event)">
-        <div class="modal" style="position:relative;">
+        <div class="modal">
             <button class="modal-close" onclick="closeModal()">&times;</button>
 
-            <!-- Form -->
-            <div id="regForm">
-                <div class="modal-title">Создать аккаунт</div>
-                <div class="modal-subtitle">Зарегистрируйтесь, чтобы начать</div>
+            <div id="loginForm">
+                <div class="modal-title">Вход</div>
+                <div class="modal-subtitle">Введите логин и пароль</div>
 
-                <form onsubmit="handleRegister(event)">
+                <form onsubmit="handleLogin(event)">
                     <div class="form-group">
-                        <label>Почта</label>
-                        <input type="email" id="regEmail" placeholder="you@example.com" required>
+                        <label>Логин</label>
+                        <input type="text" id="loginUser" placeholder="Введите логин" required autocomplete="username">
                     </div>
                     <div class="form-group">
                         <label>Пароль</label>
-                        <input type="password" id="regPassword" placeholder="Минимум 6 символов" minlength="6" required>
+                        <input type="password" id="loginPass" placeholder="Введите пароль" required autocomplete="current-password">
                     </div>
-                    <button type="submit" class="submit-btn">Зарегистрироваться</button>
+                    <div class="error-msg" id="loginError">Неверный логин или пароль</div>
+                    <button type="submit" class="submit-btn">Войти</button>
                 </form>
 
                 <div class="divider">или</div>
@@ -665,62 +939,176 @@
                     </svg>
                     Войти через Google
                 </button>
-
-                <div class="modal-footer">
-                    Уже есть аккаунт? <a onclick="alert('Форма входа в разработке')">Войти</a>
-                </div>
             </div>
+        </div>
+    </div>
 
-            <!-- Success message -->
-            <div class="success-msg" id="successMsg">
-                <div class="success-icon">
-                    <svg viewBox="0 0 24 24"><path d="M9 16.17L4.83 12l-1.42 1.41L9 19 21 7l-1.41-1.41L9 16.17z"/></svg>
+    <!-- ===== DASHBOARD ===== -->
+    <div id="dashboard">
+        <div class="bg">
+            <div class="bg-orb"></div>
+            <div class="bg-orb"></div>
+            <div class="bg-orb"></div>
+        </div>
+
+        <!-- Top bar -->
+        <div class="dash-topbar">
+            <div class="dash-logo">
+                <div class="dash-logo-icon">В</div>
+                Панель управления
+            </div>
+            <div class="dash-user">
+                <span class="dash-user-name">test</span>
+                <button class="dash-logout" onclick="handleLogout()">Выйти</button>
+            </div>
+        </div>
+
+        <!-- Right sidebar -->
+        <div class="sidebar">
+            <div class="sidebar-header">
+                <h3>Меню</h3>
+            </div>
+            <ul class="sidebar-nav">
+                <li><a href="#" onclick="setActive(this)">
+                    <span class="nav-icon"><svg viewBox="0 0 24 24"><path d="M10 20v-6h4v6h5v-8h3L12 3 2 12h3v8z"/></svg></span>
+                    Главное
+                </a></li>
+                <li><a href="#" onclick="setActive(this)">
+                    <span class="nav-icon"><svg viewBox="0 0 24 24"><path d="M19 3H5c-1.1 0-2 .9-2 2v14c0 1.1.9 2 2 2h14c1.1 0 2-.9 2-2V5c0-1.1-.9-2-2-2zM9 17H7v-7h2v7zm4 0h-2V7h2v10zm4 0h-2v-4h2v4z"/></svg></span>
+                    Статистика
+                </a></li>
+                <li><a href="#" class="active" onclick="setActive(this)">
+                    <span class="nav-icon"><svg viewBox="0 0 24 24"><path d="M12 3L1 9l4 2.18v6L12 21l7-3.82v-6l2-1.09V17h2V9L12 3zm6.82 6L12 12.72 5.18 9 12 5.28 18.82 9zM17 15.99l-5 2.73-5-2.73v-3.72L12 15l5-2.73v3.72z"/></svg></span>
+                    Скиллбейзы
+                </a></li>
+                <li><a href="#" onclick="setActive(this)">
+                    <span class="nav-icon"><svg viewBox="0 0 24 24"><path d="M18 2H6c-1.1 0-2 .9-2 2v16c0 1.1.9 2 2 2h12c1.1 0 2-.9 2-2V4c0-1.1-.9-2-2-2zM6 4h5v8l-2.5-1.5L6 12V4z"/></svg></span>
+                    База знаний
+                </a></li>
+                <li><a href="#" onclick="setActive(this)">
+                    <span class="nav-icon"><svg viewBox="0 0 24 24"><path d="M19 3H5c-1.1 0-2 .9-2 2v14c0 1.1.9 2 2 2h14c1.1 0 2-.9 2-2V5c0-1.1-.9-2-2-2zm-2 10H7v-2h10v2z"/></svg></span>
+                    Колл-листы
+                </a></li>
+                <li><a href="#" onclick="setActive(this)">
+                    <span class="nav-icon"><svg viewBox="0 0 24 24"><path d="M13 3a9 9 0 00-9 9H1l3.89 3.89.07.14L9 12H6c0-3.87 3.13-7 7-7s7 3.13 7 7-3.13 7-7 7a6.99 6.99 0 01-4.95-2.05l-1.41 1.41A8.96 8.96 0 0013 21a9 9 0 000-18zm-1 5v5l4.28 2.54.72-1.21-3.5-2.08V8H12z"/></svg></span>
+                    История звонков
+                </a></li>
+                <li><a href="#" onclick="setActive(this)">
+                    <span class="nav-icon"><svg viewBox="0 0 24 24"><path d="M19.14 12.94a7.07 7.07 0 000-1.88l2.03-1.58a.49.49 0 00.12-.61l-1.92-3.32a.49.49 0 00-.59-.22l-2.39.96a7.04 7.04 0 00-1.62-.94l-.36-2.54a.48.48 0 00-.48-.41h-3.84a.48.48 0 00-.48.41l-.36 2.54a7.04 7.04 0 00-1.62.94l-2.39-.96a.48.48 0 00-.59.22L2.74 8.87a.48.48 0 00.12.61l2.03 1.58a7.07 7.07 0 000 1.88l-2.03 1.58a.49.49 0 00-.12.61l1.92 3.32c.12.22.37.29.59.22l2.39-.96c.5.38 1.04.7 1.62.94l.36 2.54c.05.24.26.41.48.41h3.84c.24 0 .44-.17.48-.41l.36-2.54a7.04 7.04 0 001.62-.94l2.39.96c.22.08.47 0 .59-.22l1.92-3.32a.49.49 0 00-.12-.61l-2.03-1.58zM12 15.6A3.6 3.6 0 1115.6 12 3.6 3.6 0 0112 15.6z"/></svg></span>
+                    Настройки
+                </a></li>
+            </ul>
+        </div>
+
+        <!-- Main content -->
+        <div class="dash-content">
+            <h1>Скиллбейзы</h1>
+            <p class="subtitle">Управление базами навыков и сценариями</p>
+
+            <div class="skill-grid">
+                <div class="skill-card">
+                    <div class="skill-card-icon" style="background: rgba(108, 92, 231, 0.12); color: #a78bfa;">
+                        <svg width="24" height="24" viewBox="0 0 24 24" fill="currentColor"><path d="M20 6h-4V4c0-1.11-.89-2-2-2h-4c-1.11 0-2 .89-2 2v2H4c-1.11 0-2 .89-2 2v11c0 1.11.89 2 2 2h16c1.11 0 2-.89 2-2V8c0-1.11-.89-2-2-2zm-6 0h-4V4h4v2z"/></svg>
+                    </div>
+                    <h3>Продажи B2B</h3>
+                    <p>Сценарии холодных звонков для корпоративных клиентов</p>
+                    <span class="skill-card-tag tag-active">Активен</span>
                 </div>
-                <h3>Готово!</h3>
-                <p>Регистрация прошла успешно</p>
+                <div class="skill-card">
+                    <div class="skill-card-icon" style="background: rgba(56, 189, 248, 0.12); color: #38bdf8;">
+                        <svg width="24" height="24" viewBox="0 0 24 24" fill="currentColor"><path d="M21 12.22C21 6.73 16.74 3 12 3c-4.69 0-9 3.65-9 9.28-.6.34-1 .98-1 1.72v2c0 1.1.9 2 2 2h1v-6.1c0-3.87 3.13-7 7-7s7 3.13 7 7V19h-8v2h8c1.1 0 2-.9 2-2v-1.22c.59-.31 1-.92 1-1.64v-2.3c0-.7-.41-1.31-1-1.62z"/></svg>
+                    </div>
+                    <h3>Техподдержка L1</h3>
+                    <p>Базовые сценарии первой линии поддержки</p>
+                    <span class="skill-card-tag tag-active">Активен</span>
+                </div>
+                <div class="skill-card">
+                    <div class="skill-card-icon" style="background: rgba(251, 191, 36, 0.12); color: #fbbf24;">
+                        <svg width="24" height="24" viewBox="0 0 24 24" fill="currentColor"><path d="M16 11c1.66 0 2.99-1.34 2.99-3S17.66 5 16 5c-1.66 0-3 1.34-3 3s1.34 3 3 3zm-8 0c1.66 0 2.99-1.34 2.99-3S9.66 5 8 5C6.34 5 5 6.34 5 8s1.34 3 3 3zm0 2c-2.33 0-7 1.17-7 3.5V19h14v-2.5c0-2.33-4.67-3.5-7-3.5zm8 0c-.29 0-.62.02-.97.05 1.16.84 1.97 1.97 1.97 3.45V19h6v-2.5c0-2.33-4.67-3.5-7-3.5z"/></svg>
+                    </div>
+                    <h3>Онбординг</h3>
+                    <p>Скрипты для адаптации новых сотрудников</p>
+                    <span class="skill-card-tag tag-draft">Черновик</span>
+                </div>
+                <div class="skill-card">
+                    <div class="skill-card-icon" style="background: rgba(52, 211, 153, 0.12); color: #34d399;">
+                        <svg width="24" height="24" viewBox="0 0 24 24" fill="currentColor"><path d="M19 3H5c-1.1 0-2 .9-2 2v14c0 1.1.9 2 2 2h14c1.1 0 2-.9 2-2V5c0-1.1-.9-2-2-2zm-5 14H7v-2h7v2zm3-4H7v-2h10v2zm0-4H7V7h10v2z"/></svg>
+                    </div>
+                    <h3>Опросы NPS</h3>
+                    <p>Сценарии для оценки удовлетворённости клиентов</p>
+                    <span class="skill-card-tag tag-new">Новый</span>
+                </div>
             </div>
         </div>
     </div>
 
     <script>
         const modal = document.getElementById('modal');
-        const regForm = document.getElementById('regForm');
-        const successMsg = document.getElementById('successMsg');
+        const landingPage = document.getElementById('landingPage');
+        const dashboard = document.getElementById('dashboard');
 
         function openModal() {
             modal.classList.add('active');
             document.body.style.overflow = 'hidden';
+            document.getElementById('loginError').classList.remove('show');
+            document.getElementById('loginUser').classList.remove('error');
+            document.getElementById('loginPass').classList.remove('error');
         }
 
         function closeModal() {
             modal.classList.remove('active');
             document.body.style.overflow = '';
-            setTimeout(() => {
-                regForm.style.display = '';
-                successMsg.classList.remove('show');
-            }, 300);
         }
 
         function closeOnOverlay(e) {
             if (e.target === modal) closeModal();
         }
 
-        function showSuccess() {
-            regForm.style.display = 'none';
-            successMsg.classList.add('show');
-        }
-
-        function handleRegister(e) {
+        function handleLogin(e) {
             e.preventDefault();
-            const email = document.getElementById('regEmail').value;
-            const password = document.getElementById('regPassword').value;
-            console.log('Register:', email);
-            showSuccess();
+            const user = document.getElementById('loginUser');
+            const pass = document.getElementById('loginPass');
+            const error = document.getElementById('loginError');
+
+            if (user.value === 'test' && pass.value === '1234') {
+                closeModal();
+                landingPage.classList.add('hidden');
+                setTimeout(() => {
+                    dashboard.classList.add('show');
+                    document.body.style.overflow = '';
+                }, 400);
+            } else {
+                user.classList.add('error');
+                pass.classList.add('error');
+                error.classList.add('show');
+                setTimeout(() => {
+                    user.classList.remove('error');
+                    pass.classList.remove('error');
+                }, 1500);
+            }
         }
 
         function handleGoogle() {
-            console.log('Google sign-in');
-            showSuccess();
+            closeModal();
+            landingPage.classList.add('hidden');
+            setTimeout(() => {
+                dashboard.classList.add('show');
+                document.body.style.overflow = '';
+            }, 400);
+        }
+
+        function handleLogout() {
+            dashboard.classList.remove('show');
+            setTimeout(() => {
+                landingPage.classList.remove('hidden');
+                document.getElementById('loginUser').value = '';
+                document.getElementById('loginPass').value = '';
+            }, 100);
+        }
+
+        function setActive(el) {
+            document.querySelectorAll('.sidebar-nav a').forEach(a => a.classList.remove('active'));
+            el.classList.add('active');
         }
 
         document.addEventListener('keydown', (e) => {
