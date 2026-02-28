@@ -3,9 +3,9 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Вячеслав — Визитка</title>
+    <title>AI Sales Platform</title>
     <link rel="preconnect" href="https://fonts.googleapis.com">
-    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800;900&display=swap" rel="stylesheet">
     <style>
         :root {
             --bg: #0a0a1a;
@@ -43,6 +43,7 @@
             --logout-bg: rgba(255, 255, 255, 0.06);
             --logout-border: rgba(255, 255, 255, 0.08);
             --logout-color: rgba(255, 255, 255, 0.6);
+            --step-line: rgba(108, 92, 231, 0.3);
         }
 
         body.light {
@@ -81,13 +82,10 @@
             --logout-bg: rgba(0, 0, 0, 0.04);
             --logout-border: rgba(0, 0, 0, 0.08);
             --logout-color: rgba(0, 0, 0, 0.5);
+            --step-line: rgba(108, 92, 231, 0.15);
         }
 
-        * {
-            margin: 0;
-            padding: 0;
-            box-sizing: border-box;
-        }
+        * { margin: 0; padding: 0; box-sizing: border-box; }
 
         body {
             font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
@@ -97,892 +95,411 @@
             transition: background 0.4s;
         }
 
-        /* ===== LANDING PAGE ===== */
+        /* BG orbs */
+        .bg { position: fixed; inset: 0; z-index: 0; }
+        .bg-orb {
+            position: absolute; border-radius: 50%; filter: blur(80px);
+            opacity: var(--orb-opacity); animation: float 8s ease-in-out infinite; transition: opacity 0.4s;
+        }
+        .bg-orb:nth-child(1) { width: 400px; height: 400px; background: #6c5ce7; top: -10%; left: -5%; }
+        .bg-orb:nth-child(2) { width: 350px; height: 350px; background: #0984e3; bottom: -10%; right: -5%; animation-delay: -3s; }
+        .bg-orb:nth-child(3) { width: 250px; height: 250px; background: #e17055; top: 50%; left: 50%; transform: translate(-50%,-50%); animation-delay: -5s; opacity: var(--orb3-opacity); }
+        @keyframes float {
+            0%,100% { transform: translate(0,0) scale(1); }
+            33% { transform: translate(30px,-20px) scale(1.05); }
+            66% { transform: translate(-20px,20px) scale(0.95); }
+        }
+
+        /* ===== LANDING ===== */
         #landingPage {
-            min-height: 100vh;
-            display: flex;
-            align-items: center;
-            justify-content: center;
+            position: relative; z-index: 1;
             transition: opacity 0.4s, transform 0.4s;
         }
-
         #landingPage.hidden {
-            opacity: 0;
-            transform: scale(0.96);
-            pointer-events: none;
-            position: absolute;
+            opacity: 0; transform: scale(0.96); pointer-events: none; position: absolute;
         }
 
-        /* Animated background */
-        .bg {
-            position: fixed;
-            inset: 0;
-            z-index: 0;
-        }
-
-        .bg-orb {
-            position: absolute;
-            border-radius: 50%;
-            filter: blur(80px);
-            opacity: var(--orb-opacity);
-            animation: float 8s ease-in-out infinite;
-            transition: opacity 0.4s;
-        }
-
-        .bg-orb:nth-child(1) {
-            width: 400px;
-            height: 400px;
-            background: #6c5ce7;
-            top: -10%;
-            left: -5%;
-            animation-delay: 0s;
-        }
-
-        .bg-orb:nth-child(2) {
-            width: 350px;
-            height: 350px;
-            background: #0984e3;
-            bottom: -10%;
-            right: -5%;
-            animation-delay: -3s;
-        }
-
-        .bg-orb:nth-child(3) {
-            width: 250px;
-            height: 250px;
-            background: #e17055;
-            top: 50%;
-            left: 50%;
-            transform: translate(-50%, -50%);
-            animation-delay: -5s;
-            opacity: var(--orb3-opacity);
-        }
-
-        @keyframes float {
-            0%, 100% { transform: translate(0, 0) scale(1); }
-            33% { transform: translate(30px, -20px) scale(1.05); }
-            66% { transform: translate(-20px, 20px) scale(0.95); }
-        }
-
-        /* Card */
-        .card {
-            position: relative;
-            z-index: 1;
-            background: var(--card-bg);
-            backdrop-filter: blur(40px);
-            -webkit-backdrop-filter: blur(40px);
-            border: 1px solid var(--card-border);
-            border-radius: 32px;
-            padding: 48px 40px;
-            max-width: 440px;
-            width: 90%;
-            text-align: center;
-            box-shadow: var(--card-shadow), var(--card-inset);
-            animation: cardIn 0.8s cubic-bezier(0.16, 1, 0.3, 1) both;
-            transition: background 0.4s, border-color 0.4s, box-shadow 0.4s;
-        }
-
-        @keyframes cardIn {
-            from {
-                opacity: 0;
-                transform: translateY(40px) scale(0.96);
-            }
-        }
-
-        /* Avatar */
-        .avatar {
-            width: 110px;
-            height: 110px;
-            border-radius: 50%;
-            background: linear-gradient(135deg, #6c5ce7, #a855f7, #ec4899);
-            margin: 0 auto 28px;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            font-size: 44px;
-            color: white;
-            font-weight: 800;
-            box-shadow:
-                0 0 0 4px rgba(108, 92, 231, 0.2),
-                0 12px 40px rgba(108, 92, 231, 0.35);
-            animation: avatarIn 0.8s cubic-bezier(0.16, 1, 0.3, 1) 0.2s both;
-        }
-
-        @keyframes avatarIn {
-            from {
-                opacity: 0;
-                transform: scale(0.5);
-            }
-        }
-
-        .name {
-            font-size: 30px;
-            font-weight: 800;
-            color: var(--text);
-            margin-bottom: 6px;
-            letter-spacing: -0.5px;
-            transition: color 0.4s;
-        }
-
-        .title {
-            font-size: 15px;
-            color: var(--text-muted);
-            margin-bottom: 36px;
-            font-weight: 500;
-            transition: color 0.4s;
-        }
-
-        /* Info list */
-        .info {
-            list-style: none;
-            margin-bottom: 36px;
-            text-align: left;
-        }
-
-        .info li {
-            padding: 14px 16px;
-            border-radius: 16px;
-            color: var(--text-secondary);
-            font-size: 14px;
-            font-weight: 500;
-            display: flex;
-            align-items: center;
-            gap: 14px;
-            transition: background 0.3s, color 0.4s;
-        }
-
-        .info li:hover {
-            background: var(--hover-bg);
-        }
-
-        .info li .icon {
-            width: 40px;
-            height: 40px;
-            border-radius: 12px;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            flex-shrink: 0;
-        }
-
-        .info li .icon svg {
-            width: 20px;
-            height: 20px;
-        }
-
-        .icon-mail { background: rgba(108, 92, 231, 0.15); }
-        .icon-mail svg { fill: #a78bfa; }
-
-        .icon-phone { background: rgba(16, 185, 129, 0.15); }
-        .icon-phone svg { fill: #34d399; }
-
-        .icon-tg { background: rgba(56, 189, 248, 0.15); }
-        .icon-tg svg { fill: #38bdf8; }
-
-        .icon-loc { background: rgba(251, 146, 60, 0.15); }
-        .icon-loc svg { fill: #fb923c; }
-
-        .info li a {
-            color: inherit;
-            text-decoration: none;
-            transition: color 0.2s;
-        }
-
-        .info li a:hover {
-            color: var(--text);
-        }
-
-        /* Social links */
-        .links {
-            display: flex;
-            gap: 12px;
-            justify-content: center;
-            margin-bottom: 32px;
-        }
-
-        .links a {
-            width: 52px;
-            height: 52px;
-            border-radius: 16px;
-            background: var(--link-bg);
-            border: 1px solid var(--link-border);
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            text-decoration: none;
-            transition: all 0.3s cubic-bezier(0.16, 1, 0.3, 1);
-        }
-
-        .links a svg {
-            width: 22px;
-            height: 22px;
-            fill: var(--link-icon-fill);
-            transition: fill 0.3s;
-        }
-
-        .links a:hover {
-            transform: translateY(-4px);
-            box-shadow: 0 8px 25px rgba(0, 0, 0, 0.3);
-        }
-
-        .links a.github:hover { background: rgba(255, 255, 255, 0.12); }
-        .links a.github:hover svg { fill: #fff; }
-
-        .links a.telegram:hover {
-            background: rgba(56, 189, 248, 0.15);
-            border-color: rgba(56, 189, 248, 0.2);
-        }
-        .links a.telegram:hover svg { fill: #38bdf8; }
-
-        .links a.linkedin:hover {
-            background: rgba(59, 130, 246, 0.15);
-            border-color: rgba(59, 130, 246, 0.2);
-        }
-        .links a.linkedin:hover svg { fill: #60a5fa; }
-
-        /* CTA button */
-        .btn {
-            display: inline-flex;
-            align-items: center;
-            gap: 8px;
+        /* Top bar landing */
+        .land-topbar {
+            position: fixed; top: 0; left: 0; right: 0; z-index: 20;
+            display: flex; align-items: center; justify-content: space-between;
             padding: 16px 40px;
-            background: linear-gradient(135deg, #6c5ce7, #a855f7);
-            color: #fff;
-            text-decoration: none;
-            border-radius: 16px;
-            font-size: 15px;
-            font-weight: 600;
-            font-family: inherit;
-            transition: all 0.3s cubic-bezier(0.16, 1, 0.3, 1);
-            box-shadow: 0 8px 30px rgba(108, 92, 231, 0.3);
-        }
-
-        .btn:hover {
-            transform: translateY(-2px);
-            box-shadow: 0 12px 40px rgba(108, 92, 231, 0.45);
-        }
-
-        .btn svg {
-            width: 18px;
-            height: 18px;
-            fill: currentColor;
-        }
-
-        /* Login button (top right) */
-        .reg-btn {
-            position: fixed;
-            top: 24px;
-            right: 24px;
-            z-index: 10;
-            display: inline-flex;
-            align-items: center;
-            gap: 8px;
-            padding: 12px 24px;
-            background: var(--btn-bg);
-            backdrop-filter: blur(20px);
-            -webkit-backdrop-filter: blur(20px);
-            border: 1px solid var(--btn-border);
-            border-radius: 14px;
-            color: var(--text);
-            font-family: inherit;
-            font-size: 14px;
-            font-weight: 600;
-            cursor: pointer;
-            transition: all 0.3s cubic-bezier(0.16, 1, 0.3, 1);
-        }
-
-        .reg-btn svg {
-            width: 18px;
-            height: 18px;
-            fill: currentColor;
-        }
-
-        .reg-btn:hover {
-            background: rgba(255, 255, 255, 0.13);
-            transform: translateY(-2px);
-            box-shadow: 0 8px 25px rgba(0, 0, 0, 0.3);
-        }
-
-        /* Modal overlay */
-        .modal-overlay {
-            position: fixed;
-            inset: 0;
-            z-index: 100;
-            background: rgba(0, 0, 0, 0.6);
-            backdrop-filter: blur(8px);
-            -webkit-backdrop-filter: blur(8px);
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            opacity: 0;
-            visibility: hidden;
-            transition: all 0.3s;
-        }
-
-        .modal-overlay.active {
-            opacity: 1;
-            visibility: visible;
-        }
-
-        .modal {
-            background: var(--modal-bg);
-            border: 1px solid var(--card-border);
-            border-radius: 28px;
-            padding: 44px 36px;
-            max-width: 420px;
-            width: 90%;
-            text-align: center;
-            box-shadow: 0 30px 80px rgba(0, 0, 0, 0.5);
-            transform: translateY(30px) scale(0.96);
-            transition: transform 0.4s cubic-bezier(0.16, 1, 0.3, 1);
-            position: relative;
-        }
-
-        .modal-overlay.active .modal {
-            transform: translateY(0) scale(1);
-        }
-
-        .modal-close {
-            position: absolute;
-            top: 16px;
-            right: 16px;
-            width: 36px;
-            height: 36px;
-            border-radius: 10px;
-            border: none;
-            background: var(--link-bg);
-            color: var(--text-dim);
-            font-size: 20px;
-            cursor: pointer;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            transition: all 0.2s;
-        }
-
-        .modal-close:hover {
-            background: rgba(255, 255, 255, 0.12);
-            color: #fff;
-        }
-
-        .modal-title {
-            font-size: 26px;
-            font-weight: 800;
-            color: var(--text);
-            margin-bottom: 8px;
-        }
-
-        .modal-subtitle {
-            font-size: 14px;
-            color: var(--text-muted);
-            margin-bottom: 32px;
-        }
-
-        /* Form */
-        .form-group {
-            margin-bottom: 16px;
-            text-align: left;
-        }
-
-        .form-group label {
-            display: block;
-            font-size: 13px;
-            font-weight: 600;
-            color: var(--text-label);
-            margin-bottom: 8px;
-        }
-
-        .form-group input {
-            width: 100%;
-            padding: 14px 16px;
-            background: var(--input-bg);
-            border: 1px solid var(--input-border);
-            border-radius: 14px;
-            color: var(--text);
-            font-family: inherit;
-            font-size: 15px;
-            outline: none;
-            transition: border-color 0.3s, background 0.3s;
-        }
-
-        .form-group input::placeholder {
-            color: var(--text-muted);
-        }
-
-        .form-group input:focus {
-            border-color: rgba(108, 92, 231, 0.6);
-            background: rgba(108, 92, 231, 0.06);
-        }
-
-        .form-group input.error {
-            border-color: #ef4444;
-            background: rgba(239, 68, 68, 0.06);
-        }
-
-        .error-msg {
-            display: none;
-            margin-top: 12px;
-            padding: 12px 16px;
-            background: rgba(239, 68, 68, 0.1);
-            border: 1px solid rgba(239, 68, 68, 0.2);
-            border-radius: 12px;
-            color: #f87171;
-            font-size: 13px;
-            font-weight: 500;
-            text-align: center;
-        }
-
-        .error-msg.show {
-            display: block;
-        }
-
-        .submit-btn {
-            width: 100%;
-            padding: 16px;
-            margin-top: 8px;
-            background: linear-gradient(135deg, #6c5ce7, #a855f7);
-            color: #fff;
-            border: none;
-            border-radius: 14px;
-            font-family: inherit;
-            font-size: 15px;
-            font-weight: 700;
-            cursor: pointer;
-            transition: all 0.3s cubic-bezier(0.16, 1, 0.3, 1);
-            box-shadow: 0 6px 24px rgba(108, 92, 231, 0.3);
-        }
-
-        .submit-btn:hover {
-            transform: translateY(-2px);
-            box-shadow: 0 10px 32px rgba(108, 92, 231, 0.45);
-        }
-
-        .divider {
-            display: flex;
-            align-items: center;
-            gap: 16px;
-            margin: 24px 0;
-            color: var(--divider-color);
-            font-size: 13px;
-            font-weight: 500;
-        }
-
-        .divider::before,
-        .divider::after {
-            content: '';
-            flex: 1;
-            height: 1px;
-            background: var(--divider-line);
-        }
-
-        .google-btn {
-            width: 100%;
-            padding: 14px;
-            background: var(--link-bg);
-            border: 1px solid var(--input-border);
-            border-radius: 14px;
-            color: var(--text);
-            font-family: inherit;
-            font-size: 15px;
-            font-weight: 600;
-            cursor: pointer;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            gap: 12px;
-            transition: all 0.3s cubic-bezier(0.16, 1, 0.3, 1);
-        }
-
-        .google-btn:hover {
-            background: rgba(255, 255, 255, 0.1);
-            transform: translateY(-2px);
-            box-shadow: 0 6px 20px rgba(0, 0, 0, 0.3);
-        }
-
-        .google-btn svg {
-            width: 20px;
-            height: 20px;
-            flex-shrink: 0;
-        }
-
-        /* ===== DASHBOARD ===== */
-        #dashboard {
-            display: none;
-            min-height: 100vh;
-            animation: fadeIn 0.6s cubic-bezier(0.16, 1, 0.3, 1) both;
-        }
-
-        #dashboard.show {
-            display: flex;
-        }
-
-        @keyframes fadeIn {
-            from { opacity: 0; }
-        }
-
-        /* Dashboard topbar */
-        .dash-topbar {
-            position: fixed;
-            top: 0;
-            left: 0;
-            right: 280px;
-            height: 64px;
             background: var(--topbar-bg);
-            backdrop-filter: blur(20px);
-            -webkit-backdrop-filter: blur(20px);
+            backdrop-filter: blur(20px); -webkit-backdrop-filter: blur(20px);
             border-bottom: 1px solid var(--border-color);
             transition: background 0.4s, border-color 0.4s;
-            display: flex;
-            align-items: center;
-            justify-content: space-between;
-            padding: 0 32px;
-            z-index: 50;
         }
-
-        .dash-logo {
-            font-size: 18px;
-            font-weight: 800;
-            color: var(--text);
-            display: flex;
-            align-items: center;
-            gap: 10px;
+        .land-logo {
+            font-size: 20px; font-weight: 900; color: var(--text);
+            display: flex; align-items: center; gap: 10px; transition: color 0.4s;
         }
-
-        .dash-logo-icon {
-            width: 32px;
-            height: 32px;
-            border-radius: 10px;
+        .land-logo-icon {
+            width: 36px; height: 36px; border-radius: 12px;
             background: linear-gradient(135deg, #6c5ce7, #a855f7);
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            font-size: 16px;
-            font-weight: 800;
-            color: #fff;
+            display: flex; align-items: center; justify-content: center;
         }
+        .land-logo-icon svg { width: 20px; height: 20px; fill: #fff; }
+        .land-topbar-right { display: flex; align-items: center; gap: 12px; }
 
-        .dash-user {
-            display: flex;
-            align-items: center;
-            gap: 12px;
+        .reg-btn {
+            display: inline-flex; align-items: center; gap: 8px;
+            padding: 10px 22px;
+            background: linear-gradient(135deg, #6c5ce7, #a855f7);
+            border: none; border-radius: 12px; color: #fff;
+            font-family: inherit; font-size: 14px; font-weight: 600;
+            cursor: pointer; transition: all 0.3s cubic-bezier(0.16,1,0.3,1);
+            box-shadow: 0 4px 20px rgba(108,92,231,0.3);
         }
+        .reg-btn:hover { transform: translateY(-2px); box-shadow: 0 8px 30px rgba(108,92,231,0.45); }
+        .reg-btn svg { width: 18px; height: 18px; fill: currentColor; }
 
-        .dash-user-name {
-            font-size: 14px;
-            font-weight: 600;
-            color: var(--text-dim);
+        /* Hero */
+        .hero {
+            padding: 160px 40px 80px; text-align: center; max-width: 900px; margin: 0 auto;
         }
-
-        .dash-logout {
-            padding: 8px 16px;
-            background: var(--logout-bg);
-            border: 1px solid var(--logout-border);
-            border-radius: 10px;
-            color: var(--logout-color);
+        .hero-badge {
+            display: inline-flex; align-items: center; gap: 8px;
+            padding: 8px 20px; border-radius: 100px;
+            background: rgba(108,92,231,0.12); color: #a78bfa;
+            font-size: 13px; font-weight: 600; margin-bottom: 28px;
+        }
+        .hero-badge svg { width: 16px; height: 16px; fill: currentColor; }
+        .hero h1 {
+            font-size: clamp(36px, 5.5vw, 64px); font-weight: 900; line-height: 1.1;
+            color: var(--text); margin-bottom: 24px; letter-spacing: -1.5px;
+            transition: color 0.4s;
+        }
+        .hero h1 span {
+            background: linear-gradient(135deg, #6c5ce7, #a855f7, #ec4899);
+            -webkit-background-clip: text; -webkit-text-fill-color: transparent;
+            background-clip: text;
+        }
+        .hero p {
+            font-size: 18px; line-height: 1.7; color: var(--text-muted);
+            max-width: 640px; margin: 0 auto 40px; transition: color 0.4s;
+        }
+        .hero-cta {
+            display: inline-flex; align-items: center; gap: 10px;
+            padding: 18px 44px; border-radius: 16px;
+            background: linear-gradient(135deg, #6c5ce7, #a855f7);
+            color: #fff; text-decoration: none; font-size: 16px; font-weight: 700;
+            box-shadow: 0 8px 30px rgba(108,92,231,0.35);
+            transition: all 0.3s cubic-bezier(0.16,1,0.3,1); cursor: pointer; border: none;
             font-family: inherit;
-            font-size: 13px;
-            font-weight: 600;
-            cursor: pointer;
-            transition: all 0.2s;
+        }
+        .hero-cta:hover { transform: translateY(-3px); box-shadow: 0 14px 40px rgba(108,92,231,0.5); }
+        .hero-cta svg { width: 20px; height: 20px; fill: currentColor; }
+
+        /* Section titles */
+        .section { padding: 80px 40px; max-width: 1200px; margin: 0 auto; }
+        .section-label {
+            display: inline-flex; align-items: center; gap: 8px;
+            padding: 6px 16px; border-radius: 100px;
+            background: rgba(108,92,231,0.1); color: #a78bfa;
+            font-size: 12px; font-weight: 700; text-transform: uppercase; letter-spacing: 1.5px;
+            margin-bottom: 16px;
+        }
+        .section-title {
+            font-size: clamp(28px, 4vw, 42px); font-weight: 800; color: var(--text);
+            margin-bottom: 12px; letter-spacing: -0.5px; transition: color 0.4s;
+        }
+        .section-desc {
+            font-size: 16px; color: var(--text-muted); max-width: 600px;
+            line-height: 1.7; margin-bottom: 48px; transition: color 0.4s;
         }
 
-        .dash-logout:hover {
-            background: rgba(239, 68, 68, 0.1);
-            border-color: rgba(239, 68, 68, 0.2);
-            color: #f87171;
+        /* Feature grid */
+        .feat-grid {
+            display: grid; grid-template-columns: repeat(auto-fill, minmax(320px, 1fr)); gap: 20px;
+        }
+        .feat-card {
+            background: var(--card-bg); border: 1px solid var(--card-border);
+            border-radius: 24px; padding: 32px;
+            transition: all 0.3s cubic-bezier(0.16,1,0.3,1);
+            backdrop-filter: blur(20px); -webkit-backdrop-filter: blur(20px);
+        }
+        .feat-card:hover {
+            background: var(--skill-card-hover); transform: translateY(-6px);
+            box-shadow: 0 20px 50px rgba(0,0,0,0.15);
+        }
+        .feat-card:first-child {
+            grid-column: 1 / -1;
+            background: linear-gradient(135deg, rgba(108,92,231,0.12), rgba(168,85,247,0.08));
+            border-color: rgba(108,92,231,0.2);
+        }
+        .feat-card:first-child .feat-icon { background: linear-gradient(135deg, #6c5ce7, #a855f7); }
+        .feat-card:first-child .feat-icon svg { fill: #fff; }
+        .feat-icon {
+            width: 52px; height: 52px; border-radius: 16px;
+            display: flex; align-items: center; justify-content: center;
+            margin-bottom: 20px;
+        }
+        .feat-icon svg { width: 24px; height: 24px; }
+        .feat-card h3 {
+            font-size: 18px; font-weight: 700; color: var(--text);
+            margin-bottom: 10px; transition: color 0.4s;
+        }
+        .feat-card p {
+            font-size: 14px; color: var(--text-muted); line-height: 1.7;
+            transition: color 0.4s;
         }
 
-        /* Sidebar (right) */
-        .sidebar {
-            position: fixed;
-            top: 0;
-            right: 0;
-            width: 280px;
-            height: 100vh;
-            background: var(--sidebar-bg);
-            border-left: 1px solid var(--border-color);
-            transition: background 0.4s, border-color 0.4s;
-            padding: 32px 0;
-            z-index: 51;
-            display: flex;
-            flex-direction: column;
-        }
+        .ic-purple { background: rgba(108,92,231,0.12); }
+        .ic-purple svg { fill: #a78bfa; }
+        .ic-blue { background: rgba(56,189,248,0.12); }
+        .ic-blue svg { fill: #38bdf8; }
+        .ic-green { background: rgba(52,211,153,0.12); }
+        .ic-green svg { fill: #34d399; }
+        .ic-orange { background: rgba(251,146,60,0.12); }
+        .ic-orange svg { fill: #fb923c; }
+        .ic-pink { background: rgba(236,72,153,0.12); }
+        .ic-pink svg { fill: #ec4899; }
+        .ic-cyan { background: rgba(34,211,238,0.12); }
+        .ic-cyan svg { fill: #22d3ee; }
 
-        .sidebar-header {
-            padding: 0 24px 28px;
-            border-bottom: 1px solid var(--border-color);
-            margin-bottom: 8px;
-            display: flex;
-            align-items: center;
-            justify-content: space-between;
+        /* Steps */
+        .steps {
+            display: grid; grid-template-columns: repeat(4, 1fr); gap: 0;
+            position: relative; margin-top: 48px;
         }
-
-        .sidebar-header h3 {
-            font-size: 13px;
-            font-weight: 700;
-            color: var(--text-nav-header);
-            text-transform: uppercase;
-            letter-spacing: 1.2px;
+        .steps::before {
+            content: ''; position: absolute; top: 36px; left: 10%; right: 10%;
+            height: 2px; background: var(--step-line); transition: background 0.4s;
         }
-
-        .sidebar-nav {
-            list-style: none;
-            padding: 8px 12px;
-            flex: 1;
+        .step {
+            text-align: center; position: relative; padding: 0 12px;
         }
-
-        .sidebar-nav li {
-            margin-bottom: 2px;
-        }
-
-        .sidebar-nav a {
-            display: flex;
-            align-items: center;
-            gap: 14px;
-            padding: 14px 16px;
-            border-radius: 14px;
-            color: var(--text-dim);
-            text-decoration: none;
-            font-size: 14px;
-            font-weight: 500;
-            transition: all 0.2s;
-            cursor: pointer;
-        }
-
-        .sidebar-nav a:hover {
-            color: var(--text-secondary);
-            background: var(--hover-bg);
-        }
-
-        .sidebar-nav a.active {
-            color: var(--text);
-            background: rgba(108, 92, 231, 0.15);
-            font-weight: 600;
-        }
-
-        .sidebar-nav a.active .nav-icon {
+        .step-num {
+            width: 72px; height: 72px; border-radius: 50%; margin: 0 auto 20px;
+            display: flex; align-items: center; justify-content: center;
+            font-size: 24px; font-weight: 800; color: #fff;
             background: linear-gradient(135deg, #6c5ce7, #a855f7);
+            box-shadow: 0 8px 30px rgba(108,92,231,0.3);
+            position: relative; z-index: 1;
+        }
+        .step h4 {
+            font-size: 16px; font-weight: 700; color: var(--text);
+            margin-bottom: 8px; transition: color 0.4s;
+        }
+        .step p {
+            font-size: 13px; color: var(--text-muted); line-height: 1.6;
+            transition: color 0.4s;
         }
 
-        .sidebar-nav a.active .nav-icon svg {
-            fill: #fff;
+        /* CTA banner */
+        .cta-banner {
+            margin: 80px 40px; max-width: 1120px; margin-left: auto; margin-right: auto;
+            padding: 56px 48px; border-radius: 32px; text-align: center;
+            background: linear-gradient(135deg, rgba(108,92,231,0.15), rgba(168,85,247,0.1));
+            border: 1px solid rgba(108,92,231,0.2);
+            backdrop-filter: blur(20px); -webkit-backdrop-filter: blur(20px);
+        }
+        .cta-banner h2 {
+            font-size: clamp(22px, 3vw, 32px); font-weight: 800; color: var(--text);
+            margin-bottom: 16px; line-height: 1.3; transition: color 0.4s;
+        }
+        .cta-banner h2 span {
+            background: linear-gradient(135deg, #6c5ce7, #a855f7, #ec4899);
+            -webkit-background-clip: text; -webkit-text-fill-color: transparent; background-clip: text;
+        }
+        .cta-banner p {
+            font-size: 16px; color: var(--text-muted); max-width: 550px;
+            margin: 0 auto 32px; line-height: 1.7; transition: color 0.4s;
         }
 
-        .nav-icon {
-            width: 36px;
-            height: 36px;
-            border-radius: 10px;
-            background: var(--nav-icon-bg);
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            flex-shrink: 0;
+        /* Footer */
+        .land-footer {
+            padding: 40px; text-align: center;
+            color: var(--text-muted); font-size: 13px;
+            border-top: 1px solid var(--border-color); transition: color 0.4s, border-color 0.4s;
+        }
+
+        /* Theme toggle */
+        .theme-toggle {
+            display: flex; align-items: center; gap: 8px;
+            cursor: pointer; padding: 6px 10px; border-radius: 10px;
             transition: background 0.2s;
         }
-
-        .nav-icon svg {
-            width: 18px;
-            height: 18px;
-            fill: var(--nav-icon-fill);
-            transition: fill 0.2s;
+        .theme-toggle:hover { background: var(--hover-bg); }
+        .theme-toggle svg { width: 16px; height: 16px; fill: var(--text-muted); transition: fill 0.3s; }
+        .toggle-track {
+            width: 44px; height: 24px; border-radius: 12px;
+            background: rgba(108,92,231,0.3); position: relative; transition: background 0.3s;
         }
-
-        /* Main content area */
-        .dash-content {
-            flex: 1;
-            margin-top: 64px;
-            margin-right: 280px;
-            padding: 40px;
-            min-height: calc(100vh - 64px);
+        body.light .toggle-track { background: rgba(251,191,36,0.3); }
+        .toggle-thumb {
+            width: 20px; height: 20px; border-radius: 50%; background: #6c5ce7;
+            position: absolute; top: 2px; left: 2px;
+            transition: transform 0.3s cubic-bezier(0.16,1,0.3,1), background 0.3s;
         }
+        body.light .toggle-thumb { transform: translateX(20px); background: #f59e0b; }
+        .icon-moon, .icon-sun { transition: opacity 0.3s; }
+        body.light .icon-moon { opacity: 0; width: 0; overflow: hidden; }
+        body:not(.light) .icon-sun { opacity: 0; width: 0; overflow: hidden; }
 
-        .dash-content h1 {
-            font-size: 28px;
-            font-weight: 800;
-            color: var(--text);
-            margin-bottom: 8px;
+        /* ===== MODAL ===== */
+        .modal-overlay {
+            position: fixed; inset: 0; z-index: 100;
+            background: rgba(0,0,0,0.6); backdrop-filter: blur(8px); -webkit-backdrop-filter: blur(8px);
+            display: flex; align-items: center; justify-content: center;
+            opacity: 0; visibility: hidden; transition: all 0.3s;
         }
-
-        .dash-content .subtitle {
-            font-size: 15px;
-            color: var(--text-muted);
-            margin-bottom: 40px;
+        .modal-overlay.active { opacity: 1; visibility: visible; }
+        .modal {
+            background: var(--modal-bg); border: 1px solid var(--card-border);
+            border-radius: 28px; padding: 44px 36px; max-width: 420px; width: 90%;
+            text-align: center; box-shadow: 0 30px 80px rgba(0,0,0,0.5);
+            transform: translateY(30px) scale(0.96); transition: transform 0.4s cubic-bezier(0.16,1,0.3,1), background 0.4s;
+            position: relative;
         }
-
-        /* Skillbase cards */
-        .skill-grid {
-            display: grid;
-            grid-template-columns: repeat(auto-fill, minmax(260px, 1fr));
-            gap: 20px;
+        .modal-overlay.active .modal { transform: translateY(0) scale(1); }
+        .modal-close {
+            position: absolute; top: 16px; right: 16px; width: 36px; height: 36px;
+            border-radius: 10px; border: none; background: var(--link-bg);
+            color: var(--text-dim); font-size: 20px; cursor: pointer;
+            display: flex; align-items: center; justify-content: center; transition: all 0.2s;
         }
+        .modal-close:hover { background: var(--hover-bg); color: var(--text); }
+        .modal-title { font-size: 26px; font-weight: 800; color: var(--text); margin-bottom: 8px; }
+        .modal-subtitle { font-size: 14px; color: var(--text-muted); margin-bottom: 32px; }
+        .form-group { margin-bottom: 16px; text-align: left; }
+        .form-group label { display: block; font-size: 13px; font-weight: 600; color: var(--text-label); margin-bottom: 8px; }
+        .form-group input {
+            width: 100%; padding: 14px 16px; background: var(--input-bg);
+            border: 1px solid var(--input-border); border-radius: 14px; color: var(--text);
+            font-family: inherit; font-size: 15px; outline: none; transition: border-color 0.3s, background 0.3s;
+        }
+        .form-group input::placeholder { color: var(--text-muted); }
+        .form-group input:focus { border-color: rgba(108,92,231,0.6); background: rgba(108,92,231,0.06); }
+        .form-group input.error { border-color: #ef4444; background: rgba(239,68,68,0.06); }
+        .error-msg {
+            display: none; margin-top: 12px; padding: 12px 16px;
+            background: rgba(239,68,68,0.1); border: 1px solid rgba(239,68,68,0.2);
+            border-radius: 12px; color: #f87171; font-size: 13px; font-weight: 500; text-align: center;
+        }
+        .error-msg.show { display: block; }
+        .submit-btn {
+            width: 100%; padding: 16px; margin-top: 8px;
+            background: linear-gradient(135deg, #6c5ce7, #a855f7); color: #fff; border: none;
+            border-radius: 14px; font-family: inherit; font-size: 15px; font-weight: 700;
+            cursor: pointer; transition: all 0.3s cubic-bezier(0.16,1,0.3,1);
+            box-shadow: 0 6px 24px rgba(108,92,231,0.3);
+        }
+        .submit-btn:hover { transform: translateY(-2px); box-shadow: 0 10px 32px rgba(108,92,231,0.45); }
+        .divider {
+            display: flex; align-items: center; gap: 16px; margin: 24px 0;
+            color: var(--divider-color); font-size: 13px; font-weight: 500;
+        }
+        .divider::before, .divider::after { content: ''; flex: 1; height: 1px; background: var(--divider-line); }
+        .google-btn {
+            width: 100%; padding: 14px; background: var(--link-bg);
+            border: 1px solid var(--input-border); border-radius: 14px; color: var(--text);
+            font-family: inherit; font-size: 15px; font-weight: 600; cursor: pointer;
+            display: flex; align-items: center; justify-content: center; gap: 12px;
+            transition: all 0.3s cubic-bezier(0.16,1,0.3,1);
+        }
+        .google-btn:hover { background: var(--hover-bg); transform: translateY(-2px); }
+        .google-btn svg { width: 20px; height: 20px; flex-shrink: 0; }
 
+        /* ===== DASHBOARD ===== */
+        #dashboard { display: none; min-height: 100vh; animation: fadeIn 0.6s cubic-bezier(0.16,1,0.3,1) both; }
+        #dashboard.show { display: flex; }
+        @keyframes fadeIn { from { opacity: 0; } }
+
+        .dash-topbar {
+            position: fixed; top: 0; left: 0; right: 280px; height: 64px;
+            background: var(--topbar-bg); backdrop-filter: blur(20px); -webkit-backdrop-filter: blur(20px);
+            border-bottom: 1px solid var(--border-color);
+            display: flex; align-items: center; justify-content: space-between; padding: 0 32px; z-index: 50;
+            transition: background 0.4s, border-color 0.4s;
+        }
+        .dash-logo { font-size: 18px; font-weight: 800; color: var(--text); display: flex; align-items: center; gap: 10px; }
+        .dash-logo-icon {
+            width: 32px; height: 32px; border-radius: 10px;
+            background: linear-gradient(135deg, #6c5ce7, #a855f7);
+            display: flex; align-items: center; justify-content: center;
+            font-size: 16px; font-weight: 800; color: #fff;
+        }
+        .dash-user { display: flex; align-items: center; gap: 12px; }
+        .dash-user-name { font-size: 14px; font-weight: 600; color: var(--text-dim); }
+        .dash-logout {
+            padding: 8px 16px; background: var(--logout-bg);
+            border: 1px solid var(--logout-border); border-radius: 10px;
+            color: var(--logout-color); font-family: inherit; font-size: 13px;
+            font-weight: 600; cursor: pointer; transition: all 0.2s;
+        }
+        .dash-logout:hover { background: rgba(239,68,68,0.1); border-color: rgba(239,68,68,0.2); color: #f87171; }
+
+        .sidebar {
+            position: fixed; top: 0; right: 0; width: 280px; height: 100vh;
+            background: var(--sidebar-bg); border-left: 1px solid var(--border-color);
+            padding: 32px 0; z-index: 51; display: flex; flex-direction: column;
+            transition: background 0.4s, border-color 0.4s;
+        }
+        .sidebar-header {
+            padding: 0 24px 28px; border-bottom: 1px solid var(--border-color);
+            margin-bottom: 8px; display: flex; align-items: center; justify-content: space-between;
+        }
+        .sidebar-header h3 { font-size: 13px; font-weight: 700; color: var(--text-nav-header); text-transform: uppercase; letter-spacing: 1.2px; }
+        .sidebar-nav { list-style: none; padding: 8px 12px; flex: 1; }
+        .sidebar-nav li { margin-bottom: 2px; }
+        .sidebar-nav a {
+            display: flex; align-items: center; gap: 14px; padding: 14px 16px; border-radius: 14px;
+            color: var(--text-dim); text-decoration: none; font-size: 14px; font-weight: 500;
+            transition: all 0.2s; cursor: pointer;
+        }
+        .sidebar-nav a:hover { color: var(--text-secondary); background: var(--hover-bg); }
+        .sidebar-nav a.active { color: var(--text); background: rgba(108,92,231,0.15); font-weight: 600; }
+        .sidebar-nav a.active .nav-icon { background: linear-gradient(135deg, #6c5ce7, #a855f7); }
+        .sidebar-nav a.active .nav-icon svg { fill: #fff; }
+        .nav-icon {
+            width: 36px; height: 36px; border-radius: 10px; background: var(--nav-icon-bg);
+            display: flex; align-items: center; justify-content: center; flex-shrink: 0; transition: background 0.2s;
+        }
+        .nav-icon svg { width: 18px; height: 18px; fill: var(--nav-icon-fill); transition: fill 0.2s; }
+
+        .dash-content { flex: 1; margin-top: 64px; margin-right: 280px; padding: 40px; min-height: calc(100vh - 64px); }
+        .dash-content h1 { font-size: 28px; font-weight: 800; color: var(--text); margin-bottom: 8px; }
+        .dash-content .subtitle { font-size: 15px; color: var(--text-muted); margin-bottom: 40px; }
+
+        .skill-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(260px, 1fr)); gap: 20px; }
         .skill-card {
-            background: var(--skill-card-bg);
-            border: 1px solid var(--skill-card-border);
-            border-radius: 20px;
-            padding: 28px;
-            transition: all 0.3s cubic-bezier(0.16, 1, 0.3, 1);
+            background: var(--skill-card-bg); border: 1px solid var(--skill-card-border);
+            border-radius: 20px; padding: 28px; transition: all 0.3s cubic-bezier(0.16,1,0.3,1);
         }
-
-        .skill-card:hover {
-            background: var(--skill-card-hover);
-            transform: translateY(-4px);
-            box-shadow: 0 12px 40px rgba(0, 0, 0, 0.2);
-        }
-
-        .skill-card-icon {
-            width: 48px;
-            height: 48px;
-            border-radius: 14px;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            margin-bottom: 20px;
-            font-size: 22px;
-        }
-
-        .skill-card h3 {
-            font-size: 16px;
-            font-weight: 700;
-            color: var(--text);
-            margin-bottom: 8px;
-        }
-
-        .skill-card p {
-            font-size: 13px;
-            color: var(--text-muted);
-            line-height: 1.6;
-        }
-
-        .skill-card-tag {
-            display: inline-block;
-            margin-top: 16px;
-            padding: 6px 14px;
-            border-radius: 8px;
-            font-size: 12px;
-            font-weight: 600;
-        }
-
-        .tag-active {
-            background: rgba(52, 211, 153, 0.12);
-            color: #34d399;
-        }
-
-        .tag-draft {
-            background: rgba(251, 191, 36, 0.12);
-            color: #fbbf24;
-        }
-
-        .tag-new {
-            background: rgba(108, 92, 231, 0.15);
-            color: #a78bfa;
-        }
+        .skill-card:hover { background: var(--skill-card-hover); transform: translateY(-4px); box-shadow: 0 12px 40px rgba(0,0,0,0.2); }
+        .skill-card-icon { width: 48px; height: 48px; border-radius: 14px; display: flex; align-items: center; justify-content: center; margin-bottom: 20px; font-size: 22px; }
+        .skill-card h3 { font-size: 16px; font-weight: 700; color: var(--text); margin-bottom: 8px; }
+        .skill-card p { font-size: 13px; color: var(--text-muted); line-height: 1.6; }
+        .skill-card-tag { display: inline-block; margin-top: 16px; padding: 6px 14px; border-radius: 8px; font-size: 12px; font-weight: 600; }
+        .tag-active { background: rgba(52,211,153,0.12); color: #34d399; }
+        .tag-draft { background: rgba(251,191,36,0.12); color: #fbbf24; }
+        .tag-new { background: rgba(108,92,231,0.15); color: #a78bfa; }
 
         /* Responsive */
         @media (max-width: 768px) {
-            .sidebar {
-                width: 100%;
-                height: auto;
-                position: relative;
-                border-left: none;
-                border-top: 1px solid var(--border-color);
-            }
-            .dash-topbar {
-                right: 0;
-            }
-            .dash-content {
-                margin-right: 0;
-            }
-            #dashboard.show {
-                flex-direction: column;
-            }
+            .sidebar { width: 100%; height: auto; position: relative; border-left: none; border-top: 1px solid var(--border-color); }
+            .dash-topbar { right: 0; }
+            .dash-content { margin-right: 0; }
+            #dashboard.show { flex-direction: column; }
+            .steps { grid-template-columns: repeat(2, 1fr); gap: 32px; }
+            .steps::before { display: none; }
+            .feat-grid { grid-template-columns: 1fr; }
+            .feat-card:first-child { grid-column: auto; }
         }
-
         @media (max-width: 480px) {
-            .card {
-                padding: 36px 24px;
-                border-radius: 24px;
-            }
-            .name { font-size: 26px; }
-            .avatar { width: 96px; height: 96px; font-size: 38px; }
-            .reg-btn {
-                top: 16px;
-                right: 16px;
-                padding: 10px 18px;
-                font-size: 13px;
-            }
-            .modal {
-                padding: 36px 24px;
-                border-radius: 24px;
-            }
-            .dash-content {
-                padding: 24px 16px;
-            }
-            .dash-content h1 {
-                font-size: 22px;
-            }
+            .hero { padding: 130px 20px 60px; }
+            .hero h1 { font-size: 32px; }
+            .section { padding: 60px 20px; }
+            .cta-banner { margin: 60px 20px; padding: 40px 24px; }
+            .steps { grid-template-columns: 1fr; }
+            .land-topbar { padding: 12px 16px; }
+            .dash-content { padding: 24px 16px; }
         }
-        /* Theme toggle */
-        .theme-toggle {
-            display: flex;
-            align-items: center;
-            gap: 8px;
-            cursor: pointer;
-            padding: 6px 10px;
-            border-radius: 10px;
-            transition: background 0.2s;
-        }
-
-        .theme-toggle:hover {
-            background: var(--hover-bg);
-        }
-
-        .theme-toggle svg {
-            width: 16px;
-            height: 16px;
-            fill: var(--text-muted);
-            transition: fill 0.3s;
-        }
-
-        .toggle-track {
-            width: 44px;
-            height: 24px;
-            border-radius: 12px;
-            background: rgba(108, 92, 231, 0.3);
-            position: relative;
-            transition: background 0.3s;
-        }
-
-        body.light .toggle-track {
-            background: rgba(251, 191, 36, 0.3);
-        }
-
-        .toggle-thumb {
-            width: 20px;
-            height: 20px;
-            border-radius: 50%;
-            background: #6c5ce7;
-            position: absolute;
-            top: 2px;
-            left: 2px;
-            transition: transform 0.3s cubic-bezier(0.16, 1, 0.3, 1), background 0.3s;
-        }
-
-        body.light .toggle-thumb {
-            transform: translateX(20px);
-            background: #f59e0b;
-        }
-
-        .icon-moon, .icon-sun {
-            transition: opacity 0.3s;
-        }
-
-        body.light .icon-moon { opacity: 0; width: 0; overflow: hidden; }
-        body:not(.light) .icon-sun { opacity: 0; width: 0; overflow: hidden; }
     </style>
 </head>
 <body>
-    <!-- ===== LANDING PAGE ===== -->
+    <!-- ===== LANDING ===== -->
     <div id="landingPage">
         <div class="bg">
             <div class="bg-orb"></div>
@@ -990,79 +507,143 @@
             <div class="bg-orb"></div>
         </div>
 
-        <div class="card">
-            <div class="avatar">В</div>
-            <div class="name">Вячеслав</div>
-            <div class="title">Код это к Славе</div>
-
-            <ul class="info">
-                <li>
-                    <span class="icon icon-mail">
-                        <svg viewBox="0 0 24 24"><path d="M20 4H4c-1.1 0-2 .9-2 2v12c0 1.1.9 2 2 2h16c1.1 0 2-.9 2-2V6c0-1.1-.9-2-2-2zm0 4l-8 5-8-5V6l8 5 8-5v2z"/></svg>
-                    </span>
-                    <a href="mailto:monax_06@bk.ru">monax_06@bk.ru</a>
-                </li>
-                <li>
-                    <span class="icon icon-phone">
-                        <svg viewBox="0 0 24 24"><path d="M6.62 10.79a15.05 15.05 0 006.59 6.59l2.2-2.2a1 1 0 011.01-.24c1.12.37 2.33.57 3.58.57a1 1 0 011 1V20a1 1 0 01-1 1A17 17 0 013 4a1 1 0 011-1h3.5a1 1 0 011 1c0 1.25.2 2.46.57 3.58a1 1 0 01-.24 1.01l-2.2 2.2z"/></svg>
-                    </span>
-                    <a href="tel:89518143881">8 951 814-38-81</a>
-                </li>
-                <li>
-                    <span class="icon icon-tg">
-                        <svg viewBox="0 0 24 24"><path d="M9.78 18.65l.28-4.23 7.68-6.92c.34-.31-.07-.46-.52-.19L7.74 13.3 3.64 12c-.88-.25-.89-.86.2-1.3l15.97-6.16c.73-.33 1.43.18 1.15 1.3l-2.72 12.81c-.19.91-.74 1.13-1.5.71L12.6 16.3l-1.99 1.93c-.23.23-.42.42-.83.42z"/></svg>
-                    </span>
-                    <a href="https://t.me/maksimov_ofc" target="_blank">Telegram</a>
-                </li>
-                <li>
-                    <span class="icon icon-loc">
-                        <svg viewBox="0 0 24 24"><path d="M12 2C8.13 2 5 5.13 5 9c0 5.25 7 13 7 13s7-7.75 7-13c0-3.87-3.13-7-7-7zm0 9.5A2.5 2.5 0 1112 6.999 2.5 2.5 0 0112 11.5z"/></svg>
-                    </span>
-                    Москва
-                </li>
-            </ul>
-
-            <div class="links">
-                <a href="#" class="github" title="GitHub">
-                    <svg viewBox="0 0 24 24"><path d="M12 2A10 10 0 002 12a10 10 0 006.84 9.49c.5.09.68-.22.68-.48v-1.7C6.73 19.91 6.14 18 6.14 18A2.69 2.69 0 005 16.5c-.91-.62.07-.61.07-.61a2.13 2.13 0 011.53 1.03 2.14 2.14 0 002.91.83 2.16 2.16 0 01.63-1.34c-2.22-.25-4.55-1.11-4.55-4.94a3.89 3.89 0 011.03-2.68 3.6 3.6 0 01.1-2.65s.84-.27 2.75 1.02a9.58 9.58 0 015 0c1.91-1.29 2.75-1.02 2.75-1.02a3.6 3.6 0 01.1 2.65 3.86 3.86 0 011.02 2.68c0 3.84-2.34 4.69-4.57 4.93a2.39 2.39 0 01.68 1.86v2.77c0 .27.18.58.69.48A10 10 0 0012 2z"/></svg>
-                </a>
-                <a href="https://t.me/maksimov_ofc" target="_blank" class="telegram" title="Telegram">
-                    <svg viewBox="0 0 24 24"><path d="M9.78 18.65l.28-4.23 7.68-6.92c.34-.31-.07-.46-.52-.19L7.74 13.3 3.64 12c-.88-.25-.89-.86.2-1.3l15.97-6.16c.73-.33 1.43.18 1.15 1.3l-2.72 12.81c-.19.91-.74 1.13-1.5.71L12.6 16.3l-1.99 1.93c-.23.23-.42.42-.83.42z"/></svg>
-                </a>
-                <a href="#" class="linkedin" title="LinkedIn">
-                    <svg viewBox="0 0 24 24"><path d="M19 3a2 2 0 012 2v14a2 2 0 01-2 2H5a2 2 0 01-2-2V5a2 2 0 012-2h14m-.5 15.5v-5.3a3.26 3.26 0 00-3.26-3.26c-.85 0-1.84.52-2.32 1.3v-1.11h-2.79v8.37h2.79v-4.93c0-.77.62-1.4 1.39-1.4a1.4 1.4 0 011.4 1.4v4.93h2.79M6.88 8.56a1.68 1.68 0 001.68-1.68c0-.93-.75-1.69-1.68-1.69a1.69 1.69 0 00-1.69 1.69c0 .93.76 1.68 1.69 1.68m1.39 9.94v-8.37H5.5v8.37h2.77z"/></svg>
-                </a>
+        <!-- Top bar -->
+        <div class="land-topbar">
+            <div class="land-logo">
+                <div class="land-logo-icon">
+                    <svg viewBox="0 0 24 24"><path d="M13 3a9 9 0 00-9 9H1l3.89 3.89.07.14L9 12H6c0-3.87 3.13-7 7-7s7 3.13 7 7-3.13 7-7 7a6.99 6.99 0 01-4.95-2.05l-1.41 1.41A8.96 8.96 0 0013 21a9 9 0 000-18zm-1 5v5l4.28 2.54.72-1.21-3.5-2.08V8H12z"/></svg>
+                </div>
+                AI Sales
             </div>
-
-            <a href="mailto:monax_06@bk.ru" class="btn">
-                <svg viewBox="0 0 24 24"><path d="M20 4H4c-1.1 0-2 .9-2 2v12c0 1.1.9 2 2 2h16c1.1 0 2-.9 2-2V6c0-1.1-.9-2-2-2zm0 4l-8 5-8-5V6l8 5 8-5v2z"/></svg>
-                Написать мне
-            </a>
+            <div class="land-topbar-right">
+                <div class="theme-toggle" onclick="toggleTheme()">
+                    <svg class="icon-moon" viewBox="0 0 24 24"><path d="M12 3a9 9 0 109 9c0-.46-.04-.92-.1-1.36a5.39 5.39 0 01-4.4 2.26 5.4 5.4 0 01-3.14-9.8c-.44-.06-.9-.1-1.36-.1z"/></svg>
+                    <svg class="icon-sun" viewBox="0 0 24 24"><path d="M6.76 4.84l-1.8-1.79-1.41 1.41 1.79 1.79 1.42-1.41zM4 10.5H1v2h3v-2zm9-9.95h-2V3.5h2V.55zm7.45 3.91l-1.41-1.41-1.79 1.79 1.41 1.41 1.79-1.79zm-3.21 13.7l1.79 1.8 1.41-1.41-1.8-1.79-1.4 1.4zM20 10.5v2h3v-2h-3zm-8-5c-3.31 0-6 2.69-6 6s2.69 6 6 6 6-2.69 6-6-2.69-6-6-6zm-1 16.95h2V19.5h-2v2.95zm-7.45-3.91l1.41 1.41 1.79-1.8-1.41-1.41-1.79 1.8z"/></svg>
+                    <div class="toggle-track"><div class="toggle-thumb"></div></div>
+                </div>
+                <button class="reg-btn" onclick="openModal()">
+                    <svg viewBox="0 0 24 24"><path d="M11 7L9.6 8.4l2.6 2.6H2v2h10.2l-2.6 2.6L11 17l5-5-5-5zm9 12h-8v2h8c1.1 0 2-.9 2-2V5c0-1.1-.9-2-2-2h-8v2h8v14z"/></svg>
+                    Войти
+                </button>
+            </div>
         </div>
 
-        <!-- Top right buttons -->
-        <div style="position:fixed;top:24px;right:24px;z-index:10;display:flex;align-items:center;gap:10px;">
-            <div class="theme-toggle" onclick="toggleTheme()">
-                <svg class="icon-moon" viewBox="0 0 24 24"><path d="M12 3a9 9 0 109 9c0-.46-.04-.92-.1-1.36a5.39 5.39 0 01-4.4 2.26 5.4 5.4 0 01-3.14-9.8c-.44-.06-.9-.1-1.36-.1z"/></svg>
-                <svg class="icon-sun" viewBox="0 0 24 24"><path d="M6.76 4.84l-1.8-1.79-1.41 1.41 1.79 1.79 1.42-1.41zM4 10.5H1v2h3v-2zm9-9.95h-2V3.5h2V.55zm7.45 3.91l-1.41-1.41-1.79 1.79 1.41 1.41 1.79-1.79zm-3.21 13.7l1.79 1.8 1.41-1.41-1.8-1.79-1.4 1.4zM20 10.5v2h3v-2h-3zm-8-5c-3.31 0-6 2.69-6 6s2.69 6 6 6 6-2.69 6-6-2.69-6-6-6zm-1 16.95h2V19.5h-2v2.95zm-7.45-3.91l1.41 1.41 1.79-1.8-1.41-1.41-1.79 1.8z"/></svg>
-                <div class="toggle-track"><div class="toggle-thumb"></div></div>
+        <!-- Hero -->
+        <div class="hero">
+            <div class="hero-badge">
+                <svg viewBox="0 0 24 24"><path d="M19 3H5c-1.1 0-2 .9-2 2v14c0 1.1.9 2 2 2h14c1.1 0 2-.9 2-2V5c0-1.1-.9-2-2-2zm-5 14H7v-2h7v2zm3-4H7v-2h10v2zm0-4H7V7h10v2z"/></svg>
+                Платформа нового поколения
             </div>
-            <button class="reg-btn" style="position:static;" onclick="openModal()">
-                <svg viewBox="0 0 24 24"><path d="M11 7L9.6 8.4l2.6 2.6H2v2h10.2l-2.6 2.6L11 17l5-5-5-5zm9 12h-8v2h8c1.1 0 2-.9 2-2V5c0-1.1-.9-2-2-2h-8v2h8v14z"/></svg>
-                Войти
+            <h1>Быстрый и легкий запуск<br>первичного отдела продаж<br>с <span>AI</span></h1>
+            <p>Мы -- единая точка входа, агрегатор технологий, телефонии и поставщиков баз. Получай теплых клиентов уже на следующий день.</p>
+            <button class="hero-cta" onclick="openModal()">
+                Начать бесплатно
+                <svg viewBox="0 0 24 24"><path d="M12 4l-1.41 1.41L16.17 11H4v2h12.17l-5.58 5.59L12 20l8-8-8-8z"/></svg>
             </button>
         </div>
+
+        <!-- Features -->
+        <div class="section">
+            <div class="section-label">Возможности</div>
+            <div class="section-title">Комплексное решение</div>
+            <div class="section-desc">Мы объединили все необходимые инструменты в единую, интуитивно понятную платформу, доступную из одного личного кабинета.</div>
+
+            <div class="feat-grid">
+                <div class="feat-card">
+                    <div class="feat-icon">
+                        <svg viewBox="0 0 24 24"><path d="M21 11.5a8.38 8.38 0 01-.9 3.8 8.5 8.5 0 01-7.6 4.7 8.38 8.38 0 01-3.8-.9L3 21l1.9-5.7a8.38 8.38 0 01-.9-3.8 8.5 8.5 0 014.7-7.6 8.38 8.38 0 013.8-.9h.5a8.48 8.48 0 018 8v.5z"/></svg>
+                    </div>
+                    <h3>AI-телемаркетолог</h3>
+                    <p>Интеллектуальный помощник для автоматизации обзвона. Работает 24/7, не устает, не ошибается и адаптируется под каждого клиента.</p>
+                </div>
+                <div class="feat-card">
+                    <div class="feat-icon ic-blue">
+                        <svg viewBox="0 0 24 24"><path d="M6.62 10.79a15.05 15.05 0 006.59 6.59l2.2-2.2a1 1 0 011.01-.24c1.12.37 2.33.57 3.58.57a1 1 0 011 1V20a1 1 0 01-1 1A17 17 0 013 4a1 1 0 011-1h3.5a1 1 0 011 1c0 1.25.2 2.46.57 3.58a1 1 0 01-.24 1.01l-2.2 2.2z"/></svg>
+                    </div>
+                    <h3>Интегрированная телефония</h3>
+                    <p>Надежные поставщики телефонии для бесперебойной связи.</p>
+                </div>
+                <div class="feat-card">
+                    <div class="feat-icon ic-green">
+                        <svg viewBox="0 0 24 24"><path d="M19 3H5c-1.1 0-2 .9-2 2v14c0 1.1.9 2 2 2h14c1.1 0 2-.9 2-2V5c0-1.1-.9-2-2-2zm-5 14H7v-2h7v2zm3-4H7v-2h10v2zm0-4H7V7h10v2z"/></svg>
+                    </div>
+                    <h3>Актуальные базы данных</h3>
+                    <p>Доступ к проверенным поставщикам клиентских баз.</p>
+                </div>
+                <div class="feat-card">
+                    <div class="feat-icon ic-orange">
+                        <svg viewBox="0 0 24 24"><path d="M19.14 12.94a7.07 7.07 0 000-1.88l2.03-1.58a.49.49 0 00.12-.61l-1.92-3.32a.49.49 0 00-.59-.22l-2.39.96a7.04 7.04 0 00-1.62-.94l-.36-2.54a.48.48 0 00-.48-.41h-3.84a.48.48 0 00-.48.41l-.36 2.54c-.59.24-1.13.57-1.62.94l-2.39-.96a.48.48 0 00-.59.22L2.74 8.87a.48.48 0 00.12.61l2.03 1.58a7.07 7.07 0 000 1.88l-2.03 1.58a.49.49 0 00-.12.61l1.92 3.32c.12.22.37.29.59.22l2.39-.96c.5.38 1.04.7 1.62.94l.36 2.54c.05.24.26.41.48.41h3.84c.24 0 .44-.17.48-.41l.36-2.54a7.04 7.04 0 001.62-.94l2.39.96c.22.08.47 0 .59-.22l1.92-3.32c.12-.22.07-.49-.12-.61l-2.03-1.58zM12 15.6A3.6 3.6 0 1115.6 12 3.61 3.61 0 0112 15.6z"/></svg>
+                    </div>
+                    <h3>CRM-интеграции</h3>
+                    <p>Бесшовная синхронизация с вашими CRM-системами.</p>
+                </div>
+                <div class="feat-card">
+                    <div class="feat-icon ic-pink">
+                        <svg viewBox="0 0 24 24"><path d="M14 2H6c-1.1 0-2 .9-2 2v16c0 1.1.9 2 2 2h12c1.1 0 2-.9 2-2V8l-6-6zm2 16H8v-2h8v2zm0-4H8v-2h8v2zm-3-5V3.5L18.5 9H13z"/></svg>
+                    </div>
+                    <h3>Готовые шаблоны</h3>
+                    <p>Настраиваемые шаблоны под различные ниши для быстрого старта.</p>
+                </div>
+                <div class="feat-card">
+                    <div class="feat-icon ic-cyan">
+                        <svg viewBox="0 0 24 24"><path d="M13 3a9 9 0 00-9 9H1l3.89 3.89.07.14L9 12H6c0-3.87 3.13-7 7-7s7 3.13 7 7-3.13 7-7 7a6.99 6.99 0 01-4.95-2.05l-1.41 1.41A8.96 8.96 0 0013 21a9 9 0 000-18zm-1 5v5l4.28 2.54.72-1.21-3.5-2.08V8H12z"/></svg>
+                    </div>
+                    <h3>Быстрая настройка</h3>
+                    <p>Запуск кампании за 2-5 минут.</p>
+                </div>
+            </div>
+        </div>
+
+        <!-- How it works -->
+        <div class="section" style="text-align:center;">
+            <div class="section-label">Процесс</div>
+            <div class="section-title" style="text-align:center;">Как это работает?</div>
+            <div class="section-desc" style="text-align:center; margin-left:auto; margin-right:auto;">От идеи до лида в 4 шага</div>
+
+            <div class="steps">
+                <div class="step">
+                    <div class="step-num">1</div>
+                    <h4>Регистрация</h4>
+                    <p>Создайте аккаунт за 30 секунд</p>
+                </div>
+                <div class="step">
+                    <div class="step-num">2</div>
+                    <h4>Выбор ниши</h4>
+                    <p>Укажите вашу сферу бизнеса</p>
+                </div>
+                <div class="step">
+                    <div class="step-num">3</div>
+                    <h4>Настройка цели</h4>
+                    <p>Определите параметры кампании</p>
+                </div>
+                <div class="step">
+                    <div class="step-num">4</div>
+                    <h4>Начать звонки</h4>
+                    <p>AI начнет привлекать клиентов</p>
+                </div>
+            </div>
+        </div>
+
+        <!-- CTA Banner -->
+        <div class="cta-banner">
+            <h2>Мы -- единая точка входа,<br><span>агрегатор технологий</span>, телефонии и поставщиков баз</h2>
+            <p>Получай теплых клиентов уже на следующий день. Без найма, без обучения, без потери времени.</p>
+            <button class="hero-cta" onclick="openModal()">
+                Попробовать бесплатно
+                <svg viewBox="0 0 24 24"><path d="M12 4l-1.41 1.41L16.17 11H4v2h12.17l-5.58 5.59L12 20l8-8-8-8z"/></svg>
+            </button>
+        </div>
+
+        <div class="land-footer">AI Sales Platform &copy; 2026</div>
     </div>
 
     <!-- ===== LOGIN MODAL ===== -->
     <div class="modal-overlay" id="modal" onclick="closeOnOverlay(event)">
         <div class="modal">
             <button class="modal-close" onclick="closeModal()">&times;</button>
-
             <div id="loginForm">
                 <div class="modal-title">Вход</div>
                 <div class="modal-subtitle">Введите логин и пароль</div>
-
                 <form onsubmit="handleLogin(event)">
                     <div class="form-group">
                         <label>Логин</label>
@@ -1075,9 +656,7 @@
                     <div class="error-msg" id="loginError">Неверный логин или пароль</div>
                     <button type="submit" class="submit-btn">Войти</button>
                 </form>
-
                 <div class="divider">или</div>
-
                 <button class="google-btn" onclick="handleGoogle()">
                     <svg viewBox="0 0 24 24">
                         <path fill="#4285F4" d="M22.56 12.25c0-.78-.07-1.53-.2-2.25H12v4.26h5.92a5.06 5.06 0 01-2.2 3.32v2.77h3.57c2.08-1.92 3.28-4.74 3.28-8.1z"/>
@@ -1099,10 +678,9 @@
             <div class="bg-orb"></div>
         </div>
 
-        <!-- Top bar -->
         <div class="dash-topbar">
             <div class="dash-logo">
-                <div class="dash-logo-icon">В</div>
+                <div class="dash-logo-icon">S</div>
                 Панель управления
             </div>
             <div class="dash-user">
@@ -1111,7 +689,6 @@
             </div>
         </div>
 
-        <!-- Right sidebar -->
         <div class="sidebar">
             <div class="sidebar-header">
                 <h3>Меню</h3>
@@ -1157,14 +734,12 @@
             </ul>
         </div>
 
-        <!-- Main content -->
         <div class="dash-content">
             <h1>Скиллбейзы</h1>
             <p class="subtitle">Управление базами навыков и сценариями</p>
-
             <div class="skill-grid">
                 <div class="skill-card">
-                    <div class="skill-card-icon" style="background: rgba(108, 92, 231, 0.12); color: #a78bfa;">
+                    <div class="skill-card-icon" style="background:rgba(108,92,231,0.12);color:#a78bfa;">
                         <svg width="24" height="24" viewBox="0 0 24 24" fill="currentColor"><path d="M20 6h-4V4c0-1.11-.89-2-2-2h-4c-1.11 0-2 .89-2 2v2H4c-1.11 0-2 .89-2 2v11c0 1.11.89 2 2 2h16c1.11 0 2-.89 2-2V8c0-1.11-.89-2-2-2zm-6 0h-4V4h4v2z"/></svg>
                     </div>
                     <h3>Продажи B2B</h3>
@@ -1172,7 +747,7 @@
                     <span class="skill-card-tag tag-active">Активен</span>
                 </div>
                 <div class="skill-card">
-                    <div class="skill-card-icon" style="background: rgba(56, 189, 248, 0.12); color: #38bdf8;">
+                    <div class="skill-card-icon" style="background:rgba(56,189,248,0.12);color:#38bdf8;">
                         <svg width="24" height="24" viewBox="0 0 24 24" fill="currentColor"><path d="M21 12.22C21 6.73 16.74 3 12 3c-4.69 0-9 3.65-9 9.28-.6.34-1 .98-1 1.72v2c0 1.1.9 2 2 2h1v-6.1c0-3.87 3.13-7 7-7s7 3.13 7 7V19h-8v2h8c1.1 0 2-.9 2-2v-1.22c.59-.31 1-.92 1-1.64v-2.3c0-.7-.41-1.31-1-1.62z"/></svg>
                     </div>
                     <h3>Техподдержка L1</h3>
@@ -1180,7 +755,7 @@
                     <span class="skill-card-tag tag-active">Активен</span>
                 </div>
                 <div class="skill-card">
-                    <div class="skill-card-icon" style="background: rgba(251, 191, 36, 0.12); color: #fbbf24;">
+                    <div class="skill-card-icon" style="background:rgba(251,191,36,0.12);color:#fbbf24;">
                         <svg width="24" height="24" viewBox="0 0 24 24" fill="currentColor"><path d="M16 11c1.66 0 2.99-1.34 2.99-3S17.66 5 16 5c-1.66 0-3 1.34-3 3s1.34 3 3 3zm-8 0c1.66 0 2.99-1.34 2.99-3S9.66 5 8 5C6.34 5 5 6.34 5 8s1.34 3 3 3zm0 2c-2.33 0-7 1.17-7 3.5V19h14v-2.5c0-2.33-4.67-3.5-7-3.5zm8 0c-.29 0-.62.02-.97.05 1.16.84 1.97 1.97 1.97 3.45V19h6v-2.5c0-2.33-4.67-3.5-7-3.5z"/></svg>
                     </div>
                     <h3>Онбординг</h3>
@@ -1188,7 +763,7 @@
                     <span class="skill-card-tag tag-draft">Черновик</span>
                 </div>
                 <div class="skill-card">
-                    <div class="skill-card-icon" style="background: rgba(52, 211, 153, 0.12); color: #34d399;">
+                    <div class="skill-card-icon" style="background:rgba(52,211,153,0.12);color:#34d399;">
                         <svg width="24" height="24" viewBox="0 0 24 24" fill="currentColor"><path d="M19 3H5c-1.1 0-2 .9-2 2v14c0 1.1.9 2 2 2h14c1.1 0 2-.9 2-2V5c0-1.1-.9-2-2-2zm-5 14H7v-2h7v2zm3-4H7v-2h10v2zm0-4H7V7h10v2z"/></svg>
                     </div>
                     <h3>Опросы NPS</h3>
@@ -1226,32 +801,22 @@
             const user = document.getElementById('loginUser');
             const pass = document.getElementById('loginPass');
             const error = document.getElementById('loginError');
-
             if (user.value === 'test' && pass.value === '1234') {
                 closeModal();
                 landingPage.classList.add('hidden');
-                setTimeout(() => {
-                    dashboard.classList.add('show');
-                    document.body.style.overflow = '';
-                }, 400);
+                setTimeout(() => { dashboard.classList.add('show'); document.body.style.overflow = ''; }, 400);
             } else {
                 user.classList.add('error');
                 pass.classList.add('error');
                 error.classList.add('show');
-                setTimeout(() => {
-                    user.classList.remove('error');
-                    pass.classList.remove('error');
-                }, 1500);
+                setTimeout(() => { user.classList.remove('error'); pass.classList.remove('error'); }, 1500);
             }
         }
 
         function handleGoogle() {
             closeModal();
             landingPage.classList.add('hidden');
-            setTimeout(() => {
-                dashboard.classList.add('show');
-                document.body.style.overflow = '';
-            }, 400);
+            setTimeout(() => { dashboard.classList.add('show'); document.body.style.overflow = ''; }, 400);
         }
 
         function handleLogout() {
@@ -1260,6 +825,7 @@
                 landingPage.classList.remove('hidden');
                 document.getElementById('loginUser').value = '';
                 document.getElementById('loginPass').value = '';
+                window.scrollTo(0, 0);
             }, 100);
         }
 
@@ -1267,10 +833,6 @@
             document.querySelectorAll('.sidebar-nav a').forEach(a => a.classList.remove('active'));
             el.classList.add('active');
         }
-
-        document.addEventListener('keydown', (e) => {
-            if (e.key === 'Escape') closeModal();
-        });
 
         function toggleTheme() {
             document.body.classList.toggle('light');
@@ -1280,6 +842,10 @@
         if (localStorage.getItem('theme') === 'light') {
             document.body.classList.add('light');
         }
+
+        document.addEventListener('keydown', (e) => {
+            if (e.key === 'Escape') closeModal();
+        });
     </script>
 </body>
 </html>
