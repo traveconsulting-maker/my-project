@@ -794,6 +794,39 @@
             color: var(--text-muted); font-size: 16px;
         }
 
+        .important-badge {
+            display: flex; align-items: center; gap: 6px;
+            font-size: 13px; font-weight: 700; color: #f59e0b;
+            white-space: nowrap; flex-shrink: 0;
+        }
+        .info-icon {
+            position: relative; cursor: pointer; color: var(--text-muted);
+            display: inline-flex; align-items: center;
+        }
+        .info-tooltip {
+            display: none; position: absolute; right: 0; top: 28px;
+            width: 280px; padding: 12px 16px; border-radius: 12px;
+            background: var(--modal-bg); border: 1px solid var(--card-border);
+            color: var(--text-secondary); font-size: 13px; font-weight: 400;
+            line-height: 1.5; box-shadow: 0 12px 40px rgba(0,0,0,0.3);
+            z-index: 10; white-space: normal;
+        }
+        .info-icon:hover .info-tooltip,
+        .info-icon:focus .info-tooltip { display: block; }
+
+        .rule-audio-btn {
+            width: 32px; height: 32px; border-radius: 8px; border: none;
+            background: none; color: var(--text-muted); cursor: pointer;
+            display: flex; align-items: center; justify-content: center;
+            transition: all 0.2s; margin-top: 8px;
+        }
+        .rule-audio-btn:hover { background: rgba(108,92,231,0.1); color: #a78bfa; }
+        .rule-audio-btn svg { width: 18px; height: 18px; fill: currentColor; }
+
+        .add-rule-btn.disabled {
+            opacity: 0.4; cursor: not-allowed; pointer-events: none;
+        }
+
         /* Responsive */
         @media (max-width: 768px) {
             .sidebar { width: 100%; height: auto; position: relative; border-left: none; border-top: 1px solid var(--border-color); }
@@ -1304,7 +1337,35 @@
 
                 <!-- Tab: План разговора -->
                 <div class="bot-tab-content" id="tabPlan">
-                    <div class="stub-content">Раздел в разработке</div>
+                    <div class="bot-card">
+                        <div style="display:flex;justify-content:space-between;align-items:flex-start;">
+                            <div>
+                                <div class="bot-card-title">Начало разговора</div>
+                                <div class="bot-card-desc">Предзаписанные фразы, которые ИИ бот произнесёт в начале звонка</div>
+                            </div>
+                            <div class="important-badge">
+                                <span>Важно!</span>
+                                <span class="info-icon" tabindex="0">
+                                    <svg width="16" height="16" viewBox="0 0 24 24" fill="currentColor"><path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm1 15h-2v-6h2v6zm0-8h-2V7h2v2z"/></svg>
+                                    <span class="info-tooltip">Эти фразы будут воспроизведены как предзаписанное аудио в начале звонка для максимально естественного звучания</span>
+                                </span>
+                            </div>
+                        </div>
+                        <div id="greetingsList"></div>
+                        <button class="add-rule-btn" id="addGreetingBtn" onclick="addGreeting()">
+                            <svg width="16" height="16" viewBox="0 0 24 24" fill="currentColor"><path d="M19 13h-6v6h-2v-6H5v-2h6V5h2v6h6v2z"/></svg>
+                            Добавить новый ответ (максимум 5)
+                        </button>
+                    </div>
+                    <div class="bot-card">
+                        <div class="bot-card-title">План разговора</div>
+                        <div class="bot-card-desc">Определите последовательность тем, которые ИИ бот должен обсудить с лидом</div>
+                        <div id="planItemsList"></div>
+                        <button class="add-rule-btn" onclick="addPlanItem()">
+                            <svg width="16" height="16" viewBox="0 0 24 24" fill="currentColor"><path d="M19 13h-6v6h-2v-6H5v-2h6V5h2v6h6v2z"/></svg>
+                            Добавить новый пункт
+                        </button>
+                    </div>
                 </div>
                 <!-- Tab: Агенты -->
                 <div class="bot-tab-content" id="tabAgents">
@@ -1904,10 +1965,204 @@
             });
         }
 
+        // ===== GREETINGS (max 5, with audio) =====
+        var botGreetings = [];
+        var greetingIdCounter = 0;
+        var GREETINGS_MAX = 5;
+
+        function addGreeting() {
+            if (botGreetings.length >= GREETINGS_MAX) return;
+            greetingIdCounter++;
+            botGreetings.push({ id: 'greet_' + greetingIdCounter, text: '' });
+            renderGreetings();
+            triggerAutoSave();
+        }
+
+        function deleteGreeting(id) {
+            botGreetings = botGreetings.filter(function(r) { return r.id !== id; });
+            renderGreetings();
+            triggerAutoSave();
+        }
+
+        function onGreetingInput(id, textarea) {
+            for (var i = 0; i < botGreetings.length; i++) {
+                if (botGreetings[i].id === id) { botGreetings[i].text = textarea.value; break; }
+            }
+            var countEl = document.getElementById('count_' + id);
+            if (countEl) countEl.textContent = textarea.value.length + '/500';
+            triggerAutoSave();
+        }
+
+        var dragGreetId = null;
+        function onGreetDragStart(e, id) {
+            dragGreetId = id;
+            e.currentTarget.closest('.rule-item').classList.add('dragging');
+            e.dataTransfer.effectAllowed = 'move';
+        }
+        function onGreetDragEnd(e) {
+            dragGreetId = null;
+            document.querySelectorAll('#greetingsList .rule-item').forEach(function(r) {
+                r.classList.remove('dragging'); r.classList.remove('drag-over');
+            });
+        }
+        function onGreetDragOver(e, id) {
+            e.preventDefault();
+            if (dragGreetId && dragGreetId !== id) e.currentTarget.classList.add('drag-over');
+        }
+        function onGreetDragLeave(e) { e.currentTarget.classList.remove('drag-over'); }
+        function onGreetDrop(e, targetId) {
+            e.preventDefault();
+            e.currentTarget.classList.remove('drag-over');
+            if (!dragGreetId || dragGreetId === targetId) return;
+            var fromIdx = botGreetings.findIndex(function(r) { return r.id === dragGreetId; });
+            var toIdx = botGreetings.findIndex(function(r) { return r.id === targetId; });
+            if (fromIdx === -1 || toIdx === -1) return;
+            var moved = botGreetings.splice(fromIdx, 1)[0];
+            botGreetings.splice(toIdx, 0, moved);
+            renderGreetings();
+            triggerAutoSave();
+        }
+
+        function playGreeting(id) {
+            var text = '';
+            for (var i = 0; i < botGreetings.length; i++) {
+                if (botGreetings[i].id === id) { text = botGreetings[i].text; break; }
+            }
+            if (!text.trim()) return;
+            if ('speechSynthesis' in window) {
+                window.speechSynthesis.cancel();
+                var utter = new SpeechSynthesisUtterance(text);
+                utter.lang = 'ru-RU';
+                window.speechSynthesis.speak(utter);
+            }
+        }
+
+        function renderGreetings() {
+            var list = document.getElementById('greetingsList');
+            list.innerHTML = '';
+            botGreetings.forEach(function(item, idx) {
+                var div = document.createElement('div');
+                div.className = 'rule-item';
+                div.ondragover = function(e) { onGreetDragOver(e, item.id); };
+                div.ondragleave = onGreetDragLeave;
+                div.ondrop = function(e) { onGreetDrop(e, item.id); };
+                div.innerHTML =
+                    '<div class="rule-num">' + (idx + 1) + '</div>' +
+                    '<div class="rule-body">' +
+                        '<textarea class="rule-input" maxlength="500" placeholder="Введите фразу приветствия..." oninput="onGreetingInput(\'' + item.id + '\',this)">' + escapeHtml(item.text) + '</textarea>' +
+                        '<div class="rule-char-count" id="count_' + item.id + '">' + item.text.length + '/500</div>' +
+                    '</div>' +
+                    '<div class="rule-actions">' +
+                        '<button class="rule-audio-btn" onclick="playGreeting(\'' + item.id + '\')" title="Прослушать">' +
+                            '<svg viewBox="0 0 24 24"><path d="M3 9v6h4l5 5V4L7 9H3zm13.5 3c0-1.77-1.02-3.29-2.5-4.03v8.05c1.48-.73 2.5-2.25 2.5-4.02zM14 3.23v2.06c2.89.86 5 3.54 5 6.71s-2.11 5.85-5 6.71v2.06c4.01-.91 7-4.49 7-8.77s-2.99-7.86-7-8.77z"/></svg>' +
+                        '</button>' +
+                        '<button class="rule-action-btn rule-drag" draggable="true" ondragstart="onGreetDragStart(event,\'' + item.id + '\')" ondragend="onGreetDragEnd(event)" title="Перетащить">' +
+                            '<svg viewBox="0 0 24 24"><circle cx="9" cy="5" r="1.5"/><circle cx="15" cy="5" r="1.5"/><circle cx="9" cy="10" r="1.5"/><circle cx="15" cy="10" r="1.5"/><circle cx="9" cy="15" r="1.5"/><circle cx="15" cy="15" r="1.5"/><circle cx="9" cy="20" r="1.5"/><circle cx="15" cy="20" r="1.5"/></svg>' +
+                        '</button>' +
+                        '<button class="rule-action-btn" onclick="deleteGreeting(\'' + item.id + '\')" title="Удалить">' +
+                            '<svg viewBox="0 0 24 24"><path d="M6 19c0 1.1.9 2 2 2h8c1.1 0 2-.9 2-2V7H6v12zM19 4h-3.5l-1-1h-5l-1 1H5v2h14V4z"/></svg>' +
+                        '</button>' +
+                    '</div>';
+                list.appendChild(div);
+            });
+            // Toggle add button
+            var btn = document.getElementById('addGreetingBtn');
+            if (botGreetings.length >= GREETINGS_MAX) {
+                btn.classList.add('disabled');
+            } else {
+                btn.classList.remove('disabled');
+            }
+        }
+
+        // ===== PLAN ITEMS =====
+        var botPlanItems = [];
+        var planIdCounter = 0;
+
+        function addPlanItem() {
+            planIdCounter++;
+            botPlanItems.push({ id: 'plan_' + planIdCounter, text: '' });
+            renderPlanItems();
+            triggerAutoSave();
+        }
+
+        function deletePlanItem(id) {
+            botPlanItems = botPlanItems.filter(function(r) { return r.id !== id; });
+            renderPlanItems();
+            triggerAutoSave();
+        }
+
+        function onPlanItemInput(id, textarea) {
+            for (var i = 0; i < botPlanItems.length; i++) {
+                if (botPlanItems[i].id === id) { botPlanItems[i].text = textarea.value; break; }
+            }
+            var countEl = document.getElementById('count_' + id);
+            if (countEl) countEl.textContent = textarea.value.length + '/500';
+            triggerAutoSave();
+        }
+
+        var dragPlanId = null;
+        function onPlanDragStart(e, id) {
+            dragPlanId = id;
+            e.currentTarget.closest('.rule-item').classList.add('dragging');
+            e.dataTransfer.effectAllowed = 'move';
+        }
+        function onPlanDragEnd(e) {
+            dragPlanId = null;
+            document.querySelectorAll('#planItemsList .rule-item').forEach(function(r) {
+                r.classList.remove('dragging'); r.classList.remove('drag-over');
+            });
+        }
+        function onPlanDragOver(e, id) {
+            e.preventDefault();
+            if (dragPlanId && dragPlanId !== id) e.currentTarget.classList.add('drag-over');
+        }
+        function onPlanDragLeave(e) { e.currentTarget.classList.remove('drag-over'); }
+        function onPlanDrop(e, targetId) {
+            e.preventDefault();
+            e.currentTarget.classList.remove('drag-over');
+            if (!dragPlanId || dragPlanId === targetId) return;
+            var fromIdx = botPlanItems.findIndex(function(r) { return r.id === dragPlanId; });
+            var toIdx = botPlanItems.findIndex(function(r) { return r.id === targetId; });
+            if (fromIdx === -1 || toIdx === -1) return;
+            var moved = botPlanItems.splice(fromIdx, 1)[0];
+            botPlanItems.splice(toIdx, 0, moved);
+            renderPlanItems();
+            triggerAutoSave();
+        }
+
+        function renderPlanItems() {
+            var list = document.getElementById('planItemsList');
+            list.innerHTML = '';
+            botPlanItems.forEach(function(item, idx) {
+                var div = document.createElement('div');
+                div.className = 'rule-item';
+                div.ondragover = function(e) { onPlanDragOver(e, item.id); };
+                div.ondragleave = onPlanDragLeave;
+                div.ondrop = function(e) { onPlanDrop(e, item.id); };
+                div.innerHTML =
+                    '<div class="rule-num">' + (idx + 1) + '</div>' +
+                    '<div class="rule-body">' +
+                        '<textarea class="rule-input" maxlength="500" placeholder="Введите тему для обсуждения..." oninput="onPlanItemInput(\'' + item.id + '\',this)">' + escapeHtml(item.text) + '</textarea>' +
+                        '<div class="rule-char-count" id="count_' + item.id + '">' + item.text.length + '/500</div>' +
+                    '</div>' +
+                    '<div class="rule-actions">' +
+                        '<button class="rule-action-btn rule-drag" draggable="true" ondragstart="onPlanDragStart(event,\'' + item.id + '\')" ondragend="onPlanDragEnd(event)" title="Перетащить">' +
+                            '<svg viewBox="0 0 24 24"><circle cx="9" cy="5" r="1.5"/><circle cx="15" cy="5" r="1.5"/><circle cx="9" cy="10" r="1.5"/><circle cx="15" cy="10" r="1.5"/><circle cx="9" cy="15" r="1.5"/><circle cx="15" cy="15" r="1.5"/><circle cx="9" cy="20" r="1.5"/><circle cx="15" cy="20" r="1.5"/></svg>' +
+                        '</button>' +
+                        '<button class="rule-action-btn" onclick="deletePlanItem(\'' + item.id + '\')" title="Удалить">' +
+                            '<svg viewBox="0 0 24 24"><path d="M6 19c0 1.1.9 2 2 2h8c1.1 0 2-.9 2-2V7H6v12zM19 4h-3.5l-1-1h-5l-1 1H5v2h14V4z"/></svg>' +
+                        '</button>' +
+                    '</div>';
+                list.appendChild(div);
+            });
+        }
+
         // Init with one empty item each
         addRule();
         addFact();
         addCriterion();
+        addGreeting();
+        addPlanItem();
 
         function toggleTheme() {
             document.body.classList.toggle('light');
