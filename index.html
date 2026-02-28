@@ -680,18 +680,18 @@
 
                 <div class="form-group">
                     <label>ИНН компании</label>
-                    <input type="text" id="accInn" placeholder="10 или 12 цифр" oninput="checkAccessForm()">
-                    <div class="field-hint" id="hintInn">Заполните ИНН компании</div>
+                    <input type="text" id="accInn" placeholder="10 или 12 цифр" oninput="checkAccessForm()" maxlength="12">
+                    <div class="field-hint" id="hintInn"></div>
                 </div>
                 <div class="form-group">
                     <label>ФИО</label>
                     <input type="text" id="accName" placeholder="Иванов Иван Иванович" oninput="checkAccessForm()">
-                    <div class="field-hint" id="hintName">Укажите ваше ФИО</div>
+                    <div class="field-hint" id="hintName"></div>
                 </div>
                 <div class="form-group">
                     <label>Номер телефона</label>
-                    <input type="tel" id="accPhone" placeholder="+7 (999) 123-45-67" oninput="checkAccessForm()">
-                    <div class="field-hint" id="hintPhone">Укажите номер телефона</div>
+                    <input type="tel" id="accPhone" placeholder="+7 (999) 123-45-67" oninput="checkAccessForm()" maxlength="18">
+                    <div class="field-hint" id="hintPhone"></div>
                 </div>
 
                 <button class="access-submit" id="accessSubmitBtn" onclick="submitAccess()">
@@ -931,6 +931,7 @@
             document.getElementById('accPhone').value = '';
             accessSubmitBtn.classList.remove('active');
             document.querySelectorAll('.field-hint').forEach(h => h.classList.remove('show'));
+            document.querySelectorAll('#accessForm input').forEach(i => i.classList.remove('error'));
         }
 
         function closeAccessModal() {
@@ -942,29 +943,80 @@
             if (e.target === accessModal) closeAccessModal();
         }
 
+        function validateInn(v) {
+            const digits = v.replace(/\D/g, '');
+            return digits.length === 10 || digits.length === 12;
+        }
+
+        function validateName(v) {
+            const words = v.trim().split(/\s+/);
+            return words.length >= 2 && words.every(w => /^[а-яёА-ЯЁa-zA-Z-]+$/.test(w));
+        }
+
+        function validatePhone(v) {
+            const digits = v.replace(/\D/g, '');
+            return digits.length >= 10 && digits.length <= 12;
+        }
+
+        function showHint(id, msg) {
+            const el = document.getElementById(id);
+            el.textContent = msg;
+            el.classList.add('show');
+        }
+
+        function hideHint(id) {
+            document.getElementById(id).classList.remove('show');
+        }
+
         function checkAccessForm() {
             const inn = document.getElementById('accInn').value.trim();
             const name = document.getElementById('accName').value.trim();
             const phone = document.getElementById('accPhone').value.trim();
-            if (inn && name && phone) {
+
+            const innOk = validateInn(inn);
+            const nameOk = validateName(name);
+            const phoneOk = validatePhone(phone);
+
+            // Live hints
+            if (inn && !innOk) { showHint('hintInn', 'ИНН должен содержать 10 или 12 цифр'); }
+            else { hideHint('hintInn'); }
+
+            if (name && !nameOk) { showHint('hintName', 'Укажите минимум фамилию и имя кириллицей'); }
+            else { hideHint('hintName'); }
+
+            if (phone && !phoneOk) { showHint('hintPhone', 'Введите корректный номер телефона'); }
+            else { hideHint('hintPhone'); }
+
+            // Inputs error styling
+            document.getElementById('accInn').classList.toggle('error', inn !== '' && !innOk);
+            document.getElementById('accName').classList.toggle('error', name !== '' && !nameOk);
+            document.getElementById('accPhone').classList.toggle('error', phone !== '' && !phoneOk);
+
+            if (innOk && nameOk && phoneOk) {
                 accessSubmitBtn.classList.add('active');
             } else {
                 accessSubmitBtn.classList.remove('active');
             }
-            document.getElementById('hintInn').classList.remove('show');
-            document.getElementById('hintName').classList.remove('show');
-            document.getElementById('hintPhone').classList.remove('show');
         }
 
         function submitAccess() {
             const inn = document.getElementById('accInn').value.trim();
             const name = document.getElementById('accName').value.trim();
             const phone = document.getElementById('accPhone').value.trim();
+
             let valid = true;
-            if (!inn) { document.getElementById('hintInn').classList.add('show'); valid = false; }
-            if (!name) { document.getElementById('hintName').classList.add('show'); valid = false; }
-            if (!phone) { document.getElementById('hintPhone').classList.add('show'); valid = false; }
+
+            if (!inn) { showHint('hintInn', 'Заполните ИНН компании'); valid = false; }
+            else if (!validateInn(inn)) { showHint('hintInn', 'ИНН должен содержать 10 или 12 цифр'); valid = false; }
+
+            if (!name) { showHint('hintName', 'Укажите ваше ФИО'); valid = false; }
+            else if (!validateName(name)) { showHint('hintName', 'Укажите минимум фамилию и имя кириллицей'); valid = false; }
+
+            if (!phone) { showHint('hintPhone', 'Укажите номер телефона'); valid = false; }
+            else if (!validatePhone(phone)) { showHint('hintPhone', 'Введите корректный номер телефона'); valid = false; }
+
             if (!valid) return;
+
             accessForm.style.display = 'none';
             accessSuccess.classList.add('show');
         }
