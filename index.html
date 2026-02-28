@@ -396,6 +396,47 @@
             background: linear-gradient(135deg, #6c5ce7, #a855f7); color: #fff;
         }
 
+        .onb-textarea {
+            width: 100%; min-height: 100px; padding: 14px 18px;
+            border-radius: 14px; border: 2px solid var(--input-border);
+            background: var(--input-bg); color: var(--text);
+            font-family: inherit; font-size: 14px; line-height: 1.6;
+            resize: vertical; transition: all 0.3s;
+            backdrop-filter: blur(10px); -webkit-backdrop-filter: blur(10px);
+        }
+        .onb-textarea:focus {
+            outline: none; border-color: rgba(108,92,231,0.5);
+            box-shadow: 0 0 0 4px rgba(108,92,231,0.1);
+        }
+        .onb-textarea::placeholder { color: var(--text-muted); }
+        .onb-hint {
+            font-size: 12px; color: var(--text-muted); margin-top: 6px;
+        }
+        .tags-section { margin-top: 8px; }
+        .tags-label {
+            font-size: 13px; color: var(--text-muted); margin-bottom: 12px; font-weight: 500;
+        }
+        .tags-list {
+            display: flex; flex-wrap: wrap; gap: 8px;
+        }
+        .tag-chip {
+            padding: 8px 16px; border-radius: 20px;
+            background: var(--card-bg); border: 1.5px solid var(--card-border);
+            color: var(--text-secondary); font-size: 13px; font-weight: 500;
+            cursor: pointer; transition: all 0.2s; user-select: none;
+            backdrop-filter: blur(10px); -webkit-backdrop-filter: blur(10px);
+        }
+        .tag-chip:hover {
+            border-color: rgba(108,92,231,0.4); background: rgba(108,92,231,0.08);
+            color: var(--text); transform: translateY(-1px);
+        }
+        .tag-chip:active {
+            transform: scale(0.95);
+        }
+        .tag-chip.used {
+            opacity: 0.4; border-style: dashed;
+        }
+
         /* Access submit btn states */
         .access-submit {
             width: 100%; padding: 16px; margin-top: 8px;
@@ -815,6 +856,57 @@
                     <svg viewBox="0 0 24 24"><path d="M12 4l-1.41 1.41L16.17 11H4v2h12.17l-5.58 5.59L12 20l8-8-8-8z"/></svg>
                 </button>
             </div>
+
+            <!-- Step 2: Target audience -->
+            <div id="onbStep2" style="display:none;">
+                <div class="onb-title">Целевая аудитория</div>
+                <div class="onb-subtitle">Помогите нам понять ваших клиентов</div>
+
+                <div class="form-group" style="margin-bottom:24px;">
+                    <label style="color:var(--text-secondary);font-size:14px;font-weight:600;margin-bottom:10px;">Укажите от 3 до 10 сайтов конкурентов или смежных компаний</label>
+                    <textarea id="onbSites" class="onb-textarea" placeholder="Например:&#10;competitor1.ru&#10;competitor2.com&#10;similar-company.ru" oninput="checkStep2()"></textarea>
+                    <div class="onb-hint">Каждый сайт с новой строки</div>
+                </div>
+
+                <div class="form-group" style="margin-bottom:16px;">
+                    <label style="color:var(--text-secondary);font-size:14px;font-weight:600;margin-bottom:10px;">Опишите вашего идеального клиента</label>
+                    <textarea id="onbClient" class="onb-textarea" placeholder="Например: владелец малого бизнеса, 30-50 лет, ищет способы увеличить продажи..." oninput="checkStep2()" ondragover="event.preventDefault()" ondrop="dropTag(event)"></textarea>
+                </div>
+
+                <div class="tags-section">
+                    <div class="tags-label">Быстрые теги — нажмите или перетащите в описание:</div>
+                    <div class="tags-list">
+                        <span class="tag-chip" draggable="true" ondragstart="dragTag(event)" onclick="insertTag(this)">Владелец бизнеса</span>
+                        <span class="tag-chip" draggable="true" ondragstart="dragTag(event)" onclick="insertTag(this)">ЛПР</span>
+                        <span class="tag-chip" draggable="true" ondragstart="dragTag(event)" onclick="insertTag(this)">B2B клиент</span>
+                        <span class="tag-chip" draggable="true" ondragstart="dragTag(event)" onclick="insertTag(this)">Малый бизнес</span>
+                        <span class="tag-chip" draggable="true" ondragstart="dragTag(event)" onclick="insertTag(this)">Средний бизнес</span>
+                        <span class="tag-chip" draggable="true" ondragstart="dragTag(event)" onclick="insertTag(this)">Крупный бизнес</span>
+                        <span class="tag-chip" draggable="true" ondragstart="dragTag(event)" onclick="insertTag(this)">Физическое лицо</span>
+                        <span class="tag-chip" draggable="true" ondragstart="dragTag(event)" onclick="insertTag(this)">25-35 лет</span>
+                        <span class="tag-chip" draggable="true" ondragstart="dragTag(event)" onclick="insertTag(this)">35-50 лет</span>
+                        <span class="tag-chip" draggable="true" ondragstart="dragTag(event)" onclick="insertTag(this)">50+ лет</span>
+                        <span class="tag-chip" draggable="true" ondragstart="dragTag(event)" onclick="insertTag(this)">Высокий доход</span>
+                        <span class="tag-chip" draggable="true" ondragstart="dragTag(event)" onclick="insertTag(this)">Средний доход</span>
+                        <span class="tag-chip" draggable="true" ondragstart="dragTag(event)" onclick="insertTag(this)">Ищет подрядчика</span>
+                        <span class="tag-chip" draggable="true" ondragstart="dragTag(event)" onclick="insertTag(this)">Хочет сэкономить</span>
+                        <span class="tag-chip" draggable="true" ondragstart="dragTag(event)" onclick="insertTag(this)">Нужно быстро</span>
+                        <span class="tag-chip" draggable="true" ondragstart="dragTag(event)" onclick="insertTag(this)">Регион: Москва</span>
+                        <span class="tag-chip" draggable="true" ondragstart="dragTag(event)" onclick="insertTag(this)">Регион: вся РФ</span>
+                        <span class="tag-chip" draggable="true" ondragstart="dragTag(event)" onclick="insertTag(this)">Новый клиент</span>
+                    </div>
+                </div>
+
+                <div style="display:flex;gap:12px;margin-top:36px;">
+                    <button class="onb-btn active" onclick="goToStep(1)" style="background:var(--link-bg);color:var(--text-dim);box-shadow:none;cursor:pointer;">
+                        Назад
+                    </button>
+                    <button class="onb-btn" id="onbNext2" onclick="goToStep(3)" style="flex:1;">
+                        Далее
+                        <svg viewBox="0 0 24 24"><path d="M12 4l-1.41 1.41L16.17 11H4v2h12.17l-5.58 5.59L12 20l8-8-8-8z"/></svg>
+                    </button>
+                </div>
+            </div>
         </div>
     </div>
 
@@ -1061,10 +1153,77 @@
 
         function goToStep(step) {
             if (step === 2 && !selectedNiche) return;
-            // For now only step 1 exists, finish onboarding
-            localStorage.setItem('onboarded', '1');
-            onboarding.classList.remove('show');
-            dashboard.classList.add('show');
+            if (step === 3) {
+                var s = document.getElementById('onbSites').value.trim();
+                var c = document.getElementById('onbClient').value.trim();
+                if (!s || !c) return;
+                localStorage.setItem('onboarded', '1');
+                onboarding.classList.remove('show');
+                dashboard.classList.add('show');
+                return;
+            }
+            // Show/hide steps
+            document.getElementById('onbStep1').style.display = step === 1 ? '' : 'none';
+            document.getElementById('onbStep2').style.display = step === 2 ? '' : 'none';
+            // Update dots
+            var dot1 = document.getElementById('dot1');
+            var dot2 = document.getElementById('dot2');
+            var line1 = document.getElementById('line1');
+            if (step === 1) {
+                dot1.className = 'onb-step-dot active';
+                dot2.className = 'onb-step-dot';
+                line1.className = 'onb-step-line';
+            } else if (step === 2) {
+                dot1.className = 'onb-step-dot done';
+                dot2.className = 'onb-step-dot active';
+                line1.className = 'onb-step-line done';
+            }
+        }
+
+        function checkStep2() {
+            var sites = document.getElementById('onbSites').value.trim();
+            var client = document.getElementById('onbClient').value.trim();
+            var btn = document.getElementById('onbNext2');
+            if (sites.length > 0 && client.length > 0) {
+                btn.classList.add('active');
+            } else {
+                btn.classList.remove('active');
+            }
+        }
+
+        function dragTag(e) {
+            e.dataTransfer.setData('text/plain', e.target.textContent);
+        }
+
+        function insertTag(el) {
+            var ta = document.getElementById('onbClient');
+            var text = el.textContent;
+            var start = ta.selectionStart;
+            var end = ta.selectionEnd;
+            var val = ta.value;
+            var before = val.substring(0, start);
+            var after = val.substring(end);
+            var sep = before.length > 0 && !before.endsWith(' ') && !before.endsWith('\n') ? ', ' : '';
+            ta.value = before + sep + text + after;
+            ta.focus();
+            var pos = (before + sep + text).length;
+            ta.setSelectionRange(pos, pos);
+            el.classList.add('used');
+            checkStep2();
+        }
+
+        function dropTag(e) {
+            e.preventDefault();
+            var text = e.dataTransfer.getData('text/plain');
+            var ta = document.getElementById('onbClient');
+            var val = ta.value;
+            var sep = val.length > 0 && !val.endsWith(' ') && !val.endsWith('\n') ? ', ' : '';
+            ta.value = val + sep + text;
+            // Mark the tag chip as used
+            document.querySelectorAll('.tag-chip').forEach(function(ch) {
+                if (ch.textContent === text) ch.classList.add('used');
+            });
+            checkStep2();
         }
 
         function handleLogout() {
