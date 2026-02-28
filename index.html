@@ -2362,13 +2362,6 @@
             });
         }
 
-        // Init with one empty item each
-        addRule();
-        addFact();
-        addCriterion();
-        addGreeting();
-        addPlanItem();
-
         // ===== i18n =====
         var currentLang = localStorage.getItem('lang') || 'ru';
 
@@ -2634,6 +2627,13 @@
             renderGreetings();
             renderPlanItems();
         }
+
+        // Init with one empty item each
+        addRule();
+        addFact();
+        addCriterion();
+        addGreeting();
+        addPlanItem();
 
         // Apply saved language on load
         if (currentLang === 'en') applyLang();
