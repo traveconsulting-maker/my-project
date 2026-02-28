@@ -949,8 +949,7 @@
         }
 
         function validateName(v) {
-            const words = v.trim().split(/\s+/);
-            return words.length >= 2 && words.every(w => /^[а-яёА-ЯЁa-zA-Z-]+$/.test(w));
+            return v.trim().length >= 2 && /^[а-яёА-ЯЁa-zA-Z\s-]+$/.test(v.trim());
         }
 
         function validatePhone(v) {
@@ -981,7 +980,7 @@
             if (inn && !innOk) { showHint('hintInn', 'ИНН должен содержать 10 или 12 цифр'); }
             else { hideHint('hintInn'); }
 
-            if (name && !nameOk) { showHint('hintName', 'Укажите минимум фамилию и имя кириллицей'); }
+            if (name && !nameOk) { showHint('hintName', 'Укажите имя (только буквы)'); }
             else { hideHint('hintName'); }
 
             if (phone && !phoneOk) { showHint('hintPhone', 'Введите корректный номер телефона'); }
@@ -1010,7 +1009,7 @@
             else if (!validateInn(inn)) { showHint('hintInn', 'ИНН должен содержать 10 или 12 цифр'); valid = false; }
 
             if (!name) { showHint('hintName', 'Укажите ваше ФИО'); valid = false; }
-            else if (!validateName(name)) { showHint('hintName', 'Укажите минимум фамилию и имя кириллицей'); valid = false; }
+            else if (!validateName(name)) { showHint('hintName', 'Укажите имя (только буквы)'); valid = false; }
 
             if (!phone) { showHint('hintPhone', 'Укажите номер телефона'); valid = false; }
             else if (!validatePhone(phone)) { showHint('hintPhone', 'Введите корректный номер телефона'); valid = false; }
