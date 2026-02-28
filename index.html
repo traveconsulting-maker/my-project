@@ -849,6 +849,15 @@
             opacity: 0.4; cursor: not-allowed; pointer-events: none;
         }
 
+        .lang-btn {
+            padding: 4px 10px; border-radius: 8px; border: 1.5px solid var(--card-border);
+            background: var(--card-bg); color: var(--text-secondary);
+            font-family: inherit; font-size: 12px; font-weight: 700;
+            cursor: pointer; transition: all 0.2s; letter-spacing: 0.5px;
+            backdrop-filter: blur(10px); -webkit-backdrop-filter: blur(10px);
+        }
+        .lang-btn:hover { border-color: rgba(108,92,231,0.4); background: rgba(108,92,231,0.08); }
+
         /* Responsive */
         @media (max-width: 768px) {
             .sidebar { width: 100%; height: auto; position: relative; border-left: none; border-top: 1px solid var(--border-color); }
@@ -890,10 +899,11 @@
             </div>
             <div class="land-topbar-right">
                 <nav class="land-nav">
-                    <a href="#about">О нас</a>
-                    <a href="#tech">Технология</a>
-                    <a href="#contacts">Контакты</a>
+                    <a href="#about" data-i18n="about">О нас</a>
+                    <a href="#tech" data-i18n="tech">Технология</a>
+                    <a href="#contacts" data-i18n="contacts">Контакты</a>
                 </nav>
+                <button class="lang-btn" onclick="switchLang()" id="landLangBtn">EN</button>
                 <div class="theme-toggle" onclick="toggleTheme()">
                     <svg class="icon-moon" viewBox="0 0 24 24"><path d="M12 3a9 9 0 109 9c0-.46-.04-.92-.1-1.36a5.39 5.39 0 01-4.4 2.26 5.4 5.4 0 01-3.14-9.8c-.44-.06-.9-.1-1.36-.1z"/></svg>
                     <svg class="icon-sun" viewBox="0 0 24 24"><path d="M6.76 4.84l-1.8-1.79-1.41 1.41 1.79 1.79 1.42-1.41zM4 10.5H1v2h3v-2zm9-9.95h-2V3.5h2V.55zm7.45 3.91l-1.41-1.41-1.79 1.79 1.41 1.41 1.79-1.79zm-3.21 13.7l1.79 1.8 1.41-1.41-1.8-1.79-1.4 1.4zM20 10.5v2h3v-2h-3zm-8-5c-3.31 0-6 2.69-6 6s2.69 6 6 6 6-2.69 6-6-2.69-6-6-6zm-1 16.95h2V19.5h-2v2.95zm-7.45-3.91l1.41 1.41 1.79-1.8-1.41-1.41-1.79 1.8z"/></svg>
@@ -901,7 +911,7 @@
                 </div>
                 <button class="reg-btn" onclick="openModal()">
                     <svg viewBox="0 0 24 24"><path d="M11 7L9.6 8.4l2.6 2.6H2v2h10.2l-2.6 2.6L11 17l5-5-5-5zm9 12h-8v2h8c1.1 0 2-.9 2-2V5c0-1.1-.9-2-2-2h-8v2h8v14z"/></svg>
-                    Войти
+                    <span data-i18n="login">Войти</span>
                 </button>
             </div>
         </div>
@@ -910,99 +920,99 @@
         <div class="hero">
             <div class="hero-badge">
                 <svg viewBox="0 0 24 24"><path d="M19 3H5c-1.1 0-2 .9-2 2v14c0 1.1.9 2 2 2h14c1.1 0 2-.9 2-2V5c0-1.1-.9-2-2-2zm-5 14H7v-2h7v2zm3-4H7v-2h10v2zm0-4H7V7h10v2z"/></svg>
-                Платформа нового поколения
+                <span data-i18n="heroBadge">Платформа нового поколения</span>
             </div>
-            <h1>Быстрый и легкий запуск<br>первичного отдела продаж<br>с <span>AI</span></h1>
+            <h1 data-i18n-html="heroTitle">Быстрый и легкий запуск<br>первичного отдела продаж<br>с <span>AI</span></h1>
             <button class="hero-cta" onclick="openAccessModal()">
-                Запросить доступ
+                <span data-i18n="requestAccess">Запросить доступ</span>
                 <svg viewBox="0 0 24 24"><path d="M12 4l-1.41 1.41L16.17 11H4v2h12.17l-5.58 5.59L12 20l8-8-8-8z"/></svg>
             </button>
         </div>
 
         <!-- Features -->
         <div class="section">
-            <div class="section-label">Возможности</div>
-            <div class="section-title">Комплексное решение</div>
+            <div class="section-label" data-i18n="featLabel">Возможности</div>
+            <div class="section-title" data-i18n="featTitle">Комплексное решение</div>
 
             <div class="feat-grid">
                 <div class="feat-card">
                     <div class="feat-icon">
                         <svg viewBox="0 0 24 24"><path d="M21 11.5a8.38 8.38 0 01-.9 3.8 8.5 8.5 0 01-7.6 4.7 8.38 8.38 0 01-3.8-.9L3 21l1.9-5.7a8.38 8.38 0 01-.9-3.8 8.5 8.5 0 014.7-7.6 8.38 8.38 0 013.8-.9h.5a8.48 8.48 0 018 8v.5z"/></svg>
                     </div>
-                    <h3>AI-телемаркетолог</h3>
-                    <p>Интеллектуальный помощник для автоматизации обзвона. Работает 24/7, не устает, не ошибается и адаптируется под каждого клиента.</p>
+                    <h3 data-i18n="f1t">AI-телемаркетолог</h3>
+                    <p data-i18n="f1d">Интеллектуальный помощник для автоматизации обзвона. Работает 24/7, не устает, не ошибается и адаптируется под каждого клиента.</p>
                 </div>
                 <div class="feat-card">
                     <div class="feat-icon ic-blue">
                         <svg viewBox="0 0 24 24"><path d="M6.62 10.79a15.05 15.05 0 006.59 6.59l2.2-2.2a1 1 0 011.01-.24c1.12.37 2.33.57 3.58.57a1 1 0 011 1V20a1 1 0 01-1 1A17 17 0 013 4a1 1 0 011-1h3.5a1 1 0 011 1c0 1.25.2 2.46.57 3.58a1 1 0 01-.24 1.01l-2.2 2.2z"/></svg>
                     </div>
-                    <h3>Интегрированная телефония</h3>
-                    <p>Надежные поставщики телефонии для бесперебойной связи.</p>
+                    <h3 data-i18n="f2t">Интегрированная телефония</h3>
+                    <p data-i18n="f2d">Надежные поставщики телефонии для бесперебойной связи.</p>
                 </div>
                 <div class="feat-card">
                     <div class="feat-icon ic-green">
                         <svg viewBox="0 0 24 24"><path d="M19 3H5c-1.1 0-2 .9-2 2v14c0 1.1.9 2 2 2h14c1.1 0 2-.9 2-2V5c0-1.1-.9-2-2-2zm-5 14H7v-2h7v2zm3-4H7v-2h10v2zm0-4H7V7h10v2z"/></svg>
                     </div>
-                    <h3>Актуальные базы данных</h3>
-                    <p>Сформируем за вас базу для звонков и позвоним ей</p>
+                    <h3 data-i18n="f3t">Актуальные базы данных</h3>
+                    <p data-i18n="f3d">Сформируем за вас базу для звонков и позвоним ей</p>
                 </div>
                 <div class="feat-card">
                     <div class="feat-icon ic-orange">
                         <svg viewBox="0 0 24 24"><path d="M19.14 12.94a7.07 7.07 0 000-1.88l2.03-1.58a.49.49 0 00.12-.61l-1.92-3.32a.49.49 0 00-.59-.22l-2.39.96a7.04 7.04 0 00-1.62-.94l-.36-2.54a.48.48 0 00-.48-.41h-3.84a.48.48 0 00-.48.41l-.36 2.54c-.59.24-1.13.57-1.62.94l-2.39-.96a.48.48 0 00-.59.22L2.74 8.87a.48.48 0 00.12.61l2.03 1.58a7.07 7.07 0 000 1.88l-2.03 1.58a.49.49 0 00-.12.61l1.92 3.32c.12.22.37.29.59.22l2.39-.96c.5.38 1.04.7 1.62.94l.36 2.54c.05.24.26.41.48.41h3.84c.24 0 .44-.17.48-.41l.36-2.54a7.04 7.04 0 001.62-.94l2.39.96c.22.08.47 0 .59-.22l1.92-3.32c.12-.22.07-.49-.12-.61l-2.03-1.58zM12 15.6A3.6 3.6 0 1115.6 12 3.61 3.61 0 0112 15.6z"/></svg>
                     </div>
-                    <h3>CRM-интеграции</h3>
-                    <p>Бесшовная синхронизация с вашими CRM-системами.</p>
+                    <h3 data-i18n="f4t">CRM-интеграции</h3>
+                    <p data-i18n="f4d">Бесшовная синхронизация с вашими CRM-системами.</p>
                 </div>
                 <div class="feat-card">
                     <div class="feat-icon ic-pink">
                         <svg viewBox="0 0 24 24"><path d="M14 2H6c-1.1 0-2 .9-2 2v16c0 1.1.9 2 2 2h12c1.1 0 2-.9 2-2V8l-6-6zm2 16H8v-2h8v2zm0-4H8v-2h8v2zm-3-5V3.5L18.5 9H13z"/></svg>
                     </div>
-                    <h3>Готовые шаблоны</h3>
-                    <p>Настраиваемые шаблоны под различные ниши для быстрого старта.</p>
+                    <h3 data-i18n="f5t">Готовые шаблоны</h3>
+                    <p data-i18n="f5d">Настраиваемые шаблоны под различные ниши для быстрого старта.</p>
                 </div>
                 <div class="feat-card">
                     <div class="feat-icon ic-cyan">
                         <svg viewBox="0 0 24 24"><path d="M13 3a9 9 0 00-9 9H1l3.89 3.89.07.14L9 12H6c0-3.87 3.13-7 7-7s7 3.13 7 7-3.13 7-7 7a6.99 6.99 0 01-4.95-2.05l-1.41 1.41A8.96 8.96 0 0013 21a9 9 0 000-18zm-1 5v5l4.28 2.54.72-1.21-3.5-2.08V8H12z"/></svg>
                     </div>
-                    <h3>Быстрая настройка</h3>
-                    <p>Запуск кампании за 2-5 минут.</p>
+                    <h3 data-i18n="f6t">Быстрая настройка</h3>
+                    <p data-i18n="f6d">Запуск кампании за 2-5 минут.</p>
                 </div>
                 <div class="feat-card">
                     <div class="feat-icon ic-green">
                         <svg viewBox="0 0 24 24"><path d="M11 7h2v2h-2zm0 4h2v6h-2zm1-9C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm0 18c-4.41 0-8-3.59-8-8s3.59-8 8-8 8 3.59 8 8-3.59 8-8 8z"/></svg>
                     </div>
-                    <h3>Быстрый лид</h3>
-                    <p>Выбирай шаблон, настраивай звонок и получай тёплые лиды уже на следующий день.</p>
+                    <h3 data-i18n="f7t">Быстрый лид</h3>
+                    <p data-i18n="f7d">Выбирай шаблон, настраивай звонок и получай тёплые лиды уже на следующий день.</p>
                 </div>
             </div>
         </div>
 
         <!-- How it works -->
         <div class="section" style="text-align:center;">
-            <div class="section-label">Процесс</div>
-            <div class="section-title" style="text-align:center;">Как это работает?</div>
-            <div class="section-desc" style="text-align:center; margin-left:auto; margin-right:auto;">От идеи до лида в 4 шага</div>
+            <div class="section-label" data-i18n="stepsLabel">Процесс</div>
+            <div class="section-title" style="text-align:center;" data-i18n="stepsTitle">Как это работает?</div>
+            <div class="section-desc" style="text-align:center; margin-left:auto; margin-right:auto;" data-i18n="stepsDesc">От идеи до лида в 4 шага</div>
 
             <div class="steps">
                 <div class="step">
                     <div class="step-num">1</div>
-                    <h4>Регистрация</h4>
-                    <p>Создайте аккаунт за 30 секунд</p>
+                    <h4 data-i18n="s1t">Регистрация</h4>
+                    <p data-i18n="s1d">Создайте аккаунт за 30 секунд</p>
                 </div>
                 <div class="step">
                     <div class="step-num">2</div>
-                    <h4>Выбор ниши</h4>
-                    <p>Укажите вашу сферу бизнеса</p>
+                    <h4 data-i18n="s2t">Выбор ниши</h4>
+                    <p data-i18n="s2d">Укажите вашу сферу бизнеса</p>
                 </div>
                 <div class="step">
                     <div class="step-num">3</div>
-                    <h4>Настройка цели</h4>
-                    <p>Определите параметры кампании</p>
+                    <h4 data-i18n="s3t">Настройка цели</h4>
+                    <p data-i18n="s3d">Определите параметры кампании</p>
                 </div>
                 <div class="step">
                     <div class="step-num">4</div>
-                    <h4>Начать звонки</h4>
-                    <p>AI начнет привлекать клиентов</p>
+                    <h4 data-i18n="s4t">Начать звонки</h4>
+                    <p data-i18n="s4d">AI начнет привлекать клиентов</p>
                 </div>
             </div>
         </div>
@@ -1030,83 +1040,83 @@
 
             <!-- Step 1: Niche -->
             <div id="onbStep1">
-                <div class="onb-title">Выберите вашу нишу</div>
-                <div class="onb-subtitle">Это поможет настроить платформу под ваш бизнес</div>
+                <div class="onb-title" data-i18n="onb1title">Выберите вашу нишу</div>
+                <div class="onb-subtitle" data-i18n="onb1sub">Это поможет настроить платформу под ваш бизнес</div>
                 <div class="niche-grid">
-                    <div class="niche-item" onclick="selectNiche(this)">Финансы</div>
-                    <div class="niche-item" onclick="selectNiche(this)">Найм персонала и HR</div>
-                    <div class="niche-item" onclick="selectNiche(this)">Образование и онлайн-школы</div>
-                    <div class="niche-item" onclick="selectNiche(this)">Недвижимость</div>
-                    <div class="niche-item" onclick="selectNiche(this)">Медицинские организации</div>
-                    <div class="niche-item" onclick="selectNiche(this)">Сфера красоты</div>
-                    <div class="niche-item" onclick="selectNiche(this)">Юридические услуги</div>
-                    <div class="niche-item" onclick="selectNiche(this)">Организация мероприятий</div>
-                    <div class="niche-item" onclick="selectNiche(this)">Спортивные учреждения</div>
-                    <div class="niche-item" onclick="selectNiche(this)">B2B решения</div>
-                    <div class="niche-item" onclick="selectNiche(this)">Арбитраж</div>
-                    <div class="niche-item" onclick="selectNiche(this)">Логистическая компания</div>
-                    <div class="niche-item" onclick="selectNiche(this)">Работа с должниками</div>
-                    <div class="niche-item" onclick="selectNiche(this)">ЖКХ и управляющие компании</div>
-                    <div class="niche-item" onclick="selectNiche(this)">Интернет-магазин</div>
-                    <div class="niche-item" onclick="selectNiche(this)">Страховые компании</div>
-                    <div class="niche-item" onclick="selectNiche(this)">Туризм</div>
-                    <div class="niche-item" onclick="selectNiche(this)">Другая ниша</div>
+                    <div class="niche-item" data-i18n="niche1" onclick="selectNiche(this)">Финансы</div>
+                    <div class="niche-item" data-i18n="niche2" onclick="selectNiche(this)">Найм персонала и HR</div>
+                    <div class="niche-item" data-i18n="niche3" onclick="selectNiche(this)">Образование и онлайн-школы</div>
+                    <div class="niche-item" data-i18n="niche4" onclick="selectNiche(this)">Недвижимость</div>
+                    <div class="niche-item" data-i18n="niche5" onclick="selectNiche(this)">Медицинские организации</div>
+                    <div class="niche-item" data-i18n="niche6" onclick="selectNiche(this)">Сфера красоты</div>
+                    <div class="niche-item" data-i18n="niche7" onclick="selectNiche(this)">Юридические услуги</div>
+                    <div class="niche-item" data-i18n="niche8" onclick="selectNiche(this)">Организация мероприятий</div>
+                    <div class="niche-item" data-i18n="niche9" onclick="selectNiche(this)">Спортивные учреждения</div>
+                    <div class="niche-item" data-i18n="niche10" onclick="selectNiche(this)">B2B решения</div>
+                    <div class="niche-item" data-i18n="niche11" onclick="selectNiche(this)">Арбитраж</div>
+                    <div class="niche-item" data-i18n="niche12" onclick="selectNiche(this)">Логистическая компания</div>
+                    <div class="niche-item" data-i18n="niche13" onclick="selectNiche(this)">Работа с должниками</div>
+                    <div class="niche-item" data-i18n="niche14" onclick="selectNiche(this)">ЖКХ и управляющие компании</div>
+                    <div class="niche-item" data-i18n="niche15" onclick="selectNiche(this)">Интернет-магазин</div>
+                    <div class="niche-item" data-i18n="niche16" onclick="selectNiche(this)">Страховые компании</div>
+                    <div class="niche-item" data-i18n="niche17" onclick="selectNiche(this)">Туризм</div>
+                    <div class="niche-item" data-i18n="niche18" onclick="selectNiche(this)">Другая ниша</div>
                 </div>
                 <div id="customNicheBox" style="display:none;margin-bottom:24px;">
-                    <input type="text" id="customNicheInput" class="onb-textarea" style="min-height:auto;padding:14px 18px;" placeholder="Введите название вашей ниши..." oninput="checkCustomNiche()">
+                    <input type="text" id="customNicheInput" class="onb-textarea" style="min-height:auto;padding:14px 18px;" placeholder="Введите название вашей ниши..." data-i18n-ph="phNiche" oninput="checkCustomNiche()">
                 </div>
                 <button class="onb-btn" id="onbNext1" onclick="goToStep(2)">
-                    Далее
+                    <span data-i18n="next">Далее</span>
                     <svg viewBox="0 0 24 24"><path d="M12 4l-1.41 1.41L16.17 11H4v2h12.17l-5.58 5.59L12 20l8-8-8-8z"/></svg>
                 </button>
             </div>
 
             <!-- Step 2: Target audience -->
             <div id="onbStep2" style="display:none;">
-                <div class="onb-title">Целевая аудитория</div>
-                <div class="onb-subtitle">Помогите нам понять ваших клиентов</div>
+                <div class="onb-title" data-i18n="onb2title">Целевая аудитория</div>
+                <div class="onb-subtitle" data-i18n="onb2sub">Помогите нам понять ваших клиентов</div>
 
                 <div class="form-group" style="margin-bottom:24px;">
-                    <label style="color:var(--text-secondary);font-size:14px;font-weight:600;margin-bottom:10px;">Укажите от 3 до 10 сайтов конкурентов или смежных компаний</label>
-                    <textarea id="onbSites" class="onb-textarea" placeholder="Например:&#10;competitor1.ru&#10;competitor2.com&#10;similar-company.ru" oninput="checkStep2()"></textarea>
-                    <div class="onb-hint">Каждый сайт с новой строки</div>
+                    <label style="color:var(--text-secondary);font-size:14px;font-weight:600;margin-bottom:10px;" data-i18n="onb2sitesLabel">Укажите от 3 до 10 сайтов конкурентов или смежных компаний</label>
+                    <textarea id="onbSites" class="onb-textarea" placeholder="Например:&#10;competitor1.ru&#10;competitor2.com&#10;similar-company.ru" data-i18n-ph="phSites" oninput="checkStep2()"></textarea>
+                    <div class="onb-hint" data-i18n="onb2hint">Каждый сайт с новой строки</div>
                 </div>
 
                 <div class="form-group" style="margin-bottom:16px;">
-                    <label style="color:var(--text-secondary);font-size:14px;font-weight:600;margin-bottom:10px;">Опишите вашего идеального клиента</label>
-                    <textarea id="onbClient" class="onb-textarea" placeholder="Например: владелец малого бизнеса, 30-50 лет, ищет способы увеличить продажи..." oninput="checkStep2()" ondragover="event.preventDefault()" ondrop="dropTag(event)"></textarea>
+                    <label style="color:var(--text-secondary);font-size:14px;font-weight:600;margin-bottom:10px;" data-i18n="onb2clientLabel">Опишите вашего идеального клиента</label>
+                    <textarea id="onbClient" class="onb-textarea" placeholder="Например: владелец малого бизнеса, 30-50 лет, ищет способы увеличить продажи..." data-i18n-ph="phClient" oninput="checkStep2()" ondragover="event.preventDefault()" ondrop="dropTag(event)"></textarea>
                 </div>
 
                 <div class="tags-section">
-                    <div class="tags-label">Быстрые теги — нажмите или перетащите в описание:</div>
+                    <div class="tags-label" data-i18n="onb2tagsLabel">Быстрые теги — нажмите или перетащите в описание:</div>
                     <div class="tags-list">
-                        <span class="tag-chip" draggable="true" ondragstart="dragTag(event)" onclick="insertTag(this)">Владелец бизнеса</span>
-                        <span class="tag-chip" draggable="true" ondragstart="dragTag(event)" onclick="insertTag(this)">ЛПР</span>
-                        <span class="tag-chip" draggable="true" ondragstart="dragTag(event)" onclick="insertTag(this)">B2B клиент</span>
-                        <span class="tag-chip" draggable="true" ondragstart="dragTag(event)" onclick="insertTag(this)">Малый бизнес</span>
-                        <span class="tag-chip" draggable="true" ondragstart="dragTag(event)" onclick="insertTag(this)">Средний бизнес</span>
-                        <span class="tag-chip" draggable="true" ondragstart="dragTag(event)" onclick="insertTag(this)">Крупный бизнес</span>
-                        <span class="tag-chip" draggable="true" ondragstart="dragTag(event)" onclick="insertTag(this)">Физическое лицо</span>
-                        <span class="tag-chip" draggable="true" ondragstart="dragTag(event)" onclick="insertTag(this)">25-35 лет</span>
-                        <span class="tag-chip" draggable="true" ondragstart="dragTag(event)" onclick="insertTag(this)">35-50 лет</span>
-                        <span class="tag-chip" draggable="true" ondragstart="dragTag(event)" onclick="insertTag(this)">50+ лет</span>
-                        <span class="tag-chip" draggable="true" ondragstart="dragTag(event)" onclick="insertTag(this)">Высокий доход</span>
-                        <span class="tag-chip" draggable="true" ondragstart="dragTag(event)" onclick="insertTag(this)">Средний доход</span>
-                        <span class="tag-chip" draggable="true" ondragstart="dragTag(event)" onclick="insertTag(this)">Ищет подрядчика</span>
-                        <span class="tag-chip" draggable="true" ondragstart="dragTag(event)" onclick="insertTag(this)">Хочет сэкономить</span>
-                        <span class="tag-chip" draggable="true" ondragstart="dragTag(event)" onclick="insertTag(this)">Нужно быстро</span>
-                        <span class="tag-chip" draggable="true" ondragstart="dragTag(event)" onclick="insertTag(this)">Регион: Москва</span>
-                        <span class="tag-chip" draggable="true" ondragstart="dragTag(event)" onclick="insertTag(this)">Регион: вся РФ</span>
-                        <span class="tag-chip" draggable="true" ondragstart="dragTag(event)" onclick="insertTag(this)">Новый клиент</span>
+                        <span class="tag-chip" data-i18n="tag1" draggable="true" ondragstart="dragTag(event)" onclick="insertTag(this)">Владелец бизнеса</span>
+                        <span class="tag-chip" data-i18n="tag2" draggable="true" ondragstart="dragTag(event)" onclick="insertTag(this)">ЛПР</span>
+                        <span class="tag-chip" data-i18n="tag3" draggable="true" ondragstart="dragTag(event)" onclick="insertTag(this)">B2B клиент</span>
+                        <span class="tag-chip" data-i18n="tag4" draggable="true" ondragstart="dragTag(event)" onclick="insertTag(this)">Малый бизнес</span>
+                        <span class="tag-chip" data-i18n="tag5" draggable="true" ondragstart="dragTag(event)" onclick="insertTag(this)">Средний бизнес</span>
+                        <span class="tag-chip" data-i18n="tag6" draggable="true" ondragstart="dragTag(event)" onclick="insertTag(this)">Крупный бизнес</span>
+                        <span class="tag-chip" data-i18n="tag7" draggable="true" ondragstart="dragTag(event)" onclick="insertTag(this)">Физическое лицо</span>
+                        <span class="tag-chip" data-i18n="tag8" draggable="true" ondragstart="dragTag(event)" onclick="insertTag(this)">25-35 лет</span>
+                        <span class="tag-chip" data-i18n="tag9" draggable="true" ondragstart="dragTag(event)" onclick="insertTag(this)">35-50 лет</span>
+                        <span class="tag-chip" data-i18n="tag10" draggable="true" ondragstart="dragTag(event)" onclick="insertTag(this)">50+ лет</span>
+                        <span class="tag-chip" data-i18n="tag11" draggable="true" ondragstart="dragTag(event)" onclick="insertTag(this)">Высокий доход</span>
+                        <span class="tag-chip" data-i18n="tag12" draggable="true" ondragstart="dragTag(event)" onclick="insertTag(this)">Средний доход</span>
+                        <span class="tag-chip" data-i18n="tag13" draggable="true" ondragstart="dragTag(event)" onclick="insertTag(this)">Ищет подрядчика</span>
+                        <span class="tag-chip" data-i18n="tag14" draggable="true" ondragstart="dragTag(event)" onclick="insertTag(this)">Хочет сэкономить</span>
+                        <span class="tag-chip" data-i18n="tag15" draggable="true" ondragstart="dragTag(event)" onclick="insertTag(this)">Нужно быстро</span>
+                        <span class="tag-chip" data-i18n="tag16" draggable="true" ondragstart="dragTag(event)" onclick="insertTag(this)">Регион: Москва</span>
+                        <span class="tag-chip" data-i18n="tag17" draggable="true" ondragstart="dragTag(event)" onclick="insertTag(this)">Регион: вся РФ</span>
+                        <span class="tag-chip" data-i18n="tag18" draggable="true" ondragstart="dragTag(event)" onclick="insertTag(this)">Новый клиент</span>
                     </div>
                 </div>
 
                 <div style="display:flex;gap:12px;margin-top:36px;">
-                    <button class="onb-btn active" onclick="goToStep(1)" style="background:var(--link-bg);color:var(--text-dim);box-shadow:none;cursor:pointer;">
+                    <button class="onb-btn active" onclick="goToStep(1)" style="background:var(--link-bg);color:var(--text-dim);box-shadow:none;cursor:pointer;" data-i18n="back">
                         Назад
                     </button>
                     <button class="onb-btn" id="onbNext2" onclick="goToStep(3)" style="flex:1;">
-                        Далее
+                        <span data-i18n="next">Далее</span>
                         <svg viewBox="0 0 24 24"><path d="M12 4l-1.41 1.41L16.17 11H4v2h12.17l-5.58 5.59L12 20l8-8-8-8z"/></svg>
                     </button>
                 </div>
@@ -1114,45 +1124,45 @@
 
             <!-- Step 3: About company -->
             <div id="onbStep3" style="display:none;">
-                <div class="onb-title">О вашей компании</div>
-                <div class="onb-subtitle">Мы уже обучаем AI на ваши продажи — чтобы он знал о вас всё, заполните эту информацию</div>
+                <div class="onb-title" data-i18n="onb3title">О вашей компании</div>
+                <div class="onb-subtitle" data-i18n="onb3sub">Мы уже обучаем AI на ваши продажи — чтобы он знал о вас всё, заполните эту информацию</div>
 
                 <div class="onb-fields">
                     <div class="onb-field">
-                        <label class="onb-field-label">Короткое название компании</label>
-                        <input type="text" class="onb-input" id="onbCompanyName" placeholder="Например: СтройМастер">
+                        <label class="onb-field-label" data-i18n="onb3name">Короткое название компании</label>
+                        <input type="text" class="onb-input" id="onbCompanyName" placeholder="Например: СтройМастер" data-i18n-ph="phCompName">
                     </div>
                     <div class="onb-field">
-                        <label class="onb-field-label">Где находится компания</label>
-                        <input type="text" class="onb-input" id="onbCompanyLocation" placeholder="Например: Москва, Россия">
+                        <label class="onb-field-label" data-i18n="onb3loc">Где находится компания</label>
+                        <input type="text" class="onb-input" id="onbCompanyLocation" placeholder="Например: Москва, Россия" data-i18n-ph="phCompLoc">
                     </div>
                     <div class="onb-field">
-                        <label class="onb-field-label">Ссылка на сайт</label>
-                        <input type="text" class="onb-input" id="onbCompanySite" placeholder="Например: company.ru">
+                        <label class="onb-field-label" data-i18n="onb3site">Ссылка на сайт</label>
+                        <input type="text" class="onb-input" id="onbCompanySite" placeholder="Например: company.ru" data-i18n-ph="phCompSite">
                     </div>
                     <div class="onb-field">
-                        <label class="onb-field-label">Какой основной продукт / услуга</label>
-                        <input type="text" class="onb-input" id="onbCompanyProduct" placeholder="Например: строительство загородных домов">
+                        <label class="onb-field-label" data-i18n="onb3prod">Какой основной продукт / услуга</label>
+                        <input type="text" class="onb-input" id="onbCompanyProduct" placeholder="Например: строительство загородных домов" data-i18n-ph="phCompProd">
                     </div>
                     <div class="onb-field">
-                        <label class="onb-field-label">УТП (уникальное торговое предложение)</label>
-                        <input type="text" class="onb-input" id="onbCompanyUtp" placeholder="Например: строим дом за 30 дней или вернём деньги">
+                        <label class="onb-field-label" data-i18n="onb3utp">УТП (уникальное торговое предложение)</label>
+                        <input type="text" class="onb-input" id="onbCompanyUtp" placeholder="Например: строим дом за 30 дней или вернём деньги" data-i18n-ph="phCompUtp">
                     </div>
                     <div class="onb-field">
-                        <label class="onb-field-label">Всё, что нам нужно знать о вашей компании</label>
-                        <textarea class="onb-textarea" id="onbCompanyInfo" placeholder="Расскажите о компании всё что считаете важным: история, ценности, преимущества, особенности работы, целевая аудитория..." style="min-height:120px;"></textarea>
+                        <label class="onb-field-label" data-i18n="onb3info">Всё, что нам нужно знать о вашей компании</label>
+                        <textarea class="onb-textarea" id="onbCompanyInfo" placeholder="Расскажите о компании всё что считаете важным: история, ценности, преимущества, особенности работы, целевая аудитория..." data-i18n-ph="phCompInfo" style="min-height:120px;"></textarea>
                     </div>
                 </div>
 
                 <div style="display:flex;gap:12px;margin-top:36px;">
-                    <button class="onb-btn active" onclick="goToStep(2)" style="background:var(--link-bg);color:var(--text-dim);box-shadow:none;cursor:pointer;">
+                    <button class="onb-btn active" onclick="goToStep(2)" style="background:var(--link-bg);color:var(--text-dim);box-shadow:none;cursor:pointer;" data-i18n="back">
                         Назад
                     </button>
-                    <button class="onb-btn active" onclick="skipStep3()" style="background:var(--link-bg);color:var(--text-dim);box-shadow:none;cursor:pointer;">
+                    <button class="onb-btn active" onclick="skipStep3()" style="background:var(--link-bg);color:var(--text-dim);box-shadow:none;cursor:pointer;" data-i18n="fillLater">
                         Заполнить потом
                     </button>
                     <button class="onb-btn active" onclick="finishOnboarding()" style="flex:1;">
-                        Далее
+                        <span data-i18n="next">Далее</span>
                         <svg viewBox="0 0 24 24"><path d="M12 4l-1.41 1.41L16.17 11H4v2h12.17l-5.58 5.59L12 20l8-8-8-8z"/></svg>
                     </button>
                 </div>
@@ -1166,26 +1176,26 @@
             <button class="modal-close" onclick="closeAccessModal()">&times;</button>
 
             <div id="accessForm">
-                <div class="modal-title">Запросить доступ</div>
-                <div class="modal-subtitle">Заполните данные и мы свяжемся с вами</div>
+                <div class="modal-title" data-i18n="accessTitle">Запросить доступ</div>
+                <div class="modal-subtitle" data-i18n="accessSub">Заполните данные и мы свяжемся с вами</div>
 
                 <div class="form-group">
-                    <label>ИНН компании</label>
-                    <input type="text" id="accInn" placeholder="10 или 12 цифр" oninput="checkAccessForm()" maxlength="12">
+                    <label data-i18n="innLabel">ИНН компании</label>
+                    <input type="text" id="accInn" placeholder="10 или 12 цифр" data-i18n-ph="phInn" oninput="checkAccessForm()" maxlength="12">
                     <div class="field-hint" id="hintInn"></div>
                 </div>
                 <div class="form-group">
-                    <label>ФИО</label>
-                    <input type="text" id="accName" placeholder="Иванов Иван Иванович" oninput="checkAccessForm()">
+                    <label data-i18n="fioLabel">ФИО</label>
+                    <input type="text" id="accName" placeholder="Иванов Иван Иванович" data-i18n-ph="phFio" oninput="checkAccessForm()">
                     <div class="field-hint" id="hintName"></div>
                 </div>
                 <div class="form-group">
-                    <label>Номер телефона</label>
-                    <input type="tel" id="accPhone" placeholder="+7 (999) 123-45-67" oninput="checkAccessForm()" maxlength="18">
+                    <label data-i18n="phoneLabel">Номер телефона</label>
+                    <input type="tel" id="accPhone" placeholder="+7 (999) 123-45-67" data-i18n-ph="phPhone" oninput="checkAccessForm()" maxlength="18">
                     <div class="field-hint" id="hintPhone"></div>
                 </div>
 
-                <button class="access-submit" id="accessSubmitBtn" onclick="submitAccess()">
+                <button class="access-submit" id="accessSubmitBtn" onclick="submitAccess()" data-i18n="getAccess">
                     Получить доступ
                 </button>
             </div>
@@ -1194,8 +1204,8 @@
                 <div class="access-success-icon">
                     <svg viewBox="0 0 24 24"><path d="M9 16.17L4.83 12l-1.42 1.41L9 19 21 7l-1.41-1.41L9 16.17z"/></svg>
                 </div>
-                <h3>Заявка отправлена!</h3>
-                <p>Мы свяжемся с вами<br>в течение 15 минут</p>
+                <h3 data-i18n="accessOk">Заявка отправлена!</h3>
+                <p data-i18n-html="accessOkDesc">Мы свяжемся с вами<br>в течение 15 минут</p>
             </div>
         </div>
     </div>
@@ -1205,21 +1215,21 @@
         <div class="modal">
             <button class="modal-close" onclick="closeModal()">&times;</button>
             <div id="loginForm">
-                <div class="modal-title">Вход</div>
-                <div class="modal-subtitle">Введите логин и пароль</div>
+                <div class="modal-title" data-i18n="loginTitle">Вход</div>
+                <div class="modal-subtitle" data-i18n="loginSub">Введите логин и пароль</div>
                 <form onsubmit="handleLogin(event)">
                     <div class="form-group">
-                        <label>Логин</label>
-                        <input type="text" id="loginUser" placeholder="Введите логин" required autocomplete="username">
+                        <label data-i18n="loginLabel">Логин</label>
+                        <input type="text" id="loginUser" placeholder="Введите логин" data-i18n-ph="phLogin" required autocomplete="username">
                     </div>
                     <div class="form-group">
-                        <label>Пароль</label>
-                        <input type="password" id="loginPass" placeholder="Введите пароль" required autocomplete="current-password">
+                        <label data-i18n="passLabel">Пароль</label>
+                        <input type="password" id="loginPass" placeholder="Введите пароль" data-i18n-ph="phPass" required autocomplete="current-password">
                     </div>
-                    <div class="error-msg" id="loginError">Неверный логин или пароль</div>
-                    <button type="submit" class="submit-btn">Войти</button>
+                    <div class="error-msg" id="loginError" data-i18n="loginErr">Неверный логин или пароль</div>
+                    <button type="submit" class="submit-btn" data-i18n="loginBtn">Войти</button>
                 </form>
-                <div class="divider">или</div>
+                <div class="divider" data-i18n="orText">или</div>
                 <button class="google-btn" onclick="handleGoogle()">
                     <svg viewBox="0 0 24 24">
                         <path fill="#4285F4" d="M22.56 12.25c0-.78-.07-1.53-.2-2.25H12v4.26h5.92a5.06 5.06 0 01-2.2 3.32v2.77h3.57c2.08-1.92 3.28-4.74 3.28-8.1z"/>
@@ -1227,7 +1237,7 @@
                         <path fill="#FBBC05" d="M5.84 14.09a7.12 7.12 0 010-4.17V7.07H2.18a11.99 11.99 0 000 9.86l3.66-2.84z"/>
                         <path fill="#EA4335" d="M12 5.38c1.62 0 3.06.56 4.21 1.64l3.15-3.15C17.45 2.09 14.97 1 12 1 7.7 1 3.99 3.47 2.18 7.07l3.66 2.84c.87-2.6 3.3-4.53 6.16-4.53z"/>
                     </svg>
-                    Войти через Google
+                    <span data-i18n="googleBtn">Войти через Google</span>
                 </button>
             </div>
         </div>
@@ -1244,55 +1254,58 @@
         <div class="dash-topbar">
             <div class="dash-logo">
                 <div class="dash-logo-icon">S</div>
-                Панель управления
+                <span data-i18n="dashboard">Панель управления</span>
             </div>
             <div class="dash-user">
                 <span class="dash-user-name">test</span>
-                <button class="dash-logout" onclick="handleLogout()">Выйти</button>
+                <button class="dash-logout" onclick="handleLogout()" data-i18n="logout">Выйти</button>
             </div>
         </div>
 
         <div class="sidebar">
             <div class="sidebar-header">
-                <h3>Меню</h3>
-                <div class="theme-toggle" onclick="toggleTheme()">
-                    <svg class="icon-moon" viewBox="0 0 24 24"><path d="M12 3a9 9 0 109 9c0-.46-.04-.92-.1-1.36a5.39 5.39 0 01-4.4 2.26 5.4 5.4 0 01-3.14-9.8c-.44-.06-.9-.1-1.36-.1z"/></svg>
-                    <svg class="icon-sun" viewBox="0 0 24 24"><path d="M6.76 4.84l-1.8-1.79-1.41 1.41 1.79 1.79 1.42-1.41zM4 10.5H1v2h3v-2zm9-9.95h-2V3.5h2V.55zm7.45 3.91l-1.41-1.41-1.79 1.79 1.41 1.41 1.79-1.79zm-3.21 13.7l1.79 1.8 1.41-1.41-1.8-1.79-1.4 1.4zM20 10.5v2h3v-2h-3zm-8-5c-3.31 0-6 2.69-6 6s2.69 6 6 6 6-2.69 6-6-2.69-6-6-6zm-1 16.95h2V19.5h-2v2.95zm-7.45-3.91l1.41 1.41 1.79-1.8-1.41-1.41-1.79 1.8z"/></svg>
-                    <div class="toggle-track"><div class="toggle-thumb"></div></div>
+                <h3 data-i18n="menu">Меню</h3>
+                <div style="display:flex;align-items:center;gap:8px;">
+                    <button class="lang-btn" onclick="switchLang()" id="sidebarLangBtn">EN</button>
+                    <div class="theme-toggle" onclick="toggleTheme()">
+                        <svg class="icon-moon" viewBox="0 0 24 24"><path d="M12 3a9 9 0 109 9c0-.46-.04-.92-.1-1.36a5.39 5.39 0 01-4.4 2.26 5.4 5.4 0 01-3.14-9.8c-.44-.06-.9-.1-1.36-.1z"/></svg>
+                        <svg class="icon-sun" viewBox="0 0 24 24"><path d="M6.76 4.84l-1.8-1.79-1.41 1.41 1.79 1.79 1.42-1.41zM4 10.5H1v2h3v-2zm9-9.95h-2V3.5h2V.55zm7.45 3.91l-1.41-1.41-1.79 1.79 1.41 1.41 1.79-1.79zm-3.21 13.7l1.79 1.8 1.41-1.41-1.8-1.79-1.4 1.4zM20 10.5v2h3v-2h-3zm-8-5c-3.31 0-6 2.69-6 6s2.69 6 6 6 6-2.69 6-6-2.69-6-6-6zm-1 16.95h2V19.5h-2v2.95zm-7.45-3.91l1.41 1.41 1.79-1.8-1.41-1.41-1.79 1.8z"/></svg>
+                        <div class="toggle-track"><div class="toggle-thumb"></div></div>
+                    </div>
                 </div>
             </div>
             <ul class="sidebar-nav">
                 <li><a href="#" class="active" data-page="pageMain" onclick="setActive(this)">
                     <span class="nav-icon"><svg viewBox="0 0 24 24"><path d="M10 20v-6h4v6h5v-8h3L12 3 2 12h3v8z"/></svg></span>
-                    Главное
+                    <span data-i18n="navMain">Главное</span>
                 </a></li>
                 <li><a href="#" data-page="pageStats" onclick="setActive(this)">
                     <span class="nav-icon"><svg viewBox="0 0 24 24"><path d="M19 3H5c-1.1 0-2 .9-2 2v14c0 1.1.9 2 2 2h14c1.1 0 2-.9 2-2V5c0-1.1-.9-2-2-2zM9 17H7v-7h2v7zm4 0h-2V7h2v10zm4 0h-2v-4h2v4z"/></svg></span>
-                    Статистика
+                    <span data-i18n="navStats">Статистика</span>
                 </a></li>
                 <li><a href="#" data-page="pageSkills" onclick="setActive(this)">
                     <span class="nav-icon"><svg viewBox="0 0 24 24"><path d="M12 3L1 9l4 2.18v6L12 21l7-3.82v-6l2-1.09V17h2V9L12 3zm6.82 6L12 12.72 5.18 9 12 5.28 18.82 9zM17 15.99l-5 2.73-5-2.73v-3.72L12 15l5-2.73v3.72z"/></svg></span>
-                    Скиллбейзы
+                    <span data-i18n="navSkills">Скиллбейзы</span>
                 </a></li>
                 <li><a href="#" data-page="pageKnowledge" onclick="setActive(this)">
                     <span class="nav-icon"><svg viewBox="0 0 24 24"><path d="M18 2H6c-1.1 0-2 .9-2 2v16c0 1.1.9 2 2 2h12c1.1 0 2-.9 2-2V4c0-1.1-.9-2-2-2zM6 4h5v8l-2.5-1.5L6 12V4z"/></svg></span>
-                    База знаний
+                    <span data-i18n="navKb">База знаний</span>
                 </a></li>
                 <li><a href="#" data-page="pageCalls" onclick="setActive(this)">
                     <span class="nav-icon"><svg viewBox="0 0 24 24"><path d="M19 3H5c-1.1 0-2 .9-2 2v14c0 1.1.9 2 2 2h14c1.1 0 2-.9 2-2V5c0-1.1-.9-2-2-2zm-2 10H7v-2h10v2z"/></svg></span>
-                    Колл-листы
+                    <span data-i18n="navCalls">Колл-листы</span>
                 </a></li>
                 <li><a href="#" data-page="pageHistory" onclick="setActive(this)">
                     <span class="nav-icon"><svg viewBox="0 0 24 24"><path d="M13 3a9 9 0 00-9 9H1l3.89 3.89.07.14L9 12H6c0-3.87 3.13-7 7-7s7 3.13 7 7-3.13 7-7 7a6.99 6.99 0 01-4.95-2.05l-1.41 1.41A8.96 8.96 0 0013 21a9 9 0 000-18zm-1 5v5l4.28 2.54.72-1.21-3.5-2.08V8H12z"/></svg></span>
-                    История звонков
+                    <span data-i18n="navHistory">История звонков</span>
                 </a></li>
                 <li><a href="#" data-page="pageTemplates" onclick="setActive(this)">
                     <span class="nav-icon"><svg viewBox="0 0 24 24"><path d="M14 2H6c-1.1 0-2 .9-2 2v16c0 1.1.9 2 2 2h12c1.1 0 2-.9 2-2V8l-6-6zm2 16H8v-2h8v2zm0-4H8v-2h8v2zm-3-5V3.5L18.5 9H13z"/></svg></span>
-                    Шаблоны
+                    <span data-i18n="navTemplates">Шаблоны</span>
                 </a></li>
                 <li><a href="#" data-page="pageSettings" onclick="setActive(this)">
                     <span class="nav-icon"><svg viewBox="0 0 24 24"><path d="M19.14 12.94a7.07 7.07 0 000-1.88l2.03-1.58a.49.49 0 00.12-.61l-1.92-3.32a.49.49 0 00-.59-.22l-2.39.96a7.04 7.04 0 00-1.62-.94l-.36-2.54a.48.48 0 00-.48-.41h-3.84a.48.48 0 00-.48.41l-.36 2.54a7.04 7.04 0 00-1.62.94l-2.39-.96a.48.48 0 00-.59.22L2.74 8.87a.48.48 0 00.12.61l2.03 1.58a7.07 7.07 0 000 1.88l-2.03 1.58a.49.49 0 00-.12.61l1.92 3.32c.12.22.37.29.59.22l2.39-.96c.5.38 1.04.7 1.62.94l.36 2.54c.05.24.26.41.48.41h3.84c.24 0 .44-.17.48-.41l.36-2.54a7.04 7.04 0 001.62-.94l2.39.96c.22.08.47 0 .59-.22l1.92-3.32a.49.49 0 00-.12-.61l-2.03-1.58zM12 15.6A3.6 3.6 0 1115.6 12 3.6 3.6 0 0112 15.6z"/></svg></span>
-                    Настройки
+                    <span data-i18n="navSettings">Настройки</span>
                 </a></li>
             </ul>
         </div>
@@ -1302,57 +1315,57 @@
             <div class="page-section active" id="pageMain">
                 <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:4px;">
                     <div class="bot-header-title">ИП Максимов – Логистика для селлеров</div>
-                    <span class="save-status saved" id="saveStatus">Сохранено</span>
+                    <span class="save-status saved" id="saveStatus" data-i18n="saved">Сохранено</span>
                 </div>
-                <div class="bot-header-updated" id="lastUpdated">Последнее обновление: только что</div>
+                <div class="bot-header-updated" id="lastUpdated" data-i18n="botUpdated">Последнее обновление: только что</div>
 
                 <div class="bot-tabs" id="botTabs">
-                    <button class="bot-tab active" onclick="switchBotTab('context',this)">Контекст<span class="bot-tab-badge">Есть новое!</span></button>
-                    <button class="bot-tab" onclick="switchBotTab('plan',this)">План разговора</button>
-                    <button class="bot-tab" onclick="switchBotTab('agents',this)">Агенты<span class="bot-tab-badge">Есть новое!</span></button>
-                    <button class="bot-tab" onclick="switchBotTab('tools',this)">Инструменты</button>
-                    <button class="bot-tab" onclick="switchBotTab('knowledge',this)">База знаний</button>
+                    <button class="bot-tab active" onclick="switchBotTab('context',this)"><span data-i18n="tabContext">Контекст</span><span class="bot-tab-badge" data-i18n="tabBadge">Есть новое!</span></button>
+                    <button class="bot-tab" onclick="switchBotTab('plan',this)" data-i18n="tabPlan">План разговора</button>
+                    <button class="bot-tab" onclick="switchBotTab('agents',this)"><span data-i18n="tabAgents">Агенты</span><span class="bot-tab-badge" data-i18n="tabBadge">Есть новое!</span></button>
+                    <button class="bot-tab" onclick="switchBotTab('tools',this)" data-i18n="tabTools">Инструменты</button>
+                    <button class="bot-tab" onclick="switchBotTab('knowledge',this)" data-i18n="tabKb">База знаний</button>
                 </div>
 
                 <!-- Tab: Контекст -->
                 <div class="bot-tab-content active" id="tabContext">
                     <div class="bot-card">
-                        <div class="bot-card-title">Роль продавца</div>
-                        <div class="bot-card-desc">Опишите роль, которую будет играть ИИ бот при звонках лидам</div>
-                        <textarea class="bot-textarea" id="botSellerRole" placeholder="Роль продавца" maxlength="500" oninput="onBotInput(this,'roleCount')"></textarea>
+                        <div class="bot-card-title" data-i18n="roleTitle">Роль продавца</div>
+                        <div class="bot-card-desc" data-i18n="roleDesc">Опишите роль, которую будет играть ИИ бот при звонках лидам</div>
+                        <textarea class="bot-textarea" id="botSellerRole" placeholder="Роль продавца" data-i18n-ph="phRole" maxlength="500" oninput="onBotInput(this,'roleCount')"></textarea>
                         <div class="bot-char-count" id="roleCount">0/500</div>
                     </div>
                     <div class="bot-card">
-                        <div class="bot-card-title">Стиль речи</div>
-                        <div class="bot-card-desc">Определите стиль общения ИИ бота с лидами</div>
-                        <textarea class="bot-textarea" id="botSpeechStyle" placeholder="Стиль речи" maxlength="500" oninput="onBotInput(this,'styleCount')"></textarea>
+                        <div class="bot-card-title" data-i18n="styleTitle">Стиль речи</div>
+                        <div class="bot-card-desc" data-i18n="styleDesc">Определите стиль общения ИИ бота с лидами</div>
+                        <textarea class="bot-textarea" id="botSpeechStyle" placeholder="Стиль речи" data-i18n-ph="phStyle" maxlength="500" oninput="onBotInput(this,'styleCount')"></textarea>
                         <div class="bot-char-count" id="styleCount">0/500</div>
                     </div>
                     <div class="bot-card">
-                        <div class="bot-card-title">Важные правила</div>
-                        <div class="bot-card-desc">Укажите правила, которые ИИ бот должен соблюдать при звонках</div>
+                        <div class="bot-card-title" data-i18n="rulesTitle">Важные правила</div>
+                        <div class="bot-card-desc" data-i18n="rulesDesc">Укажите правила, которые ИИ бот должен соблюдать при звонках</div>
                         <div id="rulesList"></div>
                         <button class="add-rule-btn" onclick="addRule()">
                             <svg width="16" height="16" viewBox="0 0 24 24" fill="currentColor"><path d="M19 13h-6v6h-2v-6H5v-2h6V5h2v6h6v2z"/></svg>
-                            Добавить новое правило
+                            <span data-i18n="addRule">Добавить новое правило</span>
                         </button>
                     </div>
                     <div class="bot-card">
-                        <div class="bot-card-title">Аргументы и факты</div>
-                        <div class="bot-card-desc">Укажите ключевые аргументы и факты, которые бот может использовать в разговоре</div>
+                        <div class="bot-card-title" data-i18n="factsTitle">Аргументы и факты</div>
+                        <div class="bot-card-desc" data-i18n="factsDesc">Укажите ключевые аргументы и факты, которые бот может использовать в разговоре</div>
                         <div id="factsList"></div>
                         <button class="add-rule-btn" onclick="addFact()">
                             <svg width="16" height="16" viewBox="0 0 24 24" fill="currentColor"><path d="M19 13h-6v6h-2v-6H5v-2h6V5h2v6h6v2z"/></svg>
-                            Добавить новый факт
+                            <span data-i18n="addFact">Добавить новый факт</span>
                         </button>
                     </div>
                     <div class="bot-card">
-                        <div class="bot-card-title">Критерии передачи лида</div>
-                        <div class="bot-card-desc">Определите условия, при которых бот передаёт лида менеджеру</div>
+                        <div class="bot-card-title" data-i18n="critTitle">Критерии передачи лида</div>
+                        <div class="bot-card-desc" data-i18n="critDesc">Определите условия, при которых бот передаёт лида менеджеру</div>
                         <div id="criteriaList"></div>
                         <button class="add-rule-btn" onclick="addCriterion()">
                             <svg width="16" height="16" viewBox="0 0 24 24" fill="currentColor"><path d="M19 13h-6v6h-2v-6H5v-2h6V5h2v6h6v2z"/></svg>
-                            Добавить новый критерий
+                            <span data-i18n="addCrit">Добавить новый критерий</span>
                         </button>
                     </div>
                 </div>
@@ -1362,127 +1375,127 @@
                     <div class="bot-card">
                         <div style="display:flex;justify-content:space-between;align-items:flex-start;">
                             <div>
-                                <div class="bot-card-title">Начало разговора</div>
-                                <div class="bot-card-desc">Предзаписанные фразы, которые ИИ бот произнесёт в начале звонка</div>
+                                <div class="bot-card-title" data-i18n="greetTitle">Начало разговора</div>
+                                <div class="bot-card-desc" data-i18n="greetDesc">Предзаписанные фразы, которые ИИ бот произнесёт в начале звонка</div>
                             </div>
                             <div class="important-badge">
-                                <span>Важно!</span>
+                                <span data-i18n="important">Важно!</span>
                                 <span class="info-icon" tabindex="0">
                                     <svg width="16" height="16" viewBox="0 0 24 24" fill="currentColor"><path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm1 15h-2v-6h2v6zm0-8h-2V7h2v2z"/></svg>
-                                    <span class="info-tooltip">Эти фразы будут воспроизведены как предзаписанное аудио в начале звонка для максимально естественного звучания</span>
+                                    <span class="info-tooltip" data-i18n="greetTooltip">Эти фразы будут воспроизведены как предзаписанное аудио в начале звонка для максимально естественного звучания</span>
                                 </span>
                             </div>
                         </div>
                         <div id="greetingsList"></div>
                         <button class="add-rule-btn" id="addGreetingBtn" onclick="addGreeting()">
                             <svg width="16" height="16" viewBox="0 0 24 24" fill="currentColor"><path d="M19 13h-6v6h-2v-6H5v-2h6V5h2v6h6v2z"/></svg>
-                            Добавить новый ответ (максимум 5)
+                            <span data-i18n="addGreeting">Добавить новый ответ (максимум 5)</span>
                         </button>
                     </div>
                     <div class="bot-card">
-                        <div class="bot-card-title">План разговора</div>
-                        <div class="bot-card-desc">Определите последовательность тем, которые ИИ бот должен обсудить с лидом</div>
+                        <div class="bot-card-title" data-i18n="planTitle">План разговора</div>
+                        <div class="bot-card-desc" data-i18n="planDesc">Определите последовательность тем, которые ИИ бот должен обсудить с лидом</div>
                         <div id="planItemsList"></div>
                         <button class="add-rule-btn" onclick="addPlanItem()">
                             <svg width="16" height="16" viewBox="0 0 24 24" fill="currentColor"><path d="M19 13h-6v6h-2v-6H5v-2h6V5h2v6h6v2z"/></svg>
-                            Добавить новый пункт
+                            <span data-i18n="addPlan">Добавить новый пункт</span>
                         </button>
                     </div>
                 </div>
                 <!-- Tab: Агенты -->
                 <div class="bot-tab-content" id="tabAgents">
-                    <div class="stub-content">Раздел в разработке</div>
+                    <div class="stub-content" data-i18n="stub">Раздел в разработке</div>
                 </div>
                 <!-- Tab: Инструменты -->
                 <div class="bot-tab-content" id="tabTools">
-                    <div class="stub-content">Раздел в разработке</div>
+                    <div class="stub-content" data-i18n="stub">Раздел в разработке</div>
                 </div>
                 <!-- Tab: База знаний -->
                 <div class="bot-tab-content" id="tabKnowledge">
-                    <div class="stub-content">Раздел в разработке</div>
+                    <div class="stub-content" data-i18n="stub">Раздел в разработке</div>
                 </div>
             </div>
 
             <!-- PAGE: Статистика -->
             <div class="page-section" id="pageStats">
-                <h1>Статистика</h1>
-                <p class="subtitle">Аналитика и отчёты</p>
-                <div class="stub-content">Раздел в разработке</div>
+                <h1 data-i18n="pStatsT">Статистика</h1>
+                <p class="subtitle" data-i18n="pStatsSub">Аналитика и отчёты</p>
+                <div class="stub-content" data-i18n="stub">Раздел в разработке</div>
             </div>
 
             <!-- PAGE: Скиллбейзы -->
             <div class="page-section" id="pageSkills">
-                <h1>Скиллбейзы</h1>
-                <p class="subtitle">Управление базами навыков и сценариями</p>
+                <h1 data-i18n="pSkillsT">Скиллбейзы</h1>
+                <p class="subtitle" data-i18n="pSkillsSub">Управление базами навыков и сценариями</p>
                 <div class="skill-grid">
                     <div class="skill-card">
                         <div class="skill-card-icon" style="background:rgba(108,92,231,0.12);color:#a78bfa;">
                             <svg width="24" height="24" viewBox="0 0 24 24" fill="currentColor"><path d="M20 6h-4V4c0-1.11-.89-2-2-2h-4c-1.11 0-2 .89-2 2v2H4c-1.11 0-2 .89-2 2v11c0 1.11.89 2 2 2h16c1.11 0 2-.89 2-2V8c0-1.11-.89-2-2-2zm-6 0h-4V4h4v2z"/></svg>
                         </div>
-                        <h3>Продажи B2B</h3>
-                        <p>Сценарии холодных звонков для корпоративных клиентов</p>
-                        <span class="skill-card-tag tag-active">Активен</span>
+                        <h3 data-i18n="sk1t">Продажи B2B</h3>
+                        <p data-i18n="sk1d">Сценарии холодных звонков для корпоративных клиентов</p>
+                        <span class="skill-card-tag tag-active" data-i18n="skActive">Активен</span>
                     </div>
                     <div class="skill-card">
                         <div class="skill-card-icon" style="background:rgba(56,189,248,0.12);color:#38bdf8;">
                             <svg width="24" height="24" viewBox="0 0 24 24" fill="currentColor"><path d="M21 12.22C21 6.73 16.74 3 12 3c-4.69 0-9 3.65-9 9.28-.6.34-1 .98-1 1.72v2c0 1.1.9 2 2 2h1v-6.1c0-3.87 3.13-7 7-7s7 3.13 7 7V19h-8v2h8c1.1 0 2-.9 2-2v-1.22c.59-.31 1-.92 1-1.64v-2.3c0-.7-.41-1.31-1-1.62z"/></svg>
                         </div>
-                        <h3>Техподдержка L1</h3>
-                        <p>Базовые сценарии первой линии поддержки</p>
-                        <span class="skill-card-tag tag-active">Активен</span>
+                        <h3 data-i18n="sk2t">Техподдержка L1</h3>
+                        <p data-i18n="sk2d">Базовые сценарии первой линии поддержки</p>
+                        <span class="skill-card-tag tag-active" data-i18n="skActive">Активен</span>
                     </div>
                     <div class="skill-card">
                         <div class="skill-card-icon" style="background:rgba(251,191,36,0.12);color:#fbbf24;">
                             <svg width="24" height="24" viewBox="0 0 24 24" fill="currentColor"><path d="M16 11c1.66 0 2.99-1.34 2.99-3S17.66 5 16 5c-1.66 0-3 1.34-3 3s1.34 3 3 3zm-8 0c1.66 0 2.99-1.34 2.99-3S9.66 5 8 5C6.34 5 5 6.34 5 8s1.34 3 3 3zm0 2c-2.33 0-7 1.17-7 3.5V19h14v-2.5c0-2.33-4.67-3.5-7-3.5zm8 0c-.29 0-.62.02-.97.05 1.16.84 1.97 1.97 1.97 3.45V19h6v-2.5c0-2.33-4.67-3.5-7-3.5z"/></svg>
                         </div>
-                        <h3>Онбординг</h3>
-                        <p>Скрипты для адаптации новых сотрудников</p>
-                        <span class="skill-card-tag tag-draft">Черновик</span>
+                        <h3 data-i18n="sk3t">Онбординг</h3>
+                        <p data-i18n="sk3d">Скрипты для адаптации новых сотрудников</p>
+                        <span class="skill-card-tag tag-draft" data-i18n="skDraft">Черновик</span>
                     </div>
                     <div class="skill-card">
                         <div class="skill-card-icon" style="background:rgba(52,211,153,0.12);color:#34d399;">
                             <svg width="24" height="24" viewBox="0 0 24 24" fill="currentColor"><path d="M19 3H5c-1.1 0-2 .9-2 2v14c0 1.1.9 2 2 2h14c1.1 0 2-.9 2-2V5c0-1.1-.9-2-2-2zm-5 14H7v-2h7v2zm3-4H7v-2h10v2zm0-4H7V7h10v2z"/></svg>
                         </div>
-                        <h3>Опросы NPS</h3>
-                        <p>Сценарии для оценки удовлетворённости клиентов</p>
-                        <span class="skill-card-tag tag-new">Новый</span>
+                        <h3 data-i18n="sk4t">Опросы NPS</h3>
+                        <p data-i18n="sk4d">Сценарии для оценки удовлетворённости клиентов</p>
+                        <span class="skill-card-tag tag-new" data-i18n="skNew">Новый</span>
                     </div>
                 </div>
             </div>
 
             <!-- PAGE: База знаний -->
             <div class="page-section" id="pageKnowledge">
-                <h1>База знаний</h1>
-                <p class="subtitle">Документы и материалы</p>
-                <div class="stub-content">Раздел в разработке</div>
+                <h1 data-i18n="pKbT">База знаний</h1>
+                <p class="subtitle" data-i18n="pKbSub">Документы и материалы</p>
+                <div class="stub-content" data-i18n="stub">Раздел в разработке</div>
             </div>
 
             <!-- PAGE: Колл-листы -->
             <div class="page-section" id="pageCalls">
-                <h1>Колл-листы</h1>
-                <p class="subtitle">Управление списками для обзвона</p>
-                <div class="stub-content">Раздел в разработке</div>
+                <h1 data-i18n="pCallsT">Колл-листы</h1>
+                <p class="subtitle" data-i18n="pCallsSub">Управление списками для обзвона</p>
+                <div class="stub-content" data-i18n="stub">Раздел в разработке</div>
             </div>
 
             <!-- PAGE: История звонков -->
             <div class="page-section" id="pageHistory">
-                <h1>История звонков</h1>
-                <p class="subtitle">Журнал всех звонков</p>
-                <div class="stub-content">Раздел в разработке</div>
+                <h1 data-i18n="pHistT">История звонков</h1>
+                <p class="subtitle" data-i18n="pHistSub">Журнал всех звонков</p>
+                <div class="stub-content" data-i18n="stub">Раздел в разработке</div>
             </div>
 
             <!-- PAGE: Шаблоны -->
             <div class="page-section" id="pageTemplates">
-                <h1>Шаблоны</h1>
-                <p class="subtitle">Готовые сценарии и шаблоны</p>
-                <div class="stub-content">Раздел в разработке</div>
+                <h1 data-i18n="pTplT">Шаблоны</h1>
+                <p class="subtitle" data-i18n="pTplSub">Готовые сценарии и шаблоны</p>
+                <div class="stub-content" data-i18n="stub">Раздел в разработке</div>
             </div>
 
             <!-- PAGE: Настройки -->
             <div class="page-section" id="pageSettings">
-                <h1>Настройки</h1>
-                <p class="subtitle">Параметры системы</p>
-                <div class="stub-content">Раздел в разработке</div>
+                <h1 data-i18n="pSetT">Настройки</h1>
+                <p class="subtitle" data-i18n="pSetSub">Параметры системы</p>
+                <div class="stub-content" data-i18n="stub">Раздел в разработке</div>
             </div>
         </div>
     </div>
@@ -1551,7 +1564,7 @@
             el.classList.add('selected');
             var box = document.getElementById('customNicheBox');
             var btn = document.getElementById('onbNext1');
-            if (el.textContent === 'Другая ниша') {
+            if (el.getAttribute('data-i18n') === 'niche18') {
                 box.style.display = '';
                 document.getElementById('customNicheInput').focus();
                 selectedNiche = null;
@@ -1715,13 +1728,13 @@
 
         function triggerAutoSave() {
             var status = document.getElementById('saveStatus');
-            status.textContent = 'Сохранение...';
+            status.textContent = t('saving');
             status.className = 'save-status saving';
             if (saveTimer) clearTimeout(saveTimer);
             saveTimer = setTimeout(function() {
-                status.textContent = 'Сохранено';
+                status.textContent = t('saved');
                 status.className = 'save-status saved';
-                document.getElementById('lastUpdated').textContent = 'Последнее обновление: только что';
+                document.getElementById('lastUpdated').textContent = t('botUpdated');
             }, 1000);
         }
 
@@ -1800,14 +1813,14 @@
                 div.innerHTML =
                     '<div class="rule-num">' + (idx + 1) + '</div>' +
                     '<div class="rule-body">' +
-                        '<textarea class="rule-input" maxlength="500" placeholder="Введите правило..." oninput="onRuleInput(\'' + rule.id + '\',this)">' + escapeHtml(rule.text) + '</textarea>' +
+                        '<textarea class="rule-input" maxlength="500" placeholder="' + t('phRule') + '" oninput="onRuleInput(\'' + rule.id + '\',this)">' + escapeHtml(rule.text) + '</textarea>' +
                         '<div class="rule-char-count" id="count_' + rule.id + '">' + rule.text.length + '/500</div>' +
                     '</div>' +
                     '<div class="rule-actions">' +
-                        '<button class="rule-action-btn rule-drag" draggable="true" ondragstart="onRuleDragStart(event,\'' + rule.id + '\')" ondragend="onRuleDragEnd(event)" title="Перетащить">' +
+                        '<button class="rule-action-btn rule-drag" draggable="true" ondragstart="onRuleDragStart(event,\'' + rule.id + '\')" ondragend="onRuleDragEnd(event)" title="' + t('tipDrag') + '">' +
                             '<svg viewBox="0 0 24 24"><circle cx="9" cy="5" r="1.5"/><circle cx="15" cy="5" r="1.5"/><circle cx="9" cy="10" r="1.5"/><circle cx="15" cy="10" r="1.5"/><circle cx="9" cy="15" r="1.5"/><circle cx="15" cy="15" r="1.5"/><circle cx="9" cy="20" r="1.5"/><circle cx="15" cy="20" r="1.5"/></svg>' +
                         '</button>' +
-                        '<button class="rule-action-btn" onclick="deleteRule(\'' + rule.id + '\')" title="Удалить">' +
+                        '<button class="rule-action-btn" onclick="deleteRule(\'' + rule.id + '\')" title="' + t('tipDelete') + '">' +
                             '<svg viewBox="0 0 24 24"><path d="M6 19c0 1.1.9 2 2 2h8c1.1 0 2-.9 2-2V7H6v12zM19 4h-3.5l-1-1h-5l-1 1H5v2h14V4z"/></svg>' +
                         '</button>' +
                     '</div>';
@@ -1890,14 +1903,14 @@
                 div.innerHTML =
                     '<div class="rule-num">' + (idx + 1) + '</div>' +
                     '<div class="rule-body">' +
-                        '<textarea class="rule-input" maxlength="500" placeholder="Введите факт или аргумент..." oninput="onFactInput(\'' + item.id + '\',this)">' + escapeHtml(item.text) + '</textarea>' +
+                        '<textarea class="rule-input" maxlength="500" placeholder="' + t('phFact') + '" oninput="onFactInput(\'' + item.id + '\',this)">' + escapeHtml(item.text) + '</textarea>' +
                         '<div class="rule-char-count" id="count_' + item.id + '">' + item.text.length + '/500</div>' +
                     '</div>' +
                     '<div class="rule-actions">' +
-                        '<button class="rule-action-btn rule-drag" draggable="true" ondragstart="onFactDragStart(event,\'' + item.id + '\')" ondragend="onFactDragEnd(event)" title="Перетащить">' +
+                        '<button class="rule-action-btn rule-drag" draggable="true" ondragstart="onFactDragStart(event,\'' + item.id + '\')" ondragend="onFactDragEnd(event)" title="' + t('tipDrag') + '">' +
                             '<svg viewBox="0 0 24 24"><circle cx="9" cy="5" r="1.5"/><circle cx="15" cy="5" r="1.5"/><circle cx="9" cy="10" r="1.5"/><circle cx="15" cy="10" r="1.5"/><circle cx="9" cy="15" r="1.5"/><circle cx="15" cy="15" r="1.5"/><circle cx="9" cy="20" r="1.5"/><circle cx="15" cy="20" r="1.5"/></svg>' +
                         '</button>' +
-                        '<button class="rule-action-btn" onclick="deleteFact(\'' + item.id + '\')" title="Удалить">' +
+                        '<button class="rule-action-btn" onclick="deleteFact(\'' + item.id + '\')" title="' + t('tipDelete') + '">' +
                             '<svg viewBox="0 0 24 24"><path d="M6 19c0 1.1.9 2 2 2h8c1.1 0 2-.9 2-2V7H6v12zM19 4h-3.5l-1-1h-5l-1 1H5v2h14V4z"/></svg>' +
                         '</button>' +
                     '</div>';
@@ -1974,14 +1987,14 @@
                 div.innerHTML =
                     '<div class="rule-num">' + (idx + 1) + '</div>' +
                     '<div class="rule-body">' +
-                        '<textarea class="rule-input" maxlength="500" placeholder="Введите критерий передачи..." oninput="onCriterionInput(\'' + item.id + '\',this)">' + escapeHtml(item.text) + '</textarea>' +
+                        '<textarea class="rule-input" maxlength="500" placeholder="' + t('phCrit') + '" oninput="onCriterionInput(\'' + item.id + '\',this)">' + escapeHtml(item.text) + '</textarea>' +
                         '<div class="rule-char-count" id="count_' + item.id + '">' + item.text.length + '/500</div>' +
                     '</div>' +
                     '<div class="rule-actions">' +
-                        '<button class="rule-action-btn rule-drag" draggable="true" ondragstart="onCritDragStart(event,\'' + item.id + '\')" ondragend="onCritDragEnd(event)" title="Перетащить">' +
+                        '<button class="rule-action-btn rule-drag" draggable="true" ondragstart="onCritDragStart(event,\'' + item.id + '\')" ondragend="onCritDragEnd(event)" title="' + t('tipDrag') + '">' +
                             '<svg viewBox="0 0 24 24"><circle cx="9" cy="5" r="1.5"/><circle cx="15" cy="5" r="1.5"/><circle cx="9" cy="10" r="1.5"/><circle cx="15" cy="10" r="1.5"/><circle cx="9" cy="15" r="1.5"/><circle cx="15" cy="15" r="1.5"/><circle cx="9" cy="20" r="1.5"/><circle cx="15" cy="20" r="1.5"/></svg>' +
                         '</button>' +
-                        '<button class="rule-action-btn" onclick="deleteCriterion(\'' + item.id + '\')" title="Удалить">' +
+                        '<button class="rule-action-btn" onclick="deleteCriterion(\'' + item.id + '\')" title="' + t('tipDelete') + '">' +
                             '<svg viewBox="0 0 24 24"><path d="M6 19c0 1.1.9 2 2 2h8c1.1 0 2-.9 2-2V7H6v12zM19 4h-3.5l-1-1h-5l-1 1H5v2h14V4z"/></svg>' +
                         '</button>' +
                     '</div>';
@@ -2169,7 +2182,7 @@
                 console.error('TTS error:', err);
                 setTtsBtnState(id, 'idle');
                 ttsCurrentId = null;
-                showTtsToast('Не удалось озвучить фразу');
+                showTtsToast(t('ttsFail'));
             });
         }
 
@@ -2181,7 +2194,7 @@
             audio.play().catch(function() {
                 setTtsBtnState(id, 'idle');
                 ttsCurrentId = null;
-                showTtsToast('Не удалось воспроизвести аудио');
+                showTtsToast(t('ttsPlayFail'));
             });
             audio.onended = function() {
                 setTtsBtnState(id, 'idle');
@@ -2192,7 +2205,7 @@
 
         function playBrowserTts(id, text) {
             if (!('speechSynthesis' in window)) {
-                showTtsToast('Браузер не поддерживает озвучку');
+                showTtsToast(t('ttsNoSupport'));
                 return;
             }
             ttsCurrentId = id;
@@ -2241,17 +2254,17 @@
                 div.innerHTML =
                     '<div class="rule-num">' + (idx + 1) + '</div>' +
                     '<div class="rule-body">' +
-                        '<textarea class="rule-input" maxlength="500" placeholder="Введите фразу приветствия..." oninput="onGreetingInput(\'' + item.id + '\',this)">' + escapeHtml(item.text) + '</textarea>' +
+                        '<textarea class="rule-input" maxlength="500" placeholder="' + t('phGreet') + '" oninput="onGreetingInput(\'' + item.id + '\',this)">' + escapeHtml(item.text) + '</textarea>' +
                         '<div class="rule-char-count" id="count_' + item.id + '">' + item.text.length + '/500</div>' +
                     '</div>' +
                     '<div class="rule-actions">' +
-                        '<button class="rule-audio-btn' + disabledClass + '" id="ttsBtn_' + item.id + '" onclick="playGreeting(\'' + item.id + '\')" title="Прослушать">' +
+                        '<button class="rule-audio-btn' + disabledClass + '" id="ttsBtn_' + item.id + '" onclick="playGreeting(\'' + item.id + '\')" title="' + t('tipListen') + '">' +
                             '<svg viewBox="0 0 24 24"><path d="M3 9v6h4l5 5V4L7 9H3zm13.5 3c0-1.77-1.02-3.29-2.5-4.03v8.05c1.48-.73 2.5-2.25 2.5-4.02zM14 3.23v2.06c2.89.86 5 3.54 5 6.71s-2.11 5.85-5 6.71v2.06c4.01-.91 7-4.49 7-8.77s-2.99-7.86-7-8.77z"/></svg>' +
                         '</button>' +
-                        '<button class="rule-action-btn rule-drag" draggable="true" ondragstart="onGreetDragStart(event,\'' + item.id + '\')" ondragend="onGreetDragEnd(event)" title="Перетащить">' +
+                        '<button class="rule-action-btn rule-drag" draggable="true" ondragstart="onGreetDragStart(event,\'' + item.id + '\')" ondragend="onGreetDragEnd(event)" title="' + t('tipDrag') + '">' +
                             '<svg viewBox="0 0 24 24"><circle cx="9" cy="5" r="1.5"/><circle cx="15" cy="5" r="1.5"/><circle cx="9" cy="10" r="1.5"/><circle cx="15" cy="10" r="1.5"/><circle cx="9" cy="15" r="1.5"/><circle cx="15" cy="15" r="1.5"/><circle cx="9" cy="20" r="1.5"/><circle cx="15" cy="20" r="1.5"/></svg>' +
                         '</button>' +
-                        '<button class="rule-action-btn" onclick="deleteGreeting(\'' + item.id + '\')" title="Удалить">' +
+                        '<button class="rule-action-btn" onclick="deleteGreeting(\'' + item.id + '\')" title="' + t('tipDelete') + '">' +
                             '<svg viewBox="0 0 24 24"><path d="M6 19c0 1.1.9 2 2 2h8c1.1 0 2-.9 2-2V7H6v12zM19 4h-3.5l-1-1h-5l-1 1H5v2h14V4z"/></svg>' +
                         '</button>' +
                     '</div>';
@@ -2334,14 +2347,14 @@
                 div.innerHTML =
                     '<div class="rule-num">' + (idx + 1) + '</div>' +
                     '<div class="rule-body">' +
-                        '<textarea class="rule-input" maxlength="500" placeholder="Введите тему для обсуждения..." oninput="onPlanItemInput(\'' + item.id + '\',this)">' + escapeHtml(item.text) + '</textarea>' +
+                        '<textarea class="rule-input" maxlength="500" placeholder="' + t('phPlanItem') + '" oninput="onPlanItemInput(\'' + item.id + '\',this)">' + escapeHtml(item.text) + '</textarea>' +
                         '<div class="rule-char-count" id="count_' + item.id + '">' + item.text.length + '/500</div>' +
                     '</div>' +
                     '<div class="rule-actions">' +
-                        '<button class="rule-action-btn rule-drag" draggable="true" ondragstart="onPlanDragStart(event,\'' + item.id + '\')" ondragend="onPlanDragEnd(event)" title="Перетащить">' +
+                        '<button class="rule-action-btn rule-drag" draggable="true" ondragstart="onPlanDragStart(event,\'' + item.id + '\')" ondragend="onPlanDragEnd(event)" title="' + t('tipDrag') + '">' +
                             '<svg viewBox="0 0 24 24"><circle cx="9" cy="5" r="1.5"/><circle cx="15" cy="5" r="1.5"/><circle cx="9" cy="10" r="1.5"/><circle cx="15" cy="10" r="1.5"/><circle cx="9" cy="15" r="1.5"/><circle cx="15" cy="15" r="1.5"/><circle cx="9" cy="20" r="1.5"/><circle cx="15" cy="20" r="1.5"/></svg>' +
                         '</button>' +
-                        '<button class="rule-action-btn" onclick="deletePlanItem(\'' + item.id + '\')" title="Удалить">' +
+                        '<button class="rule-action-btn" onclick="deletePlanItem(\'' + item.id + '\')" title="' + t('tipDelete') + '">' +
                             '<svg viewBox="0 0 24 24"><path d="M6 19c0 1.1.9 2 2 2h8c1.1 0 2-.9 2-2V7H6v12zM19 4h-3.5l-1-1h-5l-1 1H5v2h14V4z"/></svg>' +
                         '</button>' +
                     '</div>';
@@ -2355,6 +2368,275 @@
         addCriterion();
         addGreeting();
         addPlanItem();
+
+        // ===== i18n =====
+        var currentLang = localStorage.getItem('lang') || 'ru';
+
+        var i18n = {
+            // Landing nav
+            about: { ru:'О нас', en:'About Us' },
+            tech: { ru:'Технология', en:'Technology' },
+            contacts: { ru:'Контакты', en:'Contacts' },
+            login: { ru:'Войти', en:'Sign In' },
+            // Hero
+            heroBadge: { ru:'Платформа нового поколения', en:'Next-Generation Platform' },
+            heroTitle: { ru:'Быстрый и легкий запуск<br>первичного отдела продаж<br>с <span>AI</span>', en:'Fast and Easy Launch<br>of Your Sales Department<br>with <span>AI</span>' },
+            requestAccess: { ru:'Запросить доступ', en:'Request Access' },
+            // Features
+            featLabel: { ru:'Возможности', en:'Capabilities' },
+            featTitle: { ru:'Комплексное решение', en:'Complete Solution' },
+            f1t: { ru:'AI-телемаркетолог', en:'AI Telemarketer' },
+            f1d: { ru:'Интеллектуальный помощник для автоматизации обзвона. Работает 24/7, не устает, не ошибается и адаптируется под каждого клиента.', en:'Intelligent assistant for automating outbound calls. Works 24/7, never gets tired, never makes mistakes, and adapts to each customer.' },
+            f2t: { ru:'Интегрированная телефония', en:'Integrated Telephony' },
+            f2d: { ru:'Надежные поставщики телефонии для бесперебойной связи.', en:'Reliable telephony providers for uninterrupted communication.' },
+            f3t: { ru:'Актуальные базы данных', en:'Up-to-Date Databases' },
+            f3d: { ru:'Сформируем за вас базу для звонков и позвоним ей', en:'We\'ll build a call list for you and make calls to it' },
+            f4t: { ru:'CRM-интеграции', en:'CRM Integrations' },
+            f4d: { ru:'Бесшовная синхронизация с вашими CRM-системами.', en:'Seamless synchronization with your CRM systems.' },
+            f5t: { ru:'Готовые шаблоны', en:'Ready-Made Templates' },
+            f5d: { ru:'Настраиваемые шаблоны под различные ниши для быстрого старта.', en:'Customizable templates for various niches for a quick start.' },
+            f6t: { ru:'Быстрая настройка', en:'Quick Setup' },
+            f6d: { ru:'Запуск кампании за 2-5 минут.', en:'Launch a campaign in 2-5 minutes.' },
+            f7t: { ru:'Быстрый лид', en:'Quick Lead' },
+            f7d: { ru:'Выбирай шаблон, настраивай звонок и получай тёплые лиды уже на следующий день.', en:'Choose a template, configure the call, and get warm leads the next day.' },
+            // Steps
+            stepsLabel: { ru:'Процесс', en:'Process' },
+            stepsTitle: { ru:'Как это работает?', en:'How It Works?' },
+            stepsDesc: { ru:'От идеи до лида в 4 шага', en:'From Idea to Lead in 4 Steps' },
+            s1t: { ru:'Регистрация', en:'Registration' },
+            s1d: { ru:'Создайте аккаунт за 30 секунд', en:'Create an account in 30 seconds' },
+            s2t: { ru:'Выбор ниши', en:'Choose Your Niche' },
+            s2d: { ru:'Укажите вашу сферу бизнеса', en:'Specify your business field' },
+            s3t: { ru:'Настройка цели', en:'Goal Setup' },
+            s3d: { ru:'Определите параметры кампании', en:'Define campaign parameters' },
+            s4t: { ru:'Начать звонки', en:'Start Calls' },
+            s4d: { ru:'AI начнет привлекать клиентов', en:'AI will start attracting customers' },
+            // Access modal
+            accessTitle: { ru:'Запросить доступ', en:'Request Access' },
+            accessSub: { ru:'Заполните данные и мы свяжемся с вами', en:'Fill in the details and we\'ll contact you' },
+            innLabel: { ru:'ИНН компании', en:'Company TIN' },
+            fioLabel: { ru:'ФИО', en:'Full Name' },
+            phoneLabel: { ru:'Номер телефона', en:'Phone Number' },
+            getAccess: { ru:'Получить доступ', en:'Get Access' },
+            accessOk: { ru:'Заявка отправлена!', en:'Application Submitted!' },
+            accessOkDesc: { ru:'Мы свяжемся с вами<br>в течение 15 минут', en:'We\'ll contact you<br>within 15 minutes' },
+            // Login modal
+            loginTitle: { ru:'Вход', en:'Sign In' },
+            loginSub: { ru:'Введите логин и пароль', en:'Enter username and password' },
+            loginLabel: { ru:'Логин', en:'Username' },
+            passLabel: { ru:'Пароль', en:'Password' },
+            loginBtn: { ru:'Войти', en:'Sign In' },
+            loginErr: { ru:'Неверный логин или пароль', en:'Invalid username or password' },
+            orText: { ru:'или', en:'or' },
+            googleBtn: { ru:'Войти через Google', en:'Sign in with Google' },
+            // Onboarding step 1
+            onb1title: { ru:'Выберите вашу нишу', en:'Choose Your Niche' },
+            onb1sub: { ru:'Это поможет настроить платформу под ваш бизнес', en:'This will help configure the platform for your business' },
+            next: { ru:'Далее', en:'Next' },
+            back: { ru:'Назад', en:'Back' },
+            niche1: { ru:'Финансы', en:'Finance' },
+            niche2: { ru:'Найм персонала и HR', en:'Recruitment & HR' },
+            niche3: { ru:'Образование и онлайн-школы', en:'Education & Online Schools' },
+            niche4: { ru:'Недвижимость', en:'Real Estate' },
+            niche5: { ru:'Медицинские организации', en:'Medical Organizations' },
+            niche6: { ru:'Сфера красоты', en:'Beauty Services' },
+            niche7: { ru:'Юридические услуги', en:'Legal Services' },
+            niche8: { ru:'Организация мероприятий', en:'Event Planning' },
+            niche9: { ru:'Спортивные учреждения', en:'Sports Facilities' },
+            niche10: { ru:'B2B решения', en:'B2B Solutions' },
+            niche11: { ru:'Арбитраж', en:'Arbitrage' },
+            niche12: { ru:'Логистическая компания', en:'Logistics Company' },
+            niche13: { ru:'Работа с должниками', en:'Debt Collection' },
+            niche14: { ru:'ЖКХ и управляющие компании', en:'Housing & Utilities' },
+            niche15: { ru:'Интернет-магазин', en:'Online Store' },
+            niche16: { ru:'Страховые компании', en:'Insurance Companies' },
+            niche17: { ru:'Туризм', en:'Tourism' },
+            niche18: { ru:'Другая ниша', en:'Other Niche' },
+            // Onboarding step 2
+            onb2title: { ru:'Целевая аудитория', en:'Target Audience' },
+            onb2sub: { ru:'Помогите нам понять ваших клиентов', en:'Help us understand your customers' },
+            onb2sitesLabel: { ru:'Укажите от 3 до 10 сайтов конкурентов или смежных компаний', en:'Specify 3 to 10 competitor or related company websites' },
+            onb2clientLabel: { ru:'Опишите вашего идеального клиента', en:'Describe your ideal customer' },
+            onb2hint: { ru:'Каждый сайт с новой строки', en:'One website per line' },
+            onb2tagsLabel: { ru:'Быстрые теги — нажмите или перетащите в описание:', en:'Quick tags — click or drag into the description:' },
+            tag1: { ru:'Владелец бизнеса', en:'Business Owner' },
+            tag2: { ru:'ЛПР', en:'Decision Maker' },
+            tag3: { ru:'B2B клиент', en:'B2B Client' },
+            tag4: { ru:'Малый бизнес', en:'Small Business' },
+            tag5: { ru:'Средний бизнес', en:'Medium Business' },
+            tag6: { ru:'Крупный бизнес', en:'Large Business' },
+            tag7: { ru:'Физическое лицо', en:'Individual' },
+            tag8: { ru:'25-35 лет', en:'25-35 y.o.' },
+            tag9: { ru:'35-50 лет', en:'35-50 y.o.' },
+            tag10: { ru:'50+ лет', en:'50+ y.o.' },
+            tag11: { ru:'Высокий доход', en:'High Income' },
+            tag12: { ru:'Средний доход', en:'Medium Income' },
+            tag13: { ru:'Ищет подрядчика', en:'Looking for Contractor' },
+            tag14: { ru:'Хочет сэкономить', en:'Wants to Save' },
+            tag15: { ru:'Нужно быстро', en:'Needs it Fast' },
+            tag16: { ru:'Регион: Москва', en:'Region: Moscow' },
+            tag17: { ru:'Регион: вся РФ', en:'Region: All Russia' },
+            tag18: { ru:'Новый клиент', en:'New Customer' },
+            // Onboarding step 3
+            onb3title: { ru:'О вашей компании', en:'About Your Company' },
+            onb3sub: { ru:'Мы уже обучаем AI на ваши продажи — чтобы он знал о вас всё, заполните эту информацию', en:'We\'re already training AI on your sales — fill in this info so it knows everything about you' },
+            onb3name: { ru:'Короткое название компании', en:'Short Company Name' },
+            onb3loc: { ru:'Где находится компания', en:'Company Location' },
+            onb3site: { ru:'Ссылка на сайт', en:'Website URL' },
+            onb3prod: { ru:'Какой основной продукт / услуга', en:'Main Product / Service' },
+            onb3utp: { ru:'УТП (уникальное торговое предложение)', en:'USP (Unique Selling Proposition)' },
+            onb3info: { ru:'Всё, что нам нужно знать о вашей компании', en:'Everything we need to know about your company' },
+            fillLater: { ru:'Заполнить потом', en:'Fill Later' },
+            // Dashboard
+            menu: { ru:'Меню', en:'Menu' },
+            dashboard: { ru:'Панель управления', en:'Dashboard' },
+            logout: { ru:'Выйти', en:'Logout' },
+            navMain: { ru:'Главное', en:'Main' },
+            navStats: { ru:'Статистика', en:'Statistics' },
+            navSkills: { ru:'Скиллбейзы', en:'Skill Bases' },
+            navKb: { ru:'База знаний', en:'Knowledge Base' },
+            navCalls: { ru:'Колл-листы', en:'Call Lists' },
+            navHistory: { ru:'История звонков', en:'Call History' },
+            navTemplates: { ru:'Шаблоны', en:'Templates' },
+            navSettings: { ru:'Настройки', en:'Settings' },
+            // Page stubs
+            pStatsT: { ru:'Статистика', en:'Statistics' },
+            pStatsSub: { ru:'Аналитика и отчёты', en:'Analytics and Reports' },
+            pSkillsT: { ru:'Скиллбейзы', en:'Skill Bases' },
+            pSkillsSub: { ru:'Управление базами навыков и сценариями', en:'Manage skill bases and scenarios' },
+            pKbT: { ru:'База знаний', en:'Knowledge Base' },
+            pKbSub: { ru:'Документы и материалы', en:'Documents and Materials' },
+            pCallsT: { ru:'Колл-листы', en:'Call Lists' },
+            pCallsSub: { ru:'Управление списками для обзвона', en:'Manage call lists' },
+            pHistT: { ru:'История звонков', en:'Call History' },
+            pHistSub: { ru:'Журнал всех звонков', en:'Log of all calls' },
+            pTplT: { ru:'Шаблоны', en:'Templates' },
+            pTplSub: { ru:'Готовые сценарии и шаблоны', en:'Ready-made scripts and templates' },
+            pSetT: { ru:'Настройки', en:'Settings' },
+            pSetSub: { ru:'Параметры системы', en:'System Settings' },
+            stub: { ru:'Раздел в разработке', en:'Section under development' },
+            // Skill cards
+            sk1t: { ru:'Продажи B2B', en:'B2B Sales' },
+            sk1d: { ru:'Сценарии холодных звонков для корпоративных клиентов', en:'Cold calling scripts for corporate clients' },
+            sk2t: { ru:'Техподдержка L1', en:'Tech Support L1' },
+            sk2d: { ru:'Базовые сценарии первой линии поддержки', en:'Basic first-line support scripts' },
+            sk3t: { ru:'Онбординг', en:'Onboarding' },
+            sk3d: { ru:'Скрипты для адаптации новых сотрудников', en:'Scripts for onboarding new employees' },
+            sk4t: { ru:'Опросы NPS', en:'NPS Surveys' },
+            sk4d: { ru:'Сценарии для оценки удовлетворённости клиентов', en:'Scripts for measuring customer satisfaction' },
+            skActive: { ru:'Активен', en:'Active' },
+            skDraft: { ru:'Черновик', en:'Draft' },
+            skNew: { ru:'Новый', en:'New' },
+            // Bot config
+            botUpdated: { ru:'Последнее обновление: только что', en:'Last updated: just now' },
+            saved: { ru:'Сохранено', en:'Saved' },
+            saving: { ru:'Сохранение...', en:'Saving...' },
+            tabContext: { ru:'Контекст', en:'Context' },
+            tabPlan: { ru:'План разговора', en:'Conversation Plan' },
+            tabAgents: { ru:'Агенты', en:'Agents' },
+            tabTools: { ru:'Инструменты', en:'Tools' },
+            tabKb: { ru:'База знаний', en:'Knowledge Base' },
+            tabBadge: { ru:'Есть новое!', en:'New!' },
+            roleTitle: { ru:'Роль продавца', en:'Seller Role' },
+            roleDesc: { ru:'Опишите роль, которую будет играть ИИ бот при звонках лидам', en:'Describe the role the AI bot will play when calling leads' },
+            styleTitle: { ru:'Стиль речи', en:'Speech Style' },
+            styleDesc: { ru:'Определите стиль общения ИИ бота с лидами', en:'Define the AI bot\'s communication style with leads' },
+            rulesTitle: { ru:'Важные правила', en:'Important Rules' },
+            rulesDesc: { ru:'Укажите правила, которые ИИ бот должен соблюдать при звонках', en:'Specify rules the AI bot must follow during calls' },
+            factsTitle: { ru:'Аргументы и факты', en:'Arguments and Facts' },
+            factsDesc: { ru:'Укажите ключевые аргументы и факты, которые бот может использовать в разговоре', en:'Specify key arguments and facts the bot can use in conversation' },
+            critTitle: { ru:'Критерии передачи лида', en:'Lead Transfer Criteria' },
+            critDesc: { ru:'Определите условия, при которых бот передаёт лида менеджеру', en:'Define conditions for transferring a lead to a manager' },
+            addRule: { ru:'Добавить новое правило', en:'Add new rule' },
+            addFact: { ru:'Добавить новый факт', en:'Add new fact' },
+            addCrit: { ru:'Добавить новый критерий', en:'Add new criterion' },
+            greetTitle: { ru:'Начало разговора', en:'Conversation Start' },
+            greetDesc: { ru:'Предзаписанные фразы, которые ИИ бот произнесёт в начале звонка', en:'Pre-recorded phrases the AI bot will say at the start of the call' },
+            important: { ru:'Важно!', en:'Important!' },
+            greetTooltip: { ru:'Эти фразы будут воспроизведены как предзаписанное аудио в начале звонка для максимально естественного звучания', en:'These phrases will be played as pre-recorded audio at the start of the call for maximum natural sound' },
+            addGreeting: { ru:'Добавить новый ответ (максимум 5)', en:'Add new answer (max 5)' },
+            planTitle: { ru:'План разговора', en:'Conversation Plan' },
+            planDesc: { ru:'Определите последовательность тем, которые ИИ бот должен обсудить с лидом', en:'Define the sequence of topics the AI bot should discuss with a lead' },
+            addPlan: { ru:'Добавить новый пункт', en:'Add new item' },
+            // Tooltips
+            tipDrag: { ru:'Перетащить', en:'Drag' },
+            tipDelete: { ru:'Удалить', en:'Delete' },
+            tipListen: { ru:'Прослушать', en:'Listen' },
+            // Placeholders
+            phRule: { ru:'Введите правило...', en:'Enter rule...' },
+            phFact: { ru:'Введите факт или аргумент...', en:'Enter fact or argument...' },
+            phCrit: { ru:'Введите критерий передачи...', en:'Enter transfer criterion...' },
+            phGreet: { ru:'Введите фразу приветствия...', en:'Enter greeting phrase...' },
+            phPlanItem: { ru:'Введите тему для обсуждения...', en:'Enter discussion topic...' },
+            phRole: { ru:'Роль продавца', en:'Seller Role' },
+            phStyle: { ru:'Стиль речи', en:'Speech Style' },
+            phNiche: { ru:'Введите название вашей ниши...', en:'Enter your niche name...' },
+            phInn: { ru:'10 или 12 цифр', en:'10 or 12 digits' },
+            phFio: { ru:'Иванов Иван Иванович', en:'John Smith' },
+            phPhone: { ru:'+7 (999) 123-45-67', en:'+1 (555) 123-4567' },
+            phLogin: { ru:'Введите логин', en:'Enter username' },
+            phPass: { ru:'Введите пароль', en:'Enter password' },
+            phSites: { ru:'Например:\ncompetitor1.ru\ncompetitor2.com\nsimilar-company.ru', en:'Example:\ncompetitor1.com\ncompetitor2.com\nsimilar-company.com' },
+            phClient: { ru:'Например: владелец малого бизнеса, 30-50 лет, ищет способы увеличить продажи...', en:'Example: small business owner, 30-50 years old, looking for ways to increase sales...' },
+            phCompName: { ru:'Например: СтройМастер', en:'Example: BuildMaster' },
+            phCompLoc: { ru:'Например: Москва, Россия', en:'Example: New York, USA' },
+            phCompSite: { ru:'Например: company.ru', en:'Example: company.com' },
+            phCompProd: { ru:'Например: строительство загородных домов', en:'Example: construction of country houses' },
+            phCompUtp: { ru:'Например: строим дом за 30 дней или вернём деньги', en:'Example: build a house in 30 days or money back' },
+            phCompInfo: { ru:'Расскажите о компании всё что считаете важным: история, ценности, преимущества, особенности работы, целевая аудитория...', en:'Tell us everything important: history, values, advantages, specifics, target audience...' },
+            // Toasts
+            ttsFail: { ru:'Не удалось озвучить фразу', en:'Failed to vocalize phrase' },
+            ttsPlayFail: { ru:'Не удалось воспроизвести аудио', en:'Failed to play audio' },
+            ttsNoSupport: { ru:'Браузер не поддерживает озвучку', en:'Browser does not support text-to-speech' },
+            // Validation
+            valInn: { ru:'ИНН должен содержать 10 или 12 цифр', en:'TIN must contain 10 or 12 digits' },
+            valName: { ru:'Укажите имя (только буквы)', en:'Enter name (letters only)' },
+            valPhone: { ru:'Введите корректный номер телефона', en:'Enter a valid phone number' },
+        };
+
+        function t(key) {
+            var entry = i18n[key];
+            if (!entry) return key;
+            return entry[currentLang] || entry.ru;
+        }
+
+        function switchLang() {
+            currentLang = currentLang === 'ru' ? 'en' : 'ru';
+            localStorage.setItem('lang', currentLang);
+            applyLang();
+        }
+
+        function applyLang() {
+            var label = currentLang === 'ru' ? 'EN' : 'RU';
+            document.getElementById('landLangBtn').textContent = label;
+            document.getElementById('sidebarLangBtn').textContent = label;
+
+            // data-i18n text
+            document.querySelectorAll('[data-i18n]').forEach(function(el) {
+                var key = el.getAttribute('data-i18n');
+                if (i18n[key]) el.textContent = i18n[key][currentLang];
+            });
+            // data-i18n-html (innerHTML)
+            document.querySelectorAll('[data-i18n-html]').forEach(function(el) {
+                var key = el.getAttribute('data-i18n-html');
+                if (i18n[key]) el.innerHTML = i18n[key][currentLang];
+            });
+            // data-i18n-ph (placeholder)
+            document.querySelectorAll('[data-i18n-ph]').forEach(function(el) {
+                var key = el.getAttribute('data-i18n-ph');
+                if (i18n[key]) el.placeholder = i18n[key][currentLang];
+            });
+
+            // Re-render dynamic lists with correct placeholders
+            renderRules();
+            renderFacts();
+            renderCriteria();
+            renderGreetings();
+            renderPlanItems();
+        }
+
+        // Apply saved language on load
+        if (currentLang === 'en') applyLang();
 
         function toggleTheme() {
             document.body.classList.toggle('light');
@@ -2427,13 +2709,13 @@
             const phoneOk = validatePhone(phone);
 
             // Live hints
-            if (inn && !innOk) { showHint('hintInn', 'ИНН должен содержать 10 или 12 цифр'); }
+            if (inn && !innOk) { showHint('hintInn', t('valInn')); }
             else { hideHint('hintInn'); }
 
-            if (name && !nameOk) { showHint('hintName', 'Укажите имя (только буквы)'); }
+            if (name && !nameOk) { showHint('hintName', t('valName')); }
             else { hideHint('hintName'); }
 
-            if (phone && !phoneOk) { showHint('hintPhone', 'Введите корректный номер телефона'); }
+            if (phone && !phoneOk) { showHint('hintPhone', t('valPhone')); }
             else { hideHint('hintPhone'); }
 
             // Inputs error styling
