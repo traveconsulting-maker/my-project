@@ -1282,6 +1282,24 @@
                             Добавить новое правило
                         </button>
                     </div>
+                    <div class="bot-card">
+                        <div class="bot-card-title">Аргументы и факты</div>
+                        <div class="bot-card-desc">Укажите ключевые аргументы и факты, которые бот может использовать в разговоре</div>
+                        <div id="factsList"></div>
+                        <button class="add-rule-btn" onclick="addFact()">
+                            <svg width="16" height="16" viewBox="0 0 24 24" fill="currentColor"><path d="M19 13h-6v6h-2v-6H5v-2h6V5h2v6h6v2z"/></svg>
+                            Добавить новый факт
+                        </button>
+                    </div>
+                    <div class="bot-card">
+                        <div class="bot-card-title">Критерии передачи лида</div>
+                        <div class="bot-card-desc">Определите условия, при которых бот передаёт лида менеджеру</div>
+                        <div id="criteriaList"></div>
+                        <button class="add-rule-btn" onclick="addCriterion()">
+                            <svg width="16" height="16" viewBox="0 0 24 24" fill="currentColor"><path d="M19 13h-6v6h-2v-6H5v-2h6V5h2v6h6v2z"/></svg>
+                            Добавить новый критерий
+                        </button>
+                    </div>
                 </div>
 
                 <!-- Tab: План разговора -->
@@ -1718,8 +1736,178 @@
             return div.innerHTML;
         }
 
-        // Init with one empty rule
+        // ===== FACTS =====
+        var botFacts = [];
+        var factIdCounter = 0;
+
+        function addFact() {
+            factIdCounter++;
+            botFacts.push({ id: 'fact_' + factIdCounter, text: '' });
+            renderFacts();
+            triggerAutoSave();
+        }
+
+        function deleteFact(id) {
+            botFacts = botFacts.filter(function(r) { return r.id !== id; });
+            renderFacts();
+            triggerAutoSave();
+        }
+
+        function onFactInput(id, textarea) {
+            for (var i = 0; i < botFacts.length; i++) {
+                if (botFacts[i].id === id) { botFacts[i].text = textarea.value; break; }
+            }
+            var countEl = document.getElementById('count_' + id);
+            if (countEl) countEl.textContent = textarea.value.length + '/500';
+            triggerAutoSave();
+        }
+
+        var dragFactId = null;
+
+        function onFactDragStart(e, id) {
+            dragFactId = id;
+            e.currentTarget.closest('.rule-item').classList.add('dragging');
+            e.dataTransfer.effectAllowed = 'move';
+        }
+        function onFactDragEnd(e) {
+            dragFactId = null;
+            document.querySelectorAll('#factsList .rule-item').forEach(function(r) {
+                r.classList.remove('dragging'); r.classList.remove('drag-over');
+            });
+        }
+        function onFactDragOver(e, id) {
+            e.preventDefault();
+            if (dragFactId && dragFactId !== id) e.currentTarget.classList.add('drag-over');
+        }
+        function onFactDragLeave(e) { e.currentTarget.classList.remove('drag-over'); }
+        function onFactDrop(e, targetId) {
+            e.preventDefault();
+            e.currentTarget.classList.remove('drag-over');
+            if (!dragFactId || dragFactId === targetId) return;
+            var fromIdx = botFacts.findIndex(function(r) { return r.id === dragFactId; });
+            var toIdx = botFacts.findIndex(function(r) { return r.id === targetId; });
+            if (fromIdx === -1 || toIdx === -1) return;
+            var moved = botFacts.splice(fromIdx, 1)[0];
+            botFacts.splice(toIdx, 0, moved);
+            renderFacts();
+            triggerAutoSave();
+        }
+
+        function renderFacts() {
+            var list = document.getElementById('factsList');
+            list.innerHTML = '';
+            botFacts.forEach(function(item, idx) {
+                var div = document.createElement('div');
+                div.className = 'rule-item';
+                div.ondragover = function(e) { onFactDragOver(e, item.id); };
+                div.ondragleave = onFactDragLeave;
+                div.ondrop = function(e) { onFactDrop(e, item.id); };
+                div.innerHTML =
+                    '<div class="rule-num">' + (idx + 1) + '</div>' +
+                    '<div class="rule-body">' +
+                        '<textarea class="rule-input" maxlength="500" placeholder="Введите факт или аргумент..." oninput="onFactInput(\'' + item.id + '\',this)">' + escapeHtml(item.text) + '</textarea>' +
+                        '<div class="rule-char-count" id="count_' + item.id + '">' + item.text.length + '/500</div>' +
+                    '</div>' +
+                    '<div class="rule-actions">' +
+                        '<button class="rule-action-btn rule-drag" draggable="true" ondragstart="onFactDragStart(event,\'' + item.id + '\')" ondragend="onFactDragEnd(event)" title="Перетащить">' +
+                            '<svg viewBox="0 0 24 24"><circle cx="9" cy="5" r="1.5"/><circle cx="15" cy="5" r="1.5"/><circle cx="9" cy="10" r="1.5"/><circle cx="15" cy="10" r="1.5"/><circle cx="9" cy="15" r="1.5"/><circle cx="15" cy="15" r="1.5"/><circle cx="9" cy="20" r="1.5"/><circle cx="15" cy="20" r="1.5"/></svg>' +
+                        '</button>' +
+                        '<button class="rule-action-btn" onclick="deleteFact(\'' + item.id + '\')" title="Удалить">' +
+                            '<svg viewBox="0 0 24 24"><path d="M6 19c0 1.1.9 2 2 2h8c1.1 0 2-.9 2-2V7H6v12zM19 4h-3.5l-1-1h-5l-1 1H5v2h14V4z"/></svg>' +
+                        '</button>' +
+                    '</div>';
+                list.appendChild(div);
+            });
+        }
+
+        // ===== CRITERIA =====
+        var botCriteria = [];
+        var criterionIdCounter = 0;
+
+        function addCriterion() {
+            criterionIdCounter++;
+            botCriteria.push({ id: 'crit_' + criterionIdCounter, text: '' });
+            renderCriteria();
+            triggerAutoSave();
+        }
+
+        function deleteCriterion(id) {
+            botCriteria = botCriteria.filter(function(r) { return r.id !== id; });
+            renderCriteria();
+            triggerAutoSave();
+        }
+
+        function onCriterionInput(id, textarea) {
+            for (var i = 0; i < botCriteria.length; i++) {
+                if (botCriteria[i].id === id) { botCriteria[i].text = textarea.value; break; }
+            }
+            var countEl = document.getElementById('count_' + id);
+            if (countEl) countEl.textContent = textarea.value.length + '/500';
+            triggerAutoSave();
+        }
+
+        var dragCritId = null;
+
+        function onCritDragStart(e, id) {
+            dragCritId = id;
+            e.currentTarget.closest('.rule-item').classList.add('dragging');
+            e.dataTransfer.effectAllowed = 'move';
+        }
+        function onCritDragEnd(e) {
+            dragCritId = null;
+            document.querySelectorAll('#criteriaList .rule-item').forEach(function(r) {
+                r.classList.remove('dragging'); r.classList.remove('drag-over');
+            });
+        }
+        function onCritDragOver(e, id) {
+            e.preventDefault();
+            if (dragCritId && dragCritId !== id) e.currentTarget.classList.add('drag-over');
+        }
+        function onCritDragLeave(e) { e.currentTarget.classList.remove('drag-over'); }
+        function onCritDrop(e, targetId) {
+            e.preventDefault();
+            e.currentTarget.classList.remove('drag-over');
+            if (!dragCritId || dragCritId === targetId) return;
+            var fromIdx = botCriteria.findIndex(function(r) { return r.id === dragCritId; });
+            var toIdx = botCriteria.findIndex(function(r) { return r.id === targetId; });
+            if (fromIdx === -1 || toIdx === -1) return;
+            var moved = botCriteria.splice(fromIdx, 1)[0];
+            botCriteria.splice(toIdx, 0, moved);
+            renderCriteria();
+            triggerAutoSave();
+        }
+
+        function renderCriteria() {
+            var list = document.getElementById('criteriaList');
+            list.innerHTML = '';
+            botCriteria.forEach(function(item, idx) {
+                var div = document.createElement('div');
+                div.className = 'rule-item';
+                div.ondragover = function(e) { onCritDragOver(e, item.id); };
+                div.ondragleave = onCritDragLeave;
+                div.ondrop = function(e) { onCritDrop(e, item.id); };
+                div.innerHTML =
+                    '<div class="rule-num">' + (idx + 1) + '</div>' +
+                    '<div class="rule-body">' +
+                        '<textarea class="rule-input" maxlength="500" placeholder="Введите критерий передачи..." oninput="onCriterionInput(\'' + item.id + '\',this)">' + escapeHtml(item.text) + '</textarea>' +
+                        '<div class="rule-char-count" id="count_' + item.id + '">' + item.text.length + '/500</div>' +
+                    '</div>' +
+                    '<div class="rule-actions">' +
+                        '<button class="rule-action-btn rule-drag" draggable="true" ondragstart="onCritDragStart(event,\'' + item.id + '\')" ondragend="onCritDragEnd(event)" title="Перетащить">' +
+                            '<svg viewBox="0 0 24 24"><circle cx="9" cy="5" r="1.5"/><circle cx="15" cy="5" r="1.5"/><circle cx="9" cy="10" r="1.5"/><circle cx="15" cy="10" r="1.5"/><circle cx="9" cy="15" r="1.5"/><circle cx="15" cy="15" r="1.5"/><circle cx="9" cy="20" r="1.5"/><circle cx="15" cy="20" r="1.5"/></svg>' +
+                        '</button>' +
+                        '<button class="rule-action-btn" onclick="deleteCriterion(\'' + item.id + '\')" title="Удалить">' +
+                            '<svg viewBox="0 0 24 24"><path d="M6 19c0 1.1.9 2 2 2h8c1.1 0 2-.9 2-2V7H6v12zM19 4h-3.5l-1-1h-5l-1 1H5v2h14V4z"/></svg>' +
+                        '</button>' +
+                    '</div>';
+                list.appendChild(div);
+            });
+        }
+
+        // Init with one empty item each
         addRule();
+        addFact();
+        addCriterion();
 
         function toggleTheme() {
             document.body.classList.toggle('light');
