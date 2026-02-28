@@ -307,6 +307,48 @@
             margin: 0 auto 32px; line-height: 1.7; transition: color 0.4s;
         }
 
+        /* Access submit btn states */
+        .access-submit {
+            width: 100%; padding: 16px; margin-top: 8px;
+            background: rgba(108,92,231,0.2); color: rgba(255,255,255,0.3);
+            border: none; border-radius: 14px; font-family: inherit;
+            font-size: 15px; font-weight: 700; cursor: not-allowed;
+            transition: all 0.4s cubic-bezier(0.16,1,0.3,1);
+        }
+        .access-submit.active {
+            background: linear-gradient(135deg, #6c5ce7, #a855f7);
+            color: #fff; cursor: pointer;
+            box-shadow: 0 6px 24px rgba(108,92,231,0.3);
+        }
+        .access-submit.active:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 10px 32px rgba(108,92,231,0.45);
+        }
+        body.light .access-submit {
+            background: rgba(108,92,231,0.08); color: rgba(0,0,0,0.25);
+        }
+        body.light .access-submit.active {
+            background: linear-gradient(135deg, #6c5ce7, #a855f7); color: #fff;
+        }
+
+        .access-success {
+            display: none; flex-direction: column; align-items: center; gap: 16px; padding: 20px 0;
+        }
+        .access-success.show { display: flex; }
+        .access-success-icon {
+            width: 72px; height: 72px; border-radius: 50%;
+            background: rgba(52,211,153,0.12);
+            display: flex; align-items: center; justify-content: center;
+        }
+        .access-success-icon svg { width: 36px; height: 36px; fill: #34d399; }
+        .access-success h3 { font-size: 22px; font-weight: 700; color: var(--text); }
+        .access-success p { font-size: 14px; color: var(--text-muted); line-height: 1.6; text-align: center; }
+
+        .field-hint {
+            font-size: 12px; color: #f87171; margin-top: 6px; display: none;
+        }
+        .field-hint.show { display: block; }
+
         /* Footer */
         .land-footer {
             padding: 40px; text-align: center;
@@ -535,7 +577,7 @@
                 Платформа нового поколения
             </div>
             <h1>Быстрый и легкий запуск<br>первичного отдела продаж<br>с <span>AI</span></h1>
-            <button class="hero-cta" onclick="openModal()">
+            <button class="hero-cta" onclick="openAccessModal()">
                 Запросить доступ
                 <svg viewBox="0 0 24 24"><path d="M12 4l-1.41 1.41L16.17 11H4v2h12.17l-5.58 5.59L12 20l8-8-8-8z"/></svg>
             </button>
@@ -625,6 +667,46 @@
 
 
         <div class="land-footer">AI Sales Platform &copy; 2026</div>
+    </div>
+
+    <!-- ===== ACCESS MODAL ===== -->
+    <div class="modal-overlay" id="accessModal" onclick="closeAccessOnOverlay(event)">
+        <div class="modal">
+            <button class="modal-close" onclick="closeAccessModal()">&times;</button>
+
+            <div id="accessForm">
+                <div class="modal-title">Запросить доступ</div>
+                <div class="modal-subtitle">Заполните данные и мы свяжемся с вами</div>
+
+                <div class="form-group">
+                    <label>ИНН компании</label>
+                    <input type="text" id="accInn" placeholder="10 или 12 цифр" oninput="checkAccessForm()">
+                    <div class="field-hint" id="hintInn">Заполните ИНН компании</div>
+                </div>
+                <div class="form-group">
+                    <label>ФИО</label>
+                    <input type="text" id="accName" placeholder="Иванов Иван Иванович" oninput="checkAccessForm()">
+                    <div class="field-hint" id="hintName">Укажите ваше ФИО</div>
+                </div>
+                <div class="form-group">
+                    <label>Номер телефона</label>
+                    <input type="tel" id="accPhone" placeholder="+7 (999) 123-45-67" oninput="checkAccessForm()">
+                    <div class="field-hint" id="hintPhone">Укажите номер телефона</div>
+                </div>
+
+                <button class="access-submit" id="accessSubmitBtn" onclick="submitAccess()">
+                    Получить доступ
+                </button>
+            </div>
+
+            <div class="access-success" id="accessSuccess">
+                <div class="access-success-icon">
+                    <svg viewBox="0 0 24 24"><path d="M9 16.17L4.83 12l-1.42 1.41L9 19 21 7l-1.41-1.41L9 16.17z"/></svg>
+                </div>
+                <h3>Заявка отправлена!</h3>
+                <p>Мы свяжемся с вами<br>в течение 15 минут</p>
+            </div>
+        </div>
     </div>
 
     <!-- ===== LOGIN MODAL ===== -->
@@ -833,8 +915,62 @@
             document.body.classList.add('light');
         }
 
+        // Access modal
+        const accessModal = document.getElementById('accessModal');
+        const accessForm = document.getElementById('accessForm');
+        const accessSuccess = document.getElementById('accessSuccess');
+        const accessSubmitBtn = document.getElementById('accessSubmitBtn');
+
+        function openAccessModal() {
+            accessModal.classList.add('active');
+            document.body.style.overflow = 'hidden';
+            accessForm.style.display = '';
+            accessSuccess.classList.remove('show');
+            document.getElementById('accInn').value = '';
+            document.getElementById('accName').value = '';
+            document.getElementById('accPhone').value = '';
+            accessSubmitBtn.classList.remove('active');
+            document.querySelectorAll('.field-hint').forEach(h => h.classList.remove('show'));
+        }
+
+        function closeAccessModal() {
+            accessModal.classList.remove('active');
+            document.body.style.overflow = '';
+        }
+
+        function closeAccessOnOverlay(e) {
+            if (e.target === accessModal) closeAccessModal();
+        }
+
+        function checkAccessForm() {
+            const inn = document.getElementById('accInn').value.trim();
+            const name = document.getElementById('accName').value.trim();
+            const phone = document.getElementById('accPhone').value.trim();
+            if (inn && name && phone) {
+                accessSubmitBtn.classList.add('active');
+            } else {
+                accessSubmitBtn.classList.remove('active');
+            }
+            document.getElementById('hintInn').classList.remove('show');
+            document.getElementById('hintName').classList.remove('show');
+            document.getElementById('hintPhone').classList.remove('show');
+        }
+
+        function submitAccess() {
+            const inn = document.getElementById('accInn').value.trim();
+            const name = document.getElementById('accName').value.trim();
+            const phone = document.getElementById('accPhone').value.trim();
+            let valid = true;
+            if (!inn) { document.getElementById('hintInn').classList.add('show'); valid = false; }
+            if (!name) { document.getElementById('hintName').classList.add('show'); valid = false; }
+            if (!phone) { document.getElementById('hintPhone').classList.add('show'); valid = false; }
+            if (!valid) return;
+            accessForm.style.display = 'none';
+            accessSuccess.classList.add('show');
+        }
+
         document.addEventListener('keydown', (e) => {
-            if (e.key === 'Escape') closeModal();
+            if (e.key === 'Escape') { closeModal(); closeAccessModal(); }
         });
     </script>
 </body>
