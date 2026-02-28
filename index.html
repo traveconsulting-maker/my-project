@@ -313,6 +313,89 @@
             margin: 0 auto 32px; line-height: 1.7; transition: color 0.4s;
         }
 
+        /* ===== ONBOARDING ===== */
+        #onboarding {
+            display: none; position: fixed; inset: 0; z-index: 90;
+            background: var(--bg); overflow-y: auto;
+            transition: background 0.4s;
+        }
+        #onboarding.show { display: flex; flex-direction: column; align-items: center; }
+
+        .onb-container {
+            max-width: 720px; width: 90%; padding: 60px 0 80px; margin: 0 auto;
+        }
+        .onb-progress {
+            display: flex; align-items: center; gap: 8px; margin-bottom: 48px;
+        }
+        .onb-step-dot {
+            width: 36px; height: 36px; border-radius: 50%;
+            display: flex; align-items: center; justify-content: center;
+            font-size: 14px; font-weight: 700;
+            background: var(--nav-icon-bg); color: var(--text-dim);
+            transition: all 0.3s;
+        }
+        .onb-step-dot.active {
+            background: linear-gradient(135deg, #6c5ce7, #a855f7); color: #fff;
+            box-shadow: 0 4px 16px rgba(108,92,231,0.3);
+        }
+        .onb-step-dot.done {
+            background: rgba(52,211,153,0.15); color: #34d399;
+        }
+        .onb-step-line {
+            flex: 1; height: 2px; background: var(--border-color); transition: background 0.4s;
+        }
+        .onb-step-line.done { background: rgba(52,211,153,0.3); }
+
+        .onb-title {
+            font-size: 28px; font-weight: 800; color: var(--text);
+            margin-bottom: 8px; transition: color 0.4s;
+        }
+        .onb-subtitle {
+            font-size: 15px; color: var(--text-muted); margin-bottom: 36px;
+            transition: color 0.4s;
+        }
+
+        .niche-grid {
+            display: grid; grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
+            gap: 12px; margin-bottom: 36px;
+        }
+        .niche-item {
+            padding: 16px 20px; border-radius: 16px;
+            background: var(--card-bg); border: 2px solid var(--card-border);
+            color: var(--text-secondary); font-size: 14px; font-weight: 500;
+            cursor: pointer; transition: all 0.2s; text-align: center;
+            backdrop-filter: blur(10px); -webkit-backdrop-filter: blur(10px);
+        }
+        .niche-item:hover {
+            border-color: rgba(108,92,231,0.3); background: rgba(108,92,231,0.06);
+        }
+        .niche-item.selected {
+            border-color: #6c5ce7; background: rgba(108,92,231,0.12);
+            color: var(--text); font-weight: 600;
+        }
+
+        .onb-btn {
+            display: inline-flex; align-items: center; gap: 10px;
+            padding: 16px 40px; border-radius: 14px;
+            background: rgba(108,92,231,0.2); color: rgba(255,255,255,0.3);
+            border: none; font-family: inherit; font-size: 15px; font-weight: 700;
+            cursor: not-allowed; transition: all 0.3s cubic-bezier(0.16,1,0.3,1);
+        }
+        .onb-btn.active {
+            background: linear-gradient(135deg, #6c5ce7, #a855f7); color: #fff;
+            cursor: pointer; box-shadow: 0 6px 24px rgba(108,92,231,0.3);
+        }
+        .onb-btn.active:hover {
+            transform: translateY(-2px); box-shadow: 0 10px 32px rgba(108,92,231,0.45);
+        }
+        .onb-btn svg { width: 18px; height: 18px; fill: currentColor; }
+        body.light .onb-btn {
+            background: rgba(108,92,231,0.08); color: rgba(0,0,0,0.25);
+        }
+        body.light .onb-btn.active {
+            background: linear-gradient(135deg, #6c5ce7, #a855f7); color: #fff;
+        }
+
         /* Access submit btn states */
         .access-submit {
             width: 100%; padding: 16px; margin-top: 8px;
@@ -686,6 +769,55 @@
         <div class="land-footer">AI Sales Platform &copy; 2026</div>
     </div>
 
+    <!-- ===== ONBOARDING ===== -->
+    <div id="onboarding">
+        <div class="bg">
+            <div class="bg-orb"></div>
+            <div class="bg-orb"></div>
+            <div class="bg-orb"></div>
+        </div>
+        <div class="onb-container" style="position:relative;z-index:1;">
+            <!-- Progress -->
+            <div class="onb-progress">
+                <div class="onb-step-dot active" id="dot1">1</div>
+                <div class="onb-step-line" id="line1"></div>
+                <div class="onb-step-dot" id="dot2">2</div>
+                <div class="onb-step-line" id="line2"></div>
+                <div class="onb-step-dot" id="dot3">3</div>
+            </div>
+
+            <!-- Step 1: Niche -->
+            <div id="onbStep1">
+                <div class="onb-title">Выберите вашу нишу</div>
+                <div class="onb-subtitle">Это поможет настроить платформу под ваш бизнес</div>
+                <div class="niche-grid">
+                    <div class="niche-item" onclick="selectNiche(this)">Финансы</div>
+                    <div class="niche-item" onclick="selectNiche(this)">Найм персонала и HR</div>
+                    <div class="niche-item" onclick="selectNiche(this)">Образование и онлайн-школы</div>
+                    <div class="niche-item" onclick="selectNiche(this)">Недвижимость</div>
+                    <div class="niche-item" onclick="selectNiche(this)">Медицинские организации</div>
+                    <div class="niche-item" onclick="selectNiche(this)">Сфера красоты</div>
+                    <div class="niche-item" onclick="selectNiche(this)">Юридические услуги</div>
+                    <div class="niche-item" onclick="selectNiche(this)">Организация мероприятий</div>
+                    <div class="niche-item" onclick="selectNiche(this)">Спортивные учреждения</div>
+                    <div class="niche-item" onclick="selectNiche(this)">B2B решения</div>
+                    <div class="niche-item" onclick="selectNiche(this)">Арбитраж</div>
+                    <div class="niche-item" onclick="selectNiche(this)">Логистическая компания</div>
+                    <div class="niche-item" onclick="selectNiche(this)">Работа с должниками</div>
+                    <div class="niche-item" onclick="selectNiche(this)">ЖКХ и управляющие компании</div>
+                    <div class="niche-item" onclick="selectNiche(this)">Интернет-магазин</div>
+                    <div class="niche-item" onclick="selectNiche(this)">Страховые компании</div>
+                    <div class="niche-item" onclick="selectNiche(this)">Туризм</div>
+                    <div class="niche-item" onclick="selectNiche(this)">Другая ниша</div>
+                </div>
+                <button class="onb-btn" id="onbNext1" onclick="goToStep(2)">
+                    Далее
+                    <svg viewBox="0 0 24 24"><path d="M12 4l-1.41 1.41L16.17 11H4v2h12.17l-5.58 5.59L12 20l8-8-8-8z"/></svg>
+                </button>
+            </div>
+        </div>
+    </div>
+
     <!-- ===== ACCESS MODAL ===== -->
     <div class="modal-overlay" id="accessModal" onclick="closeAccessOnOverlay(event)">
         <div class="modal">
@@ -885,15 +1017,26 @@
             if (e.target === modal) closeModal();
         }
 
+        const onboarding = document.getElementById('onboarding');
+
+        function showAfterLogin() {
+            closeModal();
+            landingPage.classList.add('hidden');
+            const onboarded = localStorage.getItem('onboarded');
+            if (onboarded) {
+                setTimeout(() => { dashboard.classList.add('show'); document.body.style.overflow = ''; }, 400);
+            } else {
+                setTimeout(() => { onboarding.classList.add('show'); document.body.style.overflow = ''; }, 400);
+            }
+        }
+
         function handleLogin(e) {
             e.preventDefault();
             const user = document.getElementById('loginUser');
             const pass = document.getElementById('loginPass');
             const error = document.getElementById('loginError');
             if (user.value === 'test' && pass.value === '1234') {
-                closeModal();
-                landingPage.classList.add('hidden');
-                setTimeout(() => { dashboard.classList.add('show'); document.body.style.overflow = ''; }, 400);
+                showAfterLogin();
             } else {
                 user.classList.add('error');
                 pass.classList.add('error');
@@ -903,13 +1046,30 @@
         }
 
         function handleGoogle() {
-            closeModal();
-            landingPage.classList.add('hidden');
-            setTimeout(() => { dashboard.classList.add('show'); document.body.style.overflow = ''; }, 400);
+            showAfterLogin();
+        }
+
+        // Onboarding
+        let selectedNiche = null;
+
+        function selectNiche(el) {
+            document.querySelectorAll('.niche-item').forEach(n => n.classList.remove('selected'));
+            el.classList.add('selected');
+            selectedNiche = el.textContent;
+            document.getElementById('onbNext1').classList.add('active');
+        }
+
+        function goToStep(step) {
+            if (step === 2 && !selectedNiche) return;
+            // For now only step 1 exists, finish onboarding
+            localStorage.setItem('onboarded', '1');
+            onboarding.classList.remove('show');
+            dashboard.classList.add('show');
         }
 
         function handleLogout() {
             dashboard.classList.remove('show');
+            localStorage.removeItem('onboarded');
             setTimeout(() => {
                 landingPage.classList.remove('hidden');
                 document.getElementById('loginUser').value = '';
