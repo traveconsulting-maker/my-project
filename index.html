@@ -436,6 +436,25 @@
         .tag-chip.used {
             opacity: 0.4; border-style: dashed;
         }
+        .onb-fields {
+            display: flex; flex-direction: column; gap: 18px;
+        }
+        .onb-field { display: flex; flex-direction: column; gap: 6px; }
+        .onb-field-label {
+            font-size: 14px; font-weight: 600; color: var(--text-secondary);
+        }
+        .onb-input {
+            width: 100%; padding: 14px 18px; border-radius: 14px;
+            border: 2px solid var(--input-border); background: var(--input-bg);
+            color: var(--text); font-family: inherit; font-size: 14px;
+            transition: all 0.3s;
+            backdrop-filter: blur(10px); -webkit-backdrop-filter: blur(10px);
+        }
+        .onb-input:focus {
+            outline: none; border-color: rgba(108,92,231,0.5);
+            box-shadow: 0 0 0 4px rgba(108,92,231,0.1);
+        }
+        .onb-input::placeholder { color: var(--text-muted); }
 
         /* Access submit btn states */
         .access-submit {
@@ -910,6 +929,52 @@
                     </button>
                 </div>
             </div>
+
+            <!-- Step 3: About company -->
+            <div id="onbStep3" style="display:none;">
+                <div class="onb-title">О вашей компании</div>
+                <div class="onb-subtitle">Мы уже обучаем AI на ваши продажи — чтобы он знал о вас всё, заполните эту информацию</div>
+
+                <div class="onb-fields">
+                    <div class="onb-field">
+                        <label class="onb-field-label">Короткое название компании</label>
+                        <input type="text" class="onb-input" id="onbCompanyName" placeholder="Например: СтройМастер">
+                    </div>
+                    <div class="onb-field">
+                        <label class="onb-field-label">Где находится компания</label>
+                        <input type="text" class="onb-input" id="onbCompanyLocation" placeholder="Например: Москва, Россия">
+                    </div>
+                    <div class="onb-field">
+                        <label class="onb-field-label">Ссылка на сайт</label>
+                        <input type="text" class="onb-input" id="onbCompanySite" placeholder="Например: company.ru">
+                    </div>
+                    <div class="onb-field">
+                        <label class="onb-field-label">Какой основной продукт / услуга</label>
+                        <input type="text" class="onb-input" id="onbCompanyProduct" placeholder="Например: строительство загородных домов">
+                    </div>
+                    <div class="onb-field">
+                        <label class="onb-field-label">УТП (уникальное торговое предложение)</label>
+                        <input type="text" class="onb-input" id="onbCompanyUtp" placeholder="Например: строим дом за 30 дней или вернём деньги">
+                    </div>
+                    <div class="onb-field">
+                        <label class="onb-field-label">Всё, что нам нужно знать о вашей компании</label>
+                        <textarea class="onb-textarea" id="onbCompanyInfo" placeholder="Расскажите о компании всё что считаете важным: история, ценности, преимущества, особенности работы, целевая аудитория..." style="min-height:120px;"></textarea>
+                    </div>
+                </div>
+
+                <div style="display:flex;gap:12px;margin-top:36px;">
+                    <button class="onb-btn active" onclick="goToStep(2)" style="background:var(--link-bg);color:var(--text-dim);box-shadow:none;cursor:pointer;">
+                        Назад
+                    </button>
+                    <button class="onb-btn active" onclick="skipStep3()" style="background:var(--link-bg);color:var(--text-dim);box-shadow:none;cursor:pointer;">
+                        Заполнить потом
+                    </button>
+                    <button class="onb-btn active" onclick="finishOnboarding()" style="flex:1;">
+                        Далее
+                        <svg viewBox="0 0 24 24"><path d="M12 4l-1.41 1.41L16.17 11H4v2h12.17l-5.58 5.59L12 20l8-8-8-8z"/></svg>
+                    </button>
+                </div>
+            </div>
         </div>
     </div>
 
@@ -1184,27 +1249,46 @@
                 var s = document.getElementById('onbSites').value.trim();
                 var c = document.getElementById('onbClient').value.trim();
                 if (!s || !c) return;
-                localStorage.setItem('onboarded', '1');
-                onboarding.classList.remove('show');
-                dashboard.classList.add('show');
-                return;
             }
             // Show/hide steps
             document.getElementById('onbStep1').style.display = step === 1 ? '' : 'none';
             document.getElementById('onbStep2').style.display = step === 2 ? '' : 'none';
+            document.getElementById('onbStep3').style.display = step === 3 ? '' : 'none';
             // Update dots
             var dot1 = document.getElementById('dot1');
             var dot2 = document.getElementById('dot2');
+            var dot3 = document.getElementById('dot3');
             var line1 = document.getElementById('line1');
+            var line2 = document.getElementById('line2');
             if (step === 1) {
                 dot1.className = 'onb-step-dot active';
                 dot2.className = 'onb-step-dot';
+                dot3.className = 'onb-step-dot';
                 line1.className = 'onb-step-line';
+                line2.className = 'onb-step-line';
             } else if (step === 2) {
                 dot1.className = 'onb-step-dot done';
                 dot2.className = 'onb-step-dot active';
+                dot3.className = 'onb-step-dot';
                 line1.className = 'onb-step-line done';
+                line2.className = 'onb-step-line';
+            } else if (step === 3) {
+                dot1.className = 'onb-step-dot done';
+                dot2.className = 'onb-step-dot done';
+                dot3.className = 'onb-step-dot active';
+                line1.className = 'onb-step-line done';
+                line2.className = 'onb-step-line done';
             }
+        }
+
+        function finishOnboarding() {
+            localStorage.setItem('onboarded', '1');
+            onboarding.classList.remove('show');
+            dashboard.classList.add('show');
+        }
+
+        function skipStep3() {
+            finishOnboarding();
         }
 
         function checkStep2() {
