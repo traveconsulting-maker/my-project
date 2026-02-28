@@ -818,10 +818,32 @@
             width: 32px; height: 32px; border-radius: 8px; border: none;
             background: none; color: var(--text-muted); cursor: pointer;
             display: flex; align-items: center; justify-content: center;
-            transition: all 0.2s; margin-top: 8px;
+            transition: all 0.2s; margin-top: 8px; position: relative;
         }
         .rule-audio-btn:hover { background: rgba(108,92,231,0.1); color: #a78bfa; }
+        .rule-audio-btn.disabled { opacity: 0.3; cursor: not-allowed; pointer-events: none; }
+        .rule-audio-btn.playing { color: #ef4444; }
+        .rule-audio-btn.playing:hover { background: rgba(239,68,68,0.1); }
+        .rule-audio-btn.loading { color: #a78bfa; pointer-events: none; }
         .rule-audio-btn svg { width: 18px; height: 18px; fill: currentColor; }
+        @keyframes tts-spin {
+            to { transform: rotate(360deg); }
+        }
+        .rule-audio-btn.loading svg {
+            animation: tts-spin 1s linear infinite;
+        }
+
+        .tts-toast {
+            position: fixed; bottom: 32px; left: 50%; transform: translateX(-50%) translateY(80px);
+            padding: 12px 24px; border-radius: 12px; font-size: 14px; font-weight: 600;
+            background: #ef4444; color: #fff; z-index: 9999;
+            box-shadow: 0 8px 32px rgba(0,0,0,0.3);
+            transition: transform 0.3s cubic-bezier(0.16,1,0.3,1), opacity 0.3s;
+            opacity: 0; pointer-events: none;
+        }
+        .tts-toast.show {
+            transform: translateX(-50%) translateY(0); opacity: 1;
+        }
 
         .add-rule-btn.disabled {
             opacity: 0.4; cursor: not-allowed; pointer-events: none;
@@ -1465,6 +1487,8 @@
         </div>
     </div>
 
+    <div class="tts-toast" id="ttsToast"></div>
+
     <script>
         const modal = document.getElementById('modal');
         const landingPage = document.getElementById('landingPage');
@@ -2023,24 +2047,192 @@
             triggerAutoSave();
         }
 
-        function playGreeting(id) {
-            var text = '';
-            for (var i = 0; i < botGreetings.length; i++) {
-                if (botGreetings[i].id === id) { text = botGreetings[i].text; break; }
-            }
-            if (!text.trim()) return;
-            if ('speechSynthesis' in window) {
-                window.speechSynthesis.cancel();
-                var utter = new SpeechSynthesisUtterance(text);
-                utter.lang = 'ru-RU';
-                window.speechSynthesis.speak(utter);
+        // ===== TTS ENGINE =====
+        var ELEVENLABS_API_KEY = ''; // Set your key here or via setTTSKey()
+        var ttsCache = {}; // { greetId: { text: string, blobUrl: string } }
+        var ttsCurrentAudio = null;
+        var ttsCurrentId = null;
+
+        function setTTSKey(key) { ELEVENLABS_API_KEY = key; }
+
+        function showTtsToast(msg) {
+            var toast = document.getElementById('ttsToast');
+            toast.textContent = msg;
+            toast.classList.add('show');
+            setTimeout(function() { toast.classList.remove('show'); }, 3000);
+        }
+
+        function getTtsBtn(id) {
+            return document.getElementById('ttsBtn_' + id);
+        }
+
+        function setTtsBtnState(id, state) {
+            var btn = getTtsBtn(id);
+            if (!btn) return;
+            btn.classList.remove('loading', 'playing', 'disabled');
+            if (state === 'loading') {
+                btn.classList.add('loading');
+                btn.innerHTML = '<svg viewBox="0 0 24 24"><path d="M12 4V1L8 5l4 4V6c3.31 0 6 2.69 6 6 0 1.01-.25 1.97-.7 2.8l1.46 1.46C19.54 15.03 20 13.57 20 12c0-4.42-3.58-8-8-8zm0 14c-3.31 0-6-2.69-6-6 0-1.01.25-1.97.7-2.8L5.24 7.74C4.46 8.97 4 10.43 4 12c0 4.42 3.58 8 8 8v3l4-4-4-4v3z"/></svg>';
+            } else if (state === 'playing') {
+                btn.classList.add('playing');
+                btn.innerHTML = '<svg viewBox="0 0 24 24"><path d="M6 6h12v12H6z"/></svg>';
+            } else {
+                // idle
+                var text = getGreetingText(id);
+                if (!text.trim()) btn.classList.add('disabled');
+                btn.innerHTML = '<svg viewBox="0 0 24 24"><path d="M3 9v6h4l5 5V4L7 9H3zm13.5 3c0-1.77-1.02-3.29-2.5-4.03v8.05c1.48-.73 2.5-2.25 2.5-4.02zM14 3.23v2.06c2.89.86 5 3.54 5 6.71s-2.11 5.85-5 6.71v2.06c4.01-.91 7-4.49 7-8.77s-2.99-7.86-7-8.77z"/></svg>';
             }
         }
+
+        function getGreetingText(id) {
+            for (var i = 0; i < botGreetings.length; i++) {
+                if (botGreetings[i].id === id) return botGreetings[i].text;
+            }
+            return '';
+        }
+
+        function stopTts() {
+            if (ttsCurrentAudio) {
+                ttsCurrentAudio.pause();
+                ttsCurrentAudio.currentTime = 0;
+                ttsCurrentAudio = null;
+            }
+            if (ttsCurrentId) {
+                setTtsBtnState(ttsCurrentId, 'idle');
+                ttsCurrentId = null;
+            }
+            if ('speechSynthesis' in window) window.speechSynthesis.cancel();
+        }
+
+        function playGreeting(id) {
+            // If already playing this one — stop
+            if (ttsCurrentId === id && ttsCurrentAudio) {
+                stopTts();
+                return;
+            }
+            // Stop any other playback
+            stopTts();
+
+            var text = getGreetingText(id);
+            if (!text.trim()) return;
+
+            // Check cache — if text matches, reuse blob
+            if (ttsCache[id] && ttsCache[id].text === text && ttsCache[id].blobUrl) {
+                playAudioBlob(id, ttsCache[id].blobUrl);
+                return;
+            }
+
+            // If ElevenLabs key set — use API
+            if (ELEVENLABS_API_KEY) {
+                setTtsBtnState(id, 'loading');
+                ttsCurrentId = id;
+                fetchElevenLabs(id, text);
+            } else {
+                // Fallback: browser TTS
+                playBrowserTts(id, text);
+            }
+        }
+
+        function fetchElevenLabs(id, text) {
+            var voiceId = 'EXAVITQu4vr4xnSDxMaL'; // Sarah — multilingual
+            fetch('https://api.elevenlabs.io/v1/text-to-speech/' + voiceId, {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                    'xi-api-key': ELEVENLABS_API_KEY
+                },
+                body: JSON.stringify({
+                    text: text,
+                    model_id: 'eleven_multilingual_v2',
+                    voice_settings: {
+                        stability: 0.4,
+                        similarity_boost: 0.75,
+                        style: 0.35,
+                        use_speaker_boost: true
+                    }
+                })
+            })
+            .then(function(res) {
+                if (!res.ok) throw new Error('HTTP ' + res.status);
+                return res.blob();
+            })
+            .then(function(blob) {
+                // Revoke old cached URL
+                if (ttsCache[id] && ttsCache[id].blobUrl) {
+                    URL.revokeObjectURL(ttsCache[id].blobUrl);
+                }
+                var url = URL.createObjectURL(blob);
+                ttsCache[id] = { text: text, blobUrl: url };
+                if (ttsCurrentId === id) playAudioBlob(id, url);
+            })
+            .catch(function(err) {
+                console.error('TTS error:', err);
+                setTtsBtnState(id, 'idle');
+                ttsCurrentId = null;
+                showTtsToast('Не удалось озвучить фразу');
+            });
+        }
+
+        function playAudioBlob(id, blobUrl) {
+            var audio = new Audio(blobUrl);
+            ttsCurrentAudio = audio;
+            ttsCurrentId = id;
+            setTtsBtnState(id, 'playing');
+            audio.play().catch(function() {
+                setTtsBtnState(id, 'idle');
+                ttsCurrentId = null;
+                showTtsToast('Не удалось воспроизвести аудио');
+            });
+            audio.onended = function() {
+                setTtsBtnState(id, 'idle');
+                ttsCurrentAudio = null;
+                ttsCurrentId = null;
+            };
+        }
+
+        function playBrowserTts(id, text) {
+            if (!('speechSynthesis' in window)) {
+                showTtsToast('Браузер не поддерживает озвучку');
+                return;
+            }
+            ttsCurrentId = id;
+            setTtsBtnState(id, 'playing');
+            var utter = new SpeechSynthesisUtterance(text);
+            utter.lang = 'ru-RU';
+            utter.onend = function() {
+                setTtsBtnState(id, 'idle');
+                ttsCurrentId = null;
+            };
+            utter.onerror = function() {
+                setTtsBtnState(id, 'idle');
+                ttsCurrentId = null;
+            };
+            window.speechSynthesis.speak(utter);
+        }
+
+        // Invalidate cache when greeting text changes
+        var origOnGreetingInput = onGreetingInput;
+        onGreetingInput = function(id, textarea) {
+            origOnGreetingInput(id, textarea);
+            if (ttsCache[id] && ttsCache[id].text !== textarea.value) {
+                if (ttsCache[id].blobUrl) URL.revokeObjectURL(ttsCache[id].blobUrl);
+                delete ttsCache[id];
+            }
+            // Update disabled state of audio btn
+            var btn = getTtsBtn(id);
+            if (btn && !btn.classList.contains('loading') && !btn.classList.contains('playing')) {
+                if (textarea.value.trim()) btn.classList.remove('disabled');
+                else btn.classList.add('disabled');
+            }
+        };
 
         function renderGreetings() {
             var list = document.getElementById('greetingsList');
             list.innerHTML = '';
             botGreetings.forEach(function(item, idx) {
+                var isEmpty = !item.text.trim();
+                var isPlaying = ttsCurrentId === item.id && ttsCurrentAudio;
+                var disabledClass = isEmpty && !isPlaying ? ' disabled' : '';
                 var div = document.createElement('div');
                 div.className = 'rule-item';
                 div.ondragover = function(e) { onGreetDragOver(e, item.id); };
@@ -2053,7 +2245,7 @@
                         '<div class="rule-char-count" id="count_' + item.id + '">' + item.text.length + '/500</div>' +
                     '</div>' +
                     '<div class="rule-actions">' +
-                        '<button class="rule-audio-btn" onclick="playGreeting(\'' + item.id + '\')" title="Прослушать">' +
+                        '<button class="rule-audio-btn' + disabledClass + '" id="ttsBtn_' + item.id + '" onclick="playGreeting(\'' + item.id + '\')" title="Прослушать">' +
                             '<svg viewBox="0 0 24 24"><path d="M3 9v6h4l5 5V4L7 9H3zm13.5 3c0-1.77-1.02-3.29-2.5-4.03v8.05c1.48-.73 2.5-2.25 2.5-4.02zM14 3.23v2.06c2.89.86 5 3.54 5 6.71s-2.11 5.85-5 6.71v2.06c4.01-.91 7-4.49 7-8.77s-2.99-7.86-7-8.77z"/></svg>' +
                         '</button>' +
                         '<button class="rule-action-btn rule-drag" draggable="true" ondragstart="onGreetDragStart(event,\'' + item.id + '\')" ondragend="onGreetDragEnd(event)" title="Перетащить">' +
