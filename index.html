@@ -851,6 +851,9 @@
                     <div class="niche-item" onclick="selectNiche(this)">Туризм</div>
                     <div class="niche-item" onclick="selectNiche(this)">Другая ниша</div>
                 </div>
+                <div id="customNicheBox" style="display:none;margin-bottom:24px;">
+                    <input type="text" id="customNicheInput" class="onb-textarea" style="min-height:auto;padding:14px 18px;" placeholder="Введите название вашей ниши..." oninput="checkCustomNiche()">
+                </div>
                 <button class="onb-btn" id="onbNext1" onclick="goToStep(2)">
                     Далее
                     <svg viewBox="0 0 24 24"><path d="M12 4l-1.41 1.41L16.17 11H4v2h12.17l-5.58 5.59L12 20l8-8-8-8z"/></svg>
@@ -1147,8 +1150,32 @@
         function selectNiche(el) {
             document.querySelectorAll('.niche-item').forEach(n => n.classList.remove('selected'));
             el.classList.add('selected');
-            selectedNiche = el.textContent;
-            document.getElementById('onbNext1').classList.add('active');
+            var box = document.getElementById('customNicheBox');
+            var btn = document.getElementById('onbNext1');
+            if (el.textContent === 'Другая ниша') {
+                box.style.display = '';
+                document.getElementById('customNicheInput').focus();
+                selectedNiche = null;
+                btn.classList.remove('active');
+                checkCustomNiche();
+            } else {
+                box.style.display = 'none';
+                document.getElementById('customNicheInput').value = '';
+                selectedNiche = el.textContent;
+                btn.classList.add('active');
+            }
+        }
+
+        function checkCustomNiche() {
+            var val = document.getElementById('customNicheInput').value.trim();
+            var btn = document.getElementById('onbNext1');
+            if (val.length > 0) {
+                selectedNiche = val;
+                btn.classList.add('active');
+            } else {
+                selectedNiche = null;
+                btn.classList.remove('active');
+            }
         }
 
         function goToStep(step) {
