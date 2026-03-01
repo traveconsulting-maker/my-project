@@ -5,7 +5,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>AI Sales Platform</title>
     <link rel="preconnect" href="https://fonts.googleapis.com">
-    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800;900&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800;900&family=Onest:wght@300;400;500;600;700&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
     <style>
         :root {
             --bg: #0a0a1a;
@@ -878,6 +878,417 @@
             .land-topbar { padding: 12px 16px; }
             .dash-content { padding: 24px 16px; }
         }
+
+        /* ===== DIALOG LIST ===== */
+        .dlg-list-header {
+            display: flex; align-items: center; justify-content: space-between;
+            margin-bottom: 24px;
+        }
+        .dlg-list-header h1 { font-size: 22px; font-weight: 700; color: var(--text); }
+        .dlg-list-actions { display: flex; gap: 10px; }
+
+        .dlg-btn-create {
+            display: inline-flex; align-items: center; gap: 6px;
+            padding: 9px 18px; border-radius: 10px; border: none;
+            background: linear-gradient(135deg, #6c5ce7, #a78bfa);
+            color: #fff; font-family: inherit; font-size: 13px; font-weight: 600;
+            cursor: pointer; transition: opacity 0.2s;
+        }
+        .dlg-btn-create:hover { opacity: 0.88; }
+
+        .dlg-btn-quickstart {
+            display: inline-flex; align-items: center; gap: 6px;
+            padding: 9px 18px; border-radius: 10px;
+            border: 1.5px solid var(--card-border);
+            background: var(--card-bg); color: var(--text-secondary);
+            font-family: inherit; font-size: 13px; font-weight: 600;
+            cursor: pointer; transition: all 0.2s;
+            backdrop-filter: blur(10px); -webkit-backdrop-filter: blur(10px);
+        }
+        .dlg-btn-quickstart:hover { border-color: rgba(108,92,231,0.4); background: rgba(108,92,231,0.08); }
+
+        /* Quick Start Wizard */
+        .qs-overlay {
+            position: fixed; inset: 0; z-index: 10000;
+            background: rgba(0,0,0,0.55); backdrop-filter: blur(8px); -webkit-backdrop-filter: blur(8px);
+            display: none; align-items: center; justify-content: center;
+        }
+        .qs-overlay.active { display: flex; }
+        .qs-modal {
+            background: var(--modal-bg); border-radius: 18px;
+            width: 680px; max-width: 94vw; max-height: 88vh;
+            overflow-y: auto; padding: 36px 32px 28px;
+            box-shadow: 0 24px 80px rgba(0,0,0,0.35);
+            position: relative; animation: modalIn 0.25s ease;
+        }
+        .qs-modal-title {
+            font-size: 22px; font-weight: 700; color: var(--text);
+            margin-bottom: 4px;
+        }
+        .qs-modal-sub {
+            font-size: 13px; color: var(--text-muted); margin-bottom: 24px;
+        }
+        .qs-progress {
+            display: flex; align-items: center; justify-content: center;
+            gap: 0; margin-bottom: 28px;
+        }
+        .qs-dot {
+            width: 28px; height: 28px; border-radius: 50%;
+            background: var(--input-bg); border: 2px solid var(--input-border);
+            display: flex; align-items: center; justify-content: center;
+            font-size: 12px; font-weight: 700; color: var(--text-muted);
+            transition: all 0.25s; flex-shrink: 0;
+        }
+        .qs-dot.active {
+            border-color: #6c5ce7; background: rgba(108,92,231,0.15); color: #6c5ce7;
+        }
+        .qs-dot.done {
+            border-color: #00b894; background: rgba(0,184,148,0.15); color: #00b894;
+        }
+        .qs-line {
+            width: 32px; height: 2px; background: var(--input-border);
+            transition: background 0.25s; flex-shrink: 0;
+        }
+        .qs-line.done { background: #00b894; }
+        .qs-step { display: none; }
+        .qs-step.active { display: block; }
+        .qs-label {
+            font-size: 13px; font-weight: 600; color: var(--text-secondary);
+            margin-bottom: 6px; display: block;
+        }
+        .qs-field { margin-bottom: 16px; }
+        .qs-textarea {
+            width: 100%; min-height: 64px; border-radius: 10px;
+            border: 1.5px solid var(--input-border); background: var(--input-bg);
+            color: var(--text); font-family: inherit; font-size: 13px;
+            padding: 10px 12px; resize: vertical; box-sizing: border-box;
+            transition: border-color 0.2s;
+        }
+        .qs-textarea:focus { outline: none; border-color: #6c5ce7; }
+        .qs-select {
+            width: 100%; border-radius: 10px;
+            border: 1.5px solid var(--input-border); background: var(--input-bg);
+            color: var(--text); font-family: inherit; font-size: 13px;
+            padding: 10px 12px; box-sizing: border-box;
+            transition: border-color 0.2s; appearance: auto;
+        }
+        .qs-select:focus { outline: none; border-color: #6c5ce7; }
+        .qs-upload-area {
+            border: 2px dashed var(--input-border); border-radius: 12px;
+            padding: 32px 20px; text-align: center; cursor: pointer;
+            color: var(--text-muted); font-size: 13px;
+            transition: border-color 0.2s, background 0.2s;
+        }
+        .qs-upload-area:hover, .qs-upload-area.dragover {
+            border-color: #6c5ce7; background: rgba(108,92,231,0.05);
+        }
+        .qs-file-list { margin-top: 10px; }
+        .qs-file-item {
+            display: flex; align-items: center; gap: 8px;
+            padding: 6px 10px; background: var(--input-bg);
+            border-radius: 8px; margin-bottom: 4px; font-size: 12px; color: var(--text-secondary);
+        }
+        .qs-file-item button {
+            background: none; border: none; color: var(--text-muted);
+            cursor: pointer; font-size: 14px; padding: 0 2px;
+        }
+        .qs-nav {
+            display: flex; gap: 10px; justify-content: flex-end;
+            margin-top: 24px; padding-top: 16px; border-top: 1px solid var(--card-border);
+        }
+        .qs-btn-back, .qs-btn-next, .qs-btn-skip {
+            padding: 10px 22px; border-radius: 10px; font-family: inherit;
+            font-size: 13px; font-weight: 600; cursor: pointer;
+            border: 1.5px solid var(--card-border); transition: all 0.2s;
+        }
+        .qs-btn-back { background: var(--btn-bg); color: var(--text-secondary); }
+        .qs-btn-back:hover { border-color: rgba(108,92,231,0.4); }
+        .qs-btn-skip { background: none; color: var(--text-muted); border-color: transparent; }
+        .qs-btn-skip:hover { color: var(--text-secondary); }
+        .qs-btn-next {
+            background: linear-gradient(135deg, #6c5ce7, #a855f7);
+            color: #fff; border: none;
+        }
+        .qs-btn-next:hover { opacity: 0.9; }
+
+        .dlg-table-wrapper {
+            background: var(--card-bg); border: 1px solid var(--card-border);
+            border-radius: 14px; overflow: hidden;
+            box-shadow: var(--card-shadow); backdrop-filter: blur(20px);
+            -webkit-backdrop-filter: blur(20px);
+        }
+        .dlg-table { width: 100%; border-collapse: collapse; }
+        .dlg-table thead th {
+            text-align: left; padding: 12px 16px;
+            font-size: 11px; font-weight: 600; text-transform: uppercase;
+            letter-spacing: 0.5px; color: var(--text-muted);
+            border-bottom: 1px solid var(--border-color);
+        }
+        .dlg-table thead th:last-child { width: 48px; text-align: center; }
+        .dlg-table tbody tr {
+            cursor: pointer; transition: background 0.15s;
+        }
+        .dlg-table tbody tr:hover { background: var(--hover-bg); }
+        .dlg-table tbody td {
+            padding: 14px 16px; font-size: 14px; color: var(--text-secondary);
+            border-bottom: 1px solid var(--border-color);
+        }
+        .dlg-table tbody tr:last-child td { border-bottom: none; }
+
+        .dlg-name-cell { font-weight: 600; color: var(--text) !important; }
+        .dlg-date { font-size: 13px; color: var(--text-muted) !important; white-space: nowrap; }
+
+        .dlg-name-input {
+            background: var(--input-bg); border: 1.5px solid rgba(108,92,231,0.5);
+            border-radius: 6px; padding: 4px 8px; color: var(--text);
+            font-family: inherit; font-size: 14px; font-weight: 600;
+            outline: none; width: 100%;
+        }
+
+        .dlg-menu-btn {
+            background: none; border: none; color: var(--text-muted);
+            font-size: 18px; cursor: pointer; padding: 4px 8px;
+            border-radius: 6px; transition: background 0.15s; position: relative;
+        }
+        .dlg-menu-btn:hover { background: var(--hover-bg); color: var(--text); }
+
+        .dlg-context-menu {
+            position: fixed;
+            background: var(--modal-bg); border: 1px solid var(--card-border);
+            border-radius: 10px; min-width: 160px; padding: 4px;
+            box-shadow: 0 12px 40px rgba(0,0,0,0.4); z-index: 100;
+            display: none;
+        }
+        .dlg-context-menu.show { display: block; }
+        .dlg-context-item {
+            display: flex; align-items: center; gap: 8px;
+            padding: 8px 12px; border-radius: 6px; border: none;
+            background: none; color: var(--text-secondary);
+            font-family: inherit; font-size: 13px; cursor: pointer;
+            width: 100%; text-align: left; transition: background 0.15s;
+        }
+        .dlg-context-item:hover { background: var(--hover-bg); }
+        .dlg-context-item.danger { color: #ef4444; }
+        .dlg-context-item.danger:hover { background: rgba(239,68,68,0.1); }
+
+        .dlg-back-btn {
+            display: inline-flex; align-items: center; gap: 6px;
+            padding: 7px 14px; border-radius: 8px;
+            border: 1.5px solid var(--card-border);
+            background: var(--card-bg); color: var(--text-secondary);
+            font-family: inherit; font-size: 13px; font-weight: 500;
+            cursor: pointer; transition: all 0.2s; margin-bottom: 16px;
+        }
+        .dlg-back-btn:hover { border-color: rgba(108,92,231,0.4); background: rgba(108,92,231,0.08); }
+
+        .dlg-empty {
+            text-align: center; padding: 48px 20px; color: var(--text-muted);
+            font-size: 14px;
+        }
+
+        /* ===== STATS PAGE STYLES ===== */
+        .st-wrap { font-family: 'Onest', 'Inter', sans-serif; color: #fff; }
+        .st-header {
+            display: flex; align-items: center; justify-content: space-between;
+            margin-bottom: 28px;
+        }
+        .st-header h2 { font-size: 26px; font-weight: 700; letter-spacing: -0.5px; color: #fff; }
+        .st-tabs { display: flex; gap: 6px; background: rgba(255,255,255,0.04); border-radius: 10px; padding: 4px; }
+        .st-tab {
+            padding: 7px 18px; border-radius: 8px; font-size: 14px; font-weight: 500;
+            cursor: pointer; transition: all .2s; color: rgba(255,255,255,0.7); border: none; background: none;
+        }
+        .st-tab.active { background: #4f8eff; color: #fff; }
+
+        .st-datepicker-wrap { position: relative; }
+        .st-datepicker-btn {
+            display: flex; align-items: center; gap: 8px;
+            background: rgba(255,255,255,0.04); border: 1px solid rgba(255,255,255,0.08);
+            color: #fff; border-radius: 10px; padding: 9px 16px;
+            font-size: 14px; font-family: 'Onest','Inter',sans-serif; cursor: pointer;
+            transition: border-color .2s;
+        }
+        .st-datepicker-btn:hover { border-color: #4f8eff; }
+        .st-datepicker-btn svg { color: #4f8eff; }
+
+        .st-calendar-popup {
+            position: absolute; top: calc(100% + 8px); left: 0; z-index: 100;
+            background: #1e2330; border: 1px solid rgba(255,255,255,0.08);
+            border-radius: 14px; padding: 20px;
+            box-shadow: 0 20px 60px rgba(0,0,0,.6);
+            display: none; min-width: 600px;
+        }
+        .st-calendar-popup.open { display: flex; gap: 24px; flex-wrap: wrap; }
+
+        .st-cal-section { flex: 1; min-width: 240px; }
+        .st-cal-header {
+            display: flex; align-items: center; justify-content: space-between;
+            margin-bottom: 14px;
+        }
+        .st-cal-header span { font-weight: 600; font-size: 14px; color: #fff; }
+        .st-cal-nav { background: none; border: 1px solid rgba(255,255,255,0.08); color: rgba(255,255,255,0.7);
+            border-radius: 6px; width: 28px; height: 28px; cursor: pointer; font-size: 13px;
+            display: flex; align-items: center; justify-content: center; transition: all .2s; }
+        .st-cal-nav:hover { border-color: #4f8eff; color: #4f8eff; }
+
+        .st-cal-grid { display: grid; grid-template-columns: repeat(7, 1fr); gap: 3px; }
+        .st-cal-day-name {
+            text-align: center; font-size: 11px; font-weight: 600;
+            color: rgba(255,255,255,0.7); padding: 4px 0; text-transform: uppercase;
+        }
+        .st-cal-day {
+            text-align: center; padding: 7px 4px; border-radius: 7px;
+            font-size: 13px; cursor: pointer; transition: all .15s; color: #fff;
+        }
+        .st-cal-day:hover { background: rgba(255,255,255,0.08); }
+        .st-cal-day.selected { background: #4f8eff; color: #fff; font-weight: 600; }
+        .st-cal-day.in-range { background: rgba(79,142,255,.15); color: #4f8eff; }
+        .st-cal-day.today { border: 1px solid #4f8eff; color: #4f8eff; }
+        .st-cal-day.empty { cursor: default; }
+        .st-cal-day.other-month { color: rgba(255,255,255,0.7); opacity: .4; }
+
+        .st-cal-presets { display: flex; flex-wrap: wrap; gap: 6px; margin-top: 16px; }
+        .st-preset-btn {
+            background: rgba(255,255,255,0.04); border: 1px solid rgba(255,255,255,0.08);
+            color: rgba(255,255,255,0.7); border-radius: 7px; padding: 5px 12px;
+            font-size: 12px; cursor: pointer; transition: all .2s; font-family: 'Onest','Inter',sans-serif;
+        }
+        .st-preset-btn:hover { border-color: #4f8eff; color: #4f8eff; }
+
+        .st-cal-apply {
+            width: 100%; margin-top: 16px; padding: 10px;
+            background: #4f8eff; border: none; border-radius: 9px;
+            color: #fff; font-family: 'Onest','Inter',sans-serif; font-weight: 600; font-size: 14px;
+            cursor: pointer; transition: opacity .2s;
+        }
+        .st-cal-apply:hover { opacity: .85; }
+
+        .st-stats-grid {
+            display: grid; grid-template-columns: repeat(3, 1fr); gap: 16px;
+            margin-bottom: 28px;
+        }
+        .st-stat-card {
+            background: rgba(255,255,255,0.04); border: 1px solid rgba(255,255,255,0.08);
+            border-radius: 14px; padding: 22px; transition: border-color .2s;
+        }
+        .st-stat-card:hover { border-color: #4f8eff; }
+        .st-stat-label { font-size: 13px; color: rgba(255,255,255,0.7); margin-bottom: 10px; }
+        .st-stat-value { font-size: 32px; font-weight: 700; letter-spacing: -1px; margin-bottom: 6px; color: #fff; }
+        .st-stat-sub { font-size: 13px; color: rgba(255,255,255,0.7); }
+        .st-stat-sub strong { color: #fff; }
+        .st-stat-badge {
+            display: inline-flex; align-items: center; gap: 4px;
+            font-size: 12px; font-weight: 600; padding: 3px 8px; border-radius: 6px; margin-left: 8px;
+        }
+        .st-badge-up { background: rgba(46,204,113,.15); color: #2ecc71; }
+        .st-badge-down { background: rgba(231,76,60,.15); color: #e74c3c; }
+
+        .st-calls-section { margin-top: 8px; }
+        .st-calls-header {
+            display: flex; align-items: center; justify-content: space-between;
+            margin-bottom: 16px; flex-wrap: wrap;
+        }
+        .st-calls-title { font-size: 18px; font-weight: 700; color: #fff; }
+
+        .st-filters-row { display: flex; gap: 8px; flex-wrap: wrap; margin-bottom: 16px; }
+        .st-filter-select {
+            background: rgba(255,255,255,0.04); border: 1px solid rgba(255,255,255,0.08);
+            color: #fff; border-radius: 9px; padding: 8px 14px;
+            font-size: 13px; font-family: 'Onest','Inter',sans-serif; cursor: pointer;
+            appearance: none; background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='8' viewBox='0 0 12 8'%3E%3Cpath d='M1 1l5 5 5-5' stroke='%236b7898' stroke-width='1.5' fill='none' stroke-linecap='round'/%3E%3C/svg%3E");
+            background-repeat: no-repeat; background-position: right 10px center;
+            padding-right: 28px; transition: border-color .2s;
+        }
+        .st-filter-select:hover, .st-filter-select:focus { border-color: #4f8eff; outline: none; }
+
+        .st-search-input {
+            background: rgba(255,255,255,0.04); border: 1px solid rgba(255,255,255,0.08);
+            color: #fff; border-radius: 9px; padding: 8px 14px;
+            font-size: 13px; font-family: 'Onest','Inter',sans-serif; flex: 1; min-width: 180px;
+            transition: border-color .2s;
+        }
+        .st-search-input:focus { border-color: #4f8eff; outline: none; }
+        .st-search-input::placeholder { color: rgba(255,255,255,0.5); }
+
+        .st-calls-scroll {
+            max-height: 560px; overflow-y: auto; padding-right: 4px;
+        }
+        .st-calls-scroll::-webkit-scrollbar { width: 5px; }
+        .st-calls-scroll::-webkit-scrollbar-track { background: rgba(255,255,255,0.04); border-radius: 4px; }
+        .st-calls-scroll::-webkit-scrollbar-thumb { background: rgba(255,255,255,0.08); border-radius: 4px; }
+
+        .st-call-row {
+            background: rgba(255,255,255,0.04); border: 1px solid rgba(255,255,255,0.08);
+            border-radius: 14px; padding: 16px 20px;
+            margin-bottom: 10px; display: grid;
+            grid-template-columns: 40px 1fr 110px 100px 110px 120px 130px 60px;
+            align-items: center; gap: 12px;
+            transition: border-color .2s, transform .15s; cursor: pointer;
+        }
+        .st-call-row:hover { border-color: #4f8eff; transform: translateX(2px); }
+
+        .st-call-num { font-family: 'JetBrains Mono', monospace; font-size: 12px; color: #fff; }
+        .st-call-name { font-weight: 600; font-size: 14px; margin-bottom: 3px; color: #fff; }
+        .st-call-phone { font-family: 'JetBrains Mono', monospace; font-size: 12px; color: rgba(255,255,255,0.7); }
+
+        .st-status-badge {
+            display: inline-flex; align-items: center; gap: 5px;
+            padding: 4px 10px; border-radius: 7px; font-size: 12px; font-weight: 600;
+        }
+        .st-status-success { background: rgba(46,204,113,.12); color: #2ecc71; border: 1px solid rgba(46,204,113,.25); }
+        .st-status-fail { background: rgba(231,76,60,.12); color: #e74c3c; border: 1px solid rgba(231,76,60,.25); }
+        .st-status-noanswer { background: rgba(241,196,15,.12); color: #f1c40f; border: 1px solid rgba(241,196,15,.25); }
+        .st-status-busy { background: rgba(155,89,182,.12); color: #9b59b6; border: 1px solid rgba(155,89,182,.25); }
+
+        .st-lead-badge {
+            display: inline-flex; align-items: center; gap: 5px;
+            padding: 4px 10px; border-radius: 7px; font-size: 12px; font-weight: 600;
+        }
+        .st-lead-yes { background: rgba(79,142,255,.12); color: #4f8eff; border: 1px solid rgba(79,142,255,.25); }
+        .st-lead-no { background: rgba(255,255,255,0.03); color: rgba(255,255,255,0.7); border: 1px solid rgba(255,255,255,0.08); }
+
+        .st-call-dur { font-family: 'JetBrains Mono', monospace; font-size: 13px; font-weight: 500; color: #fff; }
+        .st-call-date { font-size: 12px; color: rgba(255,255,255,0.7); }
+
+        .st-play-btn {
+            width: 34px; height: 34px; border-radius: 50%;
+            background: rgba(255,255,255,0.03); border: 1px solid rgba(255,255,255,0.08);
+            color: rgba(255,255,255,0.7); display: flex; align-items: center; justify-content: center;
+            cursor: pointer; transition: all .2s; font-size: 11px;
+        }
+        .st-play-btn:hover { background: #4f8eff; border-color: #4f8eff; color: #fff; }
+
+        .st-player-expand {
+            display: none; grid-column: 1 / -1;
+            background: rgba(255,255,255,0.03); border-top: 1px solid rgba(255,255,255,0.08);
+            padding: 14px; border-radius: 0 0 10px 10px; margin-top: 8px;
+        }
+        .st-player-expand.open { display: block; }
+        .st-audio-bar { display: flex; align-items: center; gap: 12px; }
+        .st-audio-play { width: 32px; height: 32px; border-radius: 50%; background: #4f8eff;
+            border: none; color: #fff; cursor: pointer; font-size: 11px; display: flex; align-items: center; justify-content: center; }
+        .st-audio-track { flex: 1; height: 4px; background: rgba(255,255,255,0.08); border-radius: 4px; position: relative; cursor: pointer; }
+        .st-audio-fill { height: 100%; background: #4f8eff; border-radius: 4px; width: 35%; }
+        .st-audio-time { font-family: 'JetBrains Mono', monospace; font-size: 12px; color: #fff; }
+
+        .st-col-labels {
+            display: grid;
+            grid-template-columns: 40px 1fr 110px 100px 110px 120px 130px 60px;
+            gap: 12px; padding: 0 20px 10px;
+            font-size: 11px; font-weight: 600; color: rgba(255,255,255,0.7); text-transform: uppercase; letter-spacing: .5px;
+        }
+
+        .st-dot { width: 7px; height: 7px; border-radius: 50%; display: inline-block; }
+        .st-dot-green { background: #2ecc71; }
+        .st-dot-red { background: #e74c3c; }
+        .st-dot-yellow { background: #f1c40f; }
+        .st-dot-purple { background: #9b59b6; }
+
+        @media (max-width: 900px) {
+            .st-stats-grid { grid-template-columns: 1fr 1fr; }
+            .st-call-row { grid-template-columns: 1fr 1fr 1fr; grid-template-rows: auto auto; }
+            .st-col-labels { display: none; }
+        }
     </style>
 </head>
 <body>
@@ -1243,6 +1654,176 @@
         </div>
     </div>
 
+    <!-- ===== CREATE DIALOG MODAL ===== -->
+    <div class="modal-overlay" id="createDialogModal" onclick="if(event.target===this)closeCreateDialogModal()">
+        <div class="modal" style="max-width:420px;">
+            <button class="modal-close" onclick="closeCreateDialogModal()">&times;</button>
+            <div class="modal-title" data-i18n="dlgCreateTitle">Новый диалог</div>
+            <div class="modal-subtitle" data-i18n="dlgCreateSub">Введите название для нового диалога</div>
+            <div class="form-group">
+                <label data-i18n="dlgNameLabel">Название</label>
+                <input type="text" id="newDialogName" placeholder="Например: Продажи B2B" data-i18n-ph="phDlgName" maxlength="100">
+            </div>
+            <button class="submit-btn" onclick="createDialog()" data-i18n="dlgCreateBtn">Создать</button>
+            <button class="submit-btn" style="background:var(--btn-bg);color:var(--text-secondary);margin-top:8px;" onclick="closeCreateDialogModal()" data-i18n="dlgCancelBtn">Отмена</button>
+        </div>
+    </div>
+
+    <!-- ===== DELETE DIALOG MODAL ===== -->
+    <div class="modal-overlay" id="deleteDialogModal" onclick="if(event.target===this)closeDeleteDialogModal()">
+        <div class="modal" style="max-width:400px;">
+            <button class="modal-close" onclick="closeDeleteDialogModal()">&times;</button>
+            <div class="modal-title" data-i18n="dlgDeleteTitle">Удалить диалог?</div>
+            <div class="modal-subtitle" data-i18n="dlgDeleteConfirm">Это действие нельзя отменить. Все данные диалога будут потеряны.</div>
+            <button class="submit-btn" style="background:linear-gradient(135deg,#ef4444,#dc2626);" onclick="confirmDeleteDialog()" data-i18n="dlgDeleteBtn">Удалить</button>
+            <button class="submit-btn" style="background:var(--btn-bg);color:var(--text-secondary);margin-top:8px;" onclick="closeDeleteDialogModal()" data-i18n="dlgCancelBtn">Отмена</button>
+        </div>
+    </div>
+
+    <!-- ===== QUICK START WIZARD ===== -->
+    <div class="qs-overlay" id="qsWizard" onclick="if(event.target===this)closeQsWizard()">
+        <div class="qs-modal">
+            <button class="modal-close" onclick="closeQsWizard()">&times;</button>
+            <div class="qs-modal-title" data-i18n="qsTitle">Быстрый старт</div>
+            <div class="qs-modal-sub" data-i18n="qsSub">Ответьте на вопросы — мы настроим диалог за вас</div>
+
+            <div class="qs-progress" id="qsProgress">
+                <div class="qs-dot active" id="qsDot1">1</div><div class="qs-line" id="qsLine1"></div>
+                <div class="qs-dot" id="qsDot2">2</div><div class="qs-line" id="qsLine2"></div>
+                <div class="qs-dot" id="qsDot3">3</div><div class="qs-line" id="qsLine3"></div>
+                <div class="qs-dot" id="qsDot4">4</div><div class="qs-line" id="qsLine4"></div>
+                <div class="qs-dot" id="qsDot5">5</div><div class="qs-line" id="qsLine5"></div>
+                <div class="qs-dot" id="qsDot6">6</div><div class="qs-line" id="qsLine6"></div>
+                <div class="qs-dot" id="qsDot7">7</div>
+            </div>
+
+            <!-- Step 1: Offer -->
+            <div class="qs-step active" id="qsStep1">
+                <div class="qs-field">
+                    <label class="qs-label" data-i18n="qsWhatSell">Что вы продаёте?</label>
+                    <textarea class="qs-textarea" id="qsWhatSell" data-i18n-ph="phQsWhatSell" placeholder="Например: CRM-система для автоматизации продаж"></textarea>
+                </div>
+                <div class="qs-field">
+                    <label class="qs-label" data-i18n="qsWhoTarget">Кому вы продаёте?</label>
+                    <textarea class="qs-textarea" id="qsWhoTarget" data-i18n-ph="phQsWhoTarget" placeholder="Например: малый и средний бизнес, отделы продаж"></textarea>
+                </div>
+                <div class="qs-field">
+                    <label class="qs-label" data-i18n="qsAdvantages">Ключевые преимущества</label>
+                    <textarea class="qs-textarea" id="qsAdvantages" data-i18n-ph="phQsAdvantages" placeholder="Перечислите через запятую или с новой строки"></textarea>
+                </div>
+                <div class="qs-field">
+                    <label class="qs-label" data-i18n="qsAfterCall">Что должно произойти после звонка?</label>
+                    <select class="qs-select" id="qsAfterCall" onchange="qsToggleAfterOther()">
+                        <option value="meeting" data-i18n="qsAfterMeeting">Назначить созвон / встречу</option>
+                        <option value="request" data-i18n="qsAfterRequest">Оставить заявку</option>
+                        <option value="kp" data-i18n="qsAfterKP">Отправить КП</option>
+                        <option value="other" data-i18n="qsAfterOther">Другое</option>
+                    </select>
+                </div>
+                <div class="qs-field" id="qsAfterOtherWrap" style="display:none">
+                    <textarea class="qs-textarea" id="qsAfterOtherText" data-i18n-ph="phQsAfterOther" placeholder="Опишите что должно произойти после звонка"></textarea>
+                </div>
+            </div>
+
+            <!-- Step 2: How managers sell -->
+            <div class="qs-step" id="qsStep2">
+                <div class="qs-field">
+                    <label class="qs-label" data-i18n="qsGreetings">Вступительные фразы менеджера</label>
+                    <textarea class="qs-textarea" id="qsGreetings" data-i18n-ph="phQsGreetings" placeholder="Как менеджер начинает разговор (каждая фраза с новой строки)"></textarea>
+                </div>
+                <div class="qs-field">
+                    <label class="qs-label" data-i18n="qsPitch">Питч: основные тезисы</label>
+                    <textarea class="qs-textarea" id="qsPitch" data-i18n-ph="phQsPitch" placeholder="Ключевые тезисы продажи (каждый с новой строки)"></textarea>
+                </div>
+                <div class="qs-field">
+                    <label class="qs-label" data-i18n="qsClosing">Закрытие: как завершает разговор</label>
+                    <textarea class="qs-textarea" id="qsClosing" data-i18n-ph="phQsClosing" placeholder="Фразы для завершения и перевода в целевое действие"></textarea>
+                </div>
+            </div>
+
+            <!-- Step 3: Call recordings -->
+            <div class="qs-step" id="qsStep3">
+                <div class="qs-field">
+                    <label class="qs-label" data-i18n="qsRecordings">Загрузите записи звонков (необязательно)</label>
+                    <div class="qs-upload-area" id="qsUploadArea" onclick="document.getElementById('qsFileInput').click()">
+                        <div style="font-size:28px;margin-bottom:8px;">📁</div>
+                        <div data-i18n="qsDragDrop">Перетащите файлы сюда или нажмите для выбора</div>
+                        <div style="margin-top:4px;font-size:11px;color:var(--text-dim)" data-i18n="qsFileTypes">MP3, WAV, OGG — до 25 МБ каждый</div>
+                    </div>
+                    <input type="file" id="qsFileInput" multiple accept="audio/*" style="display:none" onchange="qsHandleFiles(this.files)">
+                    <div class="qs-file-list" id="qsFileList"></div>
+                </div>
+            </div>
+
+            <!-- Step 4: Product info -->
+            <div class="qs-step" id="qsStep4">
+                <div class="qs-field">
+                    <label class="qs-label" data-i18n="qsProductLine">Линейка продуктов / тарифы</label>
+                    <textarea class="qs-textarea" id="qsProductLine" data-i18n-ph="phQsProductLine" placeholder="Опишите продукты, тарифы, пакеты"></textarea>
+                </div>
+                <div class="qs-field">
+                    <label class="qs-label" data-i18n="qsMinConditions">Минимальные условия сделки</label>
+                    <textarea class="qs-textarea" id="qsMinConditions" data-i18n-ph="phQsMinConditions" placeholder="Минимальный чек, срок, количество и т.д."></textarea>
+                </div>
+                <div class="qs-field">
+                    <label class="qs-label" data-i18n="qsFactsFigures">Факты и цифры о продукте</label>
+                    <textarea class="qs-textarea" id="qsFactsFigures" data-i18n-ph="phQsFactsFigures" placeholder="Статистика, кейсы, достижения"></textarea>
+                </div>
+            </div>
+
+            <!-- Step 5: Robot's task -->
+            <div class="qs-step" id="qsStep5">
+                <div class="qs-field">
+                    <label class="qs-label" data-i18n="qsGoal">Цель звонка</label>
+                    <select class="qs-select" id="qsGoal" onchange="qsToggleGoalOther()">
+                        <option value="meeting" data-i18n="qsGoalMeeting">Назначить встречу / созвон</option>
+                        <option value="qualify" data-i18n="qsGoalQualify">Квалифицировать лид</option>
+                        <option value="sell" data-i18n="qsGoalSell">Продать продукт / услугу</option>
+                        <option value="other" data-i18n="qsGoalOther">Другое</option>
+                    </select>
+                </div>
+                <div class="qs-field" id="qsGoalOtherWrap" style="display:none">
+                    <textarea class="qs-textarea" id="qsGoalOtherText" data-i18n-ph="phQsGoalOther" placeholder="Опишите цель звонка"></textarea>
+                </div>
+                <div class="qs-field">
+                    <label class="qs-label" data-i18n="qsCollectFields">Какие данные собирать у клиента?</label>
+                    <textarea class="qs-textarea" id="qsCollectFields" data-i18n-ph="phQsCollectFields" placeholder="Имя, компания, бюджет, сроки и т.д."></textarea>
+                </div>
+            </div>
+
+            <!-- Step 6: Rules -->
+            <div class="qs-step" id="qsStep6">
+                <div class="qs-field">
+                    <label class="qs-label" data-i18n="qsForbidden">Что запрещено говорить?</label>
+                    <textarea class="qs-textarea" id="qsForbidden" data-i18n-ph="phQsForbidden" placeholder="Темы, слова, формулировки которых стоит избегать"></textarea>
+                </div>
+                <div class="qs-field">
+                    <label class="qs-label" data-i18n="qsNoPromise">Что не обещать клиенту?</label>
+                    <textarea class="qs-textarea" id="qsNoPromise" data-i18n-ph="phQsNoPromise" placeholder="Скидки, сроки, гарантии которые нельзя обещать"></textarea>
+                </div>
+                <div class="qs-field">
+                    <label class="qs-label" data-i18n="qsTerms">Специальные термины и сокращения</label>
+                    <textarea class="qs-textarea" id="qsTerms" data-i18n-ph="phQsTerms" placeholder="Термины которые робот должен знать и использовать"></textarea>
+                </div>
+            </div>
+
+            <!-- Step 7: Dialog name -->
+            <div class="qs-step" id="qsStep7">
+                <div class="qs-field">
+                    <label class="qs-label" data-i18n="qsDialogName">Как назовём диалог?</label>
+                    <input type="text" class="qs-textarea" style="min-height:auto;padding:12px 14px;" id="qsDialogName" data-i18n-ph="phQsDialogName" placeholder="Например: Продажи CRM для B2B" maxlength="100">
+                </div>
+            </div>
+
+            <div class="qs-nav">
+                <button class="qs-btn-skip" id="qsBtnSkip" onclick="qsGoToStep(qsCurrentStep+1)" style="display:none" data-i18n="qsSkip">Пропустить</button>
+                <div style="flex:1"></div>
+                <button class="qs-btn-back" id="qsBtnBack" onclick="qsGoToStep(qsCurrentStep-1)" style="display:none" data-i18n="qsBack">Назад</button>
+                <button class="qs-btn-next" id="qsBtnNext" onclick="qsGoToStep(qsCurrentStep+1)" data-i18n="qsNext">Далее</button>
+            </div>
+        </div>
+    </div>
+
     <!-- ===== DASHBOARD ===== -->
     <div id="dashboard">
         <div class="bg">
@@ -1313,8 +1894,45 @@
         <div class="dash-content">
             <!-- PAGE: Главное -->
             <div class="page-section active" id="pageMain">
+                <!-- DIALOG LIST VIEW -->
+                <div id="dialogListView">
+                    <div class="dlg-list-header">
+                        <h1 data-i18n="dlgListTitle">Диалоги</h1>
+                        <div class="dlg-list-actions">
+                            <button class="dlg-btn-quickstart" onclick="quickStartDialog()">
+                                <span>&#10022;</span>
+                                <span data-i18n="dlgQuickStart">Быстрый старт</span>
+                            </button>
+                            <button class="dlg-btn-create" onclick="openCreateDialogModal()">
+                                <span>+</span>
+                                <span data-i18n="dlgCreate">Создать диалог</span>
+                            </button>
+                        </div>
+                    </div>
+                    <div class="dlg-table-wrapper">
+                        <table class="dlg-table">
+                            <thead>
+                                <tr>
+                                    <th data-i18n="dlgColName">Название</th>
+                                    <th data-i18n="dlgColCreated">Создан</th>
+                                    <th data-i18n="dlgColUpdated">Изменён</th>
+                                    <th></th>
+                                </tr>
+                            </thead>
+                            <tbody id="dialogTableBody"></tbody>
+                        </table>
+                        <div class="dlg-empty" id="dlgEmpty" style="display:none;" data-i18n="dlgEmpty">Нет диалогов. Создайте первый!</div>
+                    </div>
+                </div>
+
+                <!-- DIALOG DETAIL VIEW -->
+                <div id="dialogDetailView" style="display:none;">
+                <button class="dlg-back-btn" onclick="showDialogList()">
+                    <span>&#8592;</span>
+                    <span data-i18n="dlgBack">Назад</span>
+                </button>
                 <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:4px;">
-                    <div class="bot-header-title">ИП Максимов – Логистика для селлеров</div>
+                    <div class="bot-header-title" id="botHeaderTitle">ИП Максимов – Логистика для селлеров</div>
                     <span class="save-status saved" id="saveStatus" data-i18n="saved">Сохранено</span>
                 </div>
                 <div class="bot-header-updated" id="lastUpdated" data-i18n="botUpdated">Последнее обновление: только что</div>
@@ -1414,13 +2032,152 @@
                 <div class="bot-tab-content" id="tabKnowledge">
                     <div class="stub-content" data-i18n="stub">Раздел в разработке</div>
                 </div>
+                </div><!-- /dialogDetailView -->
             </div>
 
             <!-- PAGE: Статистика -->
             <div class="page-section" id="pageStats">
-                <h1 data-i18n="pStatsT">Статистика</h1>
-                <p class="subtitle" data-i18n="pStatsSub">Аналитика и отчёты</p>
-                <div class="stub-content" data-i18n="stub">Раздел в разработке</div>
+                <div class="st-wrap">
+                    <!-- HEADER -->
+                    <div class="st-header">
+                      <div>
+                        <h2>Статистика</h2>
+                      </div>
+                      <div style="display:flex;align-items:center;gap:12px;flex-wrap:wrap">
+                        <div class="st-tabs">
+                          <button class="st-tab active" onclick="stSwitchTab(this,'overview')">Обзор</button>
+                          <button class="st-tab" onclick="stSwitchTab(this,'analytics')">Аналитика</button>
+                        </div>
+                        <!-- DATE PICKER -->
+                        <div class="st-datepicker-wrap">
+                          <button class="st-datepicker-btn" onclick="stToggleCalendar()">
+                            <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="4" width="18" height="18" rx="2"/><line x1="16" y1="2" x2="16" y2="6"/><line x1="8" y1="2" x2="8" y2="6"/><line x1="3" y1="10" x2="21" y2="10"/></svg>
+                            <span id="st-date-label">23 фев – 1 мар 2026</span>
+                          </button>
+                          <div class="st-calendar-popup" id="st-calendar-popup">
+                            <div style="width:100%">
+                              <div style="display:flex;gap:24px;flex-wrap:wrap">
+                                <div class="st-cal-section" id="st-cal-left"></div>
+                                <div class="st-cal-section" id="st-cal-right"></div>
+                              </div>
+                              <div class="st-cal-presets">
+                                <button class="st-preset-btn" onclick="stSetPreset(1)">Сегодня</button>
+                                <button class="st-preset-btn" onclick="stSetPreset(7)">7 дней</button>
+                                <button class="st-preset-btn" onclick="stSetPreset(14)">14 дней</button>
+                                <button class="st-preset-btn" onclick="stSetPreset(30)">30 дней</button>
+                                <button class="st-preset-btn" onclick="stSetPreset(0,'month')">Этот месяц</button>
+                              </div>
+                              <button class="st-cal-apply" onclick="stApplyDate()">Применить</button>
+                            </div>
+                          </div>
+                        </div>
+                      </div>
+                    </div>
+
+                    <!-- STATS CARDS -->
+                    <div class="st-stats-grid">
+                      <div class="st-stat-card">
+                        <div class="st-stat-label">Потрачено</div>
+                        <div class="st-stat-value">347 мин</div>
+                        <div class="st-stat-sub">Списано: <strong>1 248,00 ₽</strong></div>
+                        <div class="st-stat-sub" style="margin-top:4px">За выбранный период</div>
+                      </div>
+                      <div class="st-stat-card">
+                        <div class="st-stat-label">Контактов обработано</div>
+                        <div class="st-stat-value">+84 <span class="st-stat-badge st-badge-up">↑ 12%</span></div>
+                        <div class="st-stat-sub">В процессе дозвона: <strong>6</strong></div>
+                        <div class="st-stat-sub" style="margin-top:4px">
+                          <span style="color:#2ecc71">↑ Рост контактов</span> — за период
+                        </div>
+                      </div>
+                      <div class="st-stat-card">
+                        <div class="st-stat-label">Ответов</div>
+                        <div class="st-stat-value">+61 <span class="st-stat-badge st-badge-up">↑ 8%</span></div>
+                        <div class="st-stat-sub" style="margin-top:4px">
+                          <span style="color:#2ecc71">↑ Рост ответов</span> — за период
+                        </div>
+                      </div>
+                      <div class="st-stat-card">
+                        <div class="st-stat-label">Лидов передано</div>
+                        <div class="st-stat-value">+23 <span class="st-stat-badge st-badge-up">↑ 19%</span></div>
+                        <div class="st-stat-sub" style="margin-top:4px">
+                          <span style="color:#2ecc71">↑ Рост лидов</span> — за период
+                        </div>
+                      </div>
+                      <div class="st-stat-card">
+                        <div class="st-stat-label">Конверсия из ответов в лида</div>
+                        <div class="st-stat-value">37.7% <span class="st-stat-badge st-badge-down">↓ 3%</span></div>
+                        <div class="st-stat-sub" style="margin-top:4px">
+                          <span style="color:#e74c3c">↓ Снижение конверсии</span> — за период
+                        </div>
+                      </div>
+                      <div class="st-stat-card">
+                        <div class="st-stat-label">Контакты в работе</div>
+                        <div class="st-stat-value" style="font-size:20px;margin-top:8px">
+                          <div style="display:flex;align-items:center;gap:8px;margin-bottom:6px">
+                            <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" style="opacity:0.5"><path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"/><circle cx="12" cy="7" r="4"/></svg>
+                            <span style="font-size:16px;font-weight:600">Запланировано: <span style="color:#4f8eff">14</span></span>
+                          </div>
+                          <div style="display:flex;align-items:center;gap:8px">
+                            <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" style="opacity:0.5"><path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"/><circle cx="12" cy="7" r="4"/></svg>
+                            <span style="font-size:16px;font-weight:600">В очереди: <span style="color:#f1c40f">8</span></span>
+                          </div>
+                        </div>
+                        <div class="st-stat-sub" style="margin-top:8px">*Во всех активных колл-листах</div>
+                      </div>
+                    </div>
+
+                    <!-- CALLS SECTION -->
+                    <div class="st-calls-section">
+                      <div class="st-calls-header">
+                        <div class="st-calls-title">Журнал звонков</div>
+                        <div style="font-size:13px;color:rgba(255,255,255,0.7)">Показано: <span id="st-count-shown">20</span> из 84</div>
+                      </div>
+
+                      <div class="st-filters-row">
+                        <input class="st-search-input" type="text" placeholder="Поиск по имени или номеру..." oninput="stApplyFilters()">
+                        <select class="st-filter-select" id="st-f-status" onchange="stApplyFilters()">
+                          <option value="">Статус звонка</option>
+                          <option value="success">Успешный</option>
+                          <option value="fail">Неудачный</option>
+                          <option value="noanswer">Нет ответа</option>
+                          <option value="busy">Занято</option>
+                        </select>
+                        <select class="st-filter-select" id="st-f-lead" onchange="stApplyFilters()">
+                          <option value="">Квалификация лида</option>
+                          <option value="yes">Лид квалифицирован</option>
+                          <option value="no">Не квалифицирован</option>
+                        </select>
+                        <select class="st-filter-select" id="st-f-dur" onchange="stApplyFilters()">
+                          <option value="">Длительность</option>
+                          <option value="short">< 1 мин</option>
+                          <option value="mid">1–3 мин</option>
+                          <option value="long">> 3 мин</option>
+                        </select>
+                        <select class="st-filter-select" id="st-f-mp" onchange="stApplyFilters()">
+                          <option value="">Маркетплейс</option>
+                          <option value="wb">Wildberries</option>
+                          <option value="ozon">Ozon</option>
+                          <option value="ym">Яндекс Маркет</option>
+                        </select>
+                      </div>
+
+                      <div class="st-col-labels">
+                        <div>#</div>
+                        <div>Контакт</div>
+                        <div>Статус</div>
+                        <div>Длит.</div>
+                        <div>Лид</div>
+                        <div>Маркетплейс</div>
+                        <div>Дата и время</div>
+                        <div>Аудио</div>
+                      </div>
+
+                      <div class="st-calls-scroll" id="st-calls-list">
+                        <!-- Generated by JS -->
+                      </div>
+                    </div>
+                </div>
             </div>
 
             <!-- PAGE: Скиллбейзы -->
@@ -1502,10 +2259,16 @@
 
     <div class="tts-toast" id="ttsToast"></div>
 
+    <!-- Shared context menu (outside overflow containers) -->
+    <div class="dlg-context-menu" id="dlgContextMenu"></div>
+
     <script>
         const modal = document.getElementById('modal');
         const landingPage = document.getElementById('landingPage');
         const dashboard = document.getElementById('dashboard');
+
+        // ===== DIALOG LIST STATE =====
+        var dialogs = [], dialogIdCounter = 0, currentDialogId = null, deleteTargetId = null;
 
         function openModal() {
             modal.classList.add('active');
@@ -1695,7 +2458,466 @@
             }, 100);
         }
 
+        // ===== DIALOG LIST CRUD =====
+        function createDialogObject(name) {
+            dialogIdCounter++;
+            var now = new Date().toISOString();
+            return {
+                id: 'dlg_' + dialogIdCounter,
+                name: name,
+                createdAt: now,
+                updatedAt: now,
+                botRole: '',
+                botStyle: '',
+                rules: [],
+                facts: [],
+                criteria: [],
+                greetings: [],
+                planItems: []
+            };
+        }
+
+        function openCreateDialogModal() {
+            document.getElementById('createDialogModal').classList.add('active');
+            document.body.style.overflow = 'hidden';
+            var inp = document.getElementById('newDialogName');
+            inp.value = '';
+            setTimeout(function() { inp.focus(); }, 100);
+        }
+
+        function closeCreateDialogModal() {
+            document.getElementById('createDialogModal').classList.remove('active');
+            document.body.style.overflow = '';
+        }
+
+        function createDialog() {
+            var name = document.getElementById('newDialogName').value.trim();
+            if (!name) return;
+            var dlg = createDialogObject(name);
+            dialogs.push(dlg);
+            closeCreateDialogModal();
+            renderDialogTable();
+        }
+
+        var qsCurrentStep = 1;
+        var qsFiles = [];
+
+        function quickStartDialog() {
+            qsResetForm();
+            qsCurrentStep = 1;
+            qsGoToStep(1);
+            document.getElementById('qsWizard').classList.add('active');
+            document.body.style.overflow = 'hidden';
+            applyLang();
+        }
+
+        function closeQsWizard() {
+            document.getElementById('qsWizard').classList.remove('active');
+            document.body.style.overflow = '';
+        }
+
+        function qsResetForm() {
+            var ids = ['qsWhatSell','qsWhoTarget','qsAdvantages','qsGreetings','qsPitch','qsClosing',
+                       'qsProductLine','qsMinConditions','qsFactsFigures','qsCollectFields',
+                       'qsForbidden','qsNoPromise','qsTerms','qsGoalOtherText','qsAfterOtherText','qsDialogName'];
+            ids.forEach(function(id) { document.getElementById(id).value = ''; });
+            document.getElementById('qsAfterCall').selectedIndex = 0;
+            document.getElementById('qsGoal').selectedIndex = 0;
+            document.getElementById('qsGoalOtherWrap').style.display = 'none';
+            document.getElementById('qsAfterOtherWrap').style.display = 'none';
+            qsFiles = [];
+            document.getElementById('qsFileList').innerHTML = '';
+            document.getElementById('qsFileInput').value = '';
+        }
+
+        function qsGoToStep(n) {
+            if (n < 1 || n > 7) return;
+            qsCurrentStep = n;
+            for (var i = 1; i <= 7; i++) {
+                var step = document.getElementById('qsStep' + i);
+                if (step) step.classList.toggle('active', i === n);
+            }
+            qsUpdateProgress(n);
+            // Nav buttons
+            document.getElementById('qsBtnBack').style.display = n > 1 ? '' : 'none';
+            document.getElementById('qsBtnSkip').style.display = (n === 3) ? '' : 'none';
+            var nextBtn = document.getElementById('qsBtnNext');
+            if (n === 7) {
+                nextBtn.textContent = t('qsFinishBtn');
+                nextBtn.onclick = qsFinish;
+            } else {
+                nextBtn.textContent = t('qsNext');
+                nextBtn.onclick = function() { qsGoToStep(qsCurrentStep + 1); };
+            }
+        }
+
+        function qsUpdateProgress(step) {
+            for (var i = 1; i <= 7; i++) {
+                var dot = document.getElementById('qsDot' + i);
+                dot.classList.remove('active', 'done');
+                if (i === step) dot.classList.add('active');
+                else if (i < step) dot.classList.add('done');
+            }
+            for (var j = 1; j <= 6; j++) {
+                var line = document.getElementById('qsLine' + j);
+                line.classList.toggle('done', j < step);
+            }
+        }
+
+        function qsToggleAfterOther() {
+            var sel = document.getElementById('qsAfterCall').value;
+            document.getElementById('qsAfterOtherWrap').style.display = sel === 'other' ? '' : 'none';
+        }
+
+        function qsToggleGoalOther() {
+            var sel = document.getElementById('qsGoal').value;
+            document.getElementById('qsGoalOtherWrap').style.display = sel === 'other' ? '' : 'none';
+        }
+
+        function qsHandleFiles(fileList) {
+            for (var i = 0; i < fileList.length; i++) {
+                var f = fileList[i];
+                if (f.size <= 25 * 1024 * 1024) qsFiles.push(f);
+            }
+            qsRenderFileList();
+        }
+
+        function qsRemoveFile(idx) {
+            qsFiles.splice(idx, 1);
+            qsRenderFileList();
+        }
+
+        function qsRenderFileList() {
+            var html = '';
+            qsFiles.forEach(function(f, i) {
+                var size = (f.size / 1024 / 1024).toFixed(1) + ' MB';
+                html += '<div class="qs-file-item"><span style="flex:1">' + f.name + ' (' + size + ')</span>' +
+                        '<button onclick="qsRemoveFile(' + i + ')">&times;</button></div>';
+            });
+            document.getElementById('qsFileList').innerHTML = html;
+        }
+
+        // Drag-and-drop for upload area
+        (function() {
+            document.addEventListener('DOMContentLoaded', function() {
+                var area = document.getElementById('qsUploadArea');
+                if (!area) return;
+                area.addEventListener('dragover', function(e) { e.preventDefault(); area.classList.add('dragover'); });
+                area.addEventListener('dragleave', function() { area.classList.remove('dragover'); });
+                area.addEventListener('drop', function(e) {
+                    e.preventDefault(); area.classList.remove('dragover');
+                    qsHandleFiles(e.dataTransfer.files);
+                });
+            });
+        })();
+
+        function qsSplitToItems(text) {
+            if (!text || !text.trim()) return [];
+            // Split by newlines first
+            var lines = text.split(/\n/);
+            var result = [];
+            lines.forEach(function(line) {
+                line = line.trim();
+                if (!line) return;
+                // Split by ; then by , but not inside words
+                var parts = line.split(/[;]/);
+                parts.forEach(function(part) {
+                    // Split by " и " (with spaces) as separator
+                    var subparts = part.split(/\s+и\s+/);
+                    subparts.forEach(function(sp) {
+                        // Also split by comma
+                        var items = sp.split(/,/);
+                        items.forEach(function(item) {
+                            item = item.trim();
+                            if (item) {
+                                // Capitalize first letter
+                                result.push(item.charAt(0).toUpperCase() + item.slice(1));
+                            }
+                        });
+                    });
+                });
+            });
+            return result;
+        }
+
+        function qsFinish() {
+            var v = function(id) { return document.getElementById(id).value.trim(); };
+            var dialogName = v('qsDialogName') || t('dlgQuickStartName');
+            var dlg = createDialogObject(dialogName);
+
+            // botRole: "Продаю [что] для [кому]"
+            var what = v('qsWhatSell');
+            var who = v('qsWhoTarget');
+            if (what || who) {
+                dlg.botRole = (currentLang === 'ru' ? 'Продаю ' : 'Selling ') +
+                              (what || '...') +
+                              (currentLang === 'ru' ? ' для ' : ' for ') +
+                              (who || '...');
+            }
+
+            // botStyle: opening phrases from step 2
+            dlg.botStyle = v('qsGreetings');
+
+            // greetings[]: split greeting phrases
+            var greetItems = qsSplitToItems(v('qsGreetings'));
+            greetingIdCounter = greetingIdCounter || 0;
+            greetItems.forEach(function(txt) {
+                greetingIdCounter++;
+                dlg.greetings.push({ id: 'greet_' + greetingIdCounter, text: txt });
+            });
+
+            // planItems[]: pitch + closing from step 2
+            var planTexts = qsSplitToItems(v('qsPitch'));
+            var closeTexts = qsSplitToItems(v('qsClosing'));
+            planIdCounter = planIdCounter || 0;
+            planTexts.concat(closeTexts).forEach(function(txt) {
+                planIdCounter++;
+                dlg.planItems.push({ id: 'plan_' + planIdCounter, text: txt });
+            });
+
+            // facts[]: advantages (step1) + product line + conditions + facts (step4)
+            var factTexts = qsSplitToItems(v('qsAdvantages'))
+                .concat(qsSplitToItems(v('qsProductLine')))
+                .concat(qsSplitToItems(v('qsMinConditions')))
+                .concat(qsSplitToItems(v('qsFactsFigures')));
+            factIdCounter = factIdCounter || 0;
+            factTexts.forEach(function(txt) {
+                factIdCounter++;
+                dlg.facts.push({ id: 'fact_' + factIdCounter, text: txt });
+            });
+
+            // criteria[]: collect fields (step5) + goal + after-call action (step1)
+            var critTexts = qsSplitToItems(v('qsCollectFields'));
+            // Add goal
+            var goalSel = document.getElementById('qsGoal');
+            var goalText = goalSel.value === 'other' ? v('qsGoalOtherText') : goalSel.options[goalSel.selectedIndex].textContent;
+            if (goalText) critTexts.push(goalText.charAt(0).toUpperCase() + goalText.slice(1));
+            // Add after-call action
+            var afterSel = document.getElementById('qsAfterCall');
+            var afterText = afterSel.value === 'other' ? v('qsAfterOtherText') : afterSel.options[afterSel.selectedIndex].textContent;
+            if (afterText) critTexts.push(afterText.charAt(0).toUpperCase() + afterText.slice(1));
+            criterionIdCounter = criterionIdCounter || 0;
+            critTexts.forEach(function(txt) {
+                criterionIdCounter++;
+                dlg.criteria.push({ id: 'crit_' + criterionIdCounter, text: txt });
+            });
+
+            // rules[]: forbidden + no promise + terms (step6)
+            var ruleTexts = qsSplitToItems(v('qsForbidden'))
+                .concat(qsSplitToItems(v('qsNoPromise')))
+                .concat(qsSplitToItems(v('qsTerms')));
+            ruleIdCounter = ruleIdCounter || 0;
+            ruleTexts.forEach(function(txt) {
+                ruleIdCounter++;
+                dlg.rules.push({ id: 'rule_' + ruleIdCounter, text: txt });
+            });
+
+            dialogs.push(dlg);
+            closeQsWizard();
+            renderDialogTable();
+            openDialogDetail(dlg.id);
+        }
+
+        function openDeleteDialogModal(id) {
+            deleteTargetId = id;
+            document.getElementById('deleteDialogModal').classList.add('active');
+            document.body.style.overflow = 'hidden';
+        }
+
+        function closeDeleteDialogModal() {
+            deleteTargetId = null;
+            document.getElementById('deleteDialogModal').classList.remove('active');
+            document.body.style.overflow = '';
+        }
+
+        function confirmDeleteDialog() {
+            if (!deleteTargetId) return;
+            dialogs = dialogs.filter(function(d) { return d.id !== deleteTargetId; });
+            if (currentDialogId === deleteTargetId) {
+                currentDialogId = null;
+                showDialogList();
+            }
+            closeDeleteDialogModal();
+            renderDialogTable();
+        }
+
+        function toggleContextMenu(id, event) {
+            event.stopPropagation();
+            var menu = document.getElementById('dlgContextMenu');
+            // If already open for this id, close it
+            if (menu.classList.contains('show') && menu.getAttribute('data-dlg-id') === id) {
+                closeAllContextMenus();
+                return;
+            }
+            menu.setAttribute('data-dlg-id', id);
+            menu.innerHTML =
+                '<button class="dlg-context-item" onclick="event.stopPropagation();startRename(\'' + id + '\')">' + t('dlgRename') + '</button>' +
+                '<button class="dlg-context-item" onclick="event.stopPropagation();cloneDialog(\'' + id + '\')">' + t('dlgClone') + '</button>' +
+                '<button class="dlg-context-item danger" onclick="event.stopPropagation();openDeleteDialogModal(\'' + id + '\')">' + t('dlgDelete') + '</button>';
+            var btn = event.currentTarget;
+            var rect = btn.getBoundingClientRect();
+            menu.style.top = (rect.bottom + 4) + 'px';
+            menu.style.left = '';
+            menu.style.right = (window.innerWidth - rect.right) + 'px';
+            menu.classList.add('show');
+        }
+
+        function closeAllContextMenus() {
+            var menu = document.getElementById('dlgContextMenu');
+            menu.classList.remove('show');
+        }
+
+        function startRename(id) {
+            closeAllContextMenus();
+            var cell = document.getElementById('namecell_' + id);
+            if (!cell) return;
+            var dlg = dialogs.find(function(d) { return d.id === id; });
+            if (!dlg) return;
+            cell.innerHTML = '<input class="dlg-name-input" id="renameinp_' + id + '" value="' + escapeHtml(dlg.name) + '" maxlength="100" onclick="event.stopPropagation()" onkeydown="if(event.key===\'Enter\'){finishRename(\'' + id + '\',this.value);event.preventDefault();}if(event.key===\'Escape\'){renderDialogTable();}" onblur="finishRename(\'' + id + '\',this.value)">';
+            var inp = document.getElementById('renameinp_' + id);
+            if (inp) { inp.focus(); inp.select(); }
+        }
+
+        function finishRename(id, value) {
+            var name = value.trim();
+            if (!name) { renderDialogTable(); return; }
+            var dlg = dialogs.find(function(d) { return d.id === id; });
+            if (dlg) {
+                dlg.name = name;
+                dlg.updatedAt = new Date().toISOString();
+            }
+            renderDialogTable();
+        }
+
+        function cloneDialog(id) {
+            closeAllContextMenus();
+            var src = dialogs.find(function(d) { return d.id === id; });
+            if (!src) return;
+            var clone = createDialogObject(src.name + ' ' + t('dlgCopySuffix'));
+            clone.botRole = src.botRole;
+            clone.botStyle = src.botStyle;
+            clone.rules = JSON.parse(JSON.stringify(src.rules));
+            clone.facts = JSON.parse(JSON.stringify(src.facts));
+            clone.criteria = JSON.parse(JSON.stringify(src.criteria));
+            clone.greetings = JSON.parse(JSON.stringify(src.greetings));
+            clone.planItems = JSON.parse(JSON.stringify(src.planItems));
+            // Regenerate IDs in cloned arrays
+            var regen = function(arr, prefix) {
+                arr.forEach(function(item) {
+                    dialogIdCounter++;
+                    item.id = prefix + '_' + dialogIdCounter;
+                });
+            };
+            regen(clone.rules, 'rule');
+            regen(clone.facts, 'fact');
+            regen(clone.criteria, 'crit');
+            regen(clone.greetings, 'greet');
+            regen(clone.planItems, 'plan');
+            dialogs.push(clone);
+            renderDialogTable();
+        }
+
+        function formatDate(isoStr) {
+            var d = new Date(isoStr);
+            var pad = function(n) { return n < 10 ? '0' + n : n; };
+            return pad(d.getDate()) + '.' + pad(d.getMonth() + 1) + '.' + d.getFullYear() + ' ' + pad(d.getHours()) + ':' + pad(d.getMinutes());
+        }
+
+        function renderDialogTable() {
+            var tbody = document.getElementById('dialogTableBody');
+            var emptyEl = document.getElementById('dlgEmpty');
+            tbody.innerHTML = '';
+            if (dialogs.length === 0) {
+                emptyEl.style.display = '';
+                return;
+            }
+            emptyEl.style.display = 'none';
+            dialogs.forEach(function(dlg) {
+                var tr = document.createElement('tr');
+                tr.onclick = function() { openDialogDetail(dlg.id); };
+                tr.innerHTML =
+                    '<td class="dlg-name-cell" id="namecell_' + dlg.id + '">' + escapeHtml(dlg.name) + '</td>' +
+                    '<td class="dlg-date">' + formatDate(dlg.createdAt) + '</td>' +
+                    '<td class="dlg-date">' + formatDate(dlg.updatedAt) + '</td>' +
+                    '<td style="text-align:center;">' +
+                        '<button class="dlg-menu-btn" onclick="toggleContextMenu(\'' + dlg.id + '\',event)" title="' + t('tipMore') + '">&#8942;</button>' +
+                    '</td>';
+                tbody.appendChild(tr);
+            });
+        }
+
+        function openDialogDetail(id) {
+            var dlg = dialogs.find(function(d) { return d.id === id; });
+            if (!dlg) return;
+            currentDialogId = id;
+            loadDialogIntoForm(dlg);
+            document.getElementById('dialogListView').style.display = 'none';
+            document.getElementById('dialogDetailView').style.display = '';
+            document.getElementById('botHeaderTitle').textContent = dlg.name;
+        }
+
+        function showDialogList() {
+            if (currentDialogId) saveFormIntoDialog(currentDialogId);
+            currentDialogId = null;
+            document.getElementById('dialogDetailView').style.display = 'none';
+            document.getElementById('dialogListView').style.display = '';
+            renderDialogTable();
+        }
+
+        function loadDialogIntoForm(dlg) {
+            document.getElementById('botSellerRole').value = dlg.botRole;
+            document.getElementById('roleCount').textContent = dlg.botRole.length + '/500';
+            document.getElementById('botSpeechStyle').value = dlg.botStyle;
+            document.getElementById('styleCount').textContent = dlg.botStyle.length + '/500';
+            // Load arrays
+            botRules = JSON.parse(JSON.stringify(dlg.rules));
+            botFacts = JSON.parse(JSON.stringify(dlg.facts));
+            botCriteria = JSON.parse(JSON.stringify(dlg.criteria));
+            botGreetings = JSON.parse(JSON.stringify(dlg.greetings));
+            botPlanItems = JSON.parse(JSON.stringify(dlg.planItems));
+            // Sync counters to max existing ID to prevent collisions
+            var maxId = dialogIdCounter;
+            [].concat(dlg.rules, dlg.facts, dlg.criteria, dlg.greetings, dlg.planItems).forEach(function(item) {
+                var m = item.id.match(/(\d+)$/);
+                if (m) maxId = Math.max(maxId, parseInt(m[1], 10));
+            });
+            dialogIdCounter = maxId;
+            ruleIdCounter = maxId;
+            factIdCounter = maxId;
+            criterionIdCounter = maxId;
+            greetingIdCounter = maxId;
+            planIdCounter = maxId;
+            // Render
+            renderRules();
+            renderFacts();
+            renderCriteria();
+            renderGreetings();
+            renderPlanItems();
+            // Reset to context tab
+            switchBotTab('context', document.querySelector('#botTabs .bot-tab'));
+        }
+
+        function saveFormIntoDialog(id) {
+            var dlg = dialogs.find(function(d) { return d.id === id; });
+            if (!dlg) return;
+            dlg.botRole = document.getElementById('botSellerRole').value;
+            dlg.botStyle = document.getElementById('botSpeechStyle').value;
+            dlg.rules = JSON.parse(JSON.stringify(botRules));
+            dlg.facts = JSON.parse(JSON.stringify(botFacts));
+            dlg.criteria = JSON.parse(JSON.stringify(botCriteria));
+            dlg.greetings = JSON.parse(JSON.stringify(botGreetings));
+            dlg.planItems = JSON.parse(JSON.stringify(botPlanItems));
+            dlg.updatedAt = new Date().toISOString();
+        }
+
         function setActive(el) {
+            // Save current dialog before navigating away
+            if (currentDialogId) {
+                saveFormIntoDialog(currentDialogId);
+                currentDialogId = null;
+                document.getElementById('dialogDetailView').style.display = 'none';
+                document.getElementById('dialogListView').style.display = '';
+            }
             document.querySelectorAll('.sidebar-nav a').forEach(a => a.classList.remove('active'));
             el.classList.add('active');
             var pageId = el.getAttribute('data-page');
@@ -1732,6 +2954,7 @@
             status.className = 'save-status saving';
             if (saveTimer) clearTimeout(saveTimer);
             saveTimer = setTimeout(function() {
+                if (currentDialogId) saveFormIntoDialog(currentDialogId);
                 status.textContent = t('saved');
                 status.className = 'save-status saved';
                 document.getElementById('lastUpdated').textContent = t('botUpdated');
@@ -2585,6 +3808,88 @@
             valInn: { ru:'ИНН должен содержать 10 или 12 цифр', en:'TIN must contain 10 or 12 digits' },
             valName: { ru:'Укажите имя (только буквы)', en:'Enter name (letters only)' },
             valPhone: { ru:'Введите корректный номер телефона', en:'Enter a valid phone number' },
+            // Dialog list
+            dlgListTitle: { ru:'Диалоги', en:'Dialogs' },
+            dlgCreate: { ru:'Создать диалог', en:'Create Dialog' },
+            dlgQuickStart: { ru:'Быстрый старт', en:'Quick Start' },
+            dlgQuickStartName: { ru:'Новый диалог', en:'New Dialog' },
+            dlgColName: { ru:'Название', en:'Name' },
+            dlgColCreated: { ru:'Создан', en:'Created' },
+            dlgColUpdated: { ru:'Изменён', en:'Updated' },
+            dlgBack: { ru:'Назад', en:'Back' },
+            dlgCreateTitle: { ru:'Новый диалог', en:'New Dialog' },
+            dlgCreateSub: { ru:'Введите название для нового диалога', en:'Enter a name for the new dialog' },
+            dlgNameLabel: { ru:'Название', en:'Name' },
+            phDlgName: { ru:'Например: Продажи B2B', en:'Example: B2B Sales' },
+            dlgCreateBtn: { ru:'Создать', en:'Create' },
+            dlgCancelBtn: { ru:'Отмена', en:'Cancel' },
+            dlgDeleteTitle: { ru:'Удалить диалог?', en:'Delete dialog?' },
+            dlgDeleteConfirm: { ru:'Это действие нельзя отменить. Все данные диалога будут потеряны.', en:'This action cannot be undone. All dialog data will be lost.' },
+            dlgDeleteBtn: { ru:'Удалить', en:'Delete' },
+            dlgRename: { ru:'Переименовать', en:'Rename' },
+            dlgClone: { ru:'Дублировать', en:'Duplicate' },
+            dlgDelete: { ru:'Удалить', en:'Delete' },
+            dlgCopySuffix: { ru:'(копия)', en:'(copy)' },
+            dlgEmpty: { ru:'Нет диалогов. Создайте первый!', en:'No dialogs yet. Create your first one!' },
+            tipMore: { ru:'Действия', en:'Actions' },
+
+            // Quick Start Wizard
+            qsTitle: { ru:'Быстрый старт', en:'Quick Start' },
+            qsSub: { ru:'Ответьте на вопросы — мы настроим диалог за вас', en:'Answer the questions — we\'ll set up the dialog for you' },
+            qsNext: { ru:'Далее', en:'Next' },
+            qsBack: { ru:'Назад', en:'Back' },
+            qsSkip: { ru:'Пропустить', en:'Skip' },
+            qsFinishBtn: { ru:'Создать диалог', en:'Create dialog' },
+            // Step 1
+            qsWhatSell: { ru:'Что вы продаёте?', en:'What do you sell?' },
+            qsWhoTarget: { ru:'Кому вы продаёте?', en:'Who is your target audience?' },
+            qsAdvantages: { ru:'Ключевые преимущества', en:'Key advantages' },
+            qsAfterCall: { ru:'Что должно произойти после звонка?', en:'What should happen after the call?' },
+            qsAfterMeeting: { ru:'Назначить созвон / встречу', en:'Schedule a meeting' },
+            qsAfterRequest: { ru:'Оставить заявку', en:'Submit a request' },
+            qsAfterKP: { ru:'Отправить КП', en:'Send a proposal' },
+            qsAfterOther: { ru:'Другое', en:'Other' },
+            phQsAfterOther: { ru:'Опишите что должно произойти после звонка', en:'Describe what should happen after the call' },
+            phQsWhatSell: { ru:'Например: CRM-система для автоматизации продаж', en:'E.g.: CRM system for sales automation' },
+            phQsWhoTarget: { ru:'Например: малый и средний бизнес, отделы продаж', en:'E.g.: small and medium businesses, sales teams' },
+            phQsAdvantages: { ru:'Перечислите через запятую или с новой строки', en:'List separated by commas or new lines' },
+            // Step 2
+            qsGreetings: { ru:'Вступительные фразы менеджера', en:'Manager opening phrases' },
+            qsPitch: { ru:'Питч: основные тезисы', en:'Pitch: key points' },
+            qsClosing: { ru:'Закрытие: как завершает разговор', en:'Closing: how to wrap up' },
+            phQsGreetings: { ru:'Как менеджер начинает разговор (каждая фраза с новой строки)', en:'How the manager starts the conversation (each phrase on a new line)' },
+            phQsPitch: { ru:'Ключевые тезисы продажи (каждый с новой строки)', en:'Key sales points (each on a new line)' },
+            phQsClosing: { ru:'Фразы для завершения и перевода в целевое действие', en:'Phrases for closing and converting to target action' },
+            // Step 3
+            qsRecordings: { ru:'Загрузите записи звонков (необязательно)', en:'Upload call recordings (optional)' },
+            qsDragDrop: { ru:'Перетащите файлы сюда или нажмите для выбора', en:'Drag files here or click to select' },
+            qsFileTypes: { ru:'MP3, WAV, OGG — до 25 МБ каждый', en:'MP3, WAV, OGG — up to 25 MB each' },
+            // Step 4
+            qsProductLine: { ru:'Линейка продуктов / тарифы', en:'Product line / pricing plans' },
+            qsMinConditions: { ru:'Минимальные условия сделки', en:'Minimum deal conditions' },
+            qsFactsFigures: { ru:'Факты и цифры о продукте', en:'Product facts and figures' },
+            phQsProductLine: { ru:'Опишите продукты, тарифы, пакеты', en:'Describe products, plans, packages' },
+            phQsMinConditions: { ru:'Минимальный чек, срок, количество и т.д.', en:'Minimum check, term, quantity, etc.' },
+            phQsFactsFigures: { ru:'Статистика, кейсы, достижения', en:'Statistics, case studies, achievements' },
+            // Step 5
+            qsGoal: { ru:'Цель звонка', en:'Call objective' },
+            qsGoalMeeting: { ru:'Назначить встречу / созвон', en:'Schedule a meeting' },
+            qsGoalQualify: { ru:'Квалифицировать лид', en:'Qualify the lead' },
+            qsGoalSell: { ru:'Продать продукт / услугу', en:'Sell a product / service' },
+            qsGoalOther: { ru:'Другое', en:'Other' },
+            qsCollectFields: { ru:'Какие данные собирать у клиента?', en:'What data to collect from the client?' },
+            phQsGoalOther: { ru:'Опишите цель звонка', en:'Describe the call objective' },
+            phQsCollectFields: { ru:'Имя, компания, бюджет, сроки и т.д.', en:'Name, company, budget, timeline, etc.' },
+            // Step 6
+            qsForbidden: { ru:'Что запрещено говорить?', en:'What is forbidden to say?' },
+            qsNoPromise: { ru:'Что не обещать клиенту?', en:'What not to promise the client?' },
+            qsTerms: { ru:'Специальные термины и сокращения', en:'Special terms and abbreviations' },
+            phQsForbidden: { ru:'Темы, слова, формулировки которых стоит избегать', en:'Topics, words, phrases to avoid' },
+            phQsNoPromise: { ru:'Скидки, сроки, гарантии которые нельзя обещать', en:'Discounts, deadlines, guarantees that cannot be promised' },
+            phQsTerms: { ru:'Термины которые робот должен знать и использовать', en:'Terms the robot should know and use' },
+            // Step 7
+            qsDialogName: { ru:'Как назовём диалог?', en:'What shall we name the dialog?' },
+            phQsDialogName: { ru:'Например: Продажи CRM для B2B', en:'E.g.: CRM Sales for B2B' },
         };
 
         function t(key) {
@@ -2626,14 +3931,20 @@
             renderCriteria();
             renderGreetings();
             renderPlanItems();
+            renderDialogTable();
         }
 
-        // Init with one empty item each
-        addRule();
-        addFact();
-        addCriterion();
-        addGreeting();
-        addPlanItem();
+        // Init with one example dialog
+        (function() {
+            var exDlg = createDialogObject('ИП Максимов – Логистика для селлеров');
+            exDlg.rules.push({ id: 'rule_init1', text: '' });
+            exDlg.facts.push({ id: 'fact_init1', text: '' });
+            exDlg.criteria.push({ id: 'crit_init1', text: '' });
+            exDlg.greetings.push({ id: 'greet_init1', text: '' });
+            exDlg.planItems.push({ id: 'plan_init1', text: '' });
+            dialogs.push(exDlg);
+            renderDialogTable();
+        })();
 
         // Apply saved language on load
         if (currentLang === 'en') applyLang();
@@ -2753,8 +4064,255 @@
         }
 
         document.addEventListener('keydown', (e) => {
-            if (e.key === 'Escape') { closeModal(); closeAccessModal(); }
+            if (e.key === 'Escape') { closeModal(); closeAccessModal(); closeCreateDialogModal(); closeDeleteDialogModal(); closeAllContextMenus(); }
         });
+
+        document.addEventListener('click', function() { closeAllContextMenus(); });
+
+        document.getElementById('newDialogName').addEventListener('keydown', function(e) {
+            if (e.key === 'Enter') { e.preventDefault(); createDialog(); }
+        });
+
+        // ===================== STATS PAGE =====================
+        (function() {
+            const ST_MONTHS_RU = ['Январь','Февраль','Март','Апрель','Май','Июнь','Июль','Август','Сентябрь','Октябрь','Ноябрь','Декабрь'];
+            const ST_DAYS_RU = ['Пн','Вт','Ср','Чт','Пт','Сб','Вс'];
+
+            const stCalState = {
+                leftYear: 2026, leftMonth: 1,
+                rightYear: 2026, rightMonth: 2,
+                start: new Date(2026, 1, 23),
+                end: new Date(2026, 2, 1)
+            };
+
+            window.stToggleCalendar = function() {
+                const p = document.getElementById('st-calendar-popup');
+                p.classList.toggle('open');
+                stRenderCals();
+            };
+
+            document.addEventListener('click', function(e) {
+                const popup = document.getElementById('st-calendar-popup');
+                const btn = document.querySelector('.st-datepicker-btn');
+                if (popup && btn && !popup.contains(e.target) && !btn.contains(e.target)) {
+                    popup.classList.remove('open');
+                }
+            });
+
+            function stRenderCals() {
+                stRenderCal('st-cal-left', stCalState.leftYear, stCalState.leftMonth, 'left');
+                stRenderCal('st-cal-right', stCalState.rightYear, stCalState.rightMonth, 'right');
+            }
+
+            function stRenderCal(id, year, month, side) {
+                const el = document.getElementById(id);
+                if (!el) return;
+                const firstDay = new Date(year, month, 1).getDay();
+                const offset = (firstDay === 0 ? 6 : firstDay - 1);
+                const daysInMonth = new Date(year, month + 1, 0).getDate();
+                const today = new Date();
+
+                let html = '<div class="st-cal-header">' +
+                    '<button class="st-cal-nav" onclick="stCalNav(\'' + side + '\',-1)">‹</button>' +
+                    '<span>' + ST_MONTHS_RU[month] + ' ' + year + '</span>' +
+                    '<button class="st-cal-nav" onclick="stCalNav(\'' + side + '\',1)">›</button>' +
+                    '</div><div class="st-cal-grid">';
+                ST_DAYS_RU.forEach(function(d) { html += '<div class="st-cal-day-name">' + d + '</div>'; });
+
+                for (var i = 0; i < offset; i++) {
+                    var prevMonthDays = new Date(year, month, 0).getDate();
+                    var dayNum = prevMonthDays - offset + i + 1;
+                    html += '<div class="st-cal-day other-month">' + dayNum + '</div>';
+                }
+                for (var d = 1; d <= daysInMonth; d++) {
+                    var dt = new Date(year, month, d);
+                    var cls = 'st-cal-day';
+                    if (today.getFullYear()===year && today.getMonth()===month && today.getDate()===d) cls += ' today';
+                    if (stCalState.start && stSameDay(dt, stCalState.start)) cls += ' selected';
+                    if (stCalState.end && stSameDay(dt, stCalState.end)) cls += ' selected';
+                    if (stCalState.start && stCalState.end) {
+                        var s = stCalState.start < stCalState.end ? stCalState.start : stCalState.end;
+                        var e = stCalState.start < stCalState.end ? stCalState.end : stCalState.start;
+                        if (dt > s && dt < e) cls += ' in-range';
+                    }
+                    html += '<div class="' + cls + '" onclick="stPickDay(' + year + ',' + month + ',' + d + ')">' + d + '</div>';
+                }
+                html += '</div>';
+                el.innerHTML = html;
+            }
+
+            function stSameDay(a, b) {
+                return a.getFullYear()===b.getFullYear() && a.getMonth()===b.getMonth() && a.getDate()===b.getDate();
+            }
+
+            window.stCalNav = function(side, dir) {
+                if (side === 'left') {
+                    stCalState.leftMonth += dir;
+                    if (stCalState.leftMonth > 11) { stCalState.leftMonth = 0; stCalState.leftYear++; }
+                    if (stCalState.leftMonth < 0) { stCalState.leftMonth = 11; stCalState.leftYear--; }
+                } else {
+                    stCalState.rightMonth += dir;
+                    if (stCalState.rightMonth > 11) { stCalState.rightMonth = 0; stCalState.rightYear++; }
+                    if (stCalState.rightMonth < 0) { stCalState.rightMonth = 11; stCalState.rightYear--; }
+                }
+                stRenderCals();
+            };
+
+            window.stPickDay = function(y, m, d) {
+                var dt = new Date(y, m, d);
+                if (!stCalState.start || (stCalState.start && stCalState.end)) {
+                    stCalState.start = dt; stCalState.end = null;
+                } else {
+                    if (dt < stCalState.start) { stCalState.end = stCalState.start; stCalState.start = dt; }
+                    else { stCalState.end = dt; }
+                }
+                stRenderCals();
+            };
+
+            window.stSetPreset = function(days, type) {
+                var now = new Date();
+                if (type === 'month') {
+                    stCalState.start = new Date(now.getFullYear(), now.getMonth(), 1);
+                    stCalState.end = now;
+                } else if (days === 1) {
+                    stCalState.start = now; stCalState.end = now;
+                } else {
+                    stCalState.end = now;
+                    stCalState.start = new Date(now - (days-1)*86400000);
+                }
+                stRenderCals();
+            };
+
+            window.stApplyDate = function() {
+                var shortMonths = ['янв','фев','мар','апр','май','июн','июл','авг','сен','окт','ноя','дек'];
+                if (stCalState.start) {
+                    var fmt = function(d) { return d.getDate() + ' ' + shortMonths[d.getMonth()]; };
+                    var label = fmt(stCalState.start);
+                    if (stCalState.end && !stSameDay(stCalState.start, stCalState.end)) {
+                        label += ' – ' + fmt(stCalState.end) + ' ' + stCalState.end.getFullYear();
+                    } else {
+                        label += ' ' + stCalState.start.getFullYear();
+                    }
+                    document.getElementById('st-date-label').textContent = label;
+                }
+                document.getElementById('st-calendar-popup').classList.remove('open');
+            };
+
+            window.stSwitchTab = function(btn, tab) {
+                document.querySelectorAll('.st-tab').forEach(function(t) { t.classList.remove('active'); });
+                btn.classList.add('active');
+            };
+
+            // Calls data
+            var stCalls = [
+                {id:1,name:'Андрей Ситников',phone:'+7 912 345-67-89',status:'success',dur:247,lead:'yes',mp:'wb',date:'01.03.2026',time:'11:42'},
+                {id:2,name:'Ольга Петрова',phone:'+7 905 234-56-78',status:'noanswer',dur:0,lead:'no',mp:'ozon',date:'01.03.2026',time:'10:15'},
+                {id:3,name:'Дмитрий Каюмов',phone:'+7 916 789-01-23',status:'success',dur:183,lead:'yes',mp:'ym',date:'01.03.2026',time:'09:55'},
+                {id:4,name:'Марина Лукьянова',phone:'+7 926 456-78-90',status:'fail',dur:34,lead:'no',mp:'wb',date:'28.02.2026',time:'17:30'},
+                {id:5,name:'Игорь Семёнов',phone:'+7 903 321-54-76',status:'success',dur:512,lead:'yes',mp:'ozon',date:'28.02.2026',time:'16:08'},
+                {id:6,name:'Екатерина Борисова',phone:'+7 919 654-32-10',status:'busy',dur:8,lead:'no',mp:'wb',date:'28.02.2026',time:'14:22'},
+                {id:7,name:'Виктор Захаров',phone:'+7 931 112-23-34',status:'success',dur:298,lead:'no',mp:'ym',date:'27.02.2026',time:'13:45'},
+                {id:8,name:'Наталья Фролова',phone:'+7 906 987-65-43',status:'noanswer',dur:0,lead:'no',mp:'ozon',date:'27.02.2026',time:'12:10'},
+                {id:9,name:'Алексей Громов',phone:'+7 922 543-21-09',status:'success',dur:421,lead:'yes',mp:'wb',date:'27.02.2026',time:'11:30'},
+                {id:10,name:'Светлана Орлова',phone:'+7 904 876-54-32',status:'fail',dur:17,lead:'no',mp:'wb',date:'26.02.2026',time:'18:05'},
+                {id:11,name:'Максим Тихонов',phone:'+7 915 321-09-87',status:'success',dur:190,lead:'yes',mp:'ozon',date:'26.02.2026',time:'15:40'},
+                {id:12,name:'Анна Кузнецова',phone:'+7 929 765-43-21',status:'noanswer',dur:0,lead:'no',mp:'ym',date:'26.02.2026',time:'14:55'},
+                {id:13,name:'Руслан Абдуллин',phone:'+7 937 234-56-78',status:'success',dur:376,lead:'yes',mp:'wb',date:'25.02.2026',time:'17:20'},
+                {id:14,name:'Татьяна Морозова',phone:'+7 911 890-12-34',status:'busy',dur:5,lead:'no',mp:'ozon',date:'25.02.2026',time:'16:00'},
+                {id:15,name:'Сергей Лебедев',phone:'+7 923 456-78-01',status:'success',dur:305,lead:'no',mp:'ym',date:'25.02.2026',time:'13:15'},
+                {id:16,name:'Валерия Новикова',phone:'+7 918 234-56-78',status:'fail',dur:42,lead:'no',mp:'wb',date:'24.02.2026',time:'10:30'},
+                {id:17,name:'Артём Волков',phone:'+7 908 765-43-21',status:'success',dur:228,lead:'yes',mp:'ozon',date:'24.02.2026',time:'09:45'},
+                {id:18,name:'Полина Козлова',phone:'+7 935 123-45-67',status:'noanswer',dur:0,lead:'no',mp:'wb',date:'23.02.2026',time:'16:50'},
+                {id:19,name:'Никита Попов',phone:'+7 901 678-90-12',status:'success',dur:461,lead:'yes',mp:'ym',date:'23.02.2026',time:'15:05'},
+                {id:20,name:'Юлия Смирнова',phone:'+7 925 345-67-89',status:'success',dur:134,lead:'no',mp:'ozon',date:'23.02.2026',time:'11:20'}
+            ];
+
+            var ST_STATUS_MAP = {
+                success: {label:'Успешный', cls:'st-status-success', dot:'st-dot-green'},
+                fail: {label:'Неудачный', cls:'st-status-fail', dot:'st-dot-red'},
+                noanswer: {label:'Нет ответа', cls:'st-status-noanswer', dot:'st-dot-yellow'},
+                busy: {label:'Занято', cls:'st-status-busy', dot:'st-dot-purple'}
+            };
+            var ST_MP_MAP = {wb:'Wildberries', ozon:'Ozon', ym:'Яндекс Маркет'};
+
+            function stFmtDur(sec) {
+                if (!sec) return '—';
+                var m = Math.floor(sec/60), s = sec%60;
+                return m + ':' + String(s).padStart(2,'0');
+            }
+
+            function stDurGroup(sec) {
+                if (sec < 60) return 'short';
+                if (sec < 180) return 'mid';
+                return 'long';
+            }
+
+            var stOpenPlayer = null;
+
+            function stRenderCalls(data) {
+                var list = document.getElementById('st-calls-list');
+                if (!list) return;
+                list.innerHTML = data.map(function(c) {
+                    var st = ST_STATUS_MAP[c.status];
+                    return '<div class="st-call-row" onclick="stTogglePlayer(' + c.id + ')">' +
+                        '<div class="st-call-num">' + c.id + '</div>' +
+                        '<div><div class="st-call-name">' + c.name + '</div><div class="st-call-phone">' + c.phone + '</div></div>' +
+                        '<div><span class="st-status-badge ' + st.cls + '"><span class="st-dot ' + st.dot + '"></span>' + st.label + '</span></div>' +
+                        '<div class="st-call-dur">' + stFmtDur(c.dur) + '</div>' +
+                        '<div><span class="st-lead-badge ' + (c.lead==='yes'?'st-lead-yes':'st-lead-no') + '">' + (c.lead==='yes'?'Лид':'Нет') + '</span></div>' +
+                        '<div style="font-size:13px;color:rgba(255,255,255,0.7)">' + ST_MP_MAP[c.mp] + '</div>' +
+                        '<div class="st-call-date">' + c.date + '<br><span style="color:rgba(255,255,255,0.7)">' + c.time + '</span></div>' +
+                        '<div><div class="st-play-btn" onclick="event.stopPropagation();stTogglePlayer(' + c.id + ')">' +
+                            '<svg width="12" height="12" viewBox="0 0 24 24" fill="currentColor"><polygon points="5,3 19,12 5,21"/></svg>' +
+                        '</div></div>' +
+                    '</div>' +
+                    '<div class="st-player-expand" id="st-player-' + c.id + '">' +
+                        '<div class="st-audio-bar">' +
+                            '<button class="st-audio-play"><svg width="11" height="11" viewBox="0 0 24 24" fill="white"><polygon points="5,3 19,12 5,21"/></svg></button>' +
+                            '<div class="st-audio-track"><div class="st-audio-fill" style="width:' + (c.dur ? Math.floor(Math.random()*70+5) : 0) + '%"></div></div>' +
+                            '<span class="st-audio-time">' + stFmtDur(Math.floor(c.dur*0.35)) + ' / ' + stFmtDur(c.dur) + '</span>' +
+                            '<span style="font-size:12px;color:rgba(255,255,255,0.7);margin-left:8px">' + c.name + ' · ' + c.date + ' ' + c.time + '</span>' +
+                            (c.dur===0 ? '<span style="font-size:12px;color:rgba(255,255,255,0.7);margin-left:12px">Нет записи</span>' : '') +
+                        '</div>' +
+                    '</div>';
+                }).join('');
+                var counter = document.getElementById('st-count-shown');
+                if (counter) counter.textContent = data.length;
+            }
+
+            window.stTogglePlayer = function(id) {
+                var el = document.getElementById('st-player-' + id);
+                if (!el) return;
+                if (stOpenPlayer && stOpenPlayer !== id) {
+                    var prev = document.getElementById('st-player-' + stOpenPlayer);
+                    if (prev) prev.classList.remove('open');
+                }
+                el.classList.toggle('open');
+                stOpenPlayer = el.classList.contains('open') ? id : null;
+            };
+
+            window.stApplyFilters = function() {
+                var q = document.querySelector('.st-search-input').value.toLowerCase();
+                var status = document.getElementById('st-f-status').value;
+                var lead = document.getElementById('st-f-lead').value;
+                var dur = document.getElementById('st-f-dur').value;
+                var mp = document.getElementById('st-f-mp').value;
+
+                var filtered = stCalls.filter(function(c) {
+                    if (q && c.name.toLowerCase().indexOf(q) === -1 && c.phone.indexOf(q) === -1) return false;
+                    if (status && c.status !== status) return false;
+                    if (lead && c.lead !== lead) return false;
+                    if (dur && stDurGroup(c.dur) !== dur) return false;
+                    if (mp && c.mp !== mp) return false;
+                    return true;
+                });
+                stRenderCalls(filtered);
+            };
+
+            // Init stats page
+            stRenderCals();
+            stRenderCalls(stCalls);
+        })();
     </script>
 </body>
 </html>
