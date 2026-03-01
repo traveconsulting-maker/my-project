@@ -1117,8 +1117,12 @@
             border-radius: 14px; padding: 20px;
             box-shadow: 0 20px 60px rgba(0,0,0,.6);
             display: none; min-width: 600px;
+            max-height: 70vh; overflow-y: auto;
         }
         .st-calendar-popup.open { display: flex; gap: 24px; flex-wrap: wrap; }
+        .st-calendar-popup::-webkit-scrollbar { width: 5px; }
+        .st-calendar-popup::-webkit-scrollbar-track { background: rgba(255,255,255,0.04); border-radius: 4px; }
+        .st-calendar-popup::-webkit-scrollbar-thumb { background: rgba(255,255,255,0.08); border-radius: 4px; }
 
         .st-cal-section { flex: 1; min-width: 240px; }
         .st-cal-header {
@@ -2041,7 +2045,7 @@
                         <div class="st-datepicker-wrap">
                           <button class="st-datepicker-btn" onclick="stToggleCalendar()">
                             <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="4" width="18" height="18" rx="2"/><line x1="16" y1="2" x2="16" y2="6"/><line x1="8" y1="2" x2="8" y2="6"/><line x1="3" y1="10" x2="21" y2="10"/></svg>
-                            <span id="st-date-label">23 фев – 1 мар 2026</span>
+                            <span id="st-date-label">Сегодня</span>
                           </button>
                           <div class="st-calendar-popup" id="st-calendar-popup">
                             <div style="width:100%">
@@ -4064,12 +4068,22 @@
             const ST_MONTHS_RU = ['Январь','Февраль','Март','Апрель','Май','Июнь','Июль','Август','Сентябрь','Октябрь','Ноябрь','Декабрь'];
             const ST_DAYS_RU = ['Пн','Вт','Ср','Чт','Пт','Сб','Вс'];
 
+            var _stNow = new Date();
+            var _stLeftMonth = _stNow.getMonth() === 0 ? 11 : _stNow.getMonth() - 1;
+            var _stLeftYear = _stNow.getMonth() === 0 ? _stNow.getFullYear() - 1 : _stNow.getFullYear();
             const stCalState = {
-                leftYear: 2026, leftMonth: 1,
-                rightYear: 2026, rightMonth: 2,
-                start: new Date(2026, 1, 23),
-                end: new Date(2026, 2, 1)
+                leftYear: _stLeftYear, leftMonth: _stLeftMonth,
+                rightYear: _stNow.getFullYear(), rightMonth: _stNow.getMonth(),
+                start: _stNow,
+                end: _stNow
             };
+
+            // Set initial date label
+            (function() {
+                var shortMonths = ['янв','фев','мар','апр','май','июн','июл','авг','сен','окт','ноя','дек'];
+                var el = document.getElementById('st-date-label');
+                if (el) el.textContent = _stNow.getDate() + ' ' + shortMonths[_stNow.getMonth()] + ' ' + _stNow.getFullYear();
+            })();
 
             window.stToggleCalendar = function() {
                 const p = document.getElementById('st-calendar-popup');
@@ -4166,6 +4180,11 @@
                     stCalState.end = now;
                     stCalState.start = new Date(now - (days-1)*86400000);
                 }
+                // Navigate calendar to show current month
+                var prevM = now.getMonth() === 0 ? 11 : now.getMonth() - 1;
+                var prevY = now.getMonth() === 0 ? now.getFullYear() - 1 : now.getFullYear();
+                stCalState.leftYear = prevY; stCalState.leftMonth = prevM;
+                stCalState.rightYear = now.getFullYear(); stCalState.rightMonth = now.getMonth();
                 stRenderCals();
             };
 
