@@ -1938,10 +1938,8 @@
                 <div class="bot-header-updated" id="lastUpdated" data-i18n="botUpdated">Последнее обновление: только что</div>
 
                 <div class="bot-tabs" id="botTabs">
-                    <button class="bot-tab active" onclick="switchBotTab('context',this)"><span data-i18n="tabContext">Контекст</span><span class="bot-tab-badge" data-i18n="tabBadge">Есть новое!</span></button>
+                    <button class="bot-tab active" onclick="switchBotTab('context',this)" data-i18n="tabContext">Контекст</button>
                     <button class="bot-tab" onclick="switchBotTab('plan',this)" data-i18n="tabPlan">План разговора</button>
-                    <button class="bot-tab" onclick="switchBotTab('agents',this)"><span data-i18n="tabAgents">Агенты</span><span class="bot-tab-badge" data-i18n="tabBadge">Есть новое!</span></button>
-                    <button class="bot-tab" onclick="switchBotTab('tools',this)" data-i18n="tabTools">Инструменты</button>
                     <button class="bot-tab" onclick="switchBotTab('knowledge',this)" data-i18n="tabKb">База знаний</button>
                 </div>
 
@@ -2019,14 +2017,6 @@
                             <span data-i18n="addPlan">Добавить новый пункт</span>
                         </button>
                     </div>
-                </div>
-                <!-- Tab: Агенты -->
-                <div class="bot-tab-content" id="tabAgents">
-                    <div class="stub-content" data-i18n="stub">Раздел в разработке</div>
-                </div>
-                <!-- Tab: Инструменты -->
-                <div class="bot-tab-content" id="tabTools">
-                    <div class="stub-content" data-i18n="stub">Раздел в разработке</div>
                 </div>
                 <!-- Tab: База знаний -->
                 <div class="bot-tab-content" id="tabKnowledge">
@@ -2937,7 +2927,7 @@
             document.querySelectorAll('.bot-tab').forEach(function(t) { t.classList.remove('active'); });
             document.querySelectorAll('.bot-tab-content').forEach(function(c) { c.classList.remove('active'); });
             btn.classList.add('active');
-            var map = { context:'tabContext', plan:'tabPlan', agents:'tabAgents', tools:'tabTools', knowledge:'tabKnowledge' };
+            var map = { context:'tabContext', plan:'tabPlan', knowledge:'tabKnowledge' };
             var el = document.getElementById(map[tabId]);
             if (el) el.classList.add('active');
         }
@@ -3749,10 +3739,7 @@
             saving: { ru:'Сохранение...', en:'Saving...' },
             tabContext: { ru:'Контекст', en:'Context' },
             tabPlan: { ru:'План разговора', en:'Conversation Plan' },
-            tabAgents: { ru:'Агенты', en:'Agents' },
-            tabTools: { ru:'Инструменты', en:'Tools' },
             tabKb: { ru:'База знаний', en:'Knowledge Base' },
-            tabBadge: { ru:'Есть новое!', en:'New!' },
             roleTitle: { ru:'Роль продавца', en:'Seller Role' },
             roleDesc: { ru:'Опишите роль, которую будет играть ИИ бот при звонках лидам', en:'Describe the role the AI bot will play when calling leads' },
             styleTitle: { ru:'Стиль речи', en:'Speech Style' },
