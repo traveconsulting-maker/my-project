@@ -1112,14 +1112,14 @@
         .st-datepicker-btn svg { color: #4f8eff; }
 
         .st-calendar-popup {
-            position: absolute; top: calc(100% + 8px); left: 0; z-index: 100;
+            position: fixed; z-index: 10000;
             background: #1e2330; border: 1px solid rgba(255,255,255,0.08);
             border-radius: 14px; padding: 20px;
             box-shadow: 0 20px 60px rgba(0,0,0,.6);
-            display: none; min-width: 600px;
-            max-height: 70vh; overflow-y: auto;
+            display: none; min-width: 560px; max-width: 94vw;
+            max-height: 80vh; overflow-y: auto;
         }
-        .st-calendar-popup.open { display: flex; gap: 24px; flex-wrap: wrap; }
+        .st-calendar-popup.open { display: block; }
         .st-calendar-popup::-webkit-scrollbar { width: 5px; }
         .st-calendar-popup::-webkit-scrollbar-track { background: rgba(255,255,255,0.04); border-radius: 4px; }
         .st-calendar-popup::-webkit-scrollbar-thumb { background: rgba(255,255,255,0.08); border-radius: 4px; }
@@ -4088,10 +4088,21 @@
             window.stToggleCalendar = function() {
                 const p = document.getElementById('st-calendar-popup');
                 p.classList.toggle('open');
+                if (p.classList.contains('open')) {
+                    var btn = document.querySelector('.st-datepicker-btn');
+                    var r = btn.getBoundingClientRect();
+                    var top = r.bottom + 8;
+                    var left = r.left;
+                    if (left + 560 > window.innerWidth) left = window.innerWidth - 570;
+                    if (left < 10) left = 10;
+                    if (top + p.offsetHeight > window.innerHeight) top = r.top - p.offsetHeight - 8;
+                    p.style.top = top + 'px';
+                    p.style.left = left + 'px';
+                }
                 stRenderCals();
             };
 
-            document.addEventListener('click', function(e) {
+            document.addEventListener('mousedown', function(e) {
                 const popup = document.getElementById('st-calendar-popup');
                 const btn = document.querySelector('.st-datepicker-btn');
                 if (popup && btn && !popup.contains(e.target) && !btn.contains(e.target)) {
