@@ -604,7 +604,7 @@
             display: flex; align-items: center; justify-content: space-between; padding: 0 32px; z-index: 50;
             transition: background 0.4s, border-color 0.4s;
         }
-        .dash-logo { font-size: 18px; font-weight: 800; color: var(--text); display: flex; align-items: center; gap: 10px; }
+        .dash-logo { font-size: 18px; font-weight: 800; color: var(--text); display: flex; align-items: center; gap: 10px; cursor: pointer; }
         .dash-logo-icon {
             width: 32px; height: 32px; border-radius: 10px;
             background: linear-gradient(135deg, #6c5ce7, #a855f7);
@@ -2312,7 +2312,7 @@
         </div>
 
         <div class="dash-topbar">
-            <div class="dash-logo">
+            <div class="dash-logo" onclick="var ml=document.querySelector('a[data-page=&quot;pageMain&quot;]');if(ml)setActive(ml);">
                 <div class="dash-logo-icon">S</div>
                 <span data-i18n="dashboard">Панель управления</span>
             </div>
@@ -2372,7 +2372,7 @@
                         <div class="dlg-list-actions">
                             <button class="dlg-btn-quickstart" onclick="quickStartDialog()">
                                 <span>&#10022;</span>
-                                <span data-i18n="dlgQuickStart">Быстрый старт</span>
+                                <span data-i18n="dlgQuickStart">Тщательный старт</span>
                             </button>
                             <button class="dlg-btn-quickstart" onclick="openTemplatesModal()">
                                 <span>&#9776;</span>
@@ -4874,7 +4874,7 @@
             // Dialog list
             dlgListTitle: { ru:'Диалоги', en:'Dialogs' },
             dlgCreate: { ru:'Создать диалог', en:'Create Dialog' },
-            dlgQuickStart: { ru:'Быстрый старт', en:'Quick Start' },
+            dlgQuickStart: { ru:'Тщательный старт', en:'Thorough Start' },
             dlgQuickStartName: { ru:'Новый диалог', en:'New Dialog' },
             dlgTemplate: { ru:'Выбрать шаблон', en:'Choose template' },
             dlgColName: { ru:'Название', en:'Name' },
