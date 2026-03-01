@@ -1518,6 +1518,75 @@
         .mgmt-number-input:focus { border-color: #6c5ce7; }
         .mgmt-time-sep { color: var(--text-muted); font-size: 13px; font-weight: 500; }
 
+        /* Settings cards */
+        .settings-cards { display: grid; grid-template-columns: repeat(auto-fill, minmax(300px, 1fr)); gap: 20px; margin-top: 20px; }
+        .settings-card {
+            background: var(--card-bg); border: 1px solid var(--card-border);
+            border-radius: 20px; padding: 28px; backdrop-filter: blur(10px); -webkit-backdrop-filter: blur(10px);
+            transition: all 0.3s; display: flex; flex-direction: column;
+        }
+        .settings-card:hover { border-color: rgba(108,92,231,0.3); }
+        .settings-card-title { font-size: 16px; font-weight: 700; color: var(--text); margin-bottom: 4px; }
+        .settings-card-desc { font-size: 13px; color: var(--text-muted); margin-bottom: 16px; line-height: 1.5; flex: 1; }
+        .settings-card-btn {
+            align-self: flex-start; padding: 10px 24px; border-radius: 12px; border: none;
+            background: linear-gradient(135deg, #6c5ce7, #a855f7); color: #fff;
+            font-family: inherit; font-size: 14px; font-weight: 600; cursor: pointer;
+            transition: all 0.3s; box-shadow: 0 4px 16px rgba(108,92,231,0.25);
+        }
+        .settings-card-btn:hover { transform: translateY(-1px); box-shadow: 0 6px 24px rgba(108,92,231,0.4); }
+        .settings-info-row { display: flex; justify-content: space-between; align-items: center; padding: 10px 0; border-bottom: 1px solid var(--card-border); }
+        .settings-info-row:last-child { border-bottom: none; }
+        .settings-info-label { font-size: 14px; color: var(--text-muted); }
+        .settings-info-value { font-size: 15px; font-weight: 600; color: var(--text); }
+        .settings-download-link {
+            display: inline-flex; align-items: center; gap: 6px; margin-top: 12px;
+            color: #6c5ce7; font-size: 14px; font-weight: 600; cursor: pointer; text-decoration: none;
+            transition: opacity 0.2s;
+        }
+        .settings-download-link:hover { opacity: 0.8; }
+        .settings-modal-body { text-align: left; max-height: 65vh; overflow-y: auto; padding-right: 4px; }
+        .settings-modal-body .mgmt-section { margin-bottom: 16px; }
+
+        /* Template cards */
+        .tpl-cards { display: grid; grid-template-columns: repeat(auto-fill, minmax(300px, 1fr)); gap: 20px; margin-top: 20px; }
+        .tpl-card {
+            background: var(--card-bg); border: 1px solid var(--card-border);
+            border-radius: 20px; padding: 28px; backdrop-filter: blur(10px); -webkit-backdrop-filter: blur(10px);
+            transition: all 0.3s; display: flex; flex-direction: column;
+        }
+        .tpl-card:hover { border-color: rgba(108,92,231,0.3); }
+        .tpl-card-title { font-size: 16px; font-weight: 700; color: var(--text); margin-bottom: 4px; }
+        .tpl-card-desc { font-size: 13px; color: var(--text-muted); margin-bottom: 16px; line-height: 1.5; flex: 1; }
+        .tpl-audio { display: flex; align-items: center; gap: 10px; margin-bottom: 18px; padding: 10px 14px; background: var(--input-bg); border-radius: 12px; }
+        .tpl-audio-btn {
+            width: 32px; height: 32px; border-radius: 50%; border: none; flex-shrink: 0;
+            background: linear-gradient(135deg, #6c5ce7, #a855f7); color: #fff;
+            font-size: 14px; cursor: pointer; display: flex; align-items: center; justify-content: center;
+        }
+        .tpl-audio-bar { flex: 1; height: 4px; background: var(--card-border); border-radius: 2px; position: relative; }
+        .tpl-audio-bar::after { content: ''; position: absolute; left: 0; top: 0; width: 30%; height: 100%; background: rgba(108,92,231,0.4); border-radius: 2px; }
+        .tpl-audio-time { font-size: 11px; color: var(--text-muted); white-space: nowrap; }
+        .tpl-actions { display: flex; align-items: center; gap: 12px; flex-wrap: wrap; }
+        .tpl-select-btn {
+            padding: 10px 24px; border-radius: 12px; border: none;
+            background: linear-gradient(135deg, #6c5ce7, #a855f7); color: #fff;
+            font-family: inherit; font-size: 14px; font-weight: 600; cursor: pointer;
+            transition: all 0.3s; box-shadow: 0 4px 16px rgba(108,92,231,0.25);
+        }
+        .tpl-select-btn:hover { transform: translateY(-1px); box-shadow: 0 6px 24px rgba(108,92,231,0.4); }
+        .tpl-link { color: #6c5ce7; font-size: 13px; font-weight: 600; cursor: pointer; text-decoration: none; transition: opacity 0.2s; }
+        .tpl-link:hover { opacity: 0.8; }
+        .tpl-card-create { align-items: center; justify-content: center; text-align: center; cursor: pointer; border: 2px dashed var(--card-border); background: transparent; min-height: 220px; }
+        .tpl-card-create:hover { border-color: rgba(108,92,231,0.5); background: rgba(108,92,231,0.04); }
+        .tpl-create-icon { width: 48px; height: 48px; border-radius: 50%; background: linear-gradient(135deg, #6c5ce7, #a855f7); color: #fff; font-size: 28px; font-weight: 300; display: flex; align-items: center; justify-content: center; margin-bottom: 12px; }
+        .tpl-card-custom-actions { display: flex; gap: 8px; margin-top: auto; flex-wrap: wrap; }
+        .tpl-delete-btn { padding: 8px 16px; border-radius: 10px; border: 1px solid var(--card-border); background: transparent; color: var(--text-muted); font-family: inherit; font-size: 13px; cursor: pointer; transition: all 0.2s; }
+        .tpl-delete-btn:hover { border-color: #e74c3c; color: #e74c3c; }
+        .tpl-edit-btn { padding: 8px 16px; border-radius: 10px; border: 1px solid var(--card-border); background: transparent; color: var(--text-muted); font-family: inherit; font-size: 13px; cursor: pointer; transition: all 0.2s; }
+        .tpl-edit-btn:hover { border-color: rgba(108,92,231,0.5); color: #6c5ce7; }
+        #customTplCards { display: contents; }
+
     </style>
 </head>
 <body>
@@ -1947,6 +2016,146 @@
             </div>
 
             <button class="submit-btn" onclick="saveMgmt()" data-i18n="mgmtSave">Сохранить</button>
+        </div>
+    </div>
+
+    <!-- ===== SETTINGS: AUDIENCE MODAL ===== -->
+    <div class="modal-overlay" id="settingsAudienceModal" onclick="if(event.target===this)closeSettingsAudience()">
+        <div class="modal" style="max-width:500px;">
+            <button class="modal-close" onclick="closeSettingsAudience()">&times;</button>
+            <div class="modal-title" data-i18n="setAudT">Целевая аудитория</div>
+            <div class="modal-subtitle" data-i18n="setAudModalSub">Настройте параметры целевой аудитории</div>
+            <div class="settings-modal-body">
+                <div class="mgmt-section">
+                    <div class="mgmt-section-title" data-i18n="setAudNiche">Ниша</div>
+                    <input type="text" class="mgmt-number-input" id="setAudNiche" readonly style="width:100%;cursor:default;">
+                </div>
+                <div class="mgmt-section">
+                    <div class="mgmt-section-title" data-i18n="setAudClient">Описание идеального клиента</div>
+                    <textarea class="onb-textarea" id="setAudClient" data-i18n-ph="phClient" placeholder="Например: владелец малого бизнеса, 30-50 лет, ищет способы увеличить продажи..."></textarea>
+                    <div class="tags-section" style="margin-top:10px;">
+                        <div class="tags-label" data-i18n="setAudTags">Быстрый выбор</div>
+                        <div class="tags-list">
+                            <span class="tag-chip" onclick="insertSettingsTag(this,'setAudClient')" data-i18n="tag1">Владелец бизнеса</span>
+                            <span class="tag-chip" onclick="insertSettingsTag(this,'setAudClient')" data-i18n="tag2">ЛПР</span>
+                            <span class="tag-chip" onclick="insertSettingsTag(this,'setAudClient')" data-i18n="tag3">B2B клиент</span>
+                            <span class="tag-chip" onclick="insertSettingsTag(this,'setAudClient')" data-i18n="tag4">Малый бизнес</span>
+                            <span class="tag-chip" onclick="insertSettingsTag(this,'setAudClient')" data-i18n="tag5">Средний бизнес</span>
+                            <span class="tag-chip" onclick="insertSettingsTag(this,'setAudClient')" data-i18n="tag6">Крупный бизнес</span>
+                            <span class="tag-chip" onclick="insertSettingsTag(this,'setAudClient')" data-i18n="tag7">Физическое лицо</span>
+                            <span class="tag-chip" onclick="insertSettingsTag(this,'setAudClient')" data-i18n="tag8">25-35 лет</span>
+                            <span class="tag-chip" onclick="insertSettingsTag(this,'setAudClient')" data-i18n="tag9">35-50 лет</span>
+                            <span class="tag-chip" onclick="insertSettingsTag(this,'setAudClient')" data-i18n="tag10">50+ лет</span>
+                        </div>
+                    </div>
+                </div>
+                <div class="mgmt-section">
+                    <div class="mgmt-section-title" data-i18n="setAudSites">Сайты конкурентов (до 10, каждый с новой строки)</div>
+                    <textarea class="onb-textarea" id="setAudSites" data-i18n-ph="phSites" placeholder="Например:&#10;competitor1.ru&#10;competitor2.com"></textarea>
+                </div>
+            </div>
+            <button class="submit-btn" onclick="saveSettingsAudience()" data-i18n="setAudSave">Сохранить</button>
+        </div>
+    </div>
+
+    <!-- ===== SETTINGS: COMPANY MODAL ===== -->
+    <div class="modal-overlay" id="settingsCompanyModal" onclick="if(event.target===this)closeSettingsCompany()">
+        <div class="modal" style="max-width:520px;">
+            <button class="modal-close" onclick="closeSettingsCompany()">&times;</button>
+            <div class="modal-title" data-i18n="setCompT">Настройка компании</div>
+            <div class="modal-subtitle" data-i18n="setCompModalSub">Информация о вашей компании</div>
+            <div class="settings-modal-body">
+                <div class="mgmt-section">
+                    <div class="mgmt-section-title" data-i18n="setCompName">Название компании</div>
+                    <input type="text" class="mgmt-number-input" id="setCompName" style="width:100%" data-i18n-ph="phCompName" placeholder="Например: СтройМастер">
+                </div>
+                <div class="mgmt-section">
+                    <div class="mgmt-section-title" data-i18n="setCompLoc">Местоположение</div>
+                    <input type="text" class="mgmt-number-input" id="setCompLoc" style="width:100%" data-i18n-ph="phCompLoc" placeholder="Например: Москва, Россия">
+                </div>
+                <div class="mgmt-section">
+                    <div class="mgmt-section-title" data-i18n="setCompSite">Сайт</div>
+                    <input type="text" class="mgmt-number-input" id="setCompSite" style="width:100%" data-i18n-ph="phCompSite" placeholder="Например: company.ru">
+                </div>
+                <div class="mgmt-section">
+                    <div class="mgmt-section-title" data-i18n="setCompProd">Основной продукт</div>
+                    <input type="text" class="mgmt-number-input" id="setCompProd" style="width:100%" data-i18n-ph="phCompProd" placeholder="Например: строительство загородных домов">
+                </div>
+                <div class="mgmt-section">
+                    <div class="mgmt-section-title" data-i18n="setCompUtp">УТП</div>
+                    <input type="text" class="mgmt-number-input" id="setCompUtp" style="width:100%" data-i18n-ph="phCompUtp" placeholder="Например: строим дом за 30 дней или вернём деньги">
+                </div>
+                <div class="mgmt-section">
+                    <div class="mgmt-section-title" data-i18n="setCompInfo">О компании</div>
+                    <textarea class="onb-textarea" id="setCompInfo" data-i18n-ph="phCompInfo" placeholder="Расскажите о компании..." style="min-height:80px;"></textarea>
+                </div>
+                <div class="mgmt-section">
+                    <div class="mgmt-section-title" data-i18n="setCompInn">ИНН</div>
+                    <input type="text" class="mgmt-number-input" id="setCompInn" style="width:100%" placeholder="0000000000">
+                </div>
+                <div class="mgmt-section">
+                    <div class="mgmt-section-title" data-i18n="setCompPerson">Ответственное лицо</div>
+                    <input type="text" class="mgmt-number-input" id="setCompPerson" style="width:100%" data-i18n-ph="setCompPersonPh" placeholder="ФИО ответственного лица">
+                </div>
+                <div class="mgmt-section">
+                    <div class="mgmt-section-title" data-i18n="setCompReq">Реквизиты</div>
+                    <textarea class="onb-textarea" id="setCompReq" data-i18n-ph="setCompReqPh" placeholder="Банковские реквизиты компании..." style="min-height:80px;"></textarea>
+                </div>
+                <div class="mgmt-section">
+                    <div class="mgmt-section-title" data-i18n="setCompContract">Договор на оказание услуг</div>
+                    <a class="settings-download-link" onclick="downloadContract()">&#128196; <span data-i18n="setCompDownload">Скачать договор</span></a>
+                </div>
+            </div>
+            <button class="submit-btn" onclick="saveSettingsCompany()" data-i18n="setCompSave">Сохранить</button>
+        </div>
+    </div>
+
+    <!-- ===== CUSTOM TEMPLATE MODAL ===== -->
+    <div class="modal-overlay" id="customTplModal" onclick="if(event.target===this)closeCustomTplModal()">
+        <div class="modal" style="max-width:560px;">
+            <button class="modal-close" onclick="closeCustomTplModal()">&times;</button>
+            <div class="modal-title" data-i18n="tplCreateTitle">Создать свой шаблон</div>
+            <div class="modal-subtitle" data-i18n="tplCreateSub">Заполните поля — шаблон можно будет применять повторно</div>
+            <div class="settings-modal-body">
+                <div class="mgmt-section">
+                    <div class="mgmt-section-title" data-i18n="tplFieldName">Название шаблона</div>
+                    <input type="text" class="mgmt-number-input" id="ctplName" style="width:100%" placeholder="Например: Агрессивный — дожим">
+                </div>
+                <div class="mgmt-section">
+                    <div class="mgmt-section-title" data-i18n="tplFieldDesc">Описание</div>
+                    <input type="text" class="mgmt-number-input" id="ctplDesc" style="width:100%" placeholder="Краткое описание сценария">
+                </div>
+                <div class="mgmt-section">
+                    <div class="mgmt-section-title" data-i18n="roleTitle">Роль продавца</div>
+                    <textarea class="onb-textarea" id="ctplRole" placeholder="Опишите роль бота..." style="min-height:80px;"></textarea>
+                </div>
+                <div class="mgmt-section">
+                    <div class="mgmt-section-title" data-i18n="styleTitle">Стиль речи</div>
+                    <textarea class="onb-textarea" id="ctplStyle" placeholder="Опишите стиль речи..." style="min-height:80px;"></textarea>
+                </div>
+                <div class="mgmt-section">
+                    <div class="mgmt-section-title" data-i18n="rulesTitle">Важные правила</div>
+                    <textarea class="onb-textarea" id="ctplRules" placeholder="Каждое правило с новой строки" style="min-height:70px;"></textarea>
+                </div>
+                <div class="mgmt-section">
+                    <div class="mgmt-section-title" data-i18n="factsTitle">Аргументы и факты</div>
+                    <textarea class="onb-textarea" id="ctplFacts" placeholder="Каждый аргумент с новой строки" style="min-height:70px;"></textarea>
+                </div>
+                <div class="mgmt-section">
+                    <div class="mgmt-section-title" data-i18n="critTitle">Критерии передачи лида</div>
+                    <textarea class="onb-textarea" id="ctplCriteria" placeholder="Каждый критерий с новой строки" style="min-height:70px;"></textarea>
+                </div>
+                <div class="mgmt-section">
+                    <div class="mgmt-section-title" data-i18n="greetTitle">Приветствие</div>
+                    <textarea class="onb-textarea" id="ctplGreeting" placeholder="Фраза приветствия" style="min-height:50px;"></textarea>
+                </div>
+                <div class="mgmt-section">
+                    <div class="mgmt-section-title" data-i18n="planTitle">План разговора</div>
+                    <textarea class="onb-textarea" id="ctplPlan" placeholder="Каждый шаг с новой строки" style="min-height:70px;"></textarea>
+                </div>
+            </div>
+            <button class="submit-btn" id="ctplSaveBtn" onclick="saveCustomTpl()" data-i18n="tplSaveBtn">Сохранить шаблон</button>
+            <button class="submit-btn" style="background:var(--btn-bg);color:var(--text-secondary);margin-top:8px;" onclick="closeCustomTplModal()" data-i18n="dlgCancelBtn">Отмена</button>
         </div>
     </div>
 
@@ -2469,14 +2678,91 @@
             <div class="page-section" id="pageTemplates">
                 <h1 data-i18n="pTplT">Шаблоны</h1>
                 <p class="subtitle" data-i18n="pTplSub">Готовые сценарии и шаблоны</p>
-                <div class="stub-content" data-i18n="stub">Раздел в разработке</div>
+                <div class="tpl-cards">
+                    <!-- Шаблон 1 -->
+                    <div class="tpl-card">
+                        <div class="tpl-card-title" data-i18n="tpl1t">Дружелюбный — закрыть на встречу</div>
+                        <div class="tpl-card-desc" data-i18n="tpl1d">Тёплый звонок с целью назначить встречу. Аня — дружелюбный менеджер, который мягко ведёт диалог и закрывает на конкретную дату.</div>
+                        <div class="tpl-audio">
+                            <button class="tpl-audio-btn" title="Play">&#9654;</button>
+                            <div class="tpl-audio-bar"></div>
+                            <span class="tpl-audio-time">0:00 / 1:24</span>
+                        </div>
+                        <div class="tpl-actions">
+                            <button class="tpl-select-btn" onclick="applyTemplate(1)" data-i18n="tplSelect">Выбрать</button>
+                            <a class="tpl-link" onclick="applyTemplate(1)" data-i18n="tplReview">Ознакомиться с шаблоном</a>
+                        </div>
+                    </div>
+                    <!-- Шаблон 2 -->
+                    <div class="tpl-card">
+                        <div class="tpl-card-title" data-i18n="tpl2t">Деловой — квалификация лида</div>
+                        <div class="tpl-card-desc" data-i18n="tpl2d">Структурированный звонок для оценки потенциала клиента. Чёткие вопросы, быстрая квалификация, фокус на ключевых критериях.</div>
+                        <div class="tpl-audio">
+                            <button class="tpl-audio-btn" title="Play">&#9654;</button>
+                            <div class="tpl-audio-bar"></div>
+                            <span class="tpl-audio-time">0:00 / 1:12</span>
+                        </div>
+                        <div class="tpl-actions">
+                            <button class="tpl-select-btn" onclick="applyTemplate(2)" data-i18n="tplSelect">Выбрать</button>
+                            <a class="tpl-link" onclick="applyTemplate(2)" data-i18n="tplReview">Ознакомиться с шаблоном</a>
+                        </div>
+                    </div>
+                    <!-- Шаблон 3 -->
+                    <div class="tpl-card">
+                        <div class="tpl-card-title" data-i18n="tpl3t">Мягкий — выявление потребности</div>
+                        <div class="tpl-card-desc" data-i18n="tpl3d">Деликатный разговор для выявления болей и задач клиента. Акцент на слушании, эмпатии и точечных вопросах.</div>
+                        <div class="tpl-audio">
+                            <button class="tpl-audio-btn" title="Play">&#9654;</button>
+                            <div class="tpl-audio-bar"></div>
+                            <span class="tpl-audio-time">0:00 / 1:36</span>
+                        </div>
+                        <div class="tpl-actions">
+                            <button class="tpl-select-btn" onclick="applyTemplate(3)" data-i18n="tplSelect">Выбрать</button>
+                            <a class="tpl-link" onclick="applyTemplate(3)" data-i18n="tplReview">Ознакомиться с шаблоном</a>
+                        </div>
+                    </div>
+                    <!-- Custom templates rendered here -->
+                    <div id="customTplCards"></div>
+                    <!-- Create your own -->
+                    <div class="tpl-card tpl-card-create" onclick="openCustomTplModal()">
+                        <div class="tpl-create-icon">+</div>
+                        <div class="tpl-card-title" data-i18n="tplCreateTitle">Создать свой шаблон</div>
+                        <div class="tpl-card-desc" data-i18n="tplCreateDesc">Настройте роль, стиль речи, правила и план разговора под свои задачи</div>
+                    </div>
+                </div>
             </div>
 
             <!-- PAGE: Настройки -->
             <div class="page-section" id="pageSettings">
                 <h1 data-i18n="pSetT">Настройки</h1>
                 <p class="subtitle" data-i18n="pSetSub">Параметры системы</p>
-                <div class="stub-content" data-i18n="stub">Раздел в разработке</div>
+                <div class="settings-cards">
+                    <!-- Card 1: Target Audience -->
+                    <div class="settings-card">
+                        <div class="settings-card-title" data-i18n="setAudT">Целевая аудитория</div>
+                        <div class="settings-card-desc" data-i18n="setAudD">Настройте портрет вашего идеального клиента, нишу и конкурентов</div>
+                        <button class="settings-card-btn" onclick="openSettingsAudience()" data-i18n="setBtn">Настроить</button>
+                    </div>
+                    <!-- Card 2: Company -->
+                    <div class="settings-card">
+                        <div class="settings-card-title" data-i18n="setCompT">Настройка компании</div>
+                        <div class="settings-card-desc" data-i18n="setCompD">Информация о компании, реквизиты и договор</div>
+                        <button class="settings-card-btn" onclick="openSettingsCompany()" data-i18n="setBtn">Настроить</button>
+                    </div>
+                    <!-- Card 3: Tariff & Balance -->
+                    <div class="settings-card">
+                        <div class="settings-card-title" data-i18n="setTarT">Тариф и баланс</div>
+                        <div class="settings-card-desc" data-i18n="setTarD">Текущий тарифный план и баланс компании</div>
+                        <div class="settings-info-row">
+                            <span class="settings-info-label" data-i18n="setTarPlan">Текущий тариф</span>
+                            <span class="settings-info-value" id="settingsTariffName">Стандарт</span>
+                        </div>
+                        <div class="settings-info-row">
+                            <span class="settings-info-label" data-i18n="setTarBal">Баланс</span>
+                            <span class="settings-info-value" id="settingsBalance">0 ₽</span>
+                        </div>
+                    </div>
+                </div>
             </div>
         </div>
     </div>
@@ -2545,6 +2831,8 @@
 
         // Onboarding
         let selectedNiche = null;
+        var settingsAudienceData = { niche: '', client: '', sites: '' };
+        var settingsCompanyData = { name: '', location: '', site: '', product: '', utp: '', info: '', inn: '', person: '', requisites: '' };
 
         function selectNiche(el) {
             document.querySelectorAll('.niche-item').forEach(n => n.classList.remove('selected'));
@@ -2616,6 +2904,16 @@
         }
 
         function finishOnboarding() {
+            // Save onboarding data to settings globals
+            settingsAudienceData.niche = selectedNiche || '';
+            settingsAudienceData.client = document.getElementById('onbClient').value || '';
+            settingsAudienceData.sites = document.getElementById('onbSites').value || '';
+            settingsCompanyData.name = document.getElementById('onbCompanyName').value || '';
+            settingsCompanyData.location = document.getElementById('onbCompanyLocation').value || '';
+            settingsCompanyData.site = document.getElementById('onbCompanySite').value || '';
+            settingsCompanyData.product = document.getElementById('onbCompanyProduct').value || '';
+            settingsCompanyData.utp = document.getElementById('onbCompanyUtp').value || '';
+            settingsCompanyData.info = document.getElementById('onbCompanyInfo').value || '';
             localStorage.setItem('onboarded', '1');
             onboarding.classList.remove('show');
             dashboard.classList.add('show');
@@ -2671,6 +2969,81 @@
             checkStep2();
         }
 
+        // ===== SETTINGS PAGE =====
+        function openSettingsAudience() {
+            var niche = settingsAudienceData.niche || selectedNiche || '';
+            var client = settingsAudienceData.client || document.getElementById('onbClient').value || '';
+            var sites = settingsAudienceData.sites || document.getElementById('onbSites').value || '';
+            document.getElementById('setAudNiche').value = niche;
+            document.getElementById('setAudClient').value = client;
+            document.getElementById('setAudSites').value = sites;
+            // Reset tag chips
+            document.querySelectorAll('#settingsAudienceModal .tag-chip').forEach(function(c) { c.classList.remove('used'); });
+            document.getElementById('settingsAudienceModal').classList.add('active');
+            document.body.style.overflow = 'hidden';
+        }
+        function closeSettingsAudience() {
+            document.getElementById('settingsAudienceModal').classList.remove('active');
+            document.body.style.overflow = '';
+        }
+        function saveSettingsAudience() {
+            var sitesVal = document.getElementById('setAudSites').value.trim();
+            var lines = sitesVal.split('\n').filter(function(l) { return l.trim().length > 0; });
+            if (lines.length > 10) {
+                alert(t('setAudMaxSites'));
+                return;
+            }
+            settingsAudienceData.niche = document.getElementById('setAudNiche').value;
+            settingsAudienceData.client = document.getElementById('setAudClient').value;
+            settingsAudienceData.sites = sitesVal;
+            closeSettingsAudience();
+        }
+
+        function insertSettingsTag(el, targetId) {
+            var ta = document.getElementById(targetId);
+            var text = el.textContent;
+            var val = ta.value;
+            var sep = val.length > 0 && !val.endsWith(' ') && !val.endsWith('\n') ? ', ' : '';
+            ta.value = val + sep + text;
+            ta.focus();
+            el.classList.add('used');
+        }
+
+        function openSettingsCompany() {
+            var d = settingsCompanyData;
+            document.getElementById('setCompName').value = d.name || document.getElementById('onbCompanyName').value || '';
+            document.getElementById('setCompLoc').value = d.location || document.getElementById('onbCompanyLocation').value || '';
+            document.getElementById('setCompSite').value = d.site || document.getElementById('onbCompanySite').value || '';
+            document.getElementById('setCompProd').value = d.product || document.getElementById('onbCompanyProduct').value || '';
+            document.getElementById('setCompUtp').value = d.utp || document.getElementById('onbCompanyUtp').value || '';
+            document.getElementById('setCompInfo').value = d.info || document.getElementById('onbCompanyInfo').value || '';
+            document.getElementById('setCompInn').value = d.inn || '';
+            document.getElementById('setCompPerson').value = d.person || '';
+            document.getElementById('setCompReq').value = d.requisites || '';
+            document.getElementById('settingsCompanyModal').classList.add('active');
+            document.body.style.overflow = 'hidden';
+        }
+        function closeSettingsCompany() {
+            document.getElementById('settingsCompanyModal').classList.remove('active');
+            document.body.style.overflow = '';
+        }
+        function saveSettingsCompany() {
+            settingsCompanyData.name = document.getElementById('setCompName').value;
+            settingsCompanyData.location = document.getElementById('setCompLoc').value;
+            settingsCompanyData.site = document.getElementById('setCompSite').value;
+            settingsCompanyData.product = document.getElementById('setCompProd').value;
+            settingsCompanyData.utp = document.getElementById('setCompUtp').value;
+            settingsCompanyData.info = document.getElementById('setCompInfo').value;
+            settingsCompanyData.inn = document.getElementById('setCompInn').value;
+            settingsCompanyData.person = document.getElementById('setCompPerson').value;
+            settingsCompanyData.requisites = document.getElementById('setCompReq').value;
+            closeSettingsCompany();
+        }
+
+        function downloadContract() {
+            alert(currentLang === 'ru' ? 'Договор будет доступен для скачивания в ближайшее время' : 'Contract will be available for download soon');
+        }
+
         function handleLogout() {
             dashboard.classList.remove('show');
             localStorage.removeItem('onboarded');
@@ -2704,6 +3077,277 @@
                 contactLimit: 100,
                 maxCallSec: 600
             };
+        }
+
+        // ===== APPLY TEMPLATE =====
+        function applyTemplate(templateId) {
+            var companyName = (settingsCompanyData && settingsCompanyData.name) || 'Название компании';
+            var companyProduct = (settingsCompanyData && settingsCompanyData.product) || 'ваш продукт';
+            var dlg;
+
+            if (templateId === 1) {
+                // Шаблон 1: Дружелюбный — закрыть на встречу
+                dlg = createDialogObject('Дружелюбный — встреча');
+
+                dlg.botRole = 'Тебя зовут Аня, ты менеджер по продажам компании ' + companyName + '. Ты работаешь в этой компании на позиции продажника и квалифицируешь лиды. Ты общаешься дружелюбно и по-человечески, с паузами и осмыслением. Компания занимается ' + companyProduct + '. Ты звонишь потенциальному клиенту, чтобы познакомиться и предложить решение и самое главное назначить ему встречу.';
+
+                dlg.botStyle = 'Говори коротко, чётко и предельно конкретно. Без лишних, пустых слов. Только живая, содержательная суть.\nПоказывай внимательный, последовательный ход своих мыслей — как вы вдумчиво анализируете запрос, взвешиваете детали и приходите к точному выводу.\nРечь — естественная, разговорная, немного прерывистая. Можно неполные фразы. Короткие паузы. Лёгкая рваность формулировок — аккуратная, уместная, без грубых перегибов.\nБез заезженных клише, сухих шаблонов и тяжёлых канцеляризмов.\nОбращение — уважительное, спокойное, на «вы».\nЧисла — исключительно прописью.\nВопросы — простые, короткие, односложные. Чёткие.';
+
+                dlg.rules = [
+                    { id: 'rule_1', text: 'Не сдавайся. Если клиент отказывает — креативно отработай возражение.' },
+                    { id: 'rule_2', text: 'Отвечай опираясь на последнюю речь клиента.' },
+                    { id: 'rule_3', text: 'Фокусируйся на назначении встречи, а не на подробностях услуг.' }
+                ];
+
+                dlg.facts = [
+                    { id: 'fact_1', text: 'Мы специализируемся именно на вашей сфере — это позволяет лучше понимать специфику.' },
+                    { id: 'fact_2', text: 'Встреча займёт всего 15–20 минут — покажем конкретные кейсы из вашей ниши.' },
+                    { id: 'fact_3', text: 'Никаких обязательств — просто знакомство и обмен опытом.' }
+                ];
+
+                dlg.criteria = [
+                    { id: 'crit_1', text: 'Клиент подтвердил интерес и согласился на встречу.' },
+                    { id: 'crit_2', text: 'Назначена конкретная дата и время встречи.' },
+                    { id: 'crit_3', text: 'Получены контактные данные для подтверждения.' }
+                ];
+
+                dlg.greetings = [
+                    { id: 'greet_1', text: 'Здравствуйте! Меня зовут Аня, я из компании ' + companyName + '. Скажите, удобно сейчас буквально пару минут поговорить?' }
+                ];
+
+                dlg.planItems = [
+                    { id: 'plan_1', text: 'Приветствие и проверка удобства разговора' },
+                    { id: 'plan_2', text: 'Короткое представление — кто мы и зачем звоним' },
+                    { id: 'plan_3', text: 'Один-два вопроса о текущей ситуации клиента' },
+                    { id: 'plan_4', text: 'Ключевая выгода — одно предложение' },
+                    { id: 'plan_5', text: 'Предложение встречи с конкретной датой' },
+                    { id: 'plan_6', text: 'Отработка возражений при необходимости' },
+                    { id: 'plan_7', text: 'Подтверждение договорённости и прощание' }
+                ];
+
+            } else if (templateId === 2) {
+                // Шаблон 2: Деловой — квалификация лида
+                dlg = createDialogObject('Деловой — квалификация');
+
+                dlg.botRole = 'Тебя зовут Игорь, ты старший менеджер отдела продаж компании ' + companyName + '. Ты профессионально квалифицируешь входящие лиды — определяешь бюджет, сроки, лицо принимающее решение и реальную потребность. Ты говоришь уверенно, по-деловому, без воды. Компания занимается ' + companyProduct + '. Твоя задача — за короткий звонок понять, подходит ли клиент, и передать квалифицированный лид дальше.';
+
+                dlg.botStyle = 'Тон — деловой, уверенный, уважительный. Без панибратства и лишней мягкости.\nГоворишь сжато. Каждая фраза несёт смысл. Никаких вводных конструкций и «растекания».\nЗадаёшь прямые, конкретные вопросы — один за раз. Не перегружаешь собеседника.\nСлушаешь ответ, фиксируешь суть, двигаешься дальше.\nОбращение — строго на «вы».\nЧисла — прописью.\nЕсли клиент уходит от темы — мягко, но твёрдо возвращаешь к сути.';
+
+                dlg.rules = [
+                    { id: 'rule_1', text: 'Выясни бюджет, сроки и кто принимает решение — это три ключевых параметра.' },
+                    { id: 'rule_2', text: 'Не продавай на этом этапе. Твоя задача — квалифицировать, а не закрывать сделку.' },
+                    { id: 'rule_3', text: 'Если клиент явно не целевой — вежливо заверши разговор, не трать его и своё время.' }
+                ];
+
+                dlg.facts = [
+                    { id: 'fact_1', text: 'Мы работаем с компаниями вашего масштаба — есть релевантный опыт и понимание задач.' },
+                    { id: 'fact_2', text: 'Средний срок запуска — две-три недели, включая интеграцию и настройку.' },
+                    { id: 'fact_3', text: 'Более ста компаний уже используют наше решение в вашей отрасли.' }
+                ];
+
+                dlg.criteria = [
+                    { id: 'crit_1', text: 'Определён бюджет и он соответствует нашему ценовому диапазону.' },
+                    { id: 'crit_2', text: 'Известны сроки — клиент планирует решение в ближайшие один-два месяца.' },
+                    { id: 'crit_3', text: 'Выявлено лицо, принимающее решение, или контакт является ЛПР.' }
+                ];
+
+                dlg.greetings = [
+                    { id: 'greet_1', text: 'Добрый день! Это Игорь, компания ' + companyName + '. Вы оставляли заявку — хочу уточнить несколько моментов. Буквально пару минут, удобно?' }
+                ];
+
+                dlg.planItems = [
+                    { id: 'plan_1', text: 'Приветствие и подтверждение заявки' },
+                    { id: 'plan_2', text: 'Уточнение текущей ситуации — что используют сейчас' },
+                    { id: 'plan_3', text: 'Выявление ключевой задачи — что хотят изменить' },
+                    { id: 'plan_4', text: 'Вопрос о бюджете и сроках' },
+                    { id: 'plan_5', text: 'Выяснение — кто принимает финальное решение' },
+                    { id: 'plan_6', text: 'Резюме и согласование следующего шага' },
+                    { id: 'plan_7', text: 'Фиксация договорённости и прощание' }
+                ];
+
+            } else if (templateId === 3) {
+                // Шаблон 3: Мягкий — выявление потребности
+                dlg = createDialogObject('Мягкий — потребности');
+
+                dlg.botRole = 'Тебя зовут Лиза, ты консультант компании ' + companyName + '. Ты звонишь, чтобы понять задачи и боли клиента — не продать, а разобраться. Ты умеешь слушать, задаёшь точечные вопросы и создаёшь ощущение заботы. Компания занимается ' + companyProduct + '. Твоя цель — выявить реальную потребность и понять, можем ли мы быть полезны.';
+
+                dlg.botStyle = 'Тон — мягкий, участливый, внимательный. Как разговор с хорошим знакомым, который разбирается в теме.\nГоворишь спокойно, без спешки. Даёшь собеседнику пространство ответить.\nБольше слушаешь, меньше говоришь. Уточняющие вопросы — короткие и открытые.\nНе давишь, не торопишь, не навязываешь. Если клиент не готов — принимаешь это спокойно.\nОбращение — на «вы», тёплое и уважительное.\nЧисла — прописью.\nПаузы уместны. Тишина — тоже инструмент.';
+
+                dlg.rules = [
+                    { id: 'rule_1', text: 'Не продавай. Твоя задача — слушать и понимать, а не предлагать решение.' },
+                    { id: 'rule_2', text: 'Задавай открытые вопросы — пусть клиент сам рассказывает о своей ситуации.' },
+                    { id: 'rule_3', text: 'Если клиент делится проблемой — покажи, что услышал, перефразируй его мысль.' }
+                ];
+
+                dlg.facts = [
+                    { id: 'fact_1', text: 'Мы не предлагаем шаблонных решений — сначала разбираемся в вашей ситуации.' },
+                    { id: 'fact_2', text: 'Многие клиенты приходят с одной задачей, а в процессе разговора понимают, что ключевая проблема в другом.' },
+                    { id: 'fact_3', text: 'Этот звонок ни к чему не обязывает — просто хотим понять, можем ли быть полезны.' }
+                ];
+
+                dlg.criteria = [
+                    { id: 'crit_1', text: 'Выявлена конкретная боль или задача, которую клиент хочет решить.' },
+                    { id: 'crit_2', text: 'Клиент открыто рассказал о текущей ситуации и сложностях.' },
+                    { id: 'crit_3', text: 'Есть понимание, как наш продукт может помочь — или честный вывод, что не можем.' }
+                ];
+
+                dlg.greetings = [
+                    { id: 'greet_1', text: 'Здравствуйте! Меня зовут Лиза, я из ' + companyName + '. Звоню, чтобы познакомиться и понять, можем ли мы быть вам полезны. Удобно сейчас пару минут поговорить?' }
+                ];
+
+                dlg.planItems = [
+                    { id: 'plan_1', text: 'Мягкое приветствие и проверка удобства' },
+                    { id: 'plan_2', text: 'Открытый вопрос — как сейчас обстоят дела в этой области' },
+                    { id: 'plan_3', text: 'Уточнение — что работает хорошо, а что хотелось бы улучшить' },
+                    { id: 'plan_4', text: 'Углубление — какая задача сейчас самая важная' },
+                    { id: 'plan_5', text: 'Перефразирование — подтвердить, что правильно поняли' },
+                    { id: 'plan_6', text: 'Лёгкое предложение — рассказать, как решали похожую задачу' },
+                    { id: 'plan_7', text: 'Договорённость о следующем шаге или тёплое прощание' }
+                ];
+
+            } else {
+                return;
+            }
+
+            dialogs.push(dlg);
+            renderDialogTable();
+
+            // Switch to Dialogs page
+            var mainLink = document.querySelector('a[data-page="pageMain"]');
+            if (mainLink) setActive(mainLink);
+
+            // Open created dialog in edit mode
+            openDialogDetail(dlg.id);
+        }
+
+        // ===== CUSTOM TEMPLATES =====
+        var customTemplates = [];
+        var customTplIdCounter = 0;
+        var editingTplId = null;
+
+        function openCustomTplModal(tplId) {
+            editingTplId = tplId || null;
+            var m = document.getElementById('customTplModal');
+            if (editingTplId) {
+                var tpl = customTemplates.find(function(t) { return t.id === editingTplId; });
+                if (!tpl) return;
+                document.getElementById('ctplName').value = tpl.name;
+                document.getElementById('ctplDesc').value = tpl.desc;
+                document.getElementById('ctplRole').value = tpl.botRole;
+                document.getElementById('ctplStyle').value = tpl.botStyle;
+                document.getElementById('ctplRules').value = tpl.rules.join('\n');
+                document.getElementById('ctplFacts').value = tpl.facts.join('\n');
+                document.getElementById('ctplCriteria').value = tpl.criteria.join('\n');
+                document.getElementById('ctplGreeting').value = tpl.greeting;
+                document.getElementById('ctplPlan').value = tpl.planItems.join('\n');
+                document.getElementById('ctplSaveBtn').textContent = t('tplSaveBtn');
+            } else {
+                document.getElementById('ctplName').value = '';
+                document.getElementById('ctplDesc').value = '';
+                document.getElementById('ctplRole').value = '';
+                document.getElementById('ctplStyle').value = '';
+                document.getElementById('ctplRules').value = '';
+                document.getElementById('ctplFacts').value = '';
+                document.getElementById('ctplCriteria').value = '';
+                document.getElementById('ctplGreeting').value = '';
+                document.getElementById('ctplPlan').value = '';
+            }
+            m.classList.add('active');
+            document.body.style.overflow = 'hidden';
+        }
+
+        function closeCustomTplModal() {
+            document.getElementById('customTplModal').classList.remove('active');
+            document.body.style.overflow = '';
+            editingTplId = null;
+        }
+
+        function linesToArray(val) {
+            return val.split('\n').map(function(s) { return s.trim(); }).filter(function(s) { return s.length > 0; });
+        }
+
+        function saveCustomTpl() {
+            var name = document.getElementById('ctplName').value.trim();
+            if (!name) { document.getElementById('ctplName').focus(); return; }
+
+            var data = {
+                name: name,
+                desc: document.getElementById('ctplDesc').value.trim(),
+                botRole: document.getElementById('ctplRole').value.trim(),
+                botStyle: document.getElementById('ctplStyle').value.trim(),
+                rules: linesToArray(document.getElementById('ctplRules').value),
+                facts: linesToArray(document.getElementById('ctplFacts').value),
+                criteria: linesToArray(document.getElementById('ctplCriteria').value),
+                greeting: document.getElementById('ctplGreeting').value.trim(),
+                planItems: linesToArray(document.getElementById('ctplPlan').value)
+            };
+
+            if (editingTplId) {
+                var tpl = customTemplates.find(function(t) { return t.id === editingTplId; });
+                if (tpl) Object.assign(tpl, data);
+            } else {
+                customTplIdCounter++;
+                data.id = 'ctpl_' + customTplIdCounter;
+                customTemplates.push(data);
+            }
+
+            closeCustomTplModal();
+            renderCustomTplCards();
+        }
+
+        function deleteCustomTpl(id) {
+            customTemplates = customTemplates.filter(function(t) { return t.id !== id; });
+            renderCustomTplCards();
+        }
+
+        function applyCustomTpl(id) {
+            var tpl = customTemplates.find(function(t) { return t.id === id; });
+            if (!tpl) return;
+
+            var dlg = createDialogObject(tpl.name);
+            dlg.botRole = tpl.botRole;
+            dlg.botStyle = tpl.botStyle;
+
+            dlg.rules = tpl.rules.map(function(text, i) {
+                return { id: 'rule_' + (i + 1), text: text };
+            });
+            dlg.facts = tpl.facts.map(function(text, i) {
+                return { id: 'fact_' + (i + 1), text: text };
+            });
+            dlg.criteria = tpl.criteria.map(function(text, i) {
+                return { id: 'crit_' + (i + 1), text: text };
+            });
+            dlg.greetings = tpl.greeting ? [{ id: 'greet_1', text: tpl.greeting }] : [];
+            dlg.planItems = tpl.planItems.map(function(text, i) {
+                return { id: 'plan_' + (i + 1), text: text };
+            });
+
+            dialogs.push(dlg);
+            renderDialogTable();
+
+            var mainLink = document.querySelector('a[data-page="pageMain"]');
+            if (mainLink) setActive(mainLink);
+            openDialogDetail(dlg.id);
+        }
+
+        function renderCustomTplCards() {
+            var container = document.getElementById('customTplCards');
+            container.innerHTML = '';
+            customTemplates.forEach(function(tpl) {
+                var card = document.createElement('div');
+                card.className = 'tpl-card';
+                card.innerHTML =
+                    '<div class="tpl-card-title">' + escapeHtml(tpl.name) + '</div>' +
+                    '<div class="tpl-card-desc">' + escapeHtml(tpl.desc || '') + '</div>' +
+                    '<div class="tpl-actions">' +
+                        '<button class="tpl-select-btn" onclick="applyCustomTpl(\'' + tpl.id + '\')">' + t('tplSelect') + '</button>' +
+                    '</div>' +
+                    '<div class="tpl-card-custom-actions">' +
+                        '<button class="tpl-edit-btn" onclick="openCustomTplModal(\'' + tpl.id + '\')">' + t('tplEditBtn') + '</button>' +
+                        '<button class="tpl-delete-btn" onclick="deleteCustomTpl(\'' + tpl.id + '\')">' + t('tplDeleteBtn') + '</button>' +
+                    '</div>';
+                container.appendChild(card);
+            });
         }
 
         function openCreateDialogModal() {
@@ -2948,8 +3592,8 @@
         }
 
         function openTemplatesModal() {
-            // TODO: template selection modal
-            alert(t('dlgTemplate'));
+            var tplLink = document.querySelector('a[data-page="pageTemplates"]');
+            if (tplLink) setActive(tplLink);
         }
 
         function openDeleteDialogModal(id) {
@@ -4347,6 +4991,57 @@
             mgmtSat: { ru:'Сб', en:'Sa' },
             mgmtSun: { ru:'Вс', en:'Su' },
             mgmtMenu: { ru:'Настройки', en:'Settings' },
+            // Settings page
+            setAudT: { ru:'Целевая аудитория', en:'Target Audience' },
+            setAudD: { ru:'Настройте портрет вашего идеального клиента, нишу и конкурентов', en:'Configure your ideal client profile, niche, and competitors' },
+            setAudModalSub: { ru:'Настройте параметры целевой аудитории', en:'Configure target audience parameters' },
+            setAudNiche: { ru:'Ниша', en:'Niche' },
+            setAudClient: { ru:'Описание идеального клиента', en:'Ideal Client Description' },
+            setAudTags: { ru:'Быстрый выбор', en:'Quick select' },
+            setAudSites: { ru:'Сайты конкурентов (до 10, каждый с новой строки)', en:'Competitor websites (up to 10, one per line)' },
+            setAudSave: { ru:'Сохранить', en:'Save' },
+            setAudMaxSites: { ru:'Максимум 10 сайтов конкурентов', en:'Maximum 10 competitor websites' },
+            setCompT: { ru:'Настройка компании', en:'Company Settings' },
+            setCompD: { ru:'Информация о компании, реквизиты и договор', en:'Company info, details, and contract' },
+            setCompModalSub: { ru:'Информация о вашей компании', en:'Your company information' },
+            setCompName: { ru:'Название компании', en:'Company Name' },
+            setCompLoc: { ru:'Местоположение', en:'Location' },
+            setCompSite: { ru:'Сайт', en:'Website' },
+            setCompProd: { ru:'Основной продукт', en:'Main Product' },
+            setCompUtp: { ru:'УТП', en:'USP' },
+            setCompInfo: { ru:'О компании', en:'About Company' },
+            setCompInn: { ru:'ИНН', en:'Tax ID' },
+            setCompPerson: { ru:'Ответственное лицо', en:'Contact Person' },
+            setCompPersonPh: { ru:'ФИО ответственного лица', en:'Full name of contact person' },
+            setCompReq: { ru:'Реквизиты', en:'Bank Details' },
+            setCompReqPh: { ru:'Банковские реквизиты компании...', en:'Company bank details...' },
+            setCompContract: { ru:'Договор на оказание услуг', en:'Service Agreement' },
+            setCompDownload: { ru:'Скачать договор', en:'Download contract' },
+            setCompSave: { ru:'Сохранить', en:'Save' },
+            setBtn: { ru:'Настроить', en:'Configure' },
+            setTarT: { ru:'Тариф и баланс', en:'Plan & Balance' },
+            setTarD: { ru:'Текущий тарифный план и баланс компании', en:'Current plan and company balance' },
+            setTarPlan: { ru:'Текущий тариф', en:'Current Plan' },
+            setTarBal: { ru:'Баланс', en:'Balance' },
+            // Templates
+            tpl1t: { ru:'Дружелюбный — закрыть на встречу', en:'Friendly — close for a meeting' },
+            tpl1d: { ru:'Тёплый звонок с целью назначить встречу. Аня — дружелюбный менеджер, который мягко ведёт диалог и закрывает на конкретную дату.', en:'Warm call to schedule a meeting. Anya is a friendly manager who gently leads the conversation and closes on a specific date.' },
+            tpl2t: { ru:'Деловой — квалификация лида', en:'Business — lead qualification' },
+            tpl2d: { ru:'Структурированный звонок для оценки потенциала клиента. Чёткие вопросы, быстрая квалификация, фокус на ключевых критериях.', en:'Structured call to assess client potential. Clear questions, fast qualification, focus on key criteria.' },
+            tpl3t: { ru:'Мягкий — выявление потребности', en:'Soft — needs discovery' },
+            tpl3d: { ru:'Деликатный разговор для выявления болей и задач клиента. Акцент на слушании, эмпатии и точечных вопросах.', en:'Delicate conversation to uncover client pain points and tasks. Focus on listening, empathy, and targeted questions.' },
+            tplSelect: { ru:'Выбрать', en:'Select' },
+            tplReview: { ru:'Ознакомиться с шаблоном', en:'Review template' },
+            tplComingSoon: { ru:'Шаблон в разработке', en:'Template in development' },
+            tplAudioPlaceholder: { ru:'Аудио-превью', en:'Audio preview' },
+            tplCreateTitle: { ru:'Создать свой шаблон', en:'Create your template' },
+            tplCreateDesc: { ru:'Настройте роль, стиль речи, правила и план разговора под свои задачи', en:'Set up the role, speech style, rules and conversation plan for your tasks' },
+            tplCreateSub: { ru:'Заполните поля — шаблон можно будет применять повторно', en:'Fill in the fields — you can reuse the template' },
+            tplFieldName: { ru:'Название шаблона', en:'Template name' },
+            tplFieldDesc: { ru:'Описание', en:'Description' },
+            tplSaveBtn: { ru:'Сохранить шаблон', en:'Save template' },
+            tplEditBtn: { ru:'Редактировать', en:'Edit' },
+            tplDeleteBtn: { ru:'Удалить', en:'Delete' },
         };
 
         function t(key) {
