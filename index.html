@@ -1907,6 +1907,10 @@
                                 <span>&#10022;</span>
                                 <span data-i18n="dlgQuickStart">Быстрый старт</span>
                             </button>
+                            <button class="dlg-btn-quickstart" onclick="openTemplatesModal()">
+                                <span>&#9776;</span>
+                                <span data-i18n="dlgTemplate">Выбрать шаблон</span>
+                            </button>
                             <button class="dlg-btn-create" onclick="openCreateDialogModal()">
                                 <span>+</span>
                                 <span data-i18n="dlgCreate">Создать диалог</span>
@@ -2709,6 +2713,11 @@
             closeQsWizard();
             renderDialogTable();
             openDialogDetail(dlg.id);
+        }
+
+        function openTemplatesModal() {
+            // TODO: template selection modal
+            alert(t('dlgTemplate'));
         }
 
         function openDeleteDialogModal(id) {
@@ -3803,6 +3812,7 @@
             dlgCreate: { ru:'Создать диалог', en:'Create Dialog' },
             dlgQuickStart: { ru:'Быстрый старт', en:'Quick Start' },
             dlgQuickStartName: { ru:'Новый диалог', en:'New Dialog' },
+            dlgTemplate: { ru:'Выбрать шаблон', en:'Choose template' },
             dlgColName: { ru:'Название', en:'Name' },
             dlgColCreated: { ru:'Создан', en:'Created' },
             dlgColUpdated: { ru:'Изменён', en:'Updated' },
