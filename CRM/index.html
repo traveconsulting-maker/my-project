@@ -1,0 +1,2293 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>CRM</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800;900&family=Onest:wght@300;400;500;600;700&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --bg: #0a0a1a;
+            --sidebar-bg: rgba(255,255,255,0.03);
+            --card-bg: rgba(255,255,255,0.04);
+            --card-bg-hover: rgba(255,255,255,0.07);
+            --card-border: rgba(255,255,255,0.08);
+            --card-shadow: 0 4px 24px rgba(0,0,0,0.3);
+            --text: #fff;
+            --text-muted: rgba(255,255,255,0.45);
+            --text-secondary: rgba(255,255,255,0.7);
+            --border-color: rgba(255,255,255,0.06);
+            --accent: #6c5ce7;
+            --accent-light: #a29bfe;
+            --accent-bg: rgba(108,92,231,0.12);
+            --danger: #e74c3c;
+            --danger-bg: rgba(231,76,60,0.12);
+            --success: #00b894;
+            --success-bg: rgba(0,184,148,0.12);
+            --warning: #fdcb6e;
+            --warning-bg: rgba(253,203,110,0.12);
+            --info: #0984e3;
+            --info-bg: rgba(9,132,227,0.12);
+            --input-bg: rgba(255,255,255,0.06);
+            --input-border: rgba(255,255,255,0.1);
+            --modal-bg: rgba(0,0,0,0.7);
+            --scrollbar-bg: rgba(255,255,255,0.05);
+            --scrollbar-thumb: rgba(255,255,255,0.15);
+        }
+        body.light {
+            --bg: #f0f2f5;
+            --sidebar-bg: rgba(255,255,255,0.7);
+            --card-bg: rgba(255,255,255,0.85);
+            --card-bg-hover: rgba(255,255,255,1);
+            --card-border: rgba(0,0,0,0.08);
+            --card-shadow: 0 4px 24px rgba(0,0,0,0.06);
+            --text: #1a1a2e;
+            --text-muted: rgba(0,0,0,0.4);
+            --text-secondary: rgba(0,0,0,0.65);
+            --border-color: rgba(0,0,0,0.08);
+            --accent-bg: rgba(108,92,231,0.08);
+            --danger-bg: rgba(231,76,60,0.08);
+            --success-bg: rgba(0,184,148,0.08);
+            --warning-bg: rgba(253,203,110,0.15);
+            --info-bg: rgba(9,132,227,0.08);
+            --input-bg: rgba(0,0,0,0.04);
+            --input-border: rgba(0,0,0,0.12);
+            --modal-bg: rgba(0,0,0,0.4);
+            --scrollbar-bg: rgba(0,0,0,0.05);
+            --scrollbar-thumb: rgba(0,0,0,0.15);
+        }
+        * { margin:0; padding:0; box-sizing:border-box; }
+        body {
+            font-family:'Inter',-apple-system,BlinkMacSystemFont,sans-serif;
+            min-height:100vh;
+            background:var(--bg);
+            color:var(--text);
+            display:flex;
+            transition:background .3s,color .3s;
+            font-size:14px;
+            overflow:hidden;
+        }
+        ::-webkit-scrollbar { width:6px; }
+        ::-webkit-scrollbar-track { background:var(--scrollbar-bg); }
+        ::-webkit-scrollbar-thumb { background:var(--scrollbar-thumb); border-radius:3px; }
+
+        /* Sidebar */
+        .sidebar {
+            width:240px;
+            min-width:240px;
+            height:100vh;
+            background:var(--sidebar-bg);
+            border-right:1px solid var(--border-color);
+            display:flex;
+            flex-direction:column;
+            padding:20px 0;
+            overflow-y:auto;
+        }
+        .sidebar-logo {
+            padding:0 20px 24px;
+            font-family:'Onest',sans-serif;
+            font-size:1.6rem;
+            font-weight:700;
+            background:linear-gradient(135deg,#6c5ce7,#a29bfe);
+            -webkit-background-clip:text;
+            -webkit-text-fill-color:transparent;
+            background-clip:text;
+        }
+        .sidebar-section {
+            padding:0 12px;
+            margin-bottom:8px;
+        }
+        .sidebar-section-title {
+            font-size:.7rem;
+            text-transform:uppercase;
+            letter-spacing:.08em;
+            color:var(--text-muted);
+            padding:8px 12px 4px;
+            font-weight:600;
+        }
+        .nav-item {
+            display:flex;
+            align-items:center;
+            gap:10px;
+            padding:10px 12px;
+            border-radius:10px;
+            cursor:pointer;
+            color:var(--text-secondary);
+            font-size:.875rem;
+            font-weight:500;
+            transition:all .15s;
+            user-select:none;
+        }
+        .nav-item:hover { background:var(--card-bg-hover); color:var(--text); }
+        .nav-item.active { background:var(--accent-bg); color:var(--accent-light); }
+        .nav-item svg { width:18px; height:18px; flex-shrink:0; }
+        .nav-item .badge {
+            margin-left:auto;
+            background:var(--accent);
+            color:#fff;
+            font-size:.7rem;
+            padding:2px 7px;
+            border-radius:10px;
+            font-weight:600;
+        }
+        .sidebar-bottom {
+            margin-top:auto;
+            padding:12px;
+        }
+        .theme-btn {
+            display:flex;
+            align-items:center;
+            gap:8px;
+            padding:10px 12px;
+            border-radius:10px;
+            cursor:pointer;
+            color:var(--text-muted);
+            font-size:.8rem;
+            border:none;
+            background:none;
+            width:100%;
+            font-family:inherit;
+            transition:all .15s;
+        }
+        .theme-btn:hover { background:var(--card-bg-hover); color:var(--text); }
+
+        /* Main */
+        .main {
+            flex:1;
+            height:100vh;
+            overflow-y:auto;
+            padding:28px 32px;
+        }
+        .page-header {
+            display:flex;
+            align-items:center;
+            justify-content:space-between;
+            margin-bottom:24px;
+        }
+        .page-title {
+            font-family:'Onest',sans-serif;
+            font-size:1.5rem;
+            font-weight:700;
+        }
+        .page-subtitle {
+            color:var(--text-muted);
+            font-size:.85rem;
+            margin-top:2px;
+        }
+
+        /* Buttons */
+        .btn {
+            display:inline-flex;
+            align-items:center;
+            gap:6px;
+            padding:8px 16px;
+            border-radius:10px;
+            font-family:inherit;
+            font-size:.85rem;
+            font-weight:500;
+            border:1px solid var(--border-color);
+            background:var(--card-bg);
+            color:var(--text);
+            cursor:pointer;
+            transition:all .15s;
+            white-space:nowrap;
+        }
+        .btn:hover { background:var(--card-bg-hover); }
+        .btn-primary { background:var(--accent); border-color:var(--accent); color:#fff; }
+        .btn-primary:hover { opacity:.85; background:var(--accent); }
+        .btn-danger { background:var(--danger); border-color:var(--danger); color:#fff; }
+        .btn-danger:hover { opacity:.85; background:var(--danger); }
+        .btn-sm { padding:5px 10px; font-size:.8rem; border-radius:8px; }
+        .btn svg { width:16px; height:16px; }
+
+        /* Cards & Tables */
+        .card {
+            background:var(--card-bg);
+            border:1px solid var(--card-border);
+            border-radius:14px;
+            padding:20px;
+            margin-bottom:16px;
+        }
+        .stats-grid {
+            display:grid;
+            grid-template-columns:repeat(auto-fit,minmax(200px,1fr));
+            gap:14px;
+            margin-bottom:24px;
+        }
+        .stat-card {
+            background:var(--card-bg);
+            border:1px solid var(--card-border);
+            border-radius:14px;
+            padding:18px 20px;
+        }
+        .stat-label { font-size:.75rem; color:var(--text-muted); margin-bottom:6px; text-transform:uppercase; letter-spacing:.04em; font-weight:600; }
+        .stat-value { font-family:'Onest',sans-serif; font-size:1.8rem; font-weight:700; }
+
+        table {
+            width:100%;
+            border-collapse:separate;
+            border-spacing:0;
+        }
+        th {
+            text-align:left;
+            font-size:.75rem;
+            text-transform:uppercase;
+            letter-spacing:.04em;
+            color:var(--text-muted);
+            padding:10px 14px;
+            font-weight:600;
+            border-bottom:1px solid var(--border-color);
+        }
+        td {
+            padding:12px 14px;
+            border-bottom:1px solid var(--border-color);
+            font-size:.875rem;
+        }
+        tr:hover td { background:var(--card-bg-hover); }
+        tr:last-child td { border-bottom:none; }
+        .clickable-row { cursor:pointer; }
+
+        /* Tags / Badges */
+        .tag {
+            display:inline-flex;
+            align-items:center;
+            padding:3px 10px;
+            border-radius:6px;
+            font-size:.75rem;
+            font-weight:600;
+        }
+        .tag-accent { background:var(--accent-bg); color:var(--accent-light); }
+        .tag-success { background:var(--success-bg); color:var(--success); }
+        .tag-danger { background:var(--danger-bg); color:var(--danger); }
+        .tag-warning { background:var(--warning-bg); color:var(--warning); }
+        .tag-info { background:var(--info-bg); color:var(--info); }
+        .tag-muted { background:var(--input-bg); color:var(--text-muted); }
+
+        /* Inputs */
+        input,textarea,select {
+            font-family:inherit;
+            font-size:.875rem;
+            padding:9px 14px;
+            border-radius:10px;
+            border:1px solid var(--input-border);
+            background:var(--input-bg);
+            color:var(--text);
+            width:100%;
+            outline:none;
+            transition:border-color .15s;
+        }
+        input:focus,textarea:focus,select:focus { border-color:var(--accent); }
+        textarea { resize:vertical; min-height:80px; }
+        select { cursor:pointer; }
+        .form-group { margin-bottom:14px; }
+        .form-label { display:block; font-size:.8rem; font-weight:600; color:var(--text-secondary); margin-bottom:5px; }
+        .form-row { display:grid; grid-template-columns:1fr 1fr; gap:12px; }
+
+        /* Search */
+        .search-box {
+            position:relative;
+            max-width:300px;
+        }
+        .search-box input { padding-left:36px; }
+        .search-box svg {
+            position:absolute;
+            left:12px;
+            top:50%;
+            transform:translateY(-50%);
+            width:16px;
+            height:16px;
+            color:var(--text-muted);
+        }
+        .toolbar {
+            display:flex;
+            align-items:center;
+            gap:10px;
+            flex-wrap:wrap;
+        }
+
+        /* Modal */
+        .modal-overlay {
+            position:fixed;
+            inset:0;
+            background:var(--modal-bg);
+            display:flex;
+            align-items:center;
+            justify-content:center;
+            z-index:1000;
+            opacity:0;
+            pointer-events:none;
+            transition:opacity .2s;
+            backdrop-filter:blur(4px);
+        }
+        .modal-overlay.open { opacity:1; pointer-events:auto; }
+        .modal {
+            background:var(--bg);
+            border:1px solid var(--card-border);
+            border-radius:18px;
+            width:90%;
+            max-width:640px;
+            max-height:85vh;
+            overflow-y:auto;
+            padding:28px;
+            box-shadow:0 30px 80px rgba(0,0,0,.4);
+            transform:translateY(20px);
+            transition:transform .2s;
+        }
+        .modal-overlay.open .modal { transform:translateY(0); }
+        .modal-wide { max-width:900px; }
+        .modal-header {
+            display:flex;
+            align-items:center;
+            justify-content:space-between;
+            margin-bottom:20px;
+        }
+        .modal-title { font-family:'Onest',sans-serif; font-size:1.2rem; font-weight:700; }
+        .modal-close {
+            width:32px; height:32px; border-radius:8px;
+            display:flex; align-items:center; justify-content:center;
+            cursor:pointer; border:none; background:var(--card-bg);
+            color:var(--text-muted); font-size:1.2rem; transition:all .15s;
+        }
+        .modal-close:hover { background:var(--card-bg-hover); color:var(--text); }
+        .modal-footer {
+            display:flex;
+            justify-content:flex-end;
+            gap:10px;
+            margin-top:20px;
+            padding-top:16px;
+            border-top:1px solid var(--border-color);
+        }
+
+        /* Tabs */
+        .tabs {
+            display:flex;
+            gap:4px;
+            margin-bottom:20px;
+            border-bottom:1px solid var(--border-color);
+            padding-bottom:-1px;
+        }
+        .tab {
+            padding:10px 16px;
+            font-size:.85rem;
+            font-weight:500;
+            color:var(--text-muted);
+            cursor:pointer;
+            border-bottom:2px solid transparent;
+            transition:all .15s;
+            user-select:none;
+        }
+        .tab:hover { color:var(--text); }
+        .tab.active { color:var(--accent-light); border-bottom-color:var(--accent); }
+
+        /* Kanban */
+        .kanban {
+            display:flex;
+            gap:14px;
+            overflow-x:auto;
+            padding-bottom:20px;
+            min-height:calc(100vh - 180px);
+        }
+        .kanban-col {
+            min-width:280px;
+            width:280px;
+            flex-shrink:0;
+        }
+        .kanban-col-header {
+            display:flex;
+            align-items:center;
+            justify-content:space-between;
+            padding:12px 14px;
+            background:var(--card-bg);
+            border:1px solid var(--card-border);
+            border-radius:12px 12px 0 0;
+            font-weight:600;
+            font-size:.85rem;
+        }
+        .kanban-col-count {
+            background:var(--input-bg);
+            padding:2px 8px;
+            border-radius:6px;
+            font-size:.75rem;
+            color:var(--text-muted);
+        }
+        .kanban-col-body {
+            background:var(--card-bg);
+            border:1px solid var(--card-border);
+            border-top:none;
+            border-radius:0 0 12px 12px;
+            padding:10px;
+            min-height:200px;
+        }
+        .kanban-col-body.drag-over {
+            background:var(--accent-bg);
+        }
+        .kanban-card {
+            background:var(--bg);
+            border:1px solid var(--card-border);
+            border-radius:10px;
+            padding:12px;
+            margin-bottom:8px;
+            cursor:grab;
+            transition:all .15s;
+        }
+        .kanban-card:hover { border-color:var(--accent); }
+        .kanban-card:active { cursor:grabbing; }
+        .kanban-card.dragging { opacity:.5; }
+        .kanban-card-title { font-weight:600; font-size:.85rem; margin-bottom:6px; }
+        .kanban-card-client { font-size:.75rem; color:var(--text-muted); margin-bottom:8px; }
+        .kanban-card-amount { font-family:'Onest',sans-serif; font-weight:700; font-size:.95rem; color:var(--accent-light); }
+        .kanban-card-footer { display:flex; align-items:center; justify-content:space-between; margin-top:8px; }
+
+        /* Timeline */
+        .timeline { padding-left:20px; border-left:2px solid var(--border-color); }
+        .timeline-item { position:relative; padding:0 0 20px 16px; }
+        .timeline-item::before {
+            content:'';
+            position:absolute;
+            left:-7px;
+            top:4px;
+            width:12px;
+            height:12px;
+            border-radius:50%;
+            background:var(--accent);
+            border:2px solid var(--bg);
+        }
+        .timeline-item-time { font-size:.75rem; color:var(--text-muted); margin-bottom:2px; }
+        .timeline-item-text { font-size:.85rem; }
+        .timeline-item-type { font-size:.7rem; font-weight:600; text-transform:uppercase; letter-spacing:.04em; }
+
+        /* Priority dots */
+        .priority-dot {
+            width:8px; height:8px; border-radius:50%; display:inline-block; margin-right:6px;
+        }
+        .priority-high { background:var(--danger); }
+        .priority-medium { background:var(--warning); }
+        .priority-low { background:var(--success); }
+
+        /* Empty state */
+        .empty-state {
+            text-align:center;
+            padding:60px 20px;
+            color:var(--text-muted);
+        }
+        .empty-state svg { width:48px; height:48px; margin-bottom:12px; opacity:.3; }
+        .empty-state p { font-size:.95rem; }
+
+        /* Checkbox */
+        .checkbox {
+            width:18px; height:18px; border-radius:5px;
+            border:2px solid var(--input-border);
+            display:flex; align-items:center; justify-content:center;
+            cursor:pointer; flex-shrink:0; transition:all .15s;
+        }
+        .checkbox.checked { background:var(--accent); border-color:var(--accent); }
+        .checkbox svg { width:12px; height:12px; color:#fff; }
+
+        /* Task item */
+        .task-item {
+            display:flex;
+            align-items:flex-start;
+            gap:12px;
+            padding:14px;
+            border-radius:10px;
+            border:1px solid var(--card-border);
+            background:var(--card-bg);
+            margin-bottom:8px;
+            cursor:pointer;
+            transition:all .15s;
+        }
+        .task-item:hover { background:var(--card-bg-hover); }
+        .task-item.completed .task-title { text-decoration:line-through; opacity:.5; }
+        .task-title { font-weight:600; font-size:.85rem; }
+        .task-meta { font-size:.75rem; color:var(--text-muted); margin-top:3px; }
+
+        /* Ticket */
+        .ticket-messages { max-height:300px; overflow-y:auto; }
+        .ticket-message {
+            padding:12px;
+            border-radius:10px;
+            margin-bottom:8px;
+            max-width:80%;
+        }
+        .ticket-message.staff { background:var(--accent-bg); margin-left:auto; }
+        .ticket-message.client { background:var(--card-bg); }
+        .ticket-message-author { font-size:.75rem; font-weight:600; margin-bottom:4px; }
+        .ticket-message-text { font-size:.85rem; }
+        .ticket-message-time { font-size:.7rem; color:var(--text-muted); margin-top:4px; }
+
+        /* Filters */
+        .filter-pills { display:flex; gap:6px; flex-wrap:wrap; }
+        .filter-pill {
+            padding:5px 12px;
+            border-radius:8px;
+            font-size:.8rem;
+            font-weight:500;
+            cursor:pointer;
+            background:var(--card-bg);
+            border:1px solid var(--card-border);
+            color:var(--text-secondary);
+            transition:all .15s;
+        }
+        .filter-pill:hover { background:var(--card-bg-hover); }
+        .filter-pill.active { background:var(--accent-bg); color:var(--accent-light); border-color:var(--accent); }
+
+        .section { display:none; }
+        .section.active { display:block; }
+
+        /* Notification toast */
+        .toast-container {
+            position:fixed; bottom:20px; right:20px; z-index:2000;
+            display:flex; flex-direction:column; gap:8px;
+        }
+        .toast {
+            padding:12px 20px; border-radius:10px;
+            background:var(--card-bg); border:1px solid var(--card-border);
+            box-shadow:0 10px 40px rgba(0,0,0,.3);
+            font-size:.85rem; animation:toast-in .3s ease;
+            backdrop-filter:blur(10px);
+        }
+        @keyframes toast-in { from { opacity:0; transform:translateY(10px); } to { opacity:1; transform:translateY(0); } }
+
+        /* Client card detail */
+        .client-detail-grid { display:grid; grid-template-columns:1fr 1fr; gap:20px; }
+        .client-detail-section { margin-bottom:24px; }
+        .client-detail-section h3 {
+            font-size:.85rem; font-weight:600; color:var(--text-muted);
+            text-transform:uppercase; letter-spacing:.04em; margin-bottom:12px;
+        }
+        .client-info-row {
+            display:flex; justify-content:space-between;
+            padding:8px 0; border-bottom:1px solid var(--border-color);
+            font-size:.85rem;
+        }
+        .client-info-label { color:var(--text-muted); }
+
+        /* Chat / Dialogs */
+        .chat-layout { display:flex; gap:0; height:calc(100vh - 140px); border:1px solid var(--card-border); border-radius:14px; overflow:hidden; }
+        .chat-list { width:320px; min-width:320px; border-right:1px solid var(--border-color); display:flex; flex-direction:column; background:var(--card-bg); }
+        .chat-list-header { padding:14px 16px; border-bottom:1px solid var(--border-color); }
+        .chat-list-search input { width:100%; padding:8px 12px; border-radius:8px; font-size:.8rem; }
+        .chat-list-items { flex:1; overflow-y:auto; }
+        .chat-item { display:flex; align-items:center; gap:12px; padding:12px 16px; cursor:pointer; border-bottom:1px solid var(--border-color); transition:all .1s; }
+        .chat-item:hover { background:var(--card-bg-hover); }
+        .chat-item.active { background:var(--accent-bg); }
+        .chat-item-avatar { width:40px; height:40px; border-radius:50%; display:flex; align-items:center; justify-content:center; font-weight:700; font-size:.85rem; flex-shrink:0; }
+        .chat-item-avatar.anon { background:var(--input-bg); color:var(--text-muted); }
+        .chat-item-avatar.client { background:var(--accent-bg); color:var(--accent-light); }
+        .chat-item-info { flex:1; min-width:0; }
+        .chat-item-name { font-weight:600; font-size:.85rem; white-space:nowrap; overflow:hidden; text-overflow:ellipsis; }
+        .chat-item-last { font-size:.75rem; color:var(--text-muted); white-space:nowrap; overflow:hidden; text-overflow:ellipsis; margin-top:2px; }
+        .chat-item-time { font-size:.7rem; color:var(--text-muted); flex-shrink:0; }
+        .chat-item-unread { width:8px; height:8px; border-radius:50%; background:var(--accent); flex-shrink:0; }
+        .chat-body { flex:1; display:flex; flex-direction:column; background:var(--bg); }
+        .chat-body-header { padding:14px 20px; border-bottom:1px solid var(--border-color); display:flex; align-items:center; justify-content:space-between; background:var(--card-bg); }
+        .chat-body-name { font-weight:600; font-size:.95rem; }
+        .chat-body-status { font-size:.75rem; color:var(--text-muted); }
+        .chat-messages { flex:1; overflow-y:auto; padding:20px; display:flex; flex-direction:column; gap:8px; }
+        .chat-msg { max-width:70%; padding:10px 14px; border-radius:14px; font-size:.85rem; line-height:1.5; }
+        .chat-msg.from-client { background:var(--card-bg); align-self:flex-start; border-bottom-left-radius:4px; }
+        .chat-msg.from-manager { background:var(--accent-bg); color:var(--accent-light); align-self:flex-end; border-bottom-right-radius:4px; }
+        .chat-msg-text { white-space:pre-wrap; word-break:break-word; }
+        .chat-msg-time { font-size:.7rem; color:var(--text-muted); margin-top:4px; }
+        .chat-msg-files { font-size:.75rem; color:var(--text-muted); margin-top:4px; }
+        .chat-input-area { padding:12px 16px; border-top:1px solid var(--border-color); display:flex; gap:10px; align-items:flex-end; background:var(--card-bg); }
+        .chat-input-area textarea { flex:1; min-height:38px; max-height:120px; resize:none; padding:9px 14px; border-radius:10px; }
+        .chat-input-area .btn { flex-shrink:0; height:38px; }
+        .chat-empty { flex:1; display:flex; align-items:center; justify-content:center; color:var(--text-muted); font-size:.95rem; }
+    </style>
+</head>
+<body>
+    <!-- Sidebar -->
+    <nav class="sidebar">
+        <div class="sidebar-logo">CRM</div>
+        <div class="sidebar-section">
+            <div class="sidebar-section-title">Основное</div>
+            <div class="nav-item active" data-section="dashboard" onclick="showSection('dashboard')">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="3" width="7" height="7" rx="1"/><rect x="14" y="3" width="7" height="7" rx="1"/><rect x="3" y="14" width="7" height="7" rx="1"/><rect x="14" y="14" width="7" height="7" rx="1"/></svg>
+                Дашборд
+            </div>
+            <div class="nav-item" data-section="dialogs" onclick="showSection('dialogs')">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 15a2 2 0 01-2 2H7l-4 4V5a2 2 0 012-2h14a2 2 0 012 2z"/></svg>
+                Диалоги
+                <span class="badge" id="badge-dialogs">0</span>
+            </div>
+            <div class="nav-item" data-section="clients" onclick="showSection('clients')">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M17 21v-2a4 4 0 00-4-4H5a4 4 0 00-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M23 21v-2a4 4 0 00-3-3.87M16 3.13a4 4 0 010 7.75"/></svg>
+                Клиенты
+                <span class="badge" id="badge-clients">0</span>
+            </div>
+            <div class="nav-item" data-section="deals" onclick="showSection('deals')">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="22 12 18 12 15 21 9 3 6 12 2 12"/></svg>
+                Сделки
+            </div>
+            <div class="nav-item" data-section="tasks" onclick="showSection('tasks')">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M9 11l3 3L22 4"/><path d="M21 12v7a2 2 0 01-2 2H5a2 2 0 01-2-2V5a2 2 0 012-2h11"/></svg>
+                Задачи
+                <span class="badge" id="badge-tasks">0</span>
+            </div>
+        </div>
+        <div class="sidebar-section">
+            <div class="sidebar-section-title">Разделы</div>
+            <div class="nav-item" data-section="callcenter" onclick="showSection('callcenter')">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M22 16.92v3a2 2 0 01-2.18 2 19.79 19.79 0 01-8.63-3.07 19.5 19.5 0 01-6-6A19.79 19.79 0 012.12 4.18 2 2 0 014.11 2h3a2 2 0 012 1.72c.127.96.361 1.903.7 2.81a2 2 0 01-.45 2.11L8.09 9.91a16 16 0 006 6l1.27-1.27a2 2 0 012.11-.45c.907.339 1.85.573 2.81.7A2 2 0 0122 16.92z"/></svg>
+                Колл-центр
+            </div>
+            <div class="nav-item" data-section="applications" onclick="showSection('applications')">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M14 2H6a2 2 0 00-2 2v16a2 2 0 002 2h12a2 2 0 002-2V8z"/><polyline points="14 2 14 8 20 8"/><line x1="16" y1="13" x2="8" y2="13"/><line x1="16" y1="17" x2="8" y2="17"/></svg>
+                Заявки
+                <span class="badge" id="badge-apps">0</span>
+            </div>
+            <div class="nav-item" data-section="support" onclick="showSection('support')">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><path d="M9.09 9a3 3 0 015.83 1c0 2-3 3-3 3"/><line x1="12" y1="17" x2="12.01" y2="17"/></svg>
+                Тех. поддержка
+                <span class="badge" id="badge-tickets">0</span>
+            </div>
+            <div class="nav-item" data-section="portation" onclick="showSection('portation')">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="16 3 21 3 21 8"/><line x1="4" y1="20" x2="21" y2="3"/><polyline points="21 16 21 21 16 21"/><line x1="15" y1="15" x2="21" y2="21"/><line x1="4" y1="4" x2="9" y2="9"/></svg>
+                Портация номеров
+            </div>
+        </div>
+        <div class="sidebar-bottom">
+            <button class="theme-btn" onclick="toggleTheme()">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" width="16" height="16"><circle cx="12" cy="12" r="5"/><line x1="12" y1="1" x2="12" y2="3"/><line x1="12" y1="21" x2="12" y2="23"/><line x1="4.22" y1="4.22" x2="5.64" y2="5.64"/><line x1="18.36" y1="18.36" x2="19.78" y2="19.78"/><line x1="1" y1="12" x2="3" y2="12"/><line x1="21" y1="12" x2="23" y2="12"/><line x1="4.22" y1="19.78" x2="5.64" y2="18.36"/><line x1="18.36" y1="5.64" x2="19.78" y2="4.22"/></svg>
+                Сменить тему
+            </button>
+        </div>
+    </nav>
+
+    <!-- Main content -->
+    <main class="main">
+        <!-- Dashboard -->
+        <div id="section-dashboard" class="section active">
+            <div class="page-header">
+                <div><div class="page-title">Дашборд</div><div class="page-subtitle">Обзор системы</div></div>
+            </div>
+            <div class="stats-grid" id="dashboard-stats"></div>
+            <div class="card">
+                <h3 style="font-size:.95rem;font-weight:600;margin-bottom:16px;">Последние действия</h3>
+                <div id="dashboard-activity" class="timeline"></div>
+            </div>
+        </div>
+
+        <!-- Clients -->
+        <!-- Dialogs -->
+        <div id="section-dialogs" class="section">
+            <div class="page-header">
+                <div><div class="page-title">Диалоги</div><div class="page-subtitle">Обращения из виджета поддержки</div></div>
+            </div>
+            <div class="tabs" id="dialogs-tabs">
+                <div class="tab active" onclick="switchDialogsTab('all',this)">Все</div>
+                <div class="tab" onclick="switchDialogsTab('anon',this)">Анонимные</div>
+                <div class="tab" onclick="switchDialogsTab('client',this)">Клиенты</div>
+            </div>
+            <div class="chat-layout">
+                <div class="chat-list">
+                    <div class="chat-list-header">
+                        <div class="chat-list-search"><input type="text" placeholder="Поиск диалогов..." id="dialogs-search" oninput="renderDialogsList()"></div>
+                    </div>
+                    <div class="chat-list-items" id="dialogs-list"></div>
+                </div>
+                <div class="chat-body" id="chat-body">
+                    <div class="chat-empty">Выберите диалог</div>
+                </div>
+            </div>
+        </div>
+
+        <div id="section-clients" class="section">
+            <div class="page-header">
+                <div><div class="page-title">Клиенты</div><div class="page-subtitle">Управление клиентской базой</div></div>
+                <div class="toolbar">
+                    <div class="search-box">
+                        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="11" cy="11" r="8"/><line x1="21" y1="21" x2="16.65" y2="16.65"/></svg>
+                        <input type="text" placeholder="Поиск клиентов..." id="clients-search" oninput="renderClients()">
+                    </div>
+                    <button class="btn btn-primary" onclick="openModal('client-modal')">
+                        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/></svg>
+                        Добавить клиента
+                    </button>
+                </div>
+            </div>
+            <div class="card" style="padding:0;overflow:hidden;">
+                <table>
+                    <thead><tr><th>Имя</th><th>Компания</th><th>Телефон</th><th>Email</th><th>Сделки</th><th>Создан</th></tr></thead>
+                    <tbody id="clients-table"></tbody>
+                </table>
+            </div>
+        </div>
+
+        <!-- Deals / Pipeline -->
+        <div id="section-deals" class="section">
+            <div class="page-header">
+                <div><div class="page-title">Сделки</div><div class="page-subtitle">Воронка продаж</div></div>
+                <button class="btn btn-primary" onclick="openDealModal()">
+                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/></svg>
+                    Новая сделка
+                </button>
+            </div>
+            <div class="kanban" id="kanban"></div>
+        </div>
+
+        <!-- Tasks -->
+        <div id="section-tasks" class="section">
+            <div class="page-header">
+                <div><div class="page-title">Задачи</div><div class="page-subtitle">Напоминания и действия</div></div>
+                <button class="btn btn-primary" onclick="openTaskModal()">
+                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/></svg>
+                    Новая задача
+                </button>
+            </div>
+            <div class="filter-pills" style="margin-bottom:16px;">
+                <span class="filter-pill active" onclick="filterTasks('all',this)">Все</span>
+                <span class="filter-pill" onclick="filterTasks('active',this)">Активные</span>
+                <span class="filter-pill" onclick="filterTasks('completed',this)">Завершённые</span>
+                <span class="filter-pill" onclick="filterTasks('overdue',this)">Просроченные</span>
+            </div>
+            <div id="tasks-list"></div>
+        </div>
+
+        <!-- Call Center -->
+        <div id="section-callcenter" class="section">
+            <div class="page-header">
+                <div><div class="page-title">Колл-центр</div><div class="page-subtitle">Журнал звонков</div></div>
+                <button class="btn btn-primary" onclick="openCallModal()">
+                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/></svg>
+                    Добавить звонок
+                </button>
+            </div>
+            <div class="stats-grid" id="call-stats"></div>
+            <div class="card" style="padding:0;overflow:hidden;">
+                <table>
+                    <thead><tr><th>Дата</th><th>Клиент</th><th>Телефон</th><th>Статус</th><th>Длительность</th><th>Квалификация</th></tr></thead>
+                    <tbody id="calls-table"></tbody>
+                </table>
+            </div>
+        </div>
+
+        <!-- Applications -->
+        <div id="section-applications" class="section">
+            <div class="page-header">
+                <div><div class="page-title">Заявки</div><div class="page-subtitle">Входящие заявки на подключение</div></div>
+            </div>
+            <div class="filter-pills" style="margin-bottom:16px;">
+                <span class="filter-pill active" onclick="filterApps('all',this)">Все</span>
+                <span class="filter-pill" onclick="filterApps('new',this)">Новые</span>
+                <span class="filter-pill" onclick="filterApps('in_progress',this)">В работе</span>
+                <span class="filter-pill" onclick="filterApps('converted',this)">Конвертированы</span>
+                <span class="filter-pill" onclick="filterApps('rejected',this)">Отклонены</span>
+            </div>
+            <div class="card" style="padding:0;overflow:hidden;">
+                <table>
+                    <thead><tr><th>Дата</th><th>Имя</th><th>Телефон</th><th>Email</th><th>Компания</th><th>Статус</th><th>Действия</th></tr></thead>
+                    <tbody id="apps-table"></tbody>
+                </table>
+            </div>
+        </div>
+
+        <!-- Support -->
+        <div id="section-support" class="section">
+            <div class="page-header">
+                <div><div class="page-title">Тех. поддержка</div><div class="page-subtitle">Тикеты и обращения</div></div>
+                <button class="btn btn-primary" onclick="openTicketModal()">
+                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/></svg>
+                    Создать тикет
+                </button>
+            </div>
+            <div class="filter-pills" style="margin-bottom:16px;">
+                <span class="filter-pill active" onclick="filterTickets('all',this)">Все</span>
+                <span class="filter-pill" onclick="filterTickets('open',this)">Открытые</span>
+                <span class="filter-pill" onclick="filterTickets('in_progress',this)">В работе</span>
+                <span class="filter-pill" onclick="filterTickets('closed',this)">Закрытые</span>
+            </div>
+            <div class="card" style="padding:0;overflow:hidden;">
+                <table>
+                    <thead><tr><th>ID</th><th>Тема</th><th>Клиент</th><th>Приоритет</th><th>Статус</th><th>Создан</th></tr></thead>
+                    <tbody id="tickets-table"></tbody>
+                </table>
+            </div>
+        </div>
+
+        <!-- Portation -->
+        <div id="section-portation" class="section">
+            <div class="page-header">
+                <div><div class="page-title">Портация номеров</div><div class="page-subtitle">Перенос номеров от конкурентов</div></div>
+                <button class="btn btn-primary" onclick="openPortationModal()">
+                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/></svg>
+                    Новая заявка
+                </button>
+            </div>
+            <div class="stats-grid" id="portation-stats"></div>
+            <div class="card" style="padding:0;overflow:hidden;">
+                <table>
+                    <thead><tr><th>Дата</th><th>Клиент</th><th>Номера</th><th>Оператор</th><th>Статус</th><th>Действия</th></tr></thead>
+                    <tbody id="portation-table"></tbody>
+                </table>
+            </div>
+        </div>
+    </main>
+
+    <!-- Toast container -->
+    <div class="toast-container" id="toast-container"></div>
+
+    <!-- Modals -->
+    <!-- Client Modal -->
+    <div class="modal-overlay" id="client-modal">
+        <div class="modal">
+            <div class="modal-header">
+                <div class="modal-title" id="client-modal-title">Новый клиент</div>
+                <button class="modal-close" onclick="closeModal('client-modal')">&times;</button>
+            </div>
+            <form onsubmit="saveClient(event)">
+                <input type="hidden" id="client-id">
+                <div class="form-row">
+                    <div class="form-group"><label class="form-label">Имя *</label><input id="client-name" required></div>
+                    <div class="form-group"><label class="form-label">Компания</label><input id="client-company"></div>
+                </div>
+                <div class="form-row">
+                    <div class="form-group"><label class="form-label">Телефон</label><input id="client-phone" type="tel"></div>
+                    <div class="form-group"><label class="form-label">Email</label><input id="client-email" type="email"></div>
+                </div>
+                <div class="form-row">
+                    <div class="form-group"><label class="form-label">Логин</label><input id="client-login"></div>
+                    <div class="form-group"><label class="form-label">Пароль</label><input id="client-password" type="text"></div>
+                </div>
+                <div class="form-group"><label class="form-label">Заметки</label><textarea id="client-notes" rows="3"></textarea></div>
+                <div class="modal-footer">
+                    <button type="button" class="btn" onclick="closeModal('client-modal')">Отмена</button>
+                    <button type="submit" class="btn btn-primary">Сохранить</button>
+                </div>
+            </form>
+        </div>
+    </div>
+
+    <!-- Client Detail Modal -->
+    <div class="modal-overlay" id="client-detail-modal">
+        <div class="modal modal-wide">
+            <div class="modal-header">
+                <div class="modal-title" id="client-detail-title">Клиент</div>
+                <div style="display:flex;gap:8px;">
+                    <button class="btn btn-sm" onclick="editClientFromDetail()">Редактировать</button>
+                    <button class="modal-close" onclick="closeModal('client-detail-modal')">&times;</button>
+                </div>
+            </div>
+            <div class="tabs" id="client-detail-tabs">
+                <div class="tab active" onclick="switchClientTab('info',this)">Информация</div>
+                <div class="tab" onclick="switchClientTab('deals',this)">Сделки</div>
+                <div class="tab" onclick="switchClientTab('calls',this)">Звонки</div>
+                <div class="tab" onclick="switchClientTab('tasks',this)">Задачи</div>
+                <div class="tab" onclick="switchClientTab('tickets',this)">Тикеты</div>
+                <div class="tab" onclick="switchClientTab('messages',this)">Сообщения</div>
+                <div class="tab" onclick="switchClientTab('history',this)">История</div>
+            </div>
+            <div id="client-detail-content"></div>
+        </div>
+    </div>
+
+    <!-- Deal Modal -->
+    <div class="modal-overlay" id="deal-modal">
+        <div class="modal">
+            <div class="modal-header">
+                <div class="modal-title" id="deal-modal-title">Новая сделка</div>
+                <button class="modal-close" onclick="closeModal('deal-modal')">&times;</button>
+            </div>
+            <form onsubmit="saveDeal(event)">
+                <input type="hidden" id="deal-id">
+                <div class="form-group"><label class="form-label">Название *</label><input id="deal-title" required></div>
+                <div class="form-row">
+                    <div class="form-group"><label class="form-label">Клиент *</label><select id="deal-client" required></select></div>
+                    <div class="form-group"><label class="form-label">Сумма</label><input id="deal-amount" type="number" step="0.01"></div>
+                </div>
+                <div class="form-group"><label class="form-label">Этап</label>
+                    <select id="deal-stage">
+                        <option value="lead">Новый лид</option>
+                        <option value="qualification">Квалификация</option>
+                        <option value="negotiation">Переговоры</option>
+                        <option value="closed">Закрытие</option>
+                        <option value="rejected">Отказ</option>
+                    </select>
+                </div>
+                <div class="form-group"><label class="form-label">Описание</label><textarea id="deal-description" rows="3"></textarea></div>
+                <div class="modal-footer">
+                    <button type="button" class="btn" onclick="closeModal('deal-modal')">Отмена</button>
+                    <button type="submit" class="btn btn-primary">Сохранить</button>
+                </div>
+            </form>
+        </div>
+    </div>
+
+    <!-- Task Modal -->
+    <div class="modal-overlay" id="task-modal">
+        <div class="modal">
+            <div class="modal-header">
+                <div class="modal-title" id="task-modal-title">Новая задача</div>
+                <button class="modal-close" onclick="closeModal('task-modal')">&times;</button>
+            </div>
+            <form onsubmit="saveTask(event)">
+                <input type="hidden" id="task-id">
+                <div class="form-group"><label class="form-label">Название *</label><input id="task-title" required></div>
+                <div class="form-row">
+                    <div class="form-group"><label class="form-label">Клиент</label><select id="task-client"><option value="">— Без клиента —</option></select></div>
+                    <div class="form-group"><label class="form-label">Приоритет</label>
+                        <select id="task-priority">
+                            <option value="low">Низкий</option>
+                            <option value="medium" selected>Средний</option>
+                            <option value="high">Высокий</option>
+                        </select>
+                    </div>
+                </div>
+                <div class="form-group"><label class="form-label">Срок</label><input id="task-due" type="date"></div>
+                <div class="form-group"><label class="form-label">Описание</label><textarea id="task-description" rows="3"></textarea></div>
+                <div class="modal-footer">
+                    <button type="button" class="btn" onclick="closeModal('task-modal')">Отмена</button>
+                    <button type="submit" class="btn btn-primary">Сохранить</button>
+                </div>
+            </form>
+        </div>
+    </div>
+
+    <!-- Call Modal -->
+    <div class="modal-overlay" id="call-modal">
+        <div class="modal">
+            <div class="modal-header">
+                <div class="modal-title">Новый звонок</div>
+                <button class="modal-close" onclick="closeModal('call-modal')">&times;</button>
+            </div>
+            <form onsubmit="saveCall(event)">
+                <div class="form-row">
+                    <div class="form-group"><label class="form-label">Клиент</label><select id="call-client"><option value="">— Не определён —</option></select></div>
+                    <div class="form-group"><label class="form-label">Телефон *</label><input id="call-phone" required></div>
+                </div>
+                <div class="form-row">
+                    <div class="form-group"><label class="form-label">Статус</label>
+                        <select id="call-status">
+                            <option value="answered">Принят</option>
+                            <option value="missed">Пропущен</option>
+                            <option value="outgoing">Исходящий</option>
+                        </select>
+                    </div>
+                    <div class="form-group"><label class="form-label">Длительность (сек)</label><input id="call-duration" type="number" value="0"></div>
+                </div>
+                <div class="form-group"><label class="form-label">Квалификация</label>
+                    <select id="call-qualification">
+                        <option value="">— Нет —</option>
+                        <option value="hot">Горячий</option>
+                        <option value="warm">Тёплый</option>
+                        <option value="cold">Холодный</option>
+                        <option value="spam">Спам</option>
+                    </select>
+                </div>
+                <div class="form-group"><label class="form-label">Заметки</label><textarea id="call-notes" rows="2"></textarea></div>
+                <div class="modal-footer">
+                    <button type="button" class="btn" onclick="closeModal('call-modal')">Отмена</button>
+                    <button type="submit" class="btn btn-primary">Сохранить</button>
+                </div>
+            </form>
+        </div>
+    </div>
+
+    <!-- Ticket Modal -->
+    <div class="modal-overlay" id="ticket-modal">
+        <div class="modal">
+            <div class="modal-header">
+                <div class="modal-title" id="ticket-modal-title">Новый тикет</div>
+                <button class="modal-close" onclick="closeModal('ticket-modal')">&times;</button>
+            </div>
+            <form onsubmit="saveTicket(event)">
+                <input type="hidden" id="ticket-id">
+                <div class="form-group"><label class="form-label">Тема *</label><input id="ticket-subject" required></div>
+                <div class="form-row">
+                    <div class="form-group"><label class="form-label">Клиент</label><select id="ticket-client"><option value="">— Без клиента (анонимное) —</option></select></div>
+                    <div class="form-group"><label class="form-label">Приоритет</label>
+                        <select id="ticket-priority">
+                            <option value="low">Низкий</option>
+                            <option value="medium" selected>Средний</option>
+                            <option value="high">Высокий</option>
+                            <option value="critical">Критический</option>
+                        </select>
+                    </div>
+                </div>
+                <div class="form-group"><label class="form-label">Описание *</label><textarea id="ticket-desc" required rows="4"></textarea></div>
+                <div class="modal-footer">
+                    <button type="button" class="btn" onclick="closeModal('ticket-modal')">Отмена</button>
+                    <button type="submit" class="btn btn-primary">Создать</button>
+                </div>
+            </form>
+        </div>
+    </div>
+
+    <!-- Ticket Detail Modal -->
+    <div class="modal-overlay" id="ticket-detail-modal">
+        <div class="modal modal-wide">
+            <div class="modal-header">
+                <div class="modal-title" id="ticket-detail-title">Тикет</div>
+                <button class="modal-close" onclick="closeModal('ticket-detail-modal')">&times;</button>
+            </div>
+            <div id="ticket-detail-content"></div>
+        </div>
+    </div>
+
+    <!-- Portation Modal -->
+    <div class="modal-overlay" id="portation-modal">
+        <div class="modal">
+            <div class="modal-header">
+                <div class="modal-title">Новая заявка на портацию</div>
+                <button class="modal-close" onclick="closeModal('portation-modal')">&times;</button>
+            </div>
+            <form onsubmit="savePortation(event)">
+                <div class="form-group"><label class="form-label">Клиент *</label><select id="portation-client" required></select></div>
+                <div class="form-group"><label class="form-label">Номера (по одному на строку) *</label><textarea id="portation-numbers" required rows="3" placeholder="+7 900 123-45-67&#10;+7 900 123-45-68"></textarea></div>
+                <div class="form-group"><label class="form-label">Текущий оператор *</label><input id="portation-operator" required placeholder="Название оператора-конкурента"></div>
+                <div class="form-group"><label class="form-label">Комментарий</label><textarea id="portation-comment" rows="2"></textarea></div>
+                <div class="modal-footer">
+                    <button type="button" class="btn" onclick="closeModal('portation-modal')">Отмена</button>
+                    <button type="submit" class="btn btn-primary">Создать</button>
+                </div>
+            </form>
+        </div>
+    </div>
+
+<script>
+// ==================== DATA LAYER ====================
+const STAGES = [
+    { id:'lead', name:'Новый лид', color:'var(--info)' },
+    { id:'qualification', name:'Квалификация', color:'var(--warning)' },
+    { id:'negotiation', name:'Переговоры', color:'var(--accent)' },
+    { id:'closed', name:'Закрытие', color:'var(--success)' },
+    { id:'rejected', name:'Отказ', color:'var(--danger)' }
+];
+
+function loadData(key) {
+    try { return JSON.parse(localStorage.getItem('crm_'+key)) || []; }
+    catch { return []; }
+}
+function saveData(key, data) {
+    localStorage.setItem('crm_'+key, JSON.stringify(data));
+}
+function genId() { return Date.now().toString(36) + Math.random().toString(36).substr(2,5); }
+function now() { return new Date().toISOString(); }
+
+let clients = loadData('clients');
+let deals = loadData('deals');
+let tasks = loadData('tasks');
+let calls = loadData('calls');
+let applications = loadData('applications');
+let tickets = loadData('tickets');
+let portations = loadData('portations');
+let activities = loadData('activities');
+let conversations = loadData('conversations');
+
+function persist() {
+    saveData('clients', clients);
+    saveData('deals', deals);
+    saveData('tasks', tasks);
+    saveData('calls', calls);
+    saveData('applications', applications);
+    saveData('tickets', tickets);
+    saveData('conversations', conversations);
+    saveData('portations', portations);
+    saveData('activities', activities);
+}
+
+function addActivity(type, text, clientId) {
+    activities.unshift({ id: genId(), type, text, clientId: clientId||null, time: now() });
+    if (activities.length > 100) activities = activities.slice(0,100);
+}
+
+function getClient(id) { return clients.find(c => c.id === id); }
+function getClientName(id) {
+    const c = getClient(id);
+    return c ? c.name : 'Не указан';
+}
+
+function formatDate(iso) {
+    if (!iso) return '—';
+    const d = new Date(iso);
+    return d.toLocaleDateString('ru-RU', { day:'2-digit', month:'2-digit', year:'numeric' });
+}
+function formatDateTime(iso) {
+    if (!iso) return '—';
+    const d = new Date(iso);
+    return d.toLocaleDateString('ru-RU', { day:'2-digit', month:'2-digit', year:'numeric', hour:'2-digit', minute:'2-digit' });
+}
+function formatDuration(sec) {
+    if (!sec || sec <= 0) return '—';
+    const m = Math.floor(sec/60), s = sec%60;
+    return m > 0 ? `${m}м ${s}с` : `${s}с`;
+}
+function formatMoney(v) {
+    if (!v) return '—';
+    return Number(v).toLocaleString('ru-RU') + ' ₽';
+}
+
+// ==================== TOAST ====================
+function toast(msg) {
+    const c = document.getElementById('toast-container');
+    const t = document.createElement('div');
+    t.className = 'toast';
+    t.textContent = msg;
+    c.appendChild(t);
+    setTimeout(() => { t.style.opacity='0'; t.style.transition='opacity .3s'; setTimeout(()=>t.remove(),300); }, 3000);
+}
+
+// ==================== THEME ====================
+function toggleTheme() {
+    document.body.classList.toggle('light');
+    localStorage.setItem('crm_theme', document.body.classList.contains('light') ? 'light' : 'dark');
+}
+if (localStorage.getItem('crm_theme') === 'light') document.body.classList.add('light');
+
+// ==================== NAVIGATION ====================
+function showSection(name) {
+    document.querySelectorAll('.section').forEach(s => s.classList.remove('active'));
+    document.querySelectorAll('.nav-item').forEach(n => n.classList.remove('active'));
+    document.getElementById('section-'+name).classList.add('active');
+    document.querySelector(`.nav-item[data-section="${name}"]`).classList.add('active');
+    renderSection(name);
+}
+
+function renderSection(name) {
+    switch(name) {
+        case 'dashboard': renderDashboard(); break;
+        case 'dialogs': renderDialogs(); break;
+        case 'clients': renderClients(); break;
+        case 'deals': renderKanban(); break;
+        case 'tasks': renderTasks(); break;
+        case 'callcenter': renderCallCenter(); break;
+        case 'applications': renderApplications(); break;
+        case 'support': renderSupport(); break;
+        case 'portation': renderPortation(); break;
+    }
+}
+
+// ==================== MODALS ====================
+function openModal(id) { document.getElementById(id).classList.add('open'); }
+function closeModal(id) { document.getElementById(id).classList.remove('open'); }
+
+document.querySelectorAll('.modal-overlay').forEach(ov => {
+    ov.addEventListener('click', e => { if (e.target === ov) ov.classList.remove('open'); });
+});
+
+function populateClientSelects() {
+    ['deal-client','task-client','call-client','ticket-client','portation-client'].forEach(sid => {
+        const sel = document.getElementById(sid);
+        if (!sel) return;
+        const val = sel.value;
+        const hasEmpty = sel.querySelector('option[value=""]');
+        sel.innerHTML = hasEmpty ? hasEmpty.outerHTML : '';
+        clients.forEach(c => {
+            const o = document.createElement('option');
+            o.value = c.id; o.textContent = c.name + (c.company ? ` (${c.company})` : '');
+            sel.appendChild(o);
+        });
+        if (val) sel.value = val;
+    });
+}
+
+// ==================== BADGES ====================
+function updateBadges() {
+    document.getElementById('badge-clients').textContent = clients.length;
+    document.getElementById('badge-dialogs').textContent = conversations.filter(c => c.status === 'open').length;
+    document.getElementById('badge-tasks').textContent = tasks.filter(t => !t.completed).length;
+    document.getElementById('badge-apps').textContent = applications.filter(a => a.status === 'new').length;
+    document.getElementById('badge-tickets').textContent = tickets.filter(t => t.status !== 'closed').length;
+}
+
+// ==================== DASHBOARD ====================
+function renderDashboard() {
+    const openDeals = deals.filter(d => d.stage !== 'closed' && d.stage !== 'rejected');
+    const totalAmount = deals.filter(d => d.stage === 'closed').reduce((s,d) => s + (Number(d.amount)||0), 0);
+    const openTickets = tickets.filter(t => t.status !== 'closed').length;
+    const todayTasks = tasks.filter(t => !t.completed && t.dueDate && new Date(t.dueDate).toDateString() === new Date().toDateString()).length;
+
+    document.getElementById('dashboard-stats').innerHTML = `
+        <div class="stat-card"><div class="stat-label">Клиентов</div><div class="stat-value">${clients.length}</div></div>
+        <div class="stat-card"><div class="stat-label">Открытых сделок</div><div class="stat-value">${openDeals.length}</div></div>
+        <div class="stat-card"><div class="stat-label">Сумма закрытых</div><div class="stat-value" style="font-size:1.4rem;">${formatMoney(totalAmount)}</div></div>
+        <div class="stat-card"><div class="stat-label">Открытых тикетов</div><div class="stat-value">${openTickets}</div></div>
+        <div class="stat-card"><div class="stat-label">Задач на сегодня</div><div class="stat-value">${todayTasks}</div></div>
+        <div class="stat-card"><div class="stat-label">Новых заявок</div><div class="stat-value">${applications.filter(a=>a.status==='new').length}</div></div>
+    `;
+
+    const el = document.getElementById('dashboard-activity');
+    if (activities.length === 0) {
+        el.innerHTML = '<div class="empty-state"><p>Нет активности</p></div>';
+        return;
+    }
+    el.innerHTML = activities.slice(0,15).map(a => `
+        <div class="timeline-item">
+            <div class="timeline-item-time">${formatDateTime(a.time)}</div>
+            <div class="timeline-item-type tag ${a.type==='client'?'tag-accent':a.type==='deal'?'tag-success':a.type==='call'?'tag-info':a.type==='ticket'?'tag-warning':'tag-muted'}" style="margin-bottom:4px;">${a.type}</div>
+            <div class="timeline-item-text">${a.text}</div>
+        </div>
+    `).join('');
+}
+
+// ==================== CLIENTS ====================
+function renderClients() {
+    const search = (document.getElementById('clients-search')?.value || '').toLowerCase();
+    const filtered = clients.filter(c =>
+        c.name.toLowerCase().includes(search) ||
+        (c.company||'').toLowerCase().includes(search) ||
+        (c.phone||'').includes(search) ||
+        (c.email||'').toLowerCase().includes(search)
+    );
+    const tbody = document.getElementById('clients-table');
+    if (filtered.length === 0) {
+        tbody.innerHTML = '<tr><td colspan="6" style="text-align:center;color:var(--text-muted);padding:40px;">Нет клиентов</td></tr>';
+        return;
+    }
+    tbody.innerHTML = filtered.map(c => {
+        const dCount = deals.filter(d => d.clientId === c.id).length;
+        return `<tr class="clickable-row" onclick="openClientDetail('${c.id}')">
+            <td><strong>${esc(c.name)}</strong></td>
+            <td>${esc(c.company||'—')}</td>
+            <td>${esc(c.phone||'—')}</td>
+            <td>${esc(c.email||'—')}</td>
+            <td>${dCount}</td>
+            <td>${formatDate(c.created)}</td>
+        </tr>`;
+    }).join('');
+}
+
+function saveClient(e) {
+    e.preventDefault();
+    const id = document.getElementById('client-id').value;
+    const data = {
+        name: document.getElementById('client-name').value.trim(),
+        company: document.getElementById('client-company').value.trim(),
+        phone: document.getElementById('client-phone').value.trim(),
+        email: document.getElementById('client-email').value.trim(),
+        login: document.getElementById('client-login').value.trim(),
+        password: document.getElementById('client-password').value.trim(),
+        notes: document.getElementById('client-notes').value.trim()
+    };
+    if (id) {
+        const idx = clients.findIndex(c => c.id === id);
+        if (idx >= 0) { Object.assign(clients[idx], data); clients[idx].updated = now(); }
+        addActivity('client', `Обновлён клиент: ${data.name}`, id);
+        toast('Клиент обновлён');
+    } else {
+        const newClient = { id: genId(), ...data, created: now() };
+        clients.push(newClient);
+        addActivity('client', `Создан клиент: ${data.name}`, newClient.id);
+        toast('Клиент создан');
+    }
+    persist();
+    closeModal('client-modal');
+    resetClientForm();
+    renderClients();
+    updateBadges();
+    populateClientSelects();
+}
+
+function resetClientForm() {
+    document.getElementById('client-id').value = '';
+    document.getElementById('client-modal-title').textContent = 'Новый клиент';
+    ['client-name','client-company','client-phone','client-email','client-login','client-password','client-notes'].forEach(id => document.getElementById(id).value = '');
+}
+
+function editClient(id) {
+    const c = getClient(id);
+    if (!c) return;
+    document.getElementById('client-id').value = c.id;
+    document.getElementById('client-modal-title').textContent = 'Редактировать клиента';
+    document.getElementById('client-name').value = c.name || '';
+    document.getElementById('client-company').value = c.company || '';
+    document.getElementById('client-phone').value = c.phone || '';
+    document.getElementById('client-email').value = c.email || '';
+    document.getElementById('client-login').value = c.login || '';
+    document.getElementById('client-password').value = c.password || '';
+    document.getElementById('client-notes').value = c.notes || '';
+    openModal('client-modal');
+}
+
+// Client Detail
+let currentDetailClient = null;
+let currentDetailTab = 'info';
+
+function openClientDetail(id) {
+    currentDetailClient = id;
+    currentDetailTab = 'info';
+    document.querySelectorAll('#client-detail-tabs .tab').forEach((t,i) => t.classList.toggle('active', i===0));
+    renderClientDetail();
+    openModal('client-detail-modal');
+}
+
+function switchClientTab(tab, el) {
+    currentDetailTab = tab;
+    document.querySelectorAll('#client-detail-tabs .tab').forEach(t => t.classList.remove('active'));
+    el.classList.add('active');
+    renderClientDetail();
+}
+
+function editClientFromDetail() {
+    closeModal('client-detail-modal');
+    editClient(currentDetailClient);
+}
+
+function renderClientDetail() {
+    const c = getClient(currentDetailClient);
+    if (!c) return;
+    document.getElementById('client-detail-title').textContent = c.name;
+    const el = document.getElementById('client-detail-content');
+
+    if (currentDetailTab === 'info') {
+        el.innerHTML = `
+            <div class="client-detail-grid">
+                <div>
+                    <div class="client-detail-section">
+                        <h3>Контакты</h3>
+                        <div class="client-info-row"><span class="client-info-label">Телефон</span><span>${esc(c.phone||'—')}</span></div>
+                        <div class="client-info-row"><span class="client-info-label">Email</span><span>${esc(c.email||'—')}</span></div>
+                        <div class="client-info-row"><span class="client-info-label">Компания</span><span>${esc(c.company||'—')}</span></div>
+                    </div>
+                    <div class="client-detail-section">
+                        <h3>Доступ</h3>
+                        <div class="client-info-row"><span class="client-info-label">Логин</span><span style="font-family:'JetBrains Mono',monospace;">${esc(c.login||'—')}</span></div>
+                        <div class="client-info-row"><span class="client-info-label">Пароль</span><span style="font-family:'JetBrains Mono',monospace;">${esc(c.password||'—')}</span></div>
+                    </div>
+                </div>
+                <div>
+                    <div class="client-detail-section">
+                        <h3>Статистика</h3>
+                        <div class="client-info-row"><span class="client-info-label">Сделок</span><span>${deals.filter(d=>d.clientId===c.id).length}</span></div>
+                        <div class="client-info-row"><span class="client-info-label">Звонков</span><span>${calls.filter(cl=>cl.clientId===c.id).length}</span></div>
+                        <div class="client-info-row"><span class="client-info-label">Задач</span><span>${tasks.filter(t=>t.clientId===c.id).length}</span></div>
+                        <div class="client-info-row"><span class="client-info-label">Тикетов</span><span>${tickets.filter(t=>t.clientId===c.id).length}</span></div>
+                        <div class="client-info-row"><span class="client-info-label">Создан</span><span>${formatDate(c.created)}</span></div>
+                    </div>
+                    ${c.notes ? `<div class="client-detail-section"><h3>Заметки</h3><p style="font-size:.85rem;color:var(--text-secondary);white-space:pre-wrap;">${esc(c.notes)}</p></div>` : ''}
+                </div>
+            </div>
+            <div style="margin-top:16px;">
+                <button class="btn btn-danger btn-sm" onclick="deleteClient('${c.id}')">Удалить клиента</button>
+            </div>
+        `;
+    } else if (currentDetailTab === 'deals') {
+        const cDeals = deals.filter(d => d.clientId === c.id);
+        if (cDeals.length === 0) {
+            el.innerHTML = '<div class="empty-state"><p>Нет сделок</p></div>';
+        } else {
+            el.innerHTML = '<table><thead><tr><th>Название</th><th>Сумма</th><th>Этап</th><th>Дата</th></tr></thead><tbody>' +
+                cDeals.map(d => `<tr><td>${esc(d.title)}</td><td>${formatMoney(d.amount)}</td><td><span class="tag ${stageTag(d.stage)}">${stageName(d.stage)}</span></td><td>${formatDate(d.created)}</td></tr>`).join('') +
+                '</tbody></table>';
+        }
+    } else if (currentDetailTab === 'calls') {
+        const cCalls = calls.filter(cl => cl.clientId === c.id);
+        if (cCalls.length === 0) {
+            el.innerHTML = '<div class="empty-state"><p>Нет звонков</p></div>';
+        } else {
+            el.innerHTML = '<table><thead><tr><th>Дата</th><th>Телефон</th><th>Статус</th><th>Длительность</th><th>Квалификация</th></tr></thead><tbody>' +
+                cCalls.map(cl => `<tr><td>${formatDateTime(cl.time)}</td><td>${esc(cl.phone)}</td><td>${callStatusTag(cl.status)}</td><td>${formatDuration(cl.duration)}</td><td>${qualTag(cl.qualification)}</td></tr>`).join('') +
+                '</tbody></table>';
+        }
+    } else if (currentDetailTab === 'tasks') {
+        const cTasks = tasks.filter(t => t.clientId === c.id);
+        if (cTasks.length === 0) {
+            el.innerHTML = '<div class="empty-state"><p>Нет задач</p></div>';
+        } else {
+            el.innerHTML = cTasks.map(t => `
+                <div class="task-item ${t.completed?'completed':''}" onclick="toggleTask('${t.id}')">
+                    <div class="checkbox ${t.completed?'checked':''}"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3"><polyline points="20 6 9 17 4 12"/></svg></div>
+                    <div>
+                        <div class="task-title"><span class="priority-dot priority-${t.priority}"></span>${esc(t.title)}</div>
+                        <div class="task-meta">${t.dueDate ? 'Срок: '+formatDate(t.dueDate) : 'Без срока'}</div>
+                    </div>
+                </div>
+            `).join('');
+        }
+    } else if (currentDetailTab === 'messages') {
+        conversations = loadData('conversations');
+        el.innerHTML = renderClientMessages(c.id);
+    } else if (currentDetailTab === 'tickets') {
+        const cTickets = tickets.filter(t => t.clientId === c.id);
+        if (cTickets.length === 0) {
+            el.innerHTML = '<div class="empty-state"><p>Нет тикетов</p></div>';
+        } else {
+            el.innerHTML = '<table><thead><tr><th>Тема</th><th>Приоритет</th><th>Статус</th><th>Создан</th></tr></thead><tbody>' +
+                cTickets.map(t => `<tr class="clickable-row" onclick="closeModal(\'client-detail-modal\');openTicketDetail(\'${t.id}\')"><td>${esc(t.subject)}</td><td>${priorityTag(t.priority)}</td><td>${ticketStatusTag(t.status)}</td><td>${formatDate(t.created)}</td></tr>`).join('') +
+                '</tbody></table>';
+        }
+    } else if (currentDetailTab === 'history') {
+        const cActs = activities.filter(a => a.clientId === c.id);
+        if (cActs.length === 0) {
+            el.innerHTML = '<div class="empty-state"><p>Нет истории</p></div>';
+        } else {
+            el.innerHTML = '<div class="timeline">' + cActs.map(a => `
+                <div class="timeline-item">
+                    <div class="timeline-item-time">${formatDateTime(a.time)}</div>
+                    <div class="timeline-item-text">${a.text}</div>
+                </div>
+            `).join('') + '</div>';
+        }
+    }
+}
+
+function deleteClient(id) {
+    if (!confirm('Удалить клиента и все связанные данные?')) return;
+    clients = clients.filter(c => c.id !== id);
+    deals = deals.filter(d => d.clientId !== id);
+    tasks = tasks.filter(t => t.clientId !== id);
+    calls = calls.filter(c => c.clientId !== id);
+    tickets = tickets.filter(t => t.clientId !== id);
+    persist();
+    closeModal('client-detail-modal');
+    renderClients();
+    updateBadges();
+    populateClientSelects();
+    toast('Клиент удалён');
+}
+
+// ==================== DEALS / KANBAN ====================
+function renderKanban() {
+    const kanban = document.getElementById('kanban');
+    kanban.innerHTML = STAGES.map(stage => {
+        const stageDeals = deals.filter(d => d.stage === stage.id);
+        const total = stageDeals.reduce((s,d) => s + (Number(d.amount)||0), 0);
+        return `
+            <div class="kanban-col">
+                <div class="kanban-col-header">
+                    <span style="display:flex;align-items:center;gap:8px;">
+                        <span style="width:8px;height:8px;border-radius:50%;background:${stage.color};"></span>
+                        ${stage.name}
+                    </span>
+                    <span class="kanban-col-count">${stageDeals.length}</span>
+                </div>
+                <div class="kanban-col-body" data-stage="${stage.id}"
+                    ondragover="event.preventDefault();this.classList.add('drag-over')"
+                    ondragleave="this.classList.remove('drag-over')"
+                    ondrop="dropDeal(event,'${stage.id}');this.classList.remove('drag-over')">
+                    ${stageDeals.map(d => `
+                        <div class="kanban-card" draggable="true" ondragstart="dragDeal(event,'${d.id}')" onclick="editDealFromKanban('${d.id}')">
+                            <div class="kanban-card-title">${esc(d.title)}</div>
+                            <div class="kanban-card-client">${getClientName(d.clientId)}</div>
+                            ${d.amount ? `<div class="kanban-card-amount">${formatMoney(d.amount)}</div>` : ''}
+                            <div class="kanban-card-footer"><span style="font-size:.7rem;color:var(--text-muted);">${formatDate(d.created)}</span></div>
+                        </div>
+                    `).join('')}
+                    ${stageDeals.length === 0 ? '<div style="text-align:center;padding:20px;color:var(--text-muted);font-size:.8rem;">Нет сделок</div>' : ''}
+                </div>
+            </div>
+        `;
+    }).join('');
+}
+
+let draggedDealId = null;
+function dragDeal(e, id) { draggedDealId = id; e.dataTransfer.effectAllowed = 'move'; }
+function dropDeal(e, stage) {
+    e.preventDefault();
+    if (!draggedDealId) return;
+    const deal = deals.find(d => d.id === draggedDealId);
+    if (deal && deal.stage !== stage) {
+        const oldStage = deal.stage;
+        deal.stage = stage;
+        deal.updated = now();
+        addActivity('deal', `Сделка "${deal.title}" перемещена: ${stageName(oldStage)} → ${stageName(stage)}`, deal.clientId);
+        persist();
+        renderKanban();
+        toast(`Сделка перемещена в "${stageName(stage)}"`);
+    }
+    draggedDealId = null;
+}
+
+function openDealModal(dealId) {
+    resetDealForm();
+    populateClientSelects();
+    if (dealId) {
+        const d = deals.find(x => x.id === dealId);
+        if (d) {
+            document.getElementById('deal-id').value = d.id;
+            document.getElementById('deal-modal-title').textContent = 'Редактировать сделку';
+            document.getElementById('deal-title').value = d.title;
+            document.getElementById('deal-client').value = d.clientId;
+            document.getElementById('deal-amount').value = d.amount || '';
+            document.getElementById('deal-stage').value = d.stage;
+            document.getElementById('deal-description').value = d.description || '';
+        }
+    }
+    openModal('deal-modal');
+}
+
+function editDealFromKanban(id) { openDealModal(id); }
+
+function saveDeal(e) {
+    e.preventDefault();
+    const id = document.getElementById('deal-id').value;
+    const data = {
+        title: document.getElementById('deal-title').value.trim(),
+        clientId: document.getElementById('deal-client').value,
+        amount: document.getElementById('deal-amount').value,
+        stage: document.getElementById('deal-stage').value,
+        description: document.getElementById('deal-description').value.trim()
+    };
+    if (id) {
+        const idx = deals.findIndex(d => d.id === id);
+        if (idx >= 0) { Object.assign(deals[idx], data); deals[idx].updated = now(); }
+        addActivity('deal', `Обновлена сделка: ${data.title}`, data.clientId);
+        toast('Сделка обновлена');
+    } else {
+        const newDeal = { id: genId(), ...data, created: now() };
+        deals.push(newDeal);
+        addActivity('deal', `Создана сделка: ${data.title}`, data.clientId);
+        toast('Сделка создана');
+    }
+    persist();
+    closeModal('deal-modal');
+    renderKanban();
+    updateBadges();
+}
+
+function resetDealForm() {
+    document.getElementById('deal-id').value = '';
+    document.getElementById('deal-modal-title').textContent = 'Новая сделка';
+    ['deal-title','deal-amount','deal-description'].forEach(id => document.getElementById(id).value = '');
+    document.getElementById('deal-stage').value = 'lead';
+}
+
+// ==================== TASKS ====================
+let taskFilter = 'all';
+
+function renderTasks() {
+    let filtered = [...tasks];
+    const today = new Date(); today.setHours(0,0,0,0);
+    if (taskFilter === 'active') filtered = filtered.filter(t => !t.completed);
+    else if (taskFilter === 'completed') filtered = filtered.filter(t => t.completed);
+    else if (taskFilter === 'overdue') filtered = filtered.filter(t => !t.completed && t.dueDate && new Date(t.dueDate) < today);
+
+    const el = document.getElementById('tasks-list');
+    if (filtered.length === 0) {
+        el.innerHTML = '<div class="empty-state"><p>Нет задач</p></div>';
+        return;
+    }
+    el.innerHTML = filtered.map(t => `
+        <div class="task-item ${t.completed?'completed':''}" style="position:relative;">
+            <div class="checkbox ${t.completed?'checked':''}" onclick="event.stopPropagation();toggleTask('${t.id}')"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3"><polyline points="20 6 9 17 4 12"/></svg></div>
+            <div style="flex:1;" onclick="editTaskInline('${t.id}')">
+                <div class="task-title"><span class="priority-dot priority-${t.priority}"></span>${esc(t.title)}</div>
+                <div class="task-meta">
+                    ${t.clientId ? getClientName(t.clientId) + ' · ' : ''}
+                    ${t.dueDate ? 'Срок: '+formatDate(t.dueDate) : 'Без срока'}
+                    ${t.description ? ' · '+esc(t.description.substring(0,50)) : ''}
+                </div>
+            </div>
+            <button class="btn btn-sm btn-danger" onclick="event.stopPropagation();deleteTask('${t.id}')" style="position:absolute;right:10px;top:12px;opacity:0.5;" title="Удалить">✕</button>
+        </div>
+    `).join('');
+}
+
+function toggleTask(id) {
+    const t = tasks.find(x => x.id === id);
+    if (t) {
+        t.completed = !t.completed;
+        t.updated = now();
+        addActivity('task', `Задача "${t.title}" ${t.completed?'завершена':'возобновлена'}`, t.clientId);
+        persist();
+        renderTasks();
+        updateBadges();
+        if (currentDetailClient) renderClientDetail();
+    }
+}
+
+function deleteTask(id) {
+    tasks = tasks.filter(t => t.id !== id);
+    persist(); renderTasks(); updateBadges();
+    toast('Задача удалена');
+}
+
+function filterTasks(filter, el) {
+    taskFilter = filter;
+    document.querySelectorAll('#section-tasks .filter-pill').forEach(p => p.classList.remove('active'));
+    el.classList.add('active');
+    renderTasks();
+}
+
+function openTaskModal(taskId) {
+    resetTaskForm();
+    populateClientSelects();
+    if (taskId) {
+        const t = tasks.find(x => x.id === taskId);
+        if (t) {
+            document.getElementById('task-id').value = t.id;
+            document.getElementById('task-modal-title').textContent = 'Редактировать задачу';
+            document.getElementById('task-title').value = t.title;
+            document.getElementById('task-client').value = t.clientId || '';
+            document.getElementById('task-priority').value = t.priority;
+            document.getElementById('task-due').value = t.dueDate || '';
+            document.getElementById('task-description').value = t.description || '';
+        }
+    }
+    openModal('task-modal');
+}
+
+function editTaskInline(id) { openTaskModal(id); }
+
+function saveTask(e) {
+    e.preventDefault();
+    const id = document.getElementById('task-id').value;
+    const data = {
+        title: document.getElementById('task-title').value.trim(),
+        clientId: document.getElementById('task-client').value || null,
+        priority: document.getElementById('task-priority').value,
+        dueDate: document.getElementById('task-due').value || null,
+        description: document.getElementById('task-description').value.trim()
+    };
+    if (id) {
+        const idx = tasks.findIndex(t => t.id === id);
+        if (idx >= 0) { Object.assign(tasks[idx], data); tasks[idx].updated = now(); }
+        addActivity('task', `Обновлена задача: ${data.title}`, data.clientId);
+        toast('Задача обновлена');
+    } else {
+        tasks.push({ id: genId(), ...data, completed: false, created: now() });
+        addActivity('task', `Создана задача: ${data.title}`, data.clientId);
+        toast('Задача создана');
+    }
+    persist();
+    closeModal('task-modal');
+    renderTasks();
+    updateBadges();
+}
+
+function resetTaskForm() {
+    document.getElementById('task-id').value = '';
+    document.getElementById('task-modal-title').textContent = 'Новая задача';
+    ['task-title','task-due','task-description'].forEach(id => document.getElementById(id).value = '');
+    document.getElementById('task-priority').value = 'medium';
+}
+
+// ==================== CALL CENTER ====================
+function renderCallCenter() {
+    const answered = calls.filter(c => c.status === 'answered').length;
+    const missed = calls.filter(c => c.status === 'missed').length;
+    const outgoing = calls.filter(c => c.status === 'outgoing').length;
+    const totalDur = calls.reduce((s,c) => s + (Number(c.duration)||0), 0);
+
+    document.getElementById('call-stats').innerHTML = `
+        <div class="stat-card"><div class="stat-label">Всего звонков</div><div class="stat-value">${calls.length}</div></div>
+        <div class="stat-card"><div class="stat-label">Принятых</div><div class="stat-value" style="color:var(--success);">${answered}</div></div>
+        <div class="stat-card"><div class="stat-label">Пропущенных</div><div class="stat-value" style="color:var(--danger);">${missed}</div></div>
+        <div class="stat-card"><div class="stat-label">Исходящих</div><div class="stat-value" style="color:var(--info);">${outgoing}</div></div>
+        <div class="stat-card"><div class="stat-label">Общее время</div><div class="stat-value" style="font-size:1.2rem;">${formatDuration(totalDur)}</div></div>
+    `;
+
+    const tbody = document.getElementById('calls-table');
+    if (calls.length === 0) {
+        tbody.innerHTML = '<tr><td colspan="6" style="text-align:center;color:var(--text-muted);padding:40px;">Нет звонков</td></tr>';
+        return;
+    }
+    tbody.innerHTML = [...calls].reverse().map(c => `
+        <tr>
+            <td>${formatDateTime(c.time)}</td>
+            <td>${c.clientId ? getClientName(c.clientId) : '<span style="color:var(--text-muted)">Не определён</span>'}</td>
+            <td>${esc(c.phone)}</td>
+            <td>${callStatusTag(c.status)}</td>
+            <td>${formatDuration(c.duration)}</td>
+            <td>${qualTag(c.qualification)}</td>
+        </tr>
+    `).join('');
+}
+
+function openCallModal() {
+    populateClientSelects();
+    ['call-phone','call-notes'].forEach(id => document.getElementById(id).value = '');
+    document.getElementById('call-duration').value = '0';
+    document.getElementById('call-status').value = 'answered';
+    document.getElementById('call-qualification').value = '';
+    openModal('call-modal');
+}
+
+function saveCall(e) {
+    e.preventDefault();
+    const data = {
+        id: genId(),
+        clientId: document.getElementById('call-client').value || null,
+        phone: document.getElementById('call-phone').value.trim(),
+        status: document.getElementById('call-status').value,
+        duration: Number(document.getElementById('call-duration').value) || 0,
+        qualification: document.getElementById('call-qualification').value || null,
+        notes: document.getElementById('call-notes').value.trim(),
+        time: now()
+    };
+    calls.push(data);
+    addActivity('call', `Звонок ${data.status==='outgoing'?'исходящий':'входящий'}: ${data.phone}${data.clientId?' ('+getClientName(data.clientId)+')':''}`, data.clientId);
+    persist();
+    closeModal('call-modal');
+    renderCallCenter();
+    toast('Звонок записан');
+}
+
+// ==================== APPLICATIONS ====================
+let appFilter = 'all';
+
+function renderApplications() {
+    let filtered = [...applications];
+    if (appFilter !== 'all') filtered = filtered.filter(a => a.status === appFilter);
+
+    const tbody = document.getElementById('apps-table');
+    if (filtered.length === 0) {
+        tbody.innerHTML = '<tr><td colspan="7" style="text-align:center;color:var(--text-muted);padding:40px;">Нет заявок</td></tr>';
+        return;
+    }
+    tbody.innerHTML = [...filtered].reverse().map(a => `
+        <tr>
+            <td>${formatDateTime(a.created)}</td>
+            <td>${esc(a.name)}</td>
+            <td>${esc(a.phone||'—')}</td>
+            <td>${esc(a.email||'—')}</td>
+            <td>${esc(a.company||'—')}</td>
+            <td>${appStatusTag(a.status)}</td>
+            <td>
+                ${a.status === 'new' ? `<button class="btn btn-sm" onclick="takeApp('${a.id}')">Взять</button>` : ''}
+                ${a.status === 'in_progress' ? `<button class="btn btn-sm btn-primary" onclick="convertApp('${a.id}')">В клиента</button> <button class="btn btn-sm btn-danger" onclick="rejectApp('${a.id}')">Отклонить</button>` : ''}
+                ${a.status === 'converted' && a.clientId ? `<button class="btn btn-sm" onclick="openClientDetail('${a.clientId}')">Карточка</button>` : ''}
+            </td>
+        </tr>
+    `).join('');
+}
+
+function filterApps(filter, el) {
+    appFilter = filter;
+    document.querySelectorAll('#section-applications .filter-pill').forEach(p => p.classList.remove('active'));
+    el.classList.add('active');
+    renderApplications();
+}
+
+function takeApp(id) {
+    const a = applications.find(x => x.id === id);
+    if (a) { a.status = 'in_progress'; a.updated = now(); persist(); renderApplications(); updateBadges(); toast('Заявка взята в работу'); }
+}
+
+function convertApp(id) {
+    const a = applications.find(x => x.id === id);
+    if (!a) return;
+    const newClient = {
+        id: genId(),
+        name: a.name,
+        phone: a.phone || '',
+        email: a.email || '',
+        company: a.company || '',
+        login: '',
+        password: '',
+        notes: 'Создан из заявки',
+        created: now()
+    };
+    clients.push(newClient);
+    a.status = 'converted';
+    a.clientId = newClient.id;
+    a.updated = now();
+    addActivity('client', `Клиент "${a.name}" создан из заявки`, newClient.id);
+    persist();
+    renderApplications();
+    updateBadges();
+    populateClientSelects();
+    toast('Заявка конвертирована в клиента');
+}
+
+function rejectApp(id) {
+    const a = applications.find(x => x.id === id);
+    if (a) { a.status = 'rejected'; a.updated = now(); persist(); renderApplications(); updateBadges(); toast('Заявка отклонена'); }
+}
+
+// External API: receive application from landing page
+window.CRM_addApplication = function(data) {
+    applications.push({
+        id: genId(),
+        name: data.name || 'Без имени',
+        phone: data.phone || '',
+        email: data.email || '',
+        company: data.company || '',
+        message: data.message || '',
+        status: 'new',
+        created: now()
+    });
+    addActivity('application', `Новая заявка: ${data.name||'Без имени'}`, null);
+    persist();
+    updateBadges();
+};
+
+// ==================== SUPPORT ====================
+let ticketFilter = 'all';
+
+function renderSupport() {
+    let filtered = [...tickets];
+    if (ticketFilter !== 'all') filtered = filtered.filter(t => t.status === ticketFilter);
+
+    const tbody = document.getElementById('tickets-table');
+    if (filtered.length === 0) {
+        tbody.innerHTML = '<tr><td colspan="6" style="text-align:center;color:var(--text-muted);padding:40px;">Нет тикетов</td></tr>';
+        return;
+    }
+    tbody.innerHTML = [...filtered].reverse().map(t => `
+        <tr class="clickable-row" onclick="openTicketDetail('${t.id}')">
+            <td style="font-family:'JetBrains Mono',monospace;font-size:.8rem;">#${t.id.substr(0,6)}</td>
+            <td><strong>${esc(t.subject)}</strong></td>
+            <td>${t.clientId ? getClientName(t.clientId) : '<span class="tag tag-muted">Анонимное</span>'}</td>
+            <td>${priorityTag(t.priority)}</td>
+            <td>${ticketStatusTag(t.status)}</td>
+            <td>${formatDate(t.created)}</td>
+        </tr>
+    `).join('');
+}
+
+function filterTickets(filter, el) {
+    ticketFilter = filter;
+    document.querySelectorAll('#section-support .filter-pill').forEach(p => p.classList.remove('active'));
+    el.classList.add('active');
+    renderSupport();
+}
+
+function openTicketModal() {
+    populateClientSelects();
+    document.getElementById('ticket-id').value = '';
+    document.getElementById('ticket-modal-title').textContent = 'Новый тикет';
+    ['ticket-subject','ticket-desc'].forEach(id => document.getElementById(id).value = '');
+    document.getElementById('ticket-priority').value = 'medium';
+    document.getElementById('ticket-client').value = '';
+    openModal('ticket-modal');
+}
+
+function saveTicket(e) {
+    e.preventDefault();
+    const data = {
+        id: genId(),
+        subject: document.getElementById('ticket-subject').value.trim(),
+        clientId: document.getElementById('ticket-client').value || null,
+        priority: document.getElementById('ticket-priority').value,
+        description: document.getElementById('ticket-desc').value.trim(),
+        status: 'open',
+        messages: [{
+            author: 'Система',
+            text: document.getElementById('ticket-desc').value.trim(),
+            time: now(),
+            staff: false
+        }],
+        created: now()
+    };
+    tickets.push(data);
+    addActivity('ticket', `Создан тикет: ${data.subject}`, data.clientId);
+    persist();
+    closeModal('ticket-modal');
+    renderSupport();
+    updateBadges();
+    toast('Тикет создан');
+}
+
+function openTicketDetail(id) {
+    const t = tickets.find(x => x.id === id);
+    if (!t) return;
+    document.getElementById('ticket-detail-title').textContent = `#${t.id.substr(0,6)} — ${t.subject}`;
+    renderTicketDetail(t);
+    openModal('ticket-detail-modal');
+}
+
+function renderTicketDetail(t) {
+    const el = document.getElementById('ticket-detail-content');
+    el.innerHTML = `
+        <div style="display:flex;gap:12px;margin-bottom:20px;flex-wrap:wrap;">
+            <div>Клиент: <strong>${t.clientId ? getClientName(t.clientId) : 'Анонимное обращение'}</strong></div>
+            <div>Приоритет: ${priorityTag(t.priority)}</div>
+            <div>Статус: ${ticketStatusTag(t.status)}</div>
+            <div>Создан: ${formatDateTime(t.created)}</div>
+        </div>
+        <div class="ticket-messages" id="ticket-messages-${t.id}">
+            ${(t.messages||[]).map(m => `
+                <div class="ticket-message ${m.staff?'staff':'client'}">
+                    <div class="ticket-message-author">${esc(m.author)}</div>
+                    <div class="ticket-message-text">${esc(m.text)}</div>
+                    <div class="ticket-message-time">${formatDateTime(m.time)}</div>
+                </div>
+            `).join('')}
+        </div>
+        <div style="margin-top:16px;display:flex;gap:10px;">
+            <textarea id="ticket-reply-${t.id}" placeholder="Ответ..." rows="2" style="flex:1;"></textarea>
+            <div style="display:flex;flex-direction:column;gap:6px;">
+                <button class="btn btn-primary btn-sm" onclick="replyTicket('${t.id}',true)">Ответить</button>
+            </div>
+        </div>
+        <div style="margin-top:12px;display:flex;gap:8px;">
+            ${t.status !== 'in_progress' ? `<button class="btn btn-sm" onclick="changeTicketStatus('${t.id}','in_progress')">В работу</button>` : ''}
+            ${t.status !== 'closed' ? `<button class="btn btn-sm btn-danger" onclick="changeTicketStatus('${t.id}','closed')">Закрыть</button>` : ''}
+            ${t.status === 'closed' ? `<button class="btn btn-sm" onclick="changeTicketStatus('${t.id}','open')">Переоткрыть</button>` : ''}
+        </div>
+    `;
+}
+
+function replyTicket(id, staff) {
+    const t = tickets.find(x => x.id === id);
+    if (!t) return;
+    const textarea = document.getElementById('ticket-reply-'+id);
+    const text = textarea.value.trim();
+    if (!text) return;
+    t.messages = t.messages || [];
+    t.messages.push({ author: staff ? 'Менеджер' : 'Клиент', text, time: now(), staff });
+    t.updated = now();
+    persist();
+    renderTicketDetail(t);
+    toast('Ответ отправлен');
+}
+
+function changeTicketStatus(id, status) {
+    const t = tickets.find(x => x.id === id);
+    if (t) {
+        t.status = status;
+        t.updated = now();
+        addActivity('ticket', `Тикет "${t.subject}" — статус: ${status}`, t.clientId);
+        persist();
+        renderTicketDetail(t);
+        renderSupport();
+        updateBadges();
+        toast('Статус тикета обновлён');
+    }
+}
+
+// External API: receive ticket from landing page (anonymous)
+window.CRM_addTicket = function(data) {
+    const t = {
+        id: genId(),
+        subject: data.subject || 'Обращение с сайта',
+        clientId: null,
+        priority: data.priority || 'medium',
+        description: data.message || '',
+        status: 'open',
+        messages: [{
+            author: data.name || 'Аноним',
+            text: (data.message || '') + (data.email ? `\n\nEmail: ${data.email}` : '') + (data.phone ? `\nТел: ${data.phone}` : ''),
+            time: now(),
+            staff: false
+        }],
+        created: now()
+    };
+    tickets.push(t);
+    addActivity('ticket', `Новое обращение с сайта: ${t.subject}`, null);
+    persist();
+    updateBadges();
+};
+
+// ==================== PORTATION ====================
+function renderPortation() {
+    const pending = portations.filter(p => p.status === 'pending').length;
+    const inProgress = portations.filter(p => p.status === 'in_progress').length;
+    const done = portations.filter(p => p.status === 'completed').length;
+    const totalNumbers = portations.reduce((s,p) => s + (p.numbers||[]).length, 0);
+
+    document.getElementById('portation-stats').innerHTML = `
+        <div class="stat-card"><div class="stat-label">Всего заявок</div><div class="stat-value">${portations.length}</div></div>
+        <div class="stat-card"><div class="stat-label">Ожидают</div><div class="stat-value" style="color:var(--warning);">${pending}</div></div>
+        <div class="stat-card"><div class="stat-label">В процессе</div><div class="stat-value" style="color:var(--info);">${inProgress}</div></div>
+        <div class="stat-card"><div class="stat-label">Завершены</div><div class="stat-value" style="color:var(--success);">${done}</div></div>
+        <div class="stat-card"><div class="stat-label">Всего номеров</div><div class="stat-value">${totalNumbers}</div></div>
+    `;
+
+    const tbody = document.getElementById('portation-table');
+    if (portations.length === 0) {
+        tbody.innerHTML = '<tr><td colspan="6" style="text-align:center;color:var(--text-muted);padding:40px;">Нет заявок на портацию</td></tr>';
+        return;
+    }
+    tbody.innerHTML = [...portations].reverse().map(p => `
+        <tr>
+            <td>${formatDate(p.created)}</td>
+            <td>${getClientName(p.clientId)}</td>
+            <td><span style="font-family:'JetBrains Mono',monospace;font-size:.8rem;">${(p.numbers||[]).join(', ')}</span></td>
+            <td>${esc(p.operator)}</td>
+            <td>${portationStatusTag(p.status)}</td>
+            <td>
+                ${p.status === 'pending' ? `<button class="btn btn-sm" onclick="updatePortation('${p.id}','in_progress')">В работу</button>` : ''}
+                ${p.status === 'in_progress' ? `<button class="btn btn-sm btn-primary" onclick="updatePortation('${p.id}','completed')">Завершить</button>` : ''}
+            </td>
+        </tr>
+    `).join('');
+}
+
+function openPortationModal() {
+    populateClientSelects();
+    ['portation-numbers','portation-operator','portation-comment'].forEach(id => document.getElementById(id).value = '');
+    openModal('portation-modal');
+}
+
+function savePortation(e) {
+    e.preventDefault();
+    const numbers = document.getElementById('portation-numbers').value.trim().split('\n').map(n=>n.trim()).filter(Boolean);
+    const data = {
+        id: genId(),
+        clientId: document.getElementById('portation-client').value,
+        numbers,
+        operator: document.getElementById('portation-operator').value.trim(),
+        comment: document.getElementById('portation-comment').value.trim(),
+        status: 'pending',
+        created: now()
+    };
+    portations.push(data);
+    addActivity('portation', `Заявка на портацию ${numbers.length} номеров от "${data.operator}"`, data.clientId);
+    persist();
+    closeModal('portation-modal');
+    renderPortation();
+    toast('Заявка на портацию создана');
+}
+
+function updatePortation(id, status) {
+    const p = portations.find(x => x.id === id);
+    if (p) {
+        p.status = status;
+        p.updated = now();
+        addActivity('portation', `Портация ${status==='completed'?'завершена':'взята в работу'}: ${(p.numbers||[]).join(', ')}`, p.clientId);
+        persist();
+        renderPortation();
+        toast('Статус портации обновлён');
+    }
+}
+
+// ==================== DIALOGS ====================
+let dialogsTab = 'all';
+let activeConvId = null;
+let dialogsPollTimer = null;
+
+function switchDialogsTab(tab, el) {
+    dialogsTab = tab;
+    document.querySelectorAll('#dialogs-tabs .tab').forEach(t => t.classList.remove('active'));
+    el.classList.add('active');
+    activeConvId = null;
+    renderDialogs();
+}
+
+function renderDialogs() {
+    // Перечитываем данные из localStorage (виджет пишет туда напрямую)
+    conversations = loadData('conversations');
+    renderDialogsList();
+    if (activeConvId) renderChatBody(activeConvId);
+    else document.getElementById('chat-body').innerHTML = '<div class="chat-empty">Выберите диалог</div>';
+    updateBadges();
+    startDialogsPoll();
+}
+
+function renderDialogsList() {
+    const search = (document.getElementById('dialogs-search')?.value || '').toLowerCase();
+    let filtered = [...conversations];
+    if (dialogsTab === 'anon') filtered = filtered.filter(c => !c.clientId);
+    else if (dialogsTab === 'client') filtered = filtered.filter(c => c.clientId);
+    if (search) filtered = filtered.filter(c => (c.clientName||'').toLowerCase().includes(search) || (c.messages||[]).some(m => (m.text||'').toLowerCase().includes(search)));
+    filtered.sort((a,b) => new Date(b.updated||b.created) - new Date(a.updated||a.created));
+
+    const el = document.getElementById('dialogs-list');
+    if (filtered.length === 0) {
+        el.innerHTML = '<div style="text-align:center;padding:40px;color:var(--text-muted);font-size:.85rem;">Нет диалогов</div>';
+        return;
+    }
+    el.innerHTML = filtered.map(c => {
+        const lastMsg = (c.messages||[]).length > 0 ? c.messages[c.messages.length-1] : null;
+        const initials = (c.clientName||'А').split(' ').map(w=>w[0]).join('').substring(0,2).toUpperCase();
+        const hasUnread = c.hasNewMessage;
+        return `<div class="chat-item ${activeConvId===c.id?'active':''}" onclick="openConversation('${c.id}')">
+            <div class="chat-item-avatar ${c.clientId?'client':'anon'}">${initials}</div>
+            <div class="chat-item-info">
+                <div class="chat-item-name">${esc(c.clientName||'Аноним')} ${c.clientId?'':'<span class="tag tag-muted" style="font-size:.65rem;vertical-align:middle;">аноним</span>'}</div>
+                <div class="chat-item-last">${lastMsg ? esc(lastMsg.text||'').substring(0,50) : 'Нет сообщений'}</div>
+            </div>
+            <div style="display:flex;flex-direction:column;align-items:flex-end;gap:4px;">
+                <div class="chat-item-time">${lastMsg ? formatTime(lastMsg.time) : ''}</div>
+                ${hasUnread ? '<div class="chat-item-unread"></div>' : ''}
+            </div>
+        </div>`;
+    }).join('');
+}
+
+function formatTime(iso) {
+    if (!iso) return '';
+    const d = new Date(iso);
+    const today = new Date();
+    if (d.toDateString() === today.toDateString()) {
+        return d.getHours().toString().padStart(2,'0') + ':' + d.getMinutes().toString().padStart(2,'0');
+    }
+    return d.toLocaleDateString('ru-RU', { day:'2-digit', month:'2-digit' });
+}
+
+function openConversation(id) {
+    activeConvId = id;
+    // Убираем метку нового сообщения
+    const conv = conversations.find(c => c.id === id);
+    if (conv && conv.hasNewMessage) {
+        conv.hasNewMessage = false;
+        saveData('conversations', conversations);
+    }
+    renderDialogsList();
+    renderChatBody(id);
+}
+
+function renderChatBody(id) {
+    const conv = conversations.find(c => c.id === id);
+    if (!conv) { document.getElementById('chat-body').innerHTML = '<div class="chat-empty">Диалог не найден</div>'; return; }
+
+    const clientLink = conv.clientId ? `<button class="btn btn-sm" onclick="closeModal('');openClientDetail('${conv.clientId}')">Карточка клиента</button>` : '';
+    const statusBtn = conv.status === 'open'
+        ? `<button class="btn btn-sm btn-danger" onclick="closeConversation('${conv.id}')">Закрыть</button>`
+        : `<button class="btn btn-sm" onclick="reopenConversation('${conv.id}')">Переоткрыть</button>`;
+
+    document.getElementById('chat-body').innerHTML = `
+        <div class="chat-body-header">
+            <div>
+                <div class="chat-body-name">${esc(conv.clientName||'Аноним')} ${conv.clientId?'':'<span class="tag tag-muted" style="font-size:.7rem;">анонимное обращение</span>'}</div>
+                <div class="chat-body-status">${conv.status==='open'?'Открыт':'Закрыт'} · ${formatDateTime(conv.created)}</div>
+            </div>
+            <div style="display:flex;gap:8px;">${clientLink} ${statusBtn}</div>
+        </div>
+        <div class="chat-messages" id="chat-messages-${conv.id}">
+            ${(conv.messages||[]).map(m => `
+                <div class="chat-msg ${m.author==='manager'?'from-manager':'from-client'}">
+                    <div class="chat-msg-text">${esc(m.text||'')}</div>
+                    ${m.files && m.files.length > 0 ? `<div class="chat-msg-files">${m.files.map(f=>'📎 '+esc(f)).join(', ')}</div>` : ''}
+                    <div class="chat-msg-time">${formatDateTime(m.time)}</div>
+                </div>
+            `).join('')}
+        </div>
+        ${conv.status==='open' ? `
+        <div class="chat-input-area">
+            <textarea id="chat-reply-input" placeholder="Ответить..." rows="1" onkeydown="if(event.key==='Enter'&&!event.shiftKey){event.preventDefault();sendChatReply('${conv.id}');}"></textarea>
+            <button class="btn btn-primary" onclick="sendChatReply('${conv.id}')">Отправить</button>
+        </div>` : ''}
+    `;
+    const msgEl = document.getElementById('chat-messages-'+conv.id);
+    if (msgEl) msgEl.scrollTop = msgEl.scrollHeight;
+}
+
+function sendChatReply(convId) {
+    const input = document.getElementById('chat-reply-input');
+    if (!input) return;
+    const text = input.value.trim();
+    if (!text) return;
+
+    conversations = loadData('conversations');
+    const conv = conversations.find(c => c.id === convId);
+    if (!conv) return;
+    conv.messages = conv.messages || [];
+    conv.messages.push({ author:'manager', text, time: now(), files:[] });
+    conv.updated = now();
+    saveData('conversations', conversations);
+
+    addActivity('dialog', `Ответ в диалоге: ${conv.clientName||'Аноним'}`, conv.clientId);
+    persist();
+
+    renderChatBody(convId);
+    renderDialogsList();
+}
+
+function closeConversation(id) {
+    conversations = loadData('conversations');
+    const conv = conversations.find(c => c.id === id);
+    if (conv) { conv.status = 'closed'; conv.updated = now(); saveData('conversations', conversations); }
+    renderChatBody(id);
+    renderDialogsList();
+    updateBadges();
+    toast('Диалог закрыт');
+}
+
+function reopenConversation(id) {
+    conversations = loadData('conversations');
+    const conv = conversations.find(c => c.id === id);
+    if (conv) { conv.status = 'open'; conv.updated = now(); saveData('conversations', conversations); }
+    renderChatBody(id);
+    renderDialogsList();
+    updateBadges();
+    toast('Диалог переоткрыт');
+}
+
+// Поллинг новых сообщений из виджета
+function startDialogsPoll() {
+    if (dialogsPollTimer) clearInterval(dialogsPollTimer);
+    dialogsPollTimer = setInterval(() => {
+        const fresh = loadData('conversations');
+        if (JSON.stringify(fresh) !== JSON.stringify(conversations)) {
+            conversations = fresh;
+            renderDialogsList();
+            if (activeConvId) renderChatBody(activeConvId);
+            updateBadges();
+        }
+    }, 2000);
+}
+
+// Рендер сообщений клиента в его карточке
+function renderClientMessages(clientId) {
+    const clientConvs = conversations.filter(c => c.clientId === clientId);
+    if (clientConvs.length === 0) return '<div class="empty-state"><p>Нет сообщений</p></div>';
+
+    return clientConvs.map(conv => `
+        <div class="card" style="cursor:pointer;" onclick="showSection('dialogs');setTimeout(()=>openConversation('${conv.id}'),100)">
+            <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:8px;">
+                <span class="tag ${conv.status==='open'?'tag-info':'tag-success'}">${conv.status==='open'?'Открыт':'Закрыт'}</span>
+                <span style="font-size:.75rem;color:var(--text-muted);">${formatDateTime(conv.created)}</span>
+            </div>
+            <div style="font-size:.85rem;">
+                ${(conv.messages||[]).slice(-3).map(m => `
+                    <div style="margin-bottom:4px;"><strong style="font-size:.75rem;color:${m.author==='manager'?'var(--accent-light)':'var(--text-secondary)'};">${m.author==='manager'?'Менеджер':'Клиент'}:</strong> <span style="color:var(--text-secondary);">${esc((m.text||'').substring(0,80))}${(m.text||'').length>80?'...':''}</span></div>
+                `).join('')}
+            </div>
+            <div style="font-size:.75rem;color:var(--text-muted);margin-top:8px;">Сообщений: ${(conv.messages||[]).length} · Нажмите для перехода</div>
+        </div>
+    `).join('');
+}
+
+// ==================== HELPERS ====================
+function esc(str) {
+    const div = document.createElement('div');
+    div.textContent = str;
+    return div.innerHTML;
+}
+
+function stageName(id) { return (STAGES.find(s=>s.id===id)||{}).name || id; }
+function stageTag(id) {
+    const map = { lead:'tag-info', qualification:'tag-warning', negotiation:'tag-accent', closed:'tag-success', rejected:'tag-danger' };
+    return map[id] || 'tag-muted';
+}
+
+function callStatusTag(s) {
+    const map = { answered:['Принят','tag-success'], missed:['Пропущен','tag-danger'], outgoing:['Исходящий','tag-info'] };
+    const v = map[s] || [s,'tag-muted'];
+    return `<span class="tag ${v[1]}">${v[0]}</span>`;
+}
+
+function qualTag(q) {
+    if (!q) return '<span style="color:var(--text-muted)">—</span>';
+    const map = { hot:['Горячий','tag-danger'], warm:['Тёплый','tag-warning'], cold:['Холодный','tag-info'], spam:['Спам','tag-muted'] };
+    const v = map[q] || [q,'tag-muted'];
+    return `<span class="tag ${v[1]}">${v[0]}</span>`;
+}
+
+function priorityTag(p) {
+    const map = { low:['Низкий','tag-info'], medium:['Средний','tag-warning'], high:['Высокий','tag-danger'], critical:['Критический','tag-danger'] };
+    const v = map[p] || [p,'tag-muted'];
+    return `<span class="tag ${v[1]}">${v[0]}</span>`;
+}
+
+function ticketStatusTag(s) {
+    const map = { open:['Открыт','tag-info'], in_progress:['В работе','tag-warning'], closed:['Закрыт','tag-success'] };
+    const v = map[s] || [s,'tag-muted'];
+    return `<span class="tag ${v[1]}">${v[0]}</span>`;
+}
+
+function appStatusTag(s) {
+    const map = { new:['Новая','tag-info'], in_progress:['В работе','tag-warning'], converted:['Конвертирована','tag-success'], rejected:['Отклонена','tag-danger'] };
+    const v = map[s] || [s,'tag-muted'];
+    return `<span class="tag ${v[1]}">${v[0]}</span>`;
+}
+
+function portationStatusTag(s) {
+    const map = { pending:['Ожидает','tag-warning'], in_progress:['В процессе','tag-info'], completed:['Завершена','tag-success'] };
+    const v = map[s] || [s,'tag-muted'];
+    return `<span class="tag ${v[1]}">${v[0]}</span>`;
+}
+
+// ==================== INIT ====================
+// #reset в URL — очистка всех данных
+if (location.hash === '#reset' || location.href.includes('reset')) {
+    ['clients','deals','tasks','calls','applications','tickets','portations','activities','conversations'].forEach(k => localStorage.removeItem('crm_'+k));
+    clients=[]; deals=[]; tasks=[]; calls=[]; applications=[]; tickets=[]; portations=[]; activities=[]; conversations=[];
+    location.hash = '';
+}
+
+function init() {
+    updateBadges();
+    populateClientSelects();
+    renderDashboard();
+}
+
+init();
+</script>
+</body>
+</html>

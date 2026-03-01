@@ -2810,12 +2810,73 @@
             }
         }
 
+        // Префикс для хранения данных конкретного пользователя
+        function userKey(login) { return 'user_' + login + '_'; }
+
+        function applyUserSession(login) {
+            const prefix = userKey(login);
+            // Восстанавливаем данные этого пользователя
+            const savedOnboarded = localStorage.getItem(prefix + 'onboarded');
+            if (savedOnboarded) localStorage.setItem('onboarded', savedOnboarded);
+            else localStorage.removeItem('onboarded');
+
+            // Обновляем имя в шапке дашборда
+            const nameEl = document.querySelector('.dash-user-name');
+            if (nameEl) {
+                let displayName = login;
+                try {
+                    const crmClients = JSON.parse(localStorage.getItem('crm_clients') || '[]');
+                    for (let i = 0; i < crmClients.length; i++) {
+                        if (crmClients[i].login === login) {
+                            displayName = crmClients[i].name || login;
+                            // Обновляем заголовок диалога
+                            const companyName = crmClients[i].company || '';
+                            const headerTitle = document.getElementById('botHeaderTitle');
+                            if (headerTitle && companyName) headerTitle.textContent = companyName;
+                            break;
+                        }
+                    }
+                } catch(ex) {}
+                nameEl.textContent = displayName;
+            }
+
+            sessionStorage.setItem('current_login', login);
+        }
+
+        function saveUserSession() {
+            const login = sessionStorage.getItem('current_login');
+            if (!login) return;
+            const prefix = userKey(login);
+            const onboarded = localStorage.getItem('onboarded');
+            if (onboarded) localStorage.setItem(prefix + 'onboarded', onboarded);
+            else localStorage.removeItem(prefix + 'onboarded');
+        }
+
         function handleLogin(e) {
             e.preventDefault();
             const user = document.getElementById('loginUser');
             const pass = document.getElementById('loginPass');
             const error = document.getElementById('loginError');
+
+            // Проверяем через базу клиентов CRM
+            let authorized = false;
             if (user.value === 'test' && pass.value === '1234') {
+                authorized = true;
+            } else {
+                try {
+                    const crmClients = JSON.parse(localStorage.getItem('crm_clients') || '[]');
+                    for (let i = 0; i < crmClients.length; i++) {
+                        if (crmClients[i].login === user.value && crmClients[i].password === pass.value) {
+                            authorized = true;
+                            break;
+                        }
+                    }
+                } catch(ex) {}
+            }
+
+            if (authorized) {
+                sessionStorage.setItem('sc_login', user.value);
+                applyUserSession(user.value);
                 showAfterLogin();
             } else {
                 user.classList.add('error');
@@ -2915,6 +2976,7 @@
             settingsCompanyData.utp = document.getElementById('onbCompanyUtp').value || '';
             settingsCompanyData.info = document.getElementById('onbCompanyInfo').value || '';
             localStorage.setItem('onboarded', '1');
+            saveUserSession();
             onboarding.classList.remove('show');
             dashboard.classList.add('show');
         }
@@ -3045,12 +3107,17 @@
         }
 
         function handleLogout() {
+            saveUserSession();
             dashboard.classList.remove('show');
             localStorage.removeItem('onboarded');
+            sessionStorage.removeItem('current_login');
+            sessionStorage.removeItem('sc_login');
+            sessionStorage.removeItem('sc_conv_id');
             setTimeout(() => {
                 landingPage.classList.remove('hidden');
                 document.getElementById('loginUser').value = '';
                 document.getElementById('loginPass').value = '';
+                document.querySelector('.dash-user-name').textContent = '';
                 window.scrollTo(0, 0);
             }, 100);
         }
@@ -5088,7 +5155,20 @@
 
         // Init with one example dialog
         (function() {
-            var exDlg = createDialogObject('ИП Максимов – Логистика для селлеров');
+            var dlgName = 'Новый диалог';
+            try {
+                var login = sessionStorage.getItem('current_login') || '';
+                if (login) {
+                    var crmCl = JSON.parse(localStorage.getItem('crm_clients') || '[]');
+                    for (var i = 0; i < crmCl.length; i++) {
+                        if (crmCl[i].login === login) {
+                            dlgName = (crmCl[i].company || crmCl[i].name || 'Новый диалог');
+                            break;
+                        }
+                    }
+                }
+            } catch(e) {}
+            var exDlg = createDialogObject(dlgName);
             exDlg.rules.push({ id: 'rule_init1', text: '' });
             exDlg.facts.push({ id: 'fact_init1', text: '' });
             exDlg.criteria.push({ id: 'crit_init1', text: '' });
@@ -5210,6 +5290,32 @@
             else if (!validatePhone(phone)) { showHint('hintPhone', 'Введите корректный номер телефона'); valid = false; }
 
             if (!valid) return;
+
+            // Отправляем заявку в CRM
+            try {
+                var crmApps = JSON.parse(localStorage.getItem('crm_applications') || '[]');
+                crmApps.push({
+                    id: Date.now().toString(36) + Math.random().toString(36).substr(2,5),
+                    name: name,
+                    phone: phone,
+                    email: '',
+                    company: 'ИНН: ' + inn,
+                    message: '',
+                    status: 'new',
+                    created: new Date().toISOString()
+                });
+                localStorage.setItem('crm_applications', JSON.stringify(crmApps));
+
+                var crmActs = JSON.parse(localStorage.getItem('crm_activities') || '[]');
+                crmActs.unshift({
+                    id: Date.now().toString(36) + Math.random().toString(36).substr(2,6),
+                    type: 'application',
+                    text: 'Новая заявка с сайта: ' + name + ' (ИНН: ' + inn + ')',
+                    clientId: null,
+                    time: new Date().toISOString()
+                });
+                localStorage.setItem('crm_activities', JSON.stringify(crmActs));
+            } catch(e) {}
 
             accessForm.style.display = 'none';
             accessSuccess.classList.add('show');
@@ -5651,6 +5757,121 @@
 
 <script>
     var scFiles = [];
+    var scConvId = null;
+    var scPollTimer = null;
+    var scLastMsgCount = 0;
+
+    // Определяем, авторизован ли пользователь (на дашборде или на лендинге)
+    function scGetCurrentUser() {
+        var dashboard = document.getElementById('dashboard');
+        var isLoggedIn = dashboard && dashboard.classList.contains('show');
+        if (!isLoggedIn) return null; // аноним на лендинге
+        // Ищем клиента по логину в CRM
+        var loginUser = document.getElementById('loginUser');
+        var login = loginUser ? loginUser.value : '';
+        if (!login) login = sessionStorage.getItem('sc_login') || '';
+        if (!login) return null;
+        try {
+            var crmClients = JSON.parse(localStorage.getItem('crm_clients') || '[]');
+            for (var i = 0; i < crmClients.length; i++) {
+                if (crmClients[i].login === login) return crmClients[i];
+            }
+        } catch(e) {}
+        return { id: null, name: login }; // залогинен, но не найден в CRM
+    }
+
+    function scInitConversation() {
+        scConvId = sessionStorage.getItem('sc_conv_id');
+        if (scConvId) {
+            // Подгружаем существующую переписку
+            scLoadMessages();
+            return;
+        }
+    }
+
+    function scEnsureConversation(firstText) {
+        if (scConvId) return;
+        var user = scGetCurrentUser();
+        var convId = Date.now().toString(36) + Math.random().toString(36).substr(2,5);
+        var conv = {
+            id: convId,
+            clientId: user ? (user.id || null) : null,
+            clientName: user ? user.name : 'Аноним #' + Math.floor(Math.random()*9000+1000),
+            status: 'open',
+            hasNewMessage: true,
+            messages: [],
+            created: new Date().toISOString(),
+            updated: new Date().toISOString()
+        };
+        var convs = [];
+        try { convs = JSON.parse(localStorage.getItem('crm_conversations') || '[]'); } catch(e) {}
+        convs.push(conv);
+        localStorage.setItem('crm_conversations', JSON.stringify(convs));
+        scConvId = convId;
+        sessionStorage.setItem('sc_conv_id', convId);
+    }
+
+    function scSaveMessage(author, text, files) {
+        var convs = [];
+        try { convs = JSON.parse(localStorage.getItem('crm_conversations') || '[]'); } catch(e) {}
+        for (var i = 0; i < convs.length; i++) {
+            if (convs[i].id === scConvId) {
+                convs[i].messages.push({
+                    author: author,
+                    text: text,
+                    time: new Date().toISOString(),
+                    files: files || []
+                });
+                convs[i].updated = new Date().toISOString();
+                if (author === 'client') convs[i].hasNewMessage = true;
+                break;
+            }
+        }
+        localStorage.setItem('crm_conversations', JSON.stringify(convs));
+    }
+
+    function scLoadMessages() {
+        if (!scConvId) return;
+        var convs = [];
+        try { convs = JSON.parse(localStorage.getItem('crm_conversations') || '[]'); } catch(e) {}
+        var conv = null;
+        for (var i = 0; i < convs.length; i++) {
+            if (convs[i].id === scConvId) { conv = convs[i]; break; }
+        }
+        if (!conv) return;
+        var msgs = document.getElementById('scMessages');
+        // Рендерим все сообщения
+        var html = '<div class="sc-msg support"><div class="sc-msg-text" data-i18n="scWelcome">' + t('scWelcome') + '</div><div class="sc-msg-time">·</div></div>';
+        for (var j = 0; j < conv.messages.length; j++) {
+            var m = conv.messages[j];
+            var d = new Date(m.time);
+            var tm = d.getHours().toString().padStart(2,'0') + ':' + d.getMinutes().toString().padStart(2,'0');
+            var cls = m.author === 'manager' ? 'support' : 'user';
+            html += '<div class="sc-msg ' + cls + '">';
+            if (m.text) html += '<div class="sc-msg-text">' + m.text.replace(/</g,'&lt;').replace(/>/g,'&gt;') + '</div>';
+            if (m.files) for (var f = 0; f < m.files.length; f++) html += '<div class="sc-msg-file">' + m.files[f] + '</div>';
+            html += '<div class="sc-msg-time">' + tm + '</div></div>';
+        }
+        msgs.innerHTML = html;
+        scLastMsgCount = conv.messages.length;
+        msgs.scrollTop = msgs.scrollHeight;
+    }
+
+    // Поллинг ответов менеджера из CRM
+    function scStartPoll() {
+        if (scPollTimer) return;
+        scPollTimer = setInterval(function() {
+            if (!scConvId) return;
+            var convs = [];
+            try { convs = JSON.parse(localStorage.getItem('crm_conversations') || '[]'); } catch(e) {}
+            for (var i = 0; i < convs.length; i++) {
+                if (convs[i].id === scConvId && convs[i].messages.length > scLastMsgCount) {
+                    scLoadMessages();
+                    break;
+                }
+            }
+        }, 2000);
+    }
 
     function scToggle() {
         var win = document.getElementById('scWindow');
@@ -5658,6 +5879,8 @@
         var isOpen = win.classList.toggle('open');
         fab.classList.toggle('open', isOpen);
         if (isOpen) {
+            scInitConversation();
+            scStartPoll();
             var msgs = document.getElementById('scMessages');
             msgs.scrollTop = msgs.scrollHeight;
         }
@@ -5668,9 +5891,22 @@
         var text = input.value.trim();
         if (!text && scFiles.length === 0) return;
 
+        // Создаём диалог при первом сообщении
+        scEnsureConversation(text);
+
+        // Сохраняем логин при отправке (для идентификации)
+        var loginUser = document.getElementById('loginUser');
+        if (loginUser && loginUser.value) sessionStorage.setItem('sc_login', loginUser.value);
+
         var msgs = document.getElementById('scMessages');
         var now = new Date();
         var time = now.getHours().toString().padStart(2,'0') + ':' + now.getMinutes().toString().padStart(2,'0');
+
+        var fileNames = [];
+        for (var i = 0; i < scFiles.length; i++) fileNames.push(scFiles[i].name);
+
+        // Сохраняем в CRM
+        scSaveMessage('client', text, fileNames);
 
         var bubble = document.createElement('div');
         bubble.className = 'sc-msg user';
@@ -5683,6 +5919,7 @@
         bubble.innerHTML = html;
         msgs.appendChild(bubble);
         msgs.scrollTop = msgs.scrollHeight;
+        scLastMsgCount++;
 
         input.value = '';
         scFiles = [];
@@ -5690,7 +5927,7 @@
         document.getElementById('scFilePreview').innerHTML = '';
         document.getElementById('scFileInput').value = '';
 
-        scAutoReply();
+        scStartPoll();
     }
 
     function scAttachFiles(fileList) {
@@ -5723,18 +5960,17 @@
         scRenderPreview();
     }
 
-    function scAutoReply() {
-        setTimeout(function() {
-            var msgs = document.getElementById('scMessages');
-            var now = new Date();
-            var time = now.getHours().toString().padStart(2,'0') + ':' + now.getMinutes().toString().padStart(2,'0');
-            var bubble = document.createElement('div');
-            bubble.className = 'sc-msg support';
-            bubble.innerHTML = '<div class="sc-msg-text">' + t('scAutoReply') + '</div><div class="sc-msg-time">' + time + '</div>';
-            msgs.appendChild(bubble);
-            msgs.scrollTop = msgs.scrollHeight;
-        }, 1000);
-    }
+    // Сохраняем логин при входе для идентификации в виджете
+    var _origHandleLogin = typeof handleLogin === 'function' ? handleLogin : null;
+    document.addEventListener('DOMContentLoaded', function() {
+        var loginForm = document.querySelector('#loginForm form');
+        if (loginForm) {
+            loginForm.addEventListener('submit', function() {
+                var u = document.getElementById('loginUser');
+                if (u && u.value) sessionStorage.setItem('sc_login', u.value);
+            });
+        }
+    });
 </script>
 </body>
 </html>
