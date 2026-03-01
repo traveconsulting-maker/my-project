@@ -1036,6 +1036,58 @@
         .dlg-table tbody tr:last-child td { border-bottom: none; }
 
         .dlg-name-cell { font-weight: 600; color: var(--text) !important; }
+        .dlg-name-wrap { display: flex; align-items: center; gap: 10px; }
+        .dlg-ring { position: relative; flex-shrink: 0; width: 28px; height: 28px; }
+        .dlg-ring svg { transform: rotate(-90deg); }
+        .dlg-ring-bg { fill: none; stroke: var(--input-border); stroke-width: 3; }
+        .dlg-ring-fill { fill: none; stroke-width: 3; stroke-linecap: round; transition: stroke-dashoffset .5s, stroke .4s; }
+        .dlg-ring-pct {
+            position: absolute; inset: 0; display: flex; align-items: center; justify-content: center;
+            font-size: 8px; font-weight: 700; color: var(--text-secondary); line-height: 1;
+        }
+        .dlg-status-hint {
+            display: flex; align-items: center; gap: 6px; font-size: 11px; margin-top: 2px;
+            color: var(--text-muted); line-height: 1.3;
+        }
+        .dlg-status-hint.ready { color: #2ecc71; }
+        .dlg-status-hint.warning { color: #f1c40f; }
+        .dlg-status-hint.danger { color: #e74c3c; }
+
+        .dlg-toggle { display: flex; align-items: center; gap: 8px; position: relative; }
+        .dlg-toggle-track {
+            width: 38px; height: 20px; border-radius: 10px; position: relative; cursor: pointer;
+            background: rgba(255,255,255,0.12); transition: background .3s;
+        }
+        body.light .dlg-toggle-track { background: rgba(0,0,0,0.12); }
+        .dlg-toggle-track.on { background: #2ecc71; }
+        .dlg-toggle-track.disabled { opacity: 0.4; cursor: not-allowed; }
+        .dlg-toggle-thumb {
+            width: 16px; height: 16px; border-radius: 50%; background: #fff;
+            position: absolute; top: 2px; left: 2px;
+            transition: transform .3s cubic-bezier(0.16,1,0.3,1);
+            box-shadow: 0 1px 3px rgba(0,0,0,0.3);
+        }
+        .dlg-toggle-track.on .dlg-toggle-thumb { transform: translateX(18px); }
+        .dlg-toggle-label {
+            font-size: 12px; font-weight: 500; white-space: nowrap;
+            color: var(--text-muted); transition: color .3s;
+        }
+        .dlg-toggle-label.on { color: #2ecc71; }
+        .dlg-toggle-tip {
+            position: absolute; bottom: calc(100% + 8px); left: 50%; transform: translateX(-50%);
+            background: var(--modal-bg); border: 1px solid var(--card-border);
+            border-radius: 8px; padding: 8px 12px; min-width: 210px;
+            font-size: 12px; line-height: 1.4; color: var(--text-secondary);
+            box-shadow: 0 8px 24px rgba(0,0,0,0.3); white-space: normal; text-align: center;
+            opacity: 0; visibility: hidden; pointer-events: none;
+            transition: opacity .2s, visibility .2s;
+            z-index: 50;
+        }
+        .dlg-toggle-tip::after {
+            content: ''; position: absolute; top: 100%; left: 50%; transform: translateX(-50%);
+            border: 6px solid transparent; border-top-color: var(--card-border);
+        }
+        .dlg-toggle:hover .dlg-toggle-tip { opacity: 1; visibility: visible; }
         .dlg-date { font-size: 13px; color: var(--text-muted) !important; white-space: nowrap; }
 
         .dlg-name-input {
@@ -1060,6 +1112,10 @@
             display: none;
         }
         .dlg-context-menu.show { display: block; }
+        .dlg-context-header {
+            padding: 8px 12px 4px; font-size: 11px; font-weight: 600;
+            text-transform: uppercase; letter-spacing: .5px; color: var(--text-muted);
+        }
         .dlg-context-item {
             display: flex; align-items: center; gap: 8px;
             padding: 8px 12px; border-radius: 6px; border: none;
@@ -1099,6 +1155,46 @@
             cursor: pointer; transition: all .2s; color: rgba(255,255,255,0.7); border: none; background: none;
         }
         .st-tab.active { background: #4f8eff; color: #fff; }
+
+        .st-dlg-picker { position: relative; }
+        .st-dlg-btn {
+            display: flex; align-items: center; gap: 8px;
+            padding: 7px 16px; border-radius: 10px; font-size: 13px; font-weight: 500;
+            cursor: pointer; border: 1px solid var(--input-border); background: var(--input-bg);
+            color: var(--text-secondary); transition: all .2s; white-space: nowrap;
+        }
+        .st-dlg-btn:hover { border-color: #4f8eff; color: #4f8eff; }
+        .st-dlg-btn.active { border-color: #4f8eff; color: #4f8eff; background: rgba(79,142,255,0.08); }
+        .st-dlg-btn svg { flex-shrink: 0; }
+        .st-dlg-dropdown {
+            position: absolute; top: calc(100% + 8px); right: 0; z-index: 100;
+            min-width: 260px; max-height: 320px; overflow-y: auto;
+            background: var(--modal-bg); border: 1px solid var(--card-border);
+            border-radius: 12px; box-shadow: 0 12px 40px rgba(0,0,0,0.3);
+            opacity: 0; visibility: hidden; transform: translateY(-8px);
+            transition: opacity .2s, transform .2s, visibility .2s;
+        }
+        .st-dlg-dropdown.open { opacity: 1; visibility: visible; transform: translateY(0); }
+        .st-dlg-dropdown-header {
+            padding: 12px 16px 8px; font-size: 11px; font-weight: 600;
+            text-transform: uppercase; letter-spacing: .5px; color: var(--text-muted);
+        }
+        .st-dlg-item {
+            display: flex; align-items: center; gap: 10px;
+            padding: 10px 16px; cursor: pointer; font-size: 13px;
+            color: var(--text-secondary); transition: background .15s;
+        }
+        .st-dlg-item:hover { background: var(--hover-bg); }
+        .st-dlg-item.active { color: #4f8eff; font-weight: 600; }
+        .st-dlg-item .st-dlg-dot {
+            width: 8px; height: 8px; border-radius: 50%;
+            background: var(--text-muted); flex-shrink: 0;
+        }
+        .st-dlg-item.active .st-dlg-dot { background: #4f8eff; }
+        .st-dlg-item-all { border-bottom: 1px solid var(--border-color); }
+        .st-dlg-current-name {
+            max-width: 160px; overflow: hidden; text-overflow: ellipsis; white-space: nowrap;
+        }
 
         .st-datepicker-wrap { position: relative; }
         .st-datepicker-btn {
@@ -1293,6 +1389,135 @@
             .st-call-row { grid-template-columns: 1fr 1fr 1fr; grid-template-rows: auto auto; }
             .st-col-labels { display: none; }
         }
+        /* ===== SUPPORT CHAT ===== */
+        .sc-fab {
+            position: fixed; bottom: 24px; right: 24px; z-index: 9998;
+            width: 56px; height: 56px; border-radius: 50%; border: none; cursor: pointer;
+            background: linear-gradient(135deg, #6c5ce7, #a855f7);
+            box-shadow: 0 4px 20px rgba(108, 92, 231, 0.4);
+            display: flex; align-items: center; justify-content: center;
+            transition: transform 0.3s, box-shadow 0.3s;
+        }
+        .sc-fab:hover { transform: scale(1.1); box-shadow: 0 6px 28px rgba(108, 92, 231, 0.55); }
+        .sc-fab.open svg { display: none; }
+        .sc-fab.open::after { content: '×'; color: #fff; font-size: 28px; line-height: 1; }
+
+        .sc-window {
+            position: fixed; bottom: 92px; right: 24px; z-index: 9998;
+            width: 380px; height: 500px; border-radius: 16px;
+            background: var(--modal-bg); border: 1px solid var(--card-border);
+            box-shadow: 0 12px 40px rgba(0,0,0,0.35);
+            display: flex; flex-direction: column; overflow: hidden;
+            opacity: 0; visibility: hidden; transform: scale(0.9) translateY(20px);
+            transition: opacity 0.3s, transform 0.3s, visibility 0.3s;
+        }
+        .sc-window.open { opacity: 1; visibility: visible; transform: scale(1) translateY(0); }
+
+        .sc-header {
+            display: flex; align-items: center; justify-content: space-between;
+            padding: 16px 18px; background: linear-gradient(135deg, #6c5ce7, #a855f7);
+        }
+        .sc-header-title { color: #fff; font-size: 15px; font-weight: 600; }
+        .sc-header-status { color: rgba(255,255,255,0.8); font-size: 12px; margin-top: 2px; }
+        .sc-close {
+            background: none; border: none; color: #fff; font-size: 22px; cursor: pointer;
+            width: 32px; height: 32px; display: flex; align-items: center; justify-content: center;
+            border-radius: 50%; transition: background 0.2s;
+        }
+        .sc-close:hover { background: rgba(255,255,255,0.2); }
+
+        .sc-messages {
+            flex: 1; overflow-y: auto; padding: 16px; display: flex;
+            flex-direction: column; gap: 12px;
+        }
+        .sc-msg { max-width: 80%; padding: 10px 14px; border-radius: 14px; font-size: 13px; line-height: 1.45; }
+        .sc-msg.support {
+            align-self: flex-start; background: var(--input-bg); color: var(--text);
+            border-bottom-left-radius: 4px;
+        }
+        .sc-msg.user {
+            align-self: flex-end; background: linear-gradient(135deg, #6c5ce7, #a855f7); color: #fff;
+            border-bottom-right-radius: 4px;
+        }
+        .sc-msg-time { font-size: 10px; opacity: 0.6; margin-top: 4px; }
+        .sc-msg-file { font-size: 12px; opacity: 0.85; margin-top: 4px; }
+        .sc-msg-file::before { content: '📎 '; }
+
+        .sc-file-preview {
+            padding: 6px 14px; border-top: 1px solid var(--border-color);
+            display: flex; flex-wrap: wrap; gap: 6px; align-items: center;
+        }
+        .sc-file-tag {
+            display: inline-flex; align-items: center; gap: 4px;
+            background: var(--input-bg); border-radius: 8px; padding: 4px 10px;
+            font-size: 12px; color: var(--text-secondary);
+        }
+        .sc-file-tag button {
+            background: none; border: none; cursor: pointer; color: var(--text-muted);
+            font-size: 14px; line-height: 1; padding: 0 0 0 2px;
+        }
+
+        .sc-input-area {
+            display: flex; align-items: center; gap: 8px;
+            padding: 10px 14px; border-top: 1px solid var(--border-color);
+        }
+        .sc-attach-btn, .sc-send-btn {
+            background: none; border: none; cursor: pointer; font-size: 18px; padding: 4px;
+            color: var(--text-muted); transition: color 0.2s;
+        }
+        .sc-attach-btn:hover, .sc-send-btn:hover { color: #a855f7; }
+        .sc-input {
+            flex: 1; background: var(--input-bg); border: 1px solid var(--input-border);
+            border-radius: 10px; padding: 9px 14px; font-size: 13px;
+            color: var(--text); outline: none; font-family: inherit;
+        }
+        .sc-input::placeholder { color: var(--text-muted); }
+
+        @media (max-width: 480px) {
+            .sc-window { width: calc(100vw - 24px); right: 12px; bottom: 80px; height: 60vh; }
+            .sc-fab { bottom: 16px; right: 16px; }
+        }
+
+        /* Management modal */
+        .mgmt-section { margin-bottom: 20px; }
+        .mgmt-section-title {
+            font-size: 13px; font-weight: 600; text-transform: uppercase;
+            color: var(--text-muted); margin-bottom: 10px; letter-spacing: 0.5px;
+        }
+        .mgmt-days { display: flex; gap: 6px; margin-bottom: 12px; }
+        .mgmt-day {
+            width: 36px; height: 36px; border-radius: 50%; border: 1px solid var(--input-border);
+            background: var(--input-bg); color: var(--text-secondary); font-size: 12px; font-weight: 600;
+            cursor: pointer; display: flex; align-items: center; justify-content: center;
+            transition: all 0.2s; font-family: inherit;
+        }
+        .mgmt-day:hover { border-color: rgba(108,92,231,0.4); }
+        .mgmt-day.on {
+            background: linear-gradient(135deg, #6c5ce7, #a29bfe); color: #fff;
+            border-color: transparent; box-shadow: 0 2px 8px rgba(108,92,231,0.3);
+        }
+        .mgmt-time-row { display: flex; gap: 12px; align-items: center; }
+        .mgmt-time-input {
+            flex: 1; background: var(--input-bg); border: 1px solid var(--input-border);
+            border-radius: 10px; padding: 9px 14px; font-size: 14px;
+            color: var(--text); outline: none; font-family: inherit;
+            transition: border-color 0.2s;
+        }
+        .mgmt-time-input:focus { border-color: #6c5ce7; }
+        .mgmt-toggle-row {
+            display: flex; justify-content: space-between; align-items: center;
+            padding: 8px 0;
+        }
+        .mgmt-toggle-label { font-size: 14px; color: var(--text-secondary); }
+        .mgmt-number-input {
+            width: 120px; background: var(--input-bg); border: 1px solid var(--input-border);
+            border-radius: 10px; padding: 9px 14px; font-size: 14px;
+            color: var(--text); outline: none; font-family: inherit;
+            transition: border-color 0.2s;
+        }
+        .mgmt-number-input:focus { border-color: #6c5ce7; }
+        .mgmt-time-sep { color: var(--text-muted); font-size: 13px; font-weight: 500; }
+
     </style>
 </head>
 <body>
@@ -1684,6 +1909,47 @@
         </div>
     </div>
 
+    <!-- ===== MANAGEMENT MODAL ===== -->
+    <div class="modal-overlay" id="mgmtModal" onclick="if(event.target===this)closeMgmtModal()">
+        <div class="modal" style="max-width:460px;">
+            <button class="modal-close" onclick="closeMgmtModal()">&times;</button>
+            <div class="modal-title" data-i18n="mgmtTitle">Управление</div>
+            <div class="modal-subtitle" id="mgmtDialogName"></div>
+
+            <div class="mgmt-section">
+                <div class="mgmt-section-title" data-i18n="mgmtSchedule">Рабочее время</div>
+                <div class="mgmt-days" id="mgmtDays"></div>
+                <div class="mgmt-time-row">
+                    <input type="time" class="mgmt-time-input" id="mgmtTimeFrom" value="09:00">
+                    <span class="mgmt-time-sep" data-i18n="mgmtTo">—</span>
+                    <input type="time" class="mgmt-time-input" id="mgmtTimeTo" value="18:00">
+                </div>
+            </div>
+
+            <div class="mgmt-section">
+                <div class="mgmt-section-title" data-i18n="mgmtTz">Часовой пояс</div>
+                <div class="mgmt-toggle-row">
+                    <span class="mgmt-toggle-label" data-i18n="mgmtTzLabel">Учитывать часовой пояс абонента</span>
+                    <div class="dlg-toggle-track" id="mgmtTzToggle" onclick="mgmtToggleTz()">
+                        <div class="dlg-toggle-thumb"></div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="mgmt-section">
+                <div class="mgmt-section-title" data-i18n="mgmtContactLimit">Сколько получать квал. лидов в день</div>
+                <input type="number" class="mgmt-number-input" id="mgmtContactLimit" min="1" max="10000" value="100">
+            </div>
+
+            <div class="mgmt-section">
+                <div class="mgmt-section-title" data-i18n="mgmtMaxCallSec">Макс. длительность звонка (сек)</div>
+                <input type="number" class="mgmt-number-input" id="mgmtMaxCallSec" min="10" max="7200" value="600">
+            </div>
+
+            <button class="submit-btn" onclick="saveMgmt()" data-i18n="mgmtSave">Сохранить</button>
+        </div>
+    </div>
+
     <!-- ===== QUICK START WIZARD ===== -->
     <div class="qs-overlay" id="qsWizard" onclick="if(event.target===this)closeQsWizard()">
         <div class="qs-modal">
@@ -1868,10 +2134,6 @@
                     <span class="nav-icon"><svg viewBox="0 0 24 24"><path d="M19 3H5c-1.1 0-2 .9-2 2v14c0 1.1.9 2 2 2h14c1.1 0 2-.9 2-2V5c0-1.1-.9-2-2-2zM9 17H7v-7h2v7zm4 0h-2V7h2v10zm4 0h-2v-4h2v4z"/></svg></span>
                     <span data-i18n="navStats">Статистика</span>
                 </a></li>
-                <li><a href="#" data-page="pageSkills" onclick="setActive(this)">
-                    <span class="nav-icon"><svg viewBox="0 0 24 24"><path d="M12 3L1 9l4 2.18v6L12 21l7-3.82v-6l2-1.09V17h2V9L12 3zm6.82 6L12 12.72 5.18 9 12 5.28 18.82 9zM17 15.99l-5 2.73-5-2.73v-3.72L12 15l5-2.73v3.72z"/></svg></span>
-                    <span data-i18n="navSkills">Скиллбейзы</span>
-                </a></li>
                 <li><a href="#" data-page="pageKnowledge" onclick="setActive(this)">
                     <span class="nav-icon"><svg viewBox="0 0 24 24"><path d="M18 2H6c-1.1 0-2 .9-2 2v16c0 1.1.9 2 2 2h12c1.1 0 2-.9 2-2V4c0-1.1-.9-2-2-2zM6 4h5v8l-2.5-1.5L6 12V4z"/></svg></span>
                     <span data-i18n="navKb">База знаний</span>
@@ -1879,10 +2141,6 @@
                 <li><a href="#" data-page="pageCalls" onclick="setActive(this)">
                     <span class="nav-icon"><svg viewBox="0 0 24 24"><path d="M19 3H5c-1.1 0-2 .9-2 2v14c0 1.1.9 2 2 2h14c1.1 0 2-.9 2-2V5c0-1.1-.9-2-2-2zm-2 10H7v-2h10v2z"/></svg></span>
                     <span data-i18n="navCalls">Колл-листы</span>
-                </a></li>
-                <li><a href="#" data-page="pageHistory" onclick="setActive(this)">
-                    <span class="nav-icon"><svg viewBox="0 0 24 24"><path d="M13 3a9 9 0 00-9 9H1l3.89 3.89.07.14L9 12H6c0-3.87 3.13-7 7-7s7 3.13 7 7-3.13 7-7 7a6.99 6.99 0 01-4.95-2.05l-1.41 1.41A8.96 8.96 0 0013 21a9 9 0 000-18zm-1 5v5l4.28 2.54.72-1.21-3.5-2.08V8H12z"/></svg></span>
-                    <span data-i18n="navHistory">История звонков</span>
                 </a></li>
                 <li><a href="#" data-page="pageTemplates" onclick="setActive(this)">
                     <span class="nav-icon"><svg viewBox="0 0 24 24"><path d="M14 2H6c-1.1 0-2 .9-2 2v16c0 1.1.9 2 2 2h12c1.1 0 2-.9 2-2V8l-6-6zm2 16H8v-2h8v2zm0-4H8v-2h8v2zm-3-5V3.5L18.5 9H13z"/></svg></span>
@@ -1922,6 +2180,7 @@
                             <thead>
                                 <tr>
                                     <th data-i18n="dlgColName">Название</th>
+                                    <th data-i18n="dlgColStatus">Статус</th>
                                     <th data-i18n="dlgColCreated">Создан</th>
                                     <th data-i18n="dlgColUpdated">Изменён</th>
                                     <th></th>
@@ -1940,8 +2199,17 @@
                     <span data-i18n="dlgBack">Назад</span>
                 </button>
                 <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:4px;">
-                    <div class="bot-header-title" id="botHeaderTitle">ИП Максимов – Логистика для селлеров</div>
-                    <span class="save-status saved" id="saveStatus" data-i18n="saved">Сохранено</span>
+                    <div style="display:flex;align-items:center;gap:12px;">
+                        <div id="botHeaderRing"></div>
+                        <div>
+                            <div class="bot-header-title" id="botHeaderTitle">ИП Максимов – Логистика для селлеров</div>
+                            <div class="dlg-status-hint" id="botHeaderStatus"></div>
+                        </div>
+                    </div>
+                    <div style="display:flex;align-items:center;gap:16px;">
+                        <div class="dlg-toggle" id="botHeaderToggle"></div>
+                        <span class="save-status saved" id="saveStatus" data-i18n="saved">Сохранено</span>
+                    </div>
                 </div>
                 <div class="bot-header-updated" id="lastUpdated" data-i18n="botUpdated">Последнее обновление: только что</div>
 
@@ -2045,6 +2313,15 @@
                         <div class="st-tabs">
                           <button class="st-tab active" onclick="stSwitchTab(this,'overview')">Обзор</button>
                         </div>
+                        <!-- DIALOG PICKER -->
+                        <div class="st-dlg-picker">
+                          <button class="st-dlg-btn" id="st-dlg-btn" onclick="stToggleDlgPicker()">
+                            <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"/></svg>
+                            <span id="st-dlg-label" data-i18n="stDlgAll">Все диалоги</span>
+                            <svg width="10" height="10" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="6 9 12 15 18 9"/></svg>
+                          </button>
+                          <div class="st-dlg-dropdown" id="st-dlg-dropdown"></div>
+                        </div>
                         <!-- DATE PICKER -->
                         <div class="st-datepicker-wrap">
                           <button class="st-datepicker-btn" onclick="stToggleCalendar()">
@@ -2072,63 +2349,13 @@
                     </div>
 
                     <!-- STATS CARDS -->
-                    <div class="st-stats-grid">
-                      <div class="st-stat-card">
-                        <div class="st-stat-label">Потрачено</div>
-                        <div class="st-stat-value">347 мин</div>
-                        <div class="st-stat-sub">Списано: <strong>1 248,00 ₽</strong></div>
-                        <div class="st-stat-sub" style="margin-top:4px">За выбранный период</div>
-                      </div>
-                      <div class="st-stat-card">
-                        <div class="st-stat-label">Контактов обработано</div>
-                        <div class="st-stat-value">+84 <span class="st-stat-badge st-badge-up">↑ 12%</span></div>
-                        <div class="st-stat-sub">В процессе дозвона: <strong>6</strong></div>
-                        <div class="st-stat-sub" style="margin-top:4px">
-                          <span style="color:#2ecc71">↑ Рост контактов</span> — за период
-                        </div>
-                      </div>
-                      <div class="st-stat-card">
-                        <div class="st-stat-label">Ответов</div>
-                        <div class="st-stat-value">+61 <span class="st-stat-badge st-badge-up">↑ 8%</span></div>
-                        <div class="st-stat-sub" style="margin-top:4px">
-                          <span style="color:#2ecc71">↑ Рост ответов</span> — за период
-                        </div>
-                      </div>
-                      <div class="st-stat-card">
-                        <div class="st-stat-label">Лидов передано</div>
-                        <div class="st-stat-value">+23 <span class="st-stat-badge st-badge-up">↑ 19%</span></div>
-                        <div class="st-stat-sub" style="margin-top:4px">
-                          <span style="color:#2ecc71">↑ Рост лидов</span> — за период
-                        </div>
-                      </div>
-                      <div class="st-stat-card">
-                        <div class="st-stat-label">Конверсия из ответов в лида</div>
-                        <div class="st-stat-value">37.7% <span class="st-stat-badge st-badge-down">↓ 3%</span></div>
-                        <div class="st-stat-sub" style="margin-top:4px">
-                          <span style="color:#e74c3c">↓ Снижение конверсии</span> — за период
-                        </div>
-                      </div>
-                      <div class="st-stat-card">
-                        <div class="st-stat-label">Контакты в работе</div>
-                        <div class="st-stat-value" style="font-size:20px;margin-top:8px">
-                          <div style="display:flex;align-items:center;gap:8px;margin-bottom:6px">
-                            <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" style="opacity:0.5"><path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"/><circle cx="12" cy="7" r="4"/></svg>
-                            <span style="font-size:16px;font-weight:600">Запланировано: <span style="color:#4f8eff">14</span></span>
-                          </div>
-                          <div style="display:flex;align-items:center;gap:8px">
-                            <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" style="opacity:0.5"><path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"/><circle cx="12" cy="7" r="4"/></svg>
-                            <span style="font-size:16px;font-weight:600">В очереди: <span style="color:#f1c40f">8</span></span>
-                          </div>
-                        </div>
-                        <div class="st-stat-sub" style="margin-top:8px">*Во всех активных колл-листах</div>
-                      </div>
-                    </div>
+                    <div class="st-stats-grid" id="st-stats-grid"></div>
 
                     <!-- CALLS SECTION -->
                     <div class="st-calls-section">
                       <div class="st-calls-header">
                         <div class="st-calls-title">Журнал звонков</div>
-                        <div style="font-size:13px;color:rgba(255,255,255,0.7)">Показано: <span id="st-count-shown">20</span> из 84</div>
+                        <div style="font-size:13px;color:rgba(255,255,255,0.7)">Показано: <span id="st-count-shown">20</span> из <span id="st-count-total">84</span></div>
                       </div>
 
                       <div class="st-filters-row">
@@ -2464,13 +2691,18 @@
                 name: name,
                 createdAt: now,
                 updatedAt: now,
+                active: false,
                 botRole: '',
                 botStyle: '',
                 rules: [],
                 facts: [],
                 criteria: [],
                 greetings: [],
-                planItems: []
+                planItems: [],
+                schedule: { days: [1,2,3,4,5], timeFrom: '09:00', timeTo: '18:00' },
+                useClientTz: false,
+                contactLimit: 100,
+                maxCallSec: 600
             };
         }
 
@@ -2743,6 +2975,83 @@
             renderDialogTable();
         }
 
+        // ===== MANAGEMENT MODAL =====
+        var mgmtCurrentId = null;
+        var mgmtDaysState = [];
+
+        function openMgmtModal(id) {
+            var dlg = dialogs.find(function(d) { return d.id === id; });
+            if (!dlg) return;
+            mgmtCurrentId = id;
+            // Ensure defaults for older dialogs
+            if (!dlg.schedule) dlg.schedule = { days: [1,2,3,4,5], timeFrom: '09:00', timeTo: '18:00' };
+            if (dlg.useClientTz === undefined) dlg.useClientTz = false;
+            if (dlg.contactLimit === undefined) dlg.contactLimit = 100;
+            if (dlg.maxCallSec === undefined) dlg.maxCallSec = 600;
+
+            mgmtDaysState = dlg.schedule.days.slice();
+            document.getElementById('mgmtDialogName').textContent = dlg.name;
+            document.getElementById('mgmtTimeFrom').value = dlg.schedule.timeFrom;
+            document.getElementById('mgmtTimeTo').value = dlg.schedule.timeTo;
+            mgmtRenderDays();
+            var tzToggle = document.getElementById('mgmtTzToggle');
+            if (dlg.useClientTz) { tzToggle.classList.add('on'); } else { tzToggle.classList.remove('on'); }
+            document.getElementById('mgmtContactLimit').value = dlg.contactLimit;
+            document.getElementById('mgmtMaxCallSec').value = dlg.maxCallSec;
+            document.getElementById('mgmtModal').classList.add('active');
+            document.body.style.overflow = 'hidden';
+            applyLang();
+        }
+
+        function closeMgmtModal() {
+            document.getElementById('mgmtModal').classList.remove('active');
+            document.body.style.overflow = '';
+            mgmtCurrentId = null;
+        }
+
+        function mgmtRenderDays() {
+            var dayKeys = ['mgmtMon','mgmtTue','mgmtWed','mgmtThu','mgmtFri','mgmtSat','mgmtSun'];
+            var container = document.getElementById('mgmtDays');
+            container.innerHTML = '';
+            for (var i = 0; i < 7; i++) {
+                var dayNum = i + 1;
+                var isOn = mgmtDaysState.indexOf(dayNum) !== -1;
+                var btn = document.createElement('button');
+                btn.className = 'mgmt-day' + (isOn ? ' on' : '');
+                btn.textContent = t(dayKeys[i]);
+                btn.setAttribute('data-day', dayNum);
+                btn.onclick = (function(d) { return function() { mgmtToggleDay(d); }; })(dayNum);
+                container.appendChild(btn);
+            }
+        }
+
+        function mgmtToggleDay(day) {
+            var idx = mgmtDaysState.indexOf(day);
+            if (idx !== -1) { mgmtDaysState.splice(idx, 1); } else { mgmtDaysState.push(day); }
+            mgmtRenderDays();
+        }
+
+        function mgmtToggleTz() {
+            var el = document.getElementById('mgmtTzToggle');
+            el.classList.toggle('on');
+        }
+
+        function saveMgmt() {
+            if (!mgmtCurrentId) return;
+            var dlg = dialogs.find(function(d) { return d.id === mgmtCurrentId; });
+            if (!dlg) return;
+            dlg.schedule = {
+                days: mgmtDaysState.slice().sort(),
+                timeFrom: document.getElementById('mgmtTimeFrom').value,
+                timeTo: document.getElementById('mgmtTimeTo').value
+            };
+            dlg.useClientTz = document.getElementById('mgmtTzToggle').classList.contains('on');
+            dlg.contactLimit = parseInt(document.getElementById('mgmtContactLimit').value, 10) || 100;
+            dlg.maxCallSec = parseInt(document.getElementById('mgmtMaxCallSec').value, 10) || 600;
+            dlg.updatedAt = new Date().toISOString();
+            closeMgmtModal();
+        }
+
         function toggleContextMenu(id, event) {
             event.stopPropagation();
             var menu = document.getElementById('dlgContextMenu');
@@ -2753,6 +3062,7 @@
             }
             menu.setAttribute('data-dlg-id', id);
             menu.innerHTML =
+                '<button class="dlg-context-item" onclick="event.stopPropagation();closeAllContextMenus();openMgmtModal(\'' + id + '\')">' + t('dlgMenuTitle') + '</button>' +
                 '<button class="dlg-context-item" onclick="event.stopPropagation();startRename(\'' + id + '\')">' + t('dlgRename') + '</button>' +
                 '<button class="dlg-context-item" onclick="event.stopPropagation();cloneDialog(\'' + id + '\')">' + t('dlgClone') + '</button>' +
                 '<button class="dlg-context-item danger" onclick="event.stopPropagation();openDeleteDialogModal(\'' + id + '\')">' + t('dlgDelete') + '</button>';
@@ -2803,6 +3113,10 @@
             clone.criteria = JSON.parse(JSON.stringify(src.criteria));
             clone.greetings = JSON.parse(JSON.stringify(src.greetings));
             clone.planItems = JSON.parse(JSON.stringify(src.planItems));
+            clone.schedule = JSON.parse(JSON.stringify(src.schedule));
+            clone.useClientTz = src.useClientTz;
+            clone.contactLimit = src.contactLimit;
+            clone.maxCallSec = src.maxCallSec;
             // Regenerate IDs in cloned arrays
             var regen = function(arr, prefix) {
                 arr.forEach(function(item) {
@@ -2825,6 +3139,45 @@
             return pad(d.getDate()) + '.' + pad(d.getMonth() + 1) + '.' + d.getFullYear() + ' ' + pad(d.getHours()) + ':' + pad(d.getMinutes());
         }
 
+        function dlgCompleteness(dlg) {
+            var fields = 0, total = 7;
+            if (dlg.botRole && dlg.botRole.trim()) fields++;
+            if (dlg.botStyle && dlg.botStyle.trim()) fields++;
+            if (dlg.rules && dlg.rules.some(function(r) { return r.text && r.text.trim(); })) fields++;
+            if (dlg.facts && dlg.facts.some(function(r) { return r.text && r.text.trim(); })) fields++;
+            if (dlg.criteria && dlg.criteria.some(function(r) { return r.text && r.text.trim(); })) fields++;
+            if (dlg.greetings && dlg.greetings.some(function(r) { return r.text && r.text.trim(); })) fields++;
+            if (dlg.planItems && dlg.planItems.some(function(r) { return r.text && r.text.trim(); })) fields++;
+            return Math.round((fields / total) * 100);
+        }
+
+        function dlgRingColor(pct) {
+            if (pct >= 100) return '#2ecc71';
+            if (pct >= 60) return '#f1c40f';
+            return '#e74c3c';
+        }
+
+        function dlgRingHTML(pct, size) {
+            size = size || 28;
+            var r = (size - 4) / 2;
+            var circ = 2 * Math.PI * r;
+            var offset = circ - (pct / 100) * circ;
+            var color = dlgRingColor(pct);
+            return '<div class="dlg-ring" style="width:' + size + 'px;height:' + size + 'px">' +
+                '<svg width="' + size + '" height="' + size + '" viewBox="0 0 ' + size + ' ' + size + '">' +
+                    '<circle class="dlg-ring-bg" cx="' + size/2 + '" cy="' + size/2 + '" r="' + r + '"/>' +
+                    '<circle class="dlg-ring-fill" cx="' + size/2 + '" cy="' + size/2 + '" r="' + r + '" stroke="' + color + '" stroke-dasharray="' + circ.toFixed(1) + '" stroke-dashoffset="' + offset.toFixed(1) + '"/>' +
+                '</svg>' +
+                '<div class="dlg-ring-pct" style="color:' + color + '">' + pct + '</div>' +
+            '</div>';
+        }
+
+        function dlgStatusText(pct) {
+            if (pct >= 100) return { text: t('dlgReady'), cls: 'ready' };
+            if (pct >= 60) return { text: t('dlgAlmost'), cls: 'warning' };
+            return { text: t('dlgFillMore'), cls: 'danger' };
+        }
+
         function renderDialogTable() {
             var tbody = document.getElementById('dialogTableBody');
             var emptyEl = document.getElementById('dlgEmpty');
@@ -2837,8 +3190,29 @@
             dialogs.forEach(function(dlg) {
                 var tr = document.createElement('tr');
                 tr.onclick = function() { openDialogDetail(dlg.id); };
+                var pct = dlgCompleteness(dlg);
+                var st = dlgStatusText(pct);
+                var canActivate = pct >= 100;
+                var isOn = dlg.active && canActivate;
                 tr.innerHTML =
-                    '<td class="dlg-name-cell" id="namecell_' + dlg.id + '">' + escapeHtml(dlg.name) + '</td>' +
+                    '<td class="dlg-name-cell" id="namecell_' + dlg.id + '">' +
+                        '<div class="dlg-name-wrap">' +
+                            dlgRingHTML(pct) +
+                            '<div>' +
+                                '<div>' + escapeHtml(dlg.name) + '</div>' +
+                                '<div class="dlg-status-hint ' + st.cls + '">' + st.text + '</div>' +
+                            '</div>' +
+                        '</div>' +
+                    '</td>' +
+                    '<td>' +
+                        '<div class="dlg-toggle">' +
+                            '<div class="dlg-toggle-track' + (isOn ? ' on' : '') + (canActivate ? '' : ' disabled') + '" onclick="event.stopPropagation();dlgToggleActive(\'' + dlg.id + '\')">' +
+                                '<div class="dlg-toggle-thumb"></div>' +
+                            '</div>' +
+                            '<span class="dlg-toggle-label' + (isOn ? ' on' : '') + '">' + (isOn ? t('dlgActive') : t('dlgInactive')) + '</span>' +
+                            (canActivate ? '' : '<div class="dlg-toggle-tip">' + t('dlgFillToActivate') + '</div>') +
+                        '</div>' +
+                    '</td>' +
                     '<td class="dlg-date">' + formatDate(dlg.createdAt) + '</td>' +
                     '<td class="dlg-date">' + formatDate(dlg.updatedAt) + '</td>' +
                     '<td style="text-align:center;">' +
@@ -2856,6 +3230,51 @@
             document.getElementById('dialogListView').style.display = 'none';
             document.getElementById('dialogDetailView').style.display = '';
             document.getElementById('botHeaderTitle').textContent = dlg.name;
+            updateDetailRing();
+        }
+
+        function updateDetailRing() {
+            if (!currentDialogId) return;
+            var dlg = dialogs.find(function(d) { return d.id === currentDialogId; });
+            if (!dlg) return;
+            var tmp = {
+                botRole: document.getElementById('botSellerRole').value,
+                botStyle: document.getElementById('botSpeechStyle').value,
+                rules: typeof botRules !== 'undefined' ? botRules : dlg.rules,
+                facts: typeof botFacts !== 'undefined' ? botFacts : dlg.facts,
+                criteria: typeof botCriteria !== 'undefined' ? botCriteria : dlg.criteria,
+                greetings: typeof botGreetings !== 'undefined' ? botGreetings : dlg.greetings,
+                planItems: typeof botPlanItems !== 'undefined' ? botPlanItems : dlg.planItems
+            };
+            var pct = dlgCompleteness(tmp);
+            var st = dlgStatusText(pct);
+            var ringEl = document.getElementById('botHeaderRing');
+            var statusEl = document.getElementById('botHeaderStatus');
+            if (ringEl) ringEl.innerHTML = dlgRingHTML(pct, 32);
+            if (statusEl) { statusEl.textContent = st.text; statusEl.className = 'dlg-status-hint ' + st.cls; }
+            // Update header toggle
+            var canActivate = pct >= 100;
+            if (!canActivate && dlg.active) { dlg.active = false; }
+            var isOn = dlg.active && canActivate;
+            var toggleEl = document.getElementById('botHeaderToggle');
+            if (toggleEl) {
+                toggleEl.innerHTML =
+                    '<div class="dlg-toggle-track' + (isOn ? ' on' : '') + (canActivate ? '' : ' disabled') + '" onclick="dlgToggleActive(\'' + dlg.id + '\')">' +
+                        '<div class="dlg-toggle-thumb"></div>' +
+                    '</div>' +
+                    '<span class="dlg-toggle-label' + (isOn ? ' on' : '') + '">' + (isOn ? t('dlgActive') : t('dlgInactive')) + '</span>' +
+                    (canActivate ? '' : '<div class="dlg-toggle-tip">' + t('dlgFillToActivate') + '</div>');
+            }
+        }
+
+        function dlgToggleActive(id) {
+            var dlg = dialogs.find(function(d) { return d.id === id; });
+            if (!dlg) return;
+            var pct = dlgCompleteness(dlg);
+            if (pct < 100) return;
+            dlg.active = !dlg.active;
+            renderDialogTable();
+            updateDetailRing();
         }
 
         function showDialogList() {
@@ -2954,6 +3373,7 @@
             var status = document.getElementById('saveStatus');
             status.textContent = t('saving');
             status.className = 'save-status saving';
+            updateDetailRing();
             if (saveTimer) clearTimeout(saveTimer);
             saveTimer = setTimeout(function() {
                 if (currentDialogId) saveFormIntoDialog(currentDialogId);
@@ -3890,6 +4310,43 @@
             // Step 7
             qsDialogName: { ru:'Как назовём диалог?', en:'What shall we name the dialog?' },
             phQsDialogName: { ru:'Например: Продажи CRM для B2B', en:'E.g.: CRM Sales for B2B' },
+            // Dialog completeness & status
+            dlgReady: { ru:'Готов к звонкам', en:'Ready for calls' },
+            dlgAlmost: { ru:'Почти готов — заполните оставшиеся поля', en:'Almost ready — fill remaining fields' },
+            dlgFillMore: { ru:'Заполните диалог чтобы запустить звонки', en:'Fill dialog to start calls' },
+            dlgActive: { ru:'Активен', en:'Active' },
+            dlgInactive: { ru:'Не активен', en:'Inactive' },
+            dlgColStatus: { ru:'Статус', en:'Status' },
+            dlgFillToActivate: { ru:'Заполните все поля для активации', en:'Fill all fields to activate' },
+            dlgMenuTitle: { ru:'Управление', en:'Manage' },
+            // Stats Dialog Picker
+            stDlgAll: { ru:'Все диалоги', en:'All dialogs' },
+            stDlgPick: { ru:'Выбор диалога', en:'Choose dialog' },
+            // Support Chat
+            scTitle: { ru:'Техподдержка', en:'Support' },
+            scStatus: { ru:'● онлайн', en:'● online' },
+            scPlaceholder: { ru:'Напишите сообщение...', en:'Type a message...' },
+            scWelcome: { ru:'Здравствуйте! Чем можем помочь?', en:'Hello! How can we help?' },
+            scAutoReply: { ru:'Спасибо, ваше сообщение получено. Мы скоро ответим.', en:'Thank you, your message has been received. We will reply soon.' },
+            scFileTooLarge: { ru:'Файл слишком большой (макс. 10 МБ)', en:'File is too large (max 10 MB)' },
+            // Management modal
+            mgmtTitle: { ru:'Управление', en:'Management' },
+            mgmtSchedule: { ru:'Рабочее время', en:'Working hours' },
+            mgmtFrom: { ru:'с', en:'from' },
+            mgmtTo: { ru:'—', en:'—' },
+            mgmtTz: { ru:'Часовой пояс', en:'Time zone' },
+            mgmtTzLabel: { ru:'Учитывать часовой пояс абонента', en:'Use client time zone' },
+            mgmtContactLimit: { ru:'Сколько получать квал. лидов в день', en:'Qualified leads per day' },
+            mgmtMaxCallSec: { ru:'Макс. длительность звонка (сек)', en:'Max call duration (sec)' },
+            mgmtSave: { ru:'Сохранить', en:'Save' },
+            mgmtMon: { ru:'Пн', en:'Mo' },
+            mgmtTue: { ru:'Вт', en:'Tu' },
+            mgmtWed: { ru:'Ср', en:'We' },
+            mgmtThu: { ru:'Чт', en:'Th' },
+            mgmtFri: { ru:'Пт', en:'Fr' },
+            mgmtSat: { ru:'Сб', en:'Sa' },
+            mgmtSun: { ru:'Вс', en:'Su' },
+            mgmtMenu: { ru:'Настройки', en:'Settings' },
         };
 
         function t(key) {
@@ -4064,7 +4521,7 @@
         }
 
         document.addEventListener('keydown', (e) => {
-            if (e.key === 'Escape') { closeModal(); closeAccessModal(); closeCreateDialogModal(); closeDeleteDialogModal(); closeAllContextMenus(); }
+            if (e.key === 'Escape') { closeModal(); closeAccessModal(); closeCreateDialogModal(); closeDeleteDialogModal(); closeMgmtModal(); closeAllContextMenus(); }
         });
 
         document.addEventListener('click', function() { closeAllContextMenus(); });
@@ -4229,29 +4686,32 @@
                 btn.classList.add('active');
             };
 
-            // Calls data
-            var stCalls = [
-                {id:1,name:'Андрей Ситников',phone:'+7 912 345-67-89',status:'success',dur:247,lead:'yes',mp:'wb',date:'01.03.2026',time:'11:42'},
-                {id:2,name:'Ольга Петрова',phone:'+7 905 234-56-78',status:'noanswer',dur:0,lead:'no',mp:'ozon',date:'01.03.2026',time:'10:15'},
-                {id:3,name:'Дмитрий Каюмов',phone:'+7 916 789-01-23',status:'success',dur:183,lead:'yes',mp:'ym',date:'01.03.2026',time:'09:55'},
-                {id:4,name:'Марина Лукьянова',phone:'+7 926 456-78-90',status:'fail',dur:34,lead:'no',mp:'wb',date:'28.02.2026',time:'17:30'},
-                {id:5,name:'Игорь Семёнов',phone:'+7 903 321-54-76',status:'success',dur:512,lead:'yes',mp:'ozon',date:'28.02.2026',time:'16:08'},
-                {id:6,name:'Екатерина Борисова',phone:'+7 919 654-32-10',status:'busy',dur:8,lead:'no',mp:'wb',date:'28.02.2026',time:'14:22'},
-                {id:7,name:'Виктор Захаров',phone:'+7 931 112-23-34',status:'success',dur:298,lead:'no',mp:'ym',date:'27.02.2026',time:'13:45'},
-                {id:8,name:'Наталья Фролова',phone:'+7 906 987-65-43',status:'noanswer',dur:0,lead:'no',mp:'ozon',date:'27.02.2026',time:'12:10'},
-                {id:9,name:'Алексей Громов',phone:'+7 922 543-21-09',status:'success',dur:421,lead:'yes',mp:'wb',date:'27.02.2026',time:'11:30'},
-                {id:10,name:'Светлана Орлова',phone:'+7 904 876-54-32',status:'fail',dur:17,lead:'no',mp:'wb',date:'26.02.2026',time:'18:05'},
-                {id:11,name:'Максим Тихонов',phone:'+7 915 321-09-87',status:'success',dur:190,lead:'yes',mp:'ozon',date:'26.02.2026',time:'15:40'},
-                {id:12,name:'Анна Кузнецова',phone:'+7 929 765-43-21',status:'noanswer',dur:0,lead:'no',mp:'ym',date:'26.02.2026',time:'14:55'},
-                {id:13,name:'Руслан Абдуллин',phone:'+7 937 234-56-78',status:'success',dur:376,lead:'yes',mp:'wb',date:'25.02.2026',time:'17:20'},
-                {id:14,name:'Татьяна Морозова',phone:'+7 911 890-12-34',status:'busy',dur:5,lead:'no',mp:'ozon',date:'25.02.2026',time:'16:00'},
-                {id:15,name:'Сергей Лебедев',phone:'+7 923 456-78-01',status:'success',dur:305,lead:'no',mp:'ym',date:'25.02.2026',time:'13:15'},
-                {id:16,name:'Валерия Новикова',phone:'+7 918 234-56-78',status:'fail',dur:42,lead:'no',mp:'wb',date:'24.02.2026',time:'10:30'},
-                {id:17,name:'Артём Волков',phone:'+7 908 765-43-21',status:'success',dur:228,lead:'yes',mp:'ozon',date:'24.02.2026',time:'09:45'},
-                {id:18,name:'Полина Козлова',phone:'+7 935 123-45-67',status:'noanswer',dur:0,lead:'no',mp:'wb',date:'23.02.2026',time:'16:50'},
-                {id:19,name:'Никита Попов',phone:'+7 901 678-90-12',status:'success',dur:461,lead:'yes',mp:'ym',date:'23.02.2026',time:'15:05'},
-                {id:20,name:'Юлия Смирнова',phone:'+7 925 345-67-89',status:'success',dur:134,lead:'no',mp:'ozon',date:'23.02.2026',time:'11:20'}
+            // Calls data — full set (all dialogs)
+            var stCallsAll = [
+                {id:1,name:'Андрей Ситников',phone:'+7 912 345-67-89',status:'success',dur:247,lead:'yes',mp:'wb',date:'01.03.2026',time:'11:42',dlg:'dlg_1'},
+                {id:2,name:'Ольга Петрова',phone:'+7 905 234-56-78',status:'noanswer',dur:0,lead:'no',mp:'ozon',date:'01.03.2026',time:'10:15',dlg:'dlg_1'},
+                {id:3,name:'Дмитрий Каюмов',phone:'+7 916 789-01-23',status:'success',dur:183,lead:'yes',mp:'ym',date:'01.03.2026',time:'09:55',dlg:'dlg_1'},
+                {id:4,name:'Марина Лукьянова',phone:'+7 926 456-78-90',status:'fail',dur:34,lead:'no',mp:'wb',date:'28.02.2026',time:'17:30',dlg:'dlg_1'},
+                {id:5,name:'Игорь Семёнов',phone:'+7 903 321-54-76',status:'success',dur:512,lead:'yes',mp:'ozon',date:'28.02.2026',time:'16:08',dlg:'dlg_1'},
+                {id:6,name:'Екатерина Борисова',phone:'+7 919 654-32-10',status:'busy',dur:8,lead:'no',mp:'wb',date:'28.02.2026',time:'14:22',dlg:'dlg_1'},
+                {id:7,name:'Виктор Захаров',phone:'+7 931 112-23-34',status:'success',dur:298,lead:'no',mp:'ym',date:'27.02.2026',time:'13:45',dlg:'dlg_1'},
+                {id:8,name:'Наталья Фролова',phone:'+7 906 987-65-43',status:'noanswer',dur:0,lead:'no',mp:'ozon',date:'27.02.2026',time:'12:10',dlg:'dlg_1'},
+                {id:9,name:'Алексей Громов',phone:'+7 922 543-21-09',status:'success',dur:421,lead:'yes',mp:'wb',date:'27.02.2026',time:'11:30',dlg:'dlg_1'},
+                {id:10,name:'Светлана Орлова',phone:'+7 904 876-54-32',status:'fail',dur:17,lead:'no',mp:'wb',date:'26.02.2026',time:'18:05',dlg:'dlg_1'},
+                {id:11,name:'Максим Тихонов',phone:'+7 915 321-09-87',status:'success',dur:190,lead:'yes',mp:'ozon',date:'26.02.2026',time:'15:40',dlg:'dlg_2'},
+                {id:12,name:'Анна Кузнецова',phone:'+7 929 765-43-21',status:'noanswer',dur:0,lead:'no',mp:'ym',date:'26.02.2026',time:'14:55',dlg:'dlg_2'},
+                {id:13,name:'Руслан Абдуллин',phone:'+7 937 234-56-78',status:'success',dur:376,lead:'yes',mp:'wb',date:'25.02.2026',time:'17:20',dlg:'dlg_2'},
+                {id:14,name:'Татьяна Морозова',phone:'+7 911 890-12-34',status:'busy',dur:5,lead:'no',mp:'ozon',date:'25.02.2026',time:'16:00',dlg:'dlg_2'},
+                {id:15,name:'Сергей Лебедев',phone:'+7 923 456-78-01',status:'success',dur:305,lead:'no',mp:'ym',date:'25.02.2026',time:'13:15',dlg:'dlg_2'},
+                {id:16,name:'Валерия Новикова',phone:'+7 918 234-56-78',status:'fail',dur:42,lead:'no',mp:'wb',date:'24.02.2026',time:'10:30',dlg:'dlg_2'},
+                {id:17,name:'Артём Волков',phone:'+7 908 765-43-21',status:'success',dur:228,lead:'yes',mp:'ozon',date:'24.02.2026',time:'09:45',dlg:'dlg_2'},
+                {id:18,name:'Полина Козлова',phone:'+7 935 123-45-67',status:'noanswer',dur:0,lead:'no',mp:'wb',date:'23.02.2026',time:'16:50',dlg:'dlg_2'},
+                {id:19,name:'Никита Попов',phone:'+7 901 678-90-12',status:'success',dur:461,lead:'yes',mp:'ym',date:'23.02.2026',time:'15:05',dlg:'dlg_2'},
+                {id:20,name:'Юлия Смирнова',phone:'+7 925 345-67-89',status:'success',dur:134,lead:'no',mp:'ozon',date:'23.02.2026',time:'11:20',dlg:'dlg_2'}
             ];
+
+            var stCurrentDlg = null; // null = all dialogs
+            var stCalls = stCallsAll;
 
             var ST_STATUS_MAP = {
                 success: {label:'Успешный', cls:'st-status-success', dot:'st-dot-green'},
@@ -4335,10 +4795,251 @@
                 stRenderCalls(filtered);
             };
 
+            // ---- Dialog picker ----
+            function stGetCurrentCalls() {
+                if (!stCurrentDlg) return stCallsAll;
+                return stCallsAll.filter(function(c) { return c.dlg === stCurrentDlg; });
+            }
+
+            function stRenderStatsCards(data) {
+                var grid = document.getElementById('st-stats-grid');
+                if (!grid) return;
+                var totalDur = 0, contacts = 0, answers = 0, leads = 0, scheduled = 0, queued = 0;
+                data.forEach(function(c) {
+                    contacts++;
+                    totalDur += c.dur;
+                    if (c.status === 'success' || c.status === 'fail') answers++;
+                    if (c.lead === 'yes') leads++;
+                    if (c.status === 'noanswer') scheduled++;
+                    if (c.status === 'busy') queued++;
+                });
+                var durMin = Math.round(totalDur / 60);
+                var cost = (durMin * 3.6).toFixed(2).replace(/\B(?=(\d{3})+(?!\d))/g, ' ');
+                var conv = answers > 0 ? ((leads / answers) * 100).toFixed(1) : '0.0';
+                var convUp = parseFloat(conv) >= 30;
+
+                grid.innerHTML =
+                    '<div class="st-stat-card">' +
+                        '<div class="st-stat-label">Потрачено</div>' +
+                        '<div class="st-stat-value">' + durMin + ' мин</div>' +
+                        '<div class="st-stat-sub">Списано: <strong>' + cost + ' ₽</strong></div>' +
+                        '<div class="st-stat-sub" style="margin-top:4px">За выбранный период</div>' +
+                    '</div>' +
+                    '<div class="st-stat-card">' +
+                        '<div class="st-stat-label">Контактов обработано</div>' +
+                        '<div class="st-stat-value">+' + contacts + ' <span class="st-stat-badge st-badge-up">↑ 12%</span></div>' +
+                        '<div class="st-stat-sub">В процессе дозвона: <strong>' + scheduled + '</strong></div>' +
+                        '<div class="st-stat-sub" style="margin-top:4px"><span style="color:#2ecc71">↑ Рост контактов</span> — за период</div>' +
+                    '</div>' +
+                    '<div class="st-stat-card">' +
+                        '<div class="st-stat-label">Ответов</div>' +
+                        '<div class="st-stat-value">+' + answers + ' <span class="st-stat-badge st-badge-up">↑ 8%</span></div>' +
+                        '<div class="st-stat-sub" style="margin-top:4px"><span style="color:#2ecc71">↑ Рост ответов</span> — за период</div>' +
+                    '</div>' +
+                    '<div class="st-stat-card">' +
+                        '<div class="st-stat-label">Лидов передано</div>' +
+                        '<div class="st-stat-value">+' + leads + ' <span class="st-stat-badge st-badge-up">↑ 19%</span></div>' +
+                        '<div class="st-stat-sub" style="margin-top:4px"><span style="color:#2ecc71">↑ Рост лидов</span> — за период</div>' +
+                    '</div>' +
+                    '<div class="st-stat-card">' +
+                        '<div class="st-stat-label">Конверсия из ответов в лида</div>' +
+                        '<div class="st-stat-value">' + conv + '% <span class="st-stat-badge ' + (convUp ? 'st-badge-up' : 'st-badge-down') + '">' + (convUp ? '↑' : '↓') + '</span></div>' +
+                        '<div class="st-stat-sub" style="margin-top:4px"><span style="color:' + (convUp ? '#2ecc71' : '#e74c3c') + '">' + (convUp ? '↑ Рост' : '↓ Снижение') + ' конверсии</span> — за период</div>' +
+                    '</div>' +
+                    '<div class="st-stat-card">' +
+                        '<div class="st-stat-label">Контакты в работе</div>' +
+                        '<div class="st-stat-value" style="font-size:20px;margin-top:8px">' +
+                          '<div style="display:flex;align-items:center;gap:8px;margin-bottom:6px">' +
+                            '<svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" style="opacity:0.5"><path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"/><circle cx="12" cy="7" r="4"/></svg>' +
+                            '<span style="font-size:16px;font-weight:600">Запланировано: <span style="color:#4f8eff">' + scheduled + '</span></span>' +
+                          '</div>' +
+                          '<div style="display:flex;align-items:center;gap:8px">' +
+                            '<svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" style="opacity:0.5"><path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"/><circle cx="12" cy="7" r="4"/></svg>' +
+                            '<span style="font-size:16px;font-weight:600">В очереди: <span style="color:#f1c40f">' + queued + '</span></span>' +
+                          '</div>' +
+                        '</div>' +
+                        '<div class="st-stat-sub" style="margin-top:8px">*Во всех активных колл-листах</div>' +
+                    '</div>';
+            }
+
+            function stRenderDlgDropdown() {
+                var dd = document.getElementById('st-dlg-dropdown');
+                if (!dd) return;
+                var html = '<div class="st-dlg-dropdown-header">' + t('stDlgPick') + '</div>';
+                html += '<div class="st-dlg-item st-dlg-item-all' + (stCurrentDlg === null ? ' active' : '') + '" onclick="stSelectDlg(null)">' +
+                    '<div class="st-dlg-dot"></div><span>' + t('stDlgAll') + '</span></div>';
+                dialogs.forEach(function(dlg) {
+                    var pct = dlgCompleteness(dlg);
+                    var isOn = dlg.active && pct >= 100;
+                    var statusLabel = isOn ? t('dlgActive') : t('dlgInactive');
+                    var statusColor = isOn ? '#2ecc71' : 'var(--text-muted)';
+                    html += '<div class="st-dlg-item' + (stCurrentDlg === dlg.id ? ' active' : '') + '" onclick="stSelectDlg(\'' + dlg.id + '\')">' +
+                        dlgRingHTML(pct, 22) +
+                        '<div style="flex:1"><span>' + escapeHtml(dlg.name) + '</span>' +
+                        '<div class="dlg-status-hint" style="color:' + statusColor + '">' + statusLabel + '</div></div></div>';
+                });
+                dd.innerHTML = html;
+            }
+
+            window.stToggleDlgPicker = function() {
+                var dd = document.getElementById('st-dlg-dropdown');
+                var isOpen = dd.classList.toggle('open');
+                document.getElementById('st-dlg-btn').classList.toggle('active', isOpen);
+                if (isOpen) stRenderDlgDropdown();
+            };
+
+            window.stSelectDlg = function(dlgId) {
+                stCurrentDlg = dlgId;
+                stCalls = stGetCurrentCalls();
+                // Update label
+                var label = document.getElementById('st-dlg-label');
+                if (dlgId === null) {
+                    label.textContent = t('stDlgAll');
+                } else {
+                    var dlg = dialogs.find(function(d) { return d.id === dlgId; });
+                    label.textContent = dlg ? dlg.name : t('stDlgAll');
+                }
+                // Update button style
+                document.getElementById('st-dlg-btn').classList.toggle('active', dlgId !== null);
+                // Close dropdown
+                document.getElementById('st-dlg-dropdown').classList.remove('open');
+                // Re-render stats
+                stRenderStatsCards(stCalls);
+                stRenderCalls(stCalls);
+                var totalEl = document.getElementById('st-count-total');
+                if (totalEl) totalEl.textContent = stCalls.length;
+            };
+
+            // Close dropdown on outside click
+            document.addEventListener('mousedown', function(e) {
+                var dd = document.getElementById('st-dlg-dropdown');
+                var btn = document.getElementById('st-dlg-btn');
+                if (dd && btn && !dd.contains(e.target) && !btn.contains(e.target)) {
+                    dd.classList.remove('open');
+                    btn.classList.remove('active');
+                }
+            });
+
             // Init stats page
             stRenderCals();
+            stRenderStatsCards(stCallsAll);
             stRenderCalls(stCalls);
         })();
     </script>
+
+<!-- ===== SUPPORT CHAT ===== -->
+<div class="sc-window" id="scWindow">
+    <div class="sc-header">
+        <div class="sc-header-info">
+            <div class="sc-header-title" data-i18n="scTitle">Техподдержка</div>
+            <div class="sc-header-status" data-i18n="scStatus">● онлайн</div>
+        </div>
+        <button class="sc-close" onclick="scToggle()">×</button>
+    </div>
+    <div class="sc-messages" id="scMessages">
+        <div class="sc-msg support">
+            <div class="sc-msg-text" data-i18n="scWelcome">Здравствуйте! Чем можем помочь?</div>
+            <div class="sc-msg-time">сейчас</div>
+        </div>
+    </div>
+    <div class="sc-file-preview" id="scFilePreview" style="display:none"></div>
+    <div class="sc-input-area">
+        <button class="sc-attach-btn" onclick="document.getElementById('scFileInput').click()">📎</button>
+        <input type="file" id="scFileInput" multiple style="display:none" onchange="scAttachFiles(this.files)">
+        <input type="text" class="sc-input" id="scInput" placeholder="Напишите сообщение..." data-i18n-ph="scPlaceholder" onkeydown="if(event.key==='Enter')scSend()">
+        <button class="sc-send-btn" onclick="scSend()">➤</button>
+    </div>
+</div>
+<button class="sc-fab" id="scFab" onclick="scToggle()">
+    <svg width="24" height="24" viewBox="0 0 24 24" fill="white"><path d="M20 2H4c-1.1 0-2 .9-2 2v18l4-4h14c1.1 0 2-.9 2-2V4c0-1.1-.9-2-2-2z"/></svg>
+</button>
+
+<script>
+    var scFiles = [];
+
+    function scToggle() {
+        var win = document.getElementById('scWindow');
+        var fab = document.getElementById('scFab');
+        var isOpen = win.classList.toggle('open');
+        fab.classList.toggle('open', isOpen);
+        if (isOpen) {
+            var msgs = document.getElementById('scMessages');
+            msgs.scrollTop = msgs.scrollHeight;
+        }
+    }
+
+    function scSend() {
+        var input = document.getElementById('scInput');
+        var text = input.value.trim();
+        if (!text && scFiles.length === 0) return;
+
+        var msgs = document.getElementById('scMessages');
+        var now = new Date();
+        var time = now.getHours().toString().padStart(2,'0') + ':' + now.getMinutes().toString().padStart(2,'0');
+
+        var bubble = document.createElement('div');
+        bubble.className = 'sc-msg user';
+        var html = '';
+        if (text) html += '<div class="sc-msg-text">' + text.replace(/</g,'&lt;').replace(/>/g,'&gt;') + '</div>';
+        for (var i = 0; i < scFiles.length; i++) {
+            html += '<div class="sc-msg-file">' + scFiles[i].name + '</div>';
+        }
+        html += '<div class="sc-msg-time">' + time + '</div>';
+        bubble.innerHTML = html;
+        msgs.appendChild(bubble);
+        msgs.scrollTop = msgs.scrollHeight;
+
+        input.value = '';
+        scFiles = [];
+        document.getElementById('scFilePreview').style.display = 'none';
+        document.getElementById('scFilePreview').innerHTML = '';
+        document.getElementById('scFileInput').value = '';
+
+        scAutoReply();
+    }
+
+    function scAttachFiles(fileList) {
+        var preview = document.getElementById('scFilePreview');
+        for (var i = 0; i < fileList.length; i++) {
+            var f = fileList[i];
+            if (f.size > 10 * 1024 * 1024) {
+                alert(t('scFileTooLarge'));
+                continue;
+            }
+            scFiles.push(f);
+        }
+        scRenderPreview();
+        document.getElementById('scFileInput').value = '';
+    }
+
+    function scRenderPreview() {
+        var preview = document.getElementById('scFilePreview');
+        if (scFiles.length === 0) { preview.style.display = 'none'; preview.innerHTML = ''; return; }
+        preview.style.display = 'flex';
+        var html = '';
+        for (var i = 0; i < scFiles.length; i++) {
+            html += '<span class="sc-file-tag">' + scFiles[i].name + '<button onclick="scRemoveFile(' + i + ')">×</button></span>';
+        }
+        preview.innerHTML = html;
+    }
+
+    function scRemoveFile(idx) {
+        scFiles.splice(idx, 1);
+        scRenderPreview();
+    }
+
+    function scAutoReply() {
+        setTimeout(function() {
+            var msgs = document.getElementById('scMessages');
+            var now = new Date();
+            var time = now.getHours().toString().padStart(2,'0') + ':' + now.getMinutes().toString().padStart(2,'0');
+            var bubble = document.createElement('div');
+            bubble.className = 'sc-msg support';
+            bubble.innerHTML = '<div class="sc-msg-text">' + t('scAutoReply') + '</div><div class="sc-msg-time">' + time + '</div>';
+            msgs.appendChild(bubble);
+            msgs.scrollTop = msgs.scrollHeight;
+        }, 1000);
+    }
+</script>
 </body>
 </html>
