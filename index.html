@@ -1587,6 +1587,54 @@
         .tpl-edit-btn:hover { border-color: rgba(108,92,231,0.5); color: #6c5ce7; }
         #customTplCards { display: contents; }
 
+        /* ===== KNOWLEDGE BASE ===== */
+        .kb-toolbar { display:flex; gap:12px; align-items:center; flex-wrap:wrap; margin-bottom:24px; }
+        .kb-search-input { flex:1; min-width:180px; padding:10px 14px; border-radius:10px; border:1px solid var(--input-border); background:var(--input-bg); color:var(--text); font-family:inherit; font-size:14px; outline:none; transition:border 0.2s; }
+        .kb-search-input:focus { border-color:rgba(108,92,231,0.5); }
+        .kb-filter-select { padding:10px 14px; border-radius:10px; border:1px solid var(--input-border); background:var(--input-bg); color:var(--text); font-family:inherit; font-size:14px; outline:none; cursor:pointer; min-width:140px; }
+        .kb-add-btn { padding:10px 20px; border-radius:10px; border:none; background:linear-gradient(135deg,#6c5ce7,#a855f7); color:#fff; font-family:inherit; font-size:14px; font-weight:600; cursor:pointer; transition:all 0.2s; white-space:nowrap; }
+        .kb-add-btn:hover { transform:translateY(-1px); box-shadow:0 4px 16px rgba(108,92,231,0.35); }
+        .kb-cards { display:grid; grid-template-columns:repeat(auto-fill,minmax(280px,1fr)); gap:20px; }
+        .kb-card { background:var(--card-bg); border:1px solid var(--card-border); border-radius:16px; padding:20px; display:flex; flex-direction:column; gap:10px; transition:all 0.2s; position:relative; }
+        .kb-card:hover { border-color:rgba(108,92,231,0.3); transform:translateY(-2px); box-shadow:0 8px 32px rgba(0,0,0,0.2); }
+        .kb-card-header { display:flex; align-items:center; gap:12px; }
+        .kb-card-icon { width:40px; height:40px; border-radius:10px; display:flex; align-items:center; justify-content:center; flex-shrink:0; font-size:20px; }
+        .kb-card-meta { flex:1; min-width:0; }
+        .kb-card-title { font-size:14px; font-weight:600; color:var(--text); white-space:nowrap; overflow:hidden; text-overflow:ellipsis; }
+        .kb-card-size { font-size:12px; color:var(--text-muted); margin-top:2px; }
+        .kb-card-desc { font-size:13px; color:var(--text-secondary); line-height:1.5; display:-webkit-box; -webkit-line-clamp:2; -webkit-box-orient:vertical; overflow:hidden; }
+        .kb-card-dialog { font-size:12px; color:var(--text-muted); margin-top:auto; padding-top:8px; border-top:1px solid var(--border-color); }
+        .kb-card-preview { width:100%; max-height:120px; object-fit:cover; border-radius:8px; }
+        .kb-card-audio { width:100%; height:36px; }
+        .kb-card-actions { display:flex; gap:8px; margin-top:8px; }
+        .kb-card-btn { padding:6px 12px; border-radius:8px; border:1px solid var(--card-border); background:transparent; color:var(--text-muted); font-family:inherit; font-size:12px; cursor:pointer; transition:all 0.2s; }
+        .kb-card-btn:hover { border-color:rgba(108,92,231,0.5); color:#6c5ce7; }
+        .kb-card-btn.danger:hover { border-color:#e74c3c; color:#e74c3c; }
+        .kb-upload-tabs { display:flex; gap:0; margin-bottom:16px; border-radius:10px; overflow:hidden; border:1px solid var(--input-border); }
+        .kb-upload-tab { flex:1; padding:10px 16px; border:none; background:var(--input-bg); color:var(--text-muted); font-family:inherit; font-size:13px; font-weight:500; cursor:pointer; transition:all 0.2s; }
+        .kb-upload-tab.active { background:linear-gradient(135deg,#6c5ce7,#a855f7); color:#fff; }
+        .kb-drop-area { border:2px dashed var(--card-border); border-radius:12px; padding:32px 20px; text-align:center; cursor:pointer; transition:all 0.2s; margin-bottom:16px; }
+        .kb-drop-area:hover, .kb-drop-area.dragover { border-color:rgba(108,92,231,0.5); background:rgba(108,92,231,0.04); }
+        .kb-drop-icon { font-size:32px; margin-bottom:8px; }
+        .kb-drop-text { font-size:14px; color:var(--text-secondary); }
+        .kb-drop-hint { font-size:12px; color:var(--text-muted); margin-top:4px; }
+        .kb-drop-file { font-size:13px; color:#6c5ce7; font-weight:500; margin-top:8px; }
+        .kb-item-row { display:flex; align-items:center; gap:12px; padding:12px; border-radius:10px; border:1px solid var(--card-border); background:var(--card-bg); margin-bottom:8px; transition:all 0.2s; }
+        .kb-item-row:hover { border-color:rgba(108,92,231,0.3); }
+        .kb-item-icon { width:32px; height:32px; border-radius:8px; display:flex; align-items:center; justify-content:center; flex-shrink:0; font-size:16px; }
+        .kb-item-info { flex:1; min-width:0; }
+        .kb-item-title { font-size:13px; font-weight:500; color:var(--text); white-space:nowrap; overflow:hidden; text-overflow:ellipsis; }
+        .kb-item-detail { font-size:12px; color:var(--text-muted); margin-top:2px; }
+        .kb-item-actions { display:flex; gap:6px; }
+        .kb-item-btn { width:28px; height:28px; border-radius:6px; border:1px solid var(--card-border); background:transparent; color:var(--text-muted); cursor:pointer; display:flex; align-items:center; justify-content:center; transition:all 0.2s; }
+        .kb-item-btn:hover { border-color:rgba(108,92,231,0.5); color:#6c5ce7; }
+        .kb-item-btn.danger:hover { border-color:#e74c3c; color:#e74c3c; }
+        .kb-empty { text-align:center; padding:60px 20px; }
+        .kb-empty-icon { font-size:48px; margin-bottom:12px; opacity:0.5; }
+        .kb-empty-text { font-size:15px; color:var(--text-muted); }
+        .kb-url-input { width:100%; padding:10px 14px; border-radius:10px; border:1px solid var(--input-border); background:var(--input-bg); color:var(--text); font-family:inherit; font-size:14px; outline:none; margin-bottom:12px; box-sizing:border-box; }
+        .kb-url-input:focus { border-color:rgba(108,92,231,0.5); }
+
     </style>
 </head>
 <body>
@@ -2159,6 +2207,80 @@
         </div>
     </div>
 
+    <!-- ===== KB UPLOAD MODAL ===== -->
+    <div class="modal-overlay" id="kbUploadModal" onclick="if(event.target===this)closeKbUploadModal()">
+        <div class="modal" style="max-width:520px;">
+            <button class="modal-close" onclick="closeKbUploadModal()">&times;</button>
+            <div class="modal-title" data-i18n="kbModalTitle">Добавить материал</div>
+            <div class="modal-subtitle" data-i18n="kbModalSub">Загрузите файл или добавьте ссылку в базу знаний</div>
+            <div class="settings-modal-body">
+                <div class="mgmt-section">
+                    <div class="mgmt-section-title" data-i18n="kbModalDialog">Диалог</div>
+                    <select class="kb-filter-select" id="kbModalDialogSelect" style="width:100%"></select>
+                </div>
+                <div class="kb-upload-tabs">
+                    <button class="kb-upload-tab active" onclick="kbSwitchUploadTab('file',this,'kbm-tab-')" data-i18n="kbTabFile">Файл</button>
+                    <button class="kb-upload-tab" onclick="kbSwitchUploadTab('url',this,'kbm-tab-')" data-i18n="kbTabUrl">Ссылка</button>
+                </div>
+                <div id="kbm-tab-file">
+                    <div class="kb-drop-area" id="kbmDropArea" onclick="document.getElementById('kbmFileInput').click()" ondragover="event.preventDefault();this.classList.add('dragover')" ondragleave="this.classList.remove('dragover')" ondrop="event.preventDefault();this.classList.remove('dragover');kbHandleFileSelect(event.dataTransfer.files,'modal')">
+                        <div class="kb-drop-icon">📁</div>
+                        <div class="kb-drop-text" data-i18n="kbDropText">Перетащите файл или нажмите для выбора</div>
+                        <div class="kb-drop-hint" data-i18n="kbDropHint">PDF, DOC, XLS, изображения, аудио, видео — до 2 МБ</div>
+                        <div class="kb-drop-file" id="kbmSelectedFile"></div>
+                    </div>
+                    <input type="file" id="kbmFileInput" style="display:none" onchange="kbHandleFileSelect(this.files,'modal')">
+                </div>
+                <div id="kbm-tab-url" style="display:none">
+                    <input type="url" class="kb-url-input" id="kbmUrlInput" placeholder="https://example.com" data-i18n-ph="kbUrlPh">
+                </div>
+                <div class="mgmt-section">
+                    <div class="mgmt-section-title" data-i18n="kbTitleLabel">Название</div>
+                    <input type="text" class="kb-url-input" id="kbmTitleInput" data-i18n-ph="kbTitlePh" placeholder="Название материала" style="margin-bottom:0">
+                </div>
+                <div class="mgmt-section">
+                    <div class="mgmt-section-title" data-i18n="kbDescLabel">Описание</div>
+                    <textarea class="onb-textarea" id="kbmDescInput" data-i18n-ph="kbDescPh" placeholder="Описание (необязательно)" style="min-height:60px;"></textarea>
+                </div>
+            </div>
+            <button class="submit-btn" onclick="kbSaveItem('modal')" data-i18n="kbAddBtn">Добавить в базу знаний</button>
+            <button class="submit-btn" style="background:var(--btn-bg);color:var(--text-secondary);margin-top:8px;" onclick="closeKbUploadModal()" data-i18n="dlgCancelBtn">Отмена</button>
+        </div>
+    </div>
+
+    <!-- ===== KB EDIT MODAL ===== -->
+    <div class="modal-overlay" id="kbEditModal" onclick="if(event.target===this)closeKbEditModal()">
+        <div class="modal" style="max-width:480px;">
+            <button class="modal-close" onclick="closeKbEditModal()">&times;</button>
+            <div class="modal-title" data-i18n="kbEditTitle">Редактировать материал</div>
+            <div class="settings-modal-body">
+                <div class="mgmt-section">
+                    <div class="mgmt-section-title" data-i18n="kbTitleLabel">Название</div>
+                    <input type="text" class="kb-url-input" id="kbEditTitleInput" style="margin-bottom:0">
+                </div>
+                <div class="mgmt-section">
+                    <div class="mgmt-section-title" data-i18n="kbDescLabel">Описание</div>
+                    <textarea class="onb-textarea" id="kbEditDescInput" style="min-height:60px;"></textarea>
+                </div>
+            </div>
+            <input type="hidden" id="kbEditItemId">
+            <button class="submit-btn" onclick="kbUpdateItem()" data-i18n="kbSaveBtn">Сохранить</button>
+            <button class="submit-btn" style="background:var(--btn-bg);color:var(--text-secondary);margin-top:8px;" onclick="closeKbEditModal()" data-i18n="dlgCancelBtn">Отмена</button>
+        </div>
+    </div>
+
+    <!-- ===== KB DELETE MODAL ===== -->
+    <div class="modal-overlay" id="kbDeleteModal" onclick="if(event.target===this)closeKbDeleteModal()">
+        <div class="modal" style="max-width:420px;">
+            <button class="modal-close" onclick="closeKbDeleteModal()">&times;</button>
+            <div class="modal-title" data-i18n="kbDeleteTitle">Удалить материал?</div>
+            <div class="modal-subtitle" data-i18n="kbDeleteConfirm">Это действие нельзя отменить.</div>
+            <input type="hidden" id="kbDeleteItemId">
+            <button class="submit-btn" style="background:linear-gradient(135deg,#e74c3c,#c0392b);" onclick="kbConfirmDelete()" data-i18n="dlgDeleteBtn">Удалить</button>
+            <button class="submit-btn" style="background:var(--btn-bg);color:var(--text-secondary);margin-top:8px;" onclick="closeKbDeleteModal()" data-i18n="dlgCancelBtn">Отмена</button>
+        </div>
+    </div>
+
     <!-- ===== QUICK START WIZARD ===== -->
     <div class="qs-overlay" id="qsWizard" onclick="if(event.target===this)closeQsWizard()">
         <div class="qs-modal">
@@ -2505,7 +2627,37 @@
                 </div>
                 <!-- Tab: База знаний -->
                 <div class="bot-tab-content" id="tabKnowledge">
-                    <div class="stub-content" data-i18n="stub">Раздел в разработке</div>
+                    <div class="bot-card">
+                        <div class="bot-card-title" data-i18n="kbUploadTitle">Добавить материал</div>
+                        <div class="bot-card-desc" data-i18n="kbUploadDesc">Загрузите файл или добавьте ссылку с описанием</div>
+                        <div class="kb-upload-tabs">
+                            <button class="kb-upload-tab active" onclick="kbSwitchUploadTab('file',this,'kb-tab-')" data-i18n="kbTabFile">Файл</button>
+                            <button class="kb-upload-tab" onclick="kbSwitchUploadTab('url',this,'kb-tab-')" data-i18n="kbTabUrl">Ссылка</button>
+                        </div>
+                        <div id="kb-tab-file">
+                            <div class="kb-drop-area" id="kbDropArea" onclick="document.getElementById('kbFileInput').click()" ondragover="event.preventDefault();this.classList.add('dragover')" ondragleave="this.classList.remove('dragover')" ondrop="event.preventDefault();this.classList.remove('dragover');kbHandleFileSelect(event.dataTransfer.files)">
+                                <div class="kb-drop-icon">📁</div>
+                                <div class="kb-drop-text" data-i18n="kbDropText">Перетащите файл или нажмите для выбора</div>
+                                <div class="kb-drop-hint" data-i18n="kbDropHint">PDF, DOC, XLS, изображения, аудио, видео — до 2 МБ</div>
+                                <div class="kb-drop-file" id="kbSelectedFile"></div>
+                            </div>
+                            <input type="file" id="kbFileInput" style="display:none" onchange="kbHandleFileSelect(this.files)">
+                        </div>
+                        <div id="kb-tab-url" style="display:none">
+                            <input type="url" class="kb-url-input" id="kbUrlInput" placeholder="https://example.com" data-i18n-ph="kbUrlPh">
+                        </div>
+                        <input type="text" class="kb-url-input" id="kbTitleInput" data-i18n-ph="kbTitlePh" placeholder="Название материала">
+                        <textarea class="onb-textarea" id="kbDescInput" data-i18n-ph="kbDescPh" placeholder="Описание (необязательно)" style="min-height:60px;margin-bottom:12px;"></textarea>
+                        <button class="submit-btn" onclick="kbSaveItem('dialog')" data-i18n="kbAddBtn">Добавить в базу знаний</button>
+                    </div>
+                    <div class="bot-card">
+                        <div class="bot-card-title" data-i18n="kbMaterials">Материалы диалога</div>
+                        <div id="kbDialogItems"></div>
+                        <div class="kb-empty" id="kbDialogEmpty">
+                            <div class="kb-empty-icon">📚</div>
+                            <div class="kb-empty-text" data-i18n="kbNoItems">Материалы ещё не добавлены</div>
+                        </div>
+                    </div>
                 </div>
                 </div><!-- /dialogDetailView -->
             </div>
@@ -2656,8 +2808,31 @@
             <!-- PAGE: База знаний -->
             <div class="page-section" id="pageKnowledge">
                 <h1 data-i18n="pKbT">База знаний</h1>
-                <p class="subtitle" data-i18n="pKbSub">Документы и материалы</p>
-                <div class="stub-content" data-i18n="stub">Раздел в разработке</div>
+                <p class="subtitle" data-i18n="pKbSub">Все материалы из всех диалогов</p>
+                <div class="kb-toolbar">
+                    <input type="text" class="kb-search-input" id="kbSearchInput" data-i18n-ph="kbSearchPh" placeholder="Поиск по названию или описанию..." oninput="kbRenderCentralList()">
+                    <select class="kb-filter-select" id="kbFilterType" onchange="kbRenderCentralList()">
+                        <option value="all" data-i18n="kbFilterAll">Все типы</option>
+                        <option value="pdf">PDF</option>
+                        <option value="doc">DOC</option>
+                        <option value="xls">XLS</option>
+                        <option value="image" data-i18n="kbTypeImage">Изображения</option>
+                        <option value="audio" data-i18n="kbTypeAudio">Аудио</option>
+                        <option value="video" data-i18n="kbTypeVideo">Видео</option>
+                        <option value="text" data-i18n="kbTypeText">Текст</option>
+                        <option value="url" data-i18n="kbTypeUrl">Ссылки</option>
+                        <option value="other" data-i18n="kbTypeOther">Другое</option>
+                    </select>
+                    <select class="kb-filter-select" id="kbFilterDialog" onchange="kbRenderCentralList()">
+                        <option value="all" data-i18n="kbAllDialogs">Все диалоги</option>
+                    </select>
+                    <button class="kb-add-btn" onclick="openKbUploadModal()" data-i18n="kbAddMaterial">+ Добавить</button>
+                </div>
+                <div class="kb-cards" id="kbCentralCards"></div>
+                <div class="kb-empty" id="kbCentralEmpty" style="display:none">
+                    <div class="kb-empty-icon">📚</div>
+                    <div class="kb-empty-text" data-i18n="kbNoItems">Материалы ещё не добавлены</div>
+                </div>
             </div>
 
             <!-- PAGE: Колл-листы -->
@@ -2779,6 +2954,369 @@
 
         // ===== DIALOG LIST STATE =====
         var dialogs = [], dialogIdCounter = 0, currentDialogId = null, deleteTargetId = null;
+
+        // ===== KNOWLEDGE BASE STATE =====
+        var kbItems = JSON.parse(localStorage.getItem('kbItems') || '[]');
+        var kbIdCounter = parseInt(localStorage.getItem('kbIdCounter') || '0', 10);
+        var kbPendingFile = null;
+        var kbPendingFileModal = null;
+
+        function kbPersist() {
+            localStorage.setItem('kbItems', JSON.stringify(kbItems));
+            localStorage.setItem('kbIdCounter', kbIdCounter);
+        }
+
+        function kbDetectFileType(fileName) {
+            var ext = (fileName || '').split('.').pop().toLowerCase();
+            if (['pdf'].indexOf(ext) >= 0) return 'pdf';
+            if (['doc','docx','odt','rtf'].indexOf(ext) >= 0) return 'doc';
+            if (['xls','xlsx','csv','ods'].indexOf(ext) >= 0) return 'xls';
+            if (['png','jpg','jpeg','gif','webp','svg','bmp'].indexOf(ext) >= 0) return 'image';
+            if (['mp3','wav','ogg','m4a','aac','flac'].indexOf(ext) >= 0) return 'audio';
+            if (['mp4','webm','avi','mov','mkv'].indexOf(ext) >= 0) return 'video';
+            if (['txt','md','json','xml','html','css','js'].indexOf(ext) >= 0) return 'text';
+            return 'other';
+        }
+
+        function kbFileIcon(fileType) {
+            var map = {
+                pdf: { icon: '📄', bg: 'rgba(231,76,60,0.12)', color: '#e74c3c' },
+                doc: { icon: '📝', bg: 'rgba(52,152,219,0.12)', color: '#3498db' },
+                xls: { icon: '📊', bg: 'rgba(46,204,113,0.12)', color: '#2ecc71' },
+                image: { icon: '🖼️', bg: 'rgba(155,89,182,0.12)', color: '#9b59b6' },
+                audio: { icon: '🎵', bg: 'rgba(241,196,15,0.12)', color: '#f1c40f' },
+                video: { icon: '🎬', bg: 'rgba(230,126,34,0.12)', color: '#e67e22' },
+                text: { icon: '📃', bg: 'rgba(149,165,166,0.12)', color: '#95a5a6' },
+                url: { icon: '🔗', bg: 'rgba(108,92,231,0.12)', color: '#6c5ce7' },
+                other: { icon: '📎', bg: 'rgba(149,165,166,0.12)', color: '#95a5a6' }
+            };
+            return map[fileType] || map.other;
+        }
+
+        function kbFormatSize(bytes) {
+            if (!bytes) return '';
+            if (bytes < 1024) return bytes + ' B';
+            if (bytes < 1048576) return (bytes / 1024).toFixed(1) + ' KB';
+            return (bytes / 1048576).toFixed(1) + ' MB';
+        }
+
+        function kbSwitchUploadTab(tab, btn, prefix) {
+            var parent = btn.parentElement;
+            parent.querySelectorAll('.kb-upload-tab').forEach(function(b) { b.classList.remove('active'); });
+            btn.classList.add('active');
+            document.getElementById(prefix + 'file').style.display = tab === 'file' ? '' : 'none';
+            document.getElementById(prefix + 'url').style.display = tab === 'url' ? '' : 'none';
+        }
+
+        function kbHandleFileSelect(files, source) {
+            if (!files || !files.length) return;
+            var file = files[0];
+            if (file.size > 2 * 1024 * 1024) {
+                alert(t('kbFileTooLarge'));
+                return;
+            }
+            var reader = new FileReader();
+            reader.onload = function(e) {
+                if (source === 'modal') {
+                    kbPendingFileModal = { name: file.name, size: file.size, type: file.type, dataUrl: e.target.result };
+                    document.getElementById('kbmSelectedFile').textContent = file.name + ' (' + kbFormatSize(file.size) + ')';
+                    if (!document.getElementById('kbmTitleInput').value) {
+                        document.getElementById('kbmTitleInput').value = file.name;
+                    }
+                } else {
+                    kbPendingFile = { name: file.name, size: file.size, type: file.type, dataUrl: e.target.result };
+                    document.getElementById('kbSelectedFile').textContent = file.name + ' (' + kbFormatSize(file.size) + ')';
+                    if (!document.getElementById('kbTitleInput').value) {
+                        document.getElementById('kbTitleInput').value = file.name;
+                    }
+                }
+            };
+            reader.readAsDataURL(file);
+        }
+
+        function kbSaveItem(source) {
+            var isModal = source === 'modal';
+            var titleInput = document.getElementById(isModal ? 'kbmTitleInput' : 'kbTitleInput');
+            var descInput = document.getElementById(isModal ? 'kbmDescInput' : 'kbDescInput');
+            var urlInput = document.getElementById(isModal ? 'kbmUrlInput' : 'kbUrlInput');
+            var fileTabVisible = document.getElementById(isModal ? 'kbm-tab-file' : 'kb-tab-file').style.display !== 'none';
+            var pendingFile = isModal ? kbPendingFileModal : kbPendingFile;
+
+            var dialogId;
+            if (isModal) {
+                dialogId = document.getElementById('kbModalDialogSelect').value;
+            } else {
+                dialogId = currentDialogId;
+            }
+            if (!dialogId) return;
+
+            var title = titleInput.value.trim();
+            var desc = descInput.value.trim();
+            var now = new Date().toISOString();
+
+            if (fileTabVisible) {
+                if (!pendingFile) { alert(t('kbSelectFile')); return; }
+                if (!title) title = pendingFile.name;
+                kbIdCounter++;
+                kbItems.push({
+                    id: 'kb_' + kbIdCounter,
+                    dialogId: dialogId,
+                    type: 'file',
+                    fileType: kbDetectFileType(pendingFile.name),
+                    title: title,
+                    description: desc,
+                    fileName: pendingFile.name,
+                    fileSize: pendingFile.size,
+                    mimeType: pendingFile.type,
+                    dataUrl: pendingFile.dataUrl,
+                    url: '',
+                    createdAt: now,
+                    updatedAt: now
+                });
+            } else {
+                var url = urlInput.value.trim();
+                if (!url) { alert(t('kbEnterUrl')); return; }
+                if (!title) title = url;
+                kbIdCounter++;
+                kbItems.push({
+                    id: 'kb_' + kbIdCounter,
+                    dialogId: dialogId,
+                    type: 'url',
+                    fileType: 'url',
+                    title: title,
+                    description: desc,
+                    fileName: '',
+                    fileSize: 0,
+                    mimeType: '',
+                    dataUrl: '',
+                    url: url,
+                    createdAt: now,
+                    updatedAt: now
+                });
+            }
+
+            kbPersist();
+
+            // Reset form
+            titleInput.value = '';
+            descInput.value = '';
+            if (urlInput) urlInput.value = '';
+            if (isModal) {
+                kbPendingFileModal = null;
+                document.getElementById('kbmSelectedFile').textContent = '';
+                document.getElementById('kbmFileInput').value = '';
+                closeKbUploadModal();
+            } else {
+                kbPendingFile = null;
+                document.getElementById('kbSelectedFile').textContent = '';
+                document.getElementById('kbFileInput').value = '';
+            }
+
+            kbRenderDialogItems();
+            kbRenderCentralList();
+        }
+
+        function kbRenderDialogItems() {
+            var container = document.getElementById('kbDialogItems');
+            var empty = document.getElementById('kbDialogEmpty');
+            if (!container || !currentDialogId) return;
+            var items = kbItems.filter(function(it) { return it.dialogId === currentDialogId; });
+            container.innerHTML = '';
+            if (items.length === 0) {
+                if (empty) empty.style.display = '';
+                return;
+            }
+            if (empty) empty.style.display = 'none';
+            items.forEach(function(item) {
+                var fi = kbFileIcon(item.fileType);
+                var detail = item.type === 'url' ? item.url : (kbFormatSize(item.fileSize) + ' · ' + (item.fileName || ''));
+                var row = document.createElement('div');
+                row.className = 'kb-item-row';
+                row.innerHTML =
+                    '<div class="kb-item-icon" style="background:' + fi.bg + '">' + fi.icon + '</div>' +
+                    '<div class="kb-item-info">' +
+                        '<div class="kb-item-title">' + escapeHtml(item.title) + '</div>' +
+                        '<div class="kb-item-detail">' + escapeHtml(detail) + '</div>' +
+                    '</div>' +
+                    '<div class="kb-item-actions">' +
+                        '<button class="kb-item-btn" onclick="kbViewItem(\'' + item.id + '\')" title="' + t('kbView') + '">👁</button>' +
+                        '<button class="kb-item-btn" onclick="kbEditItem(\'' + item.id + '\')" title="' + t('tplEditBtn') + '">✏️</button>' +
+                        '<button class="kb-item-btn danger" onclick="kbDeleteItem(\'' + item.id + '\')" title="' + t('tipDelete') + '">🗑</button>' +
+                    '</div>';
+                container.appendChild(row);
+            });
+        }
+
+        function kbRenderCentralList() {
+            var container = document.getElementById('kbCentralCards');
+            var empty = document.getElementById('kbCentralEmpty');
+            if (!container) return;
+
+            // Update dialog filter dropdown
+            var filterDlg = document.getElementById('kbFilterDialog');
+            if (filterDlg) {
+                var selectedVal = filterDlg.value;
+                filterDlg.innerHTML = '<option value="all">' + t('kbAllDialogs') + '</option>';
+                dialogs.forEach(function(d) {
+                    filterDlg.innerHTML += '<option value="' + d.id + '"' + (d.id === selectedVal ? ' selected' : '') + '>' + escapeHtml(d.name) + '</option>';
+                });
+            }
+
+            var search = (document.getElementById('kbSearchInput') || {}).value || '';
+            search = search.toLowerCase().trim();
+            var filterType = (document.getElementById('kbFilterType') || {}).value || 'all';
+            var filterDialog = (document.getElementById('kbFilterDialog') || {}).value || 'all';
+
+            var items = kbItems.filter(function(it) {
+                if (filterDialog !== 'all' && it.dialogId !== filterDialog) return false;
+                if (filterType !== 'all') {
+                    if (filterType === 'url') { if (it.type !== 'url') return false; }
+                    else { if (it.fileType !== filterType) return false; }
+                }
+                if (search) {
+                    var hay = (it.title + ' ' + it.description + ' ' + it.fileName + ' ' + it.url).toLowerCase();
+                    if (hay.indexOf(search) < 0) return false;
+                }
+                return true;
+            });
+
+            container.innerHTML = '';
+            if (items.length === 0) {
+                if (empty) empty.style.display = '';
+                return;
+            }
+            if (empty) empty.style.display = 'none';
+
+            items.forEach(function(item) {
+                var fi = kbFileIcon(item.fileType);
+                var dlg = dialogs.find(function(d) { return d.id === item.dialogId; });
+                var dlgName = dlg ? dlg.name : '—';
+                var card = document.createElement('div');
+                card.className = 'kb-card';
+
+                var previewHtml = '';
+                if (item.fileType === 'image' && item.dataUrl) {
+                    previewHtml = '<img class="kb-card-preview" src="' + item.dataUrl + '" alt="">';
+                } else if (item.fileType === 'audio' && item.dataUrl) {
+                    previewHtml = '<audio class="kb-card-audio" controls src="' + item.dataUrl + '"></audio>';
+                }
+
+                var sizeInfo = item.type === 'url' ? item.url : kbFormatSize(item.fileSize);
+
+                card.innerHTML =
+                    '<div class="kb-card-header">' +
+                        '<div class="kb-card-icon" style="background:' + fi.bg + '">' + fi.icon + '</div>' +
+                        '<div class="kb-card-meta">' +
+                            '<div class="kb-card-title">' + escapeHtml(item.title) + '</div>' +
+                            '<div class="kb-card-size">' + escapeHtml(sizeInfo) + '</div>' +
+                        '</div>' +
+                    '</div>' +
+                    (item.description ? '<div class="kb-card-desc">' + escapeHtml(item.description) + '</div>' : '') +
+                    previewHtml +
+                    '<div class="kb-card-dialog">📂 ' + escapeHtml(dlgName) + '</div>' +
+                    '<div class="kb-card-actions">' +
+                        '<button class="kb-card-btn" onclick="kbViewItem(\'' + item.id + '\')">' + t('kbView') + '</button>' +
+                        '<button class="kb-card-btn" onclick="kbEditItem(\'' + item.id + '\')">' + t('tplEditBtn') + '</button>' +
+                        '<button class="kb-card-btn danger" onclick="kbDeleteItem(\'' + item.id + '\')">' + t('tplDeleteBtn') + '</button>' +
+                    '</div>';
+                container.appendChild(card);
+            });
+        }
+
+        function kbViewItem(id) {
+            var item = kbItems.find(function(it) { return it.id === id; });
+            if (!item) return;
+            if (item.type === 'url') {
+                window.open(item.url, '_blank');
+            } else if (item.dataUrl) {
+                var win = window.open('', '_blank');
+                if (item.fileType === 'image') {
+                    win.document.write('<html><head><title>' + escapeHtml(item.title) + '</title></head><body style="margin:0;display:flex;justify-content:center;align-items:center;min-height:100vh;background:#111"><img src="' + item.dataUrl + '" style="max-width:100%;max-height:100vh"></body></html>');
+                } else if (item.fileType === 'audio') {
+                    win.document.write('<html><head><title>' + escapeHtml(item.title) + '</title></head><body style="margin:40px;background:#111;color:#fff;font-family:sans-serif"><h2>' + escapeHtml(item.title) + '</h2><audio controls src="' + item.dataUrl + '" style="width:100%"></audio></body></html>');
+                } else if (item.fileType === 'video') {
+                    win.document.write('<html><head><title>' + escapeHtml(item.title) + '</title></head><body style="margin:0;display:flex;justify-content:center;align-items:center;min-height:100vh;background:#111"><video controls src="' + item.dataUrl + '" style="max-width:100%;max-height:100vh"></video></body></html>');
+                } else {
+                    // Download for other types
+                    var a = document.createElement('a');
+                    a.href = item.dataUrl;
+                    a.download = item.fileName || item.title;
+                    a.click();
+                    win.close();
+                }
+            }
+        }
+
+        function kbEditItem(id) {
+            var item = kbItems.find(function(it) { return it.id === id; });
+            if (!item) return;
+            document.getElementById('kbEditItemId').value = id;
+            document.getElementById('kbEditTitleInput').value = item.title;
+            document.getElementById('kbEditDescInput').value = item.description || '';
+            document.getElementById('kbEditModal').classList.add('active');
+            document.body.style.overflow = 'hidden';
+        }
+
+        function closeKbEditModal() {
+            document.getElementById('kbEditModal').classList.remove('active');
+            document.body.style.overflow = '';
+        }
+
+        function kbUpdateItem() {
+            var id = document.getElementById('kbEditItemId').value;
+            var item = kbItems.find(function(it) { return it.id === id; });
+            if (!item) return;
+            var newTitle = document.getElementById('kbEditTitleInput').value.trim();
+            if (!newTitle) return;
+            item.title = newTitle;
+            item.description = document.getElementById('kbEditDescInput').value.trim();
+            item.updatedAt = new Date().toISOString();
+            kbPersist();
+            closeKbEditModal();
+            kbRenderDialogItems();
+            kbRenderCentralList();
+        }
+
+        function kbDeleteItem(id) {
+            document.getElementById('kbDeleteItemId').value = id;
+            document.getElementById('kbDeleteModal').classList.add('active');
+            document.body.style.overflow = 'hidden';
+        }
+
+        function closeKbDeleteModal() {
+            document.getElementById('kbDeleteModal').classList.remove('active');
+            document.body.style.overflow = '';
+        }
+
+        function kbConfirmDelete() {
+            var id = document.getElementById('kbDeleteItemId').value;
+            kbItems = kbItems.filter(function(it) { return it.id !== id; });
+            kbPersist();
+            closeKbDeleteModal();
+            kbRenderDialogItems();
+            kbRenderCentralList();
+        }
+
+        function openKbUploadModal() {
+            var select = document.getElementById('kbModalDialogSelect');
+            select.innerHTML = '';
+            dialogs.forEach(function(d) {
+                select.innerHTML += '<option value="' + d.id + '">' + escapeHtml(d.name) + '</option>';
+            });
+            kbPendingFileModal = null;
+            document.getElementById('kbmSelectedFile').textContent = '';
+            document.getElementById('kbmTitleInput').value = '';
+            document.getElementById('kbmDescInput').value = '';
+            document.getElementById('kbmUrlInput').value = '';
+            document.getElementById('kbmFileInput').value = '';
+            document.getElementById('kbUploadModal').classList.add('active');
+            document.body.style.overflow = 'hidden';
+        }
+
+        function closeKbUploadModal() {
+            document.getElementById('kbUploadModal').classList.remove('active');
+            document.body.style.overflow = '';
+        }
 
         function openModal() {
             modal.classList.add('active');
@@ -2977,6 +3515,8 @@
             settingsCompanyData.info = document.getElementById('onbCompanyInfo').value || '';
             localStorage.setItem('onboarded', '1');
             saveUserSession();
+            // Sync audience to CRM
+            syncAudienceToCRM();
             onboarding.classList.remove('show');
             dashboard.classList.add('show');
         }
@@ -3058,7 +3598,51 @@
             settingsAudienceData.niche = document.getElementById('setAudNiche').value;
             settingsAudienceData.client = document.getElementById('setAudClient').value;
             settingsAudienceData.sites = sitesVal;
+            // Persist to localStorage for CRM integration
+            syncAudienceToCRM();
             closeSettingsAudience();
+        }
+
+        function syncAudienceToCRM() {
+            var login = sessionStorage.getItem('current_login') || '';
+            var clientName = login;
+            try {
+                var crmClients = JSON.parse(localStorage.getItem('crm_clients') || '[]');
+                for (var i = 0; i < crmClients.length; i++) {
+                    if (crmClients[i].login === login) {
+                        clientName = crmClients[i].name || crmClients[i].company || login;
+                        break;
+                    }
+                }
+            } catch(e) {}
+
+            var sites = (settingsAudienceData.sites || '').split('\n').map(function(s) { return s.trim(); }).filter(Boolean);
+            if (!settingsAudienceData.niche && !settingsAudienceData.client && sites.length === 0) return;
+
+            var payload = {
+                id: 'sync_' + Date.now().toString(36),
+                niche: settingsAudienceData.niche || '',
+                client: settingsAudienceData.client || '',
+                sites: sites,
+                clientName: clientName,
+                login: login,
+                timestamp: new Date().toISOString()
+            };
+            // Write to shared localStorage key for CRM to pick up
+            var queue = [];
+            try { queue = JSON.parse(localStorage.getItem('dmp_sync_queue') || '[]'); } catch(e) {}
+            // Replace existing for same login or add new
+            queue = queue.filter(function(q) { return q.login !== login; });
+            queue.push(payload);
+            localStorage.setItem('dmp_sync_queue', JSON.stringify(queue));
+
+            // Show notification
+            var ttsToast = document.getElementById('ttsToast');
+            if (ttsToast) {
+                ttsToast.textContent = 'Данные ЦА отправлены в CRM';
+                ttsToast.classList.add('show');
+                setTimeout(function() { ttsToast.classList.remove('show'); }, 3000);
+            }
         }
 
         function insertSettingsTag(el, targetId) {
@@ -3678,6 +4262,9 @@
         function confirmDeleteDialog() {
             if (!deleteTargetId) return;
             dialogs = dialogs.filter(function(d) { return d.id !== deleteTargetId; });
+            // Clean up KB items for deleted dialog
+            kbItems = kbItems.filter(function(it) { return it.dialogId !== deleteTargetId; });
+            kbPersist();
             if (currentDialogId === deleteTargetId) {
                 currentDialogId = null;
                 showDialogList();
@@ -4025,6 +4612,7 @@
             renderCriteria();
             renderGreetings();
             renderPlanItems();
+            kbRenderDialogItems();
             // Reset to context tab
             switchBotTab('context', document.querySelector('#botTabs .bot-tab'));
         }
@@ -4057,6 +4645,7 @@
                 document.querySelectorAll('.page-section').forEach(function(p) { p.classList.remove('active'); });
                 var target = document.getElementById(pageId);
                 if (target) target.classList.add('active');
+                if (pageId === 'pageKnowledge') kbRenderCentralList();
             }
         }
 
@@ -4072,6 +4661,7 @@
             var map = { context:'tabContext', plan:'tabPlan', knowledge:'tabKnowledge' };
             var el = document.getElementById(map[tabId]);
             if (el) el.classList.add('active');
+            if (tabId === 'knowledge') kbRenderDialogItems();
         }
 
         function onBotInput(textarea, counterId) {
@@ -4854,7 +5444,7 @@
             pSkillsT: { ru:'Скиллбейзы', en:'Skill Bases' },
             pSkillsSub: { ru:'Управление базами навыков и сценариями', en:'Manage skill bases and scenarios' },
             pKbT: { ru:'База знаний', en:'Knowledge Base' },
-            pKbSub: { ru:'Документы и материалы', en:'Documents and Materials' },
+            pKbSub: { ru:'Все материалы из всех диалогов', en:'All materials from all dialogs' },
             pCallsT: { ru:'Колл-листы', en:'Call Lists' },
             pCallsSub: { ru:'Управление списками для обзвона', en:'Manage call lists' },
             pHistT: { ru:'История звонков', en:'Call History' },
@@ -5109,6 +5699,42 @@
             tplSaveBtn: { ru:'Сохранить шаблон', en:'Save template' },
             tplEditBtn: { ru:'Редактировать', en:'Edit' },
             tplDeleteBtn: { ru:'Удалить', en:'Delete' },
+            // Knowledge Base
+            kbUploadTitle: { ru:'Добавить материал', en:'Add Material' },
+            kbUploadDesc: { ru:'Загрузите файл или добавьте ссылку с описанием', en:'Upload a file or add a link with description' },
+            kbTabFile: { ru:'Файл', en:'File' },
+            kbTabUrl: { ru:'Ссылка', en:'Link' },
+            kbDropText: { ru:'Перетащите файл или нажмите для выбора', en:'Drag & drop a file or click to select' },
+            kbDropHint: { ru:'PDF, DOC, XLS, изображения, аудио, видео — до 2 МБ', en:'PDF, DOC, XLS, images, audio, video — up to 2 MB' },
+            kbTitlePh: { ru:'Название материала', en:'Material title' },
+            kbDescPh: { ru:'Описание (необязательно)', en:'Description (optional)' },
+            kbUrlPh: { ru:'https://example.com', en:'https://example.com' },
+            kbAddBtn: { ru:'Добавить в базу знаний', en:'Add to Knowledge Base' },
+            kbMaterials: { ru:'Материалы диалога', en:'Dialog Materials' },
+            kbNoItems: { ru:'Материалы ещё не добавлены', en:'No materials added yet' },
+            kbSearchPh: { ru:'Поиск по названию или описанию...', en:'Search by title or description...' },
+            kbFilterAll: { ru:'Все типы', en:'All types' },
+            kbAllDialogs: { ru:'Все диалоги', en:'All dialogs' },
+            kbAddMaterial: { ru:'+ Добавить', en:'+ Add' },
+            kbTypeImage: { ru:'Изображения', en:'Images' },
+            kbTypeAudio: { ru:'Аудио', en:'Audio' },
+            kbTypeVideo: { ru:'Видео', en:'Video' },
+            kbTypeText: { ru:'Текст', en:'Text' },
+            kbTypeUrl: { ru:'Ссылки', en:'Links' },
+            kbTypeOther: { ru:'Другое', en:'Other' },
+            kbView: { ru:'Просмотр', en:'View' },
+            kbModalTitle: { ru:'Добавить материал', en:'Add Material' },
+            kbModalSub: { ru:'Загрузите файл или добавьте ссылку в базу знаний', en:'Upload a file or add a link to knowledge base' },
+            kbModalDialog: { ru:'Диалог', en:'Dialog' },
+            kbTitleLabel: { ru:'Название', en:'Title' },
+            kbDescLabel: { ru:'Описание', en:'Description' },
+            kbSaveBtn: { ru:'Сохранить', en:'Save' },
+            kbEditTitle: { ru:'Редактировать материал', en:'Edit Material' },
+            kbDeleteTitle: { ru:'Удалить материал?', en:'Delete material?' },
+            kbDeleteConfirm: { ru:'Это действие нельзя отменить.', en:'This action cannot be undone.' },
+            kbFileTooLarge: { ru:'Файл слишком большой (макс. 2 МБ)', en:'File too large (max 2 MB)' },
+            kbSelectFile: { ru:'Выберите файл для загрузки', en:'Select a file to upload' },
+            kbEnterUrl: { ru:'Введите URL-ссылку', en:'Enter a URL' },
         };
 
         function t(key) {

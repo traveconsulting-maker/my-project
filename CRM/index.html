@@ -595,6 +595,83 @@
         .chat-input-area textarea { flex:1; min-height:38px; max-height:120px; resize:none; padding:9px 14px; border-radius:10px; }
         .chat-input-area .btn { flex-shrink:0; height:38px; }
         .chat-empty { flex:1; display:flex; align-items:center; justify-content:center; color:var(--text-muted); font-size:.95rem; }
+
+        /* DMP Integration */
+        .dmp-tabs { display:flex; gap:0; margin-bottom:24px; border-radius:10px; overflow:hidden; border:1px solid var(--border-color); }
+        .dmp-tab { flex:1; padding:12px 20px; border:none; background:var(--card-bg); color:var(--text-muted); font-family:inherit; font-size:.875rem; font-weight:600; cursor:pointer; transition:all .2s; text-align:center; }
+        .dmp-tab.active { background:linear-gradient(135deg,var(--accent),#a855f7); color:#fff; }
+        .dmp-tab:hover:not(.active) { background:var(--card-bg-hover); }
+        .dmp-tab-content { display:none; }
+        .dmp-tab-content.active { display:block; }
+        .dmp-projects { display:grid; grid-template-columns:repeat(auto-fill,minmax(320px,1fr)); gap:16px; }
+        .dmp-project-card { background:var(--card-bg); border:1px solid var(--card-border); border-radius:14px; padding:20px; transition:all .2s; }
+        .dmp-project-card:hover { border-color:rgba(108,92,231,.3); transform:translateY(-2px); box-shadow:var(--card-shadow); }
+        .dmp-project-header { display:flex; justify-content:space-between; align-items:flex-start; margin-bottom:14px; }
+        .dmp-project-title { font-size:.95rem; font-weight:700; margin-bottom:4px; }
+        .dmp-project-client { font-size:.8rem; color:var(--text-muted); }
+        .dmp-project-stats { display:grid; grid-template-columns:1fr 1fr; gap:8px; margin:14px 0; }
+        .dmp-project-stat { background:var(--input-bg); border-radius:8px; padding:8px 12px; }
+        .dmp-project-stat-label { font-size:.7rem; color:var(--text-muted); text-transform:uppercase; letter-spacing:.5px; }
+        .dmp-project-stat-value { font-size:1.05rem; font-weight:700; margin-top:2px; }
+        .dmp-project-progress { height:6px; background:var(--input-bg); border-radius:3px; overflow:hidden; margin:12px 0; }
+        .dmp-project-progress-bar { height:100%; background:linear-gradient(90deg,var(--accent),#a855f7); border-radius:3px; transition:width .3s; }
+        .dmp-project-sites { font-size:.75rem; color:var(--text-muted); margin-bottom:12px; display:flex; gap:6px; flex-wrap:wrap; }
+        .dmp-project-sites .dmp-site-tag { background:var(--input-bg); border-radius:6px; padding:2px 8px; }
+        .dmp-project-actions { display:flex; gap:8px; flex-wrap:wrap; }
+        .dmp-api-config { background:var(--card-bg); border:1px solid var(--card-border); border-radius:14px; padding:20px; margin-bottom:20px; }
+        .dmp-api-config-title { font-size:.95rem; font-weight:700; margin-bottom:4px; }
+        .dmp-api-config-sub { font-size:.8rem; color:var(--text-muted); margin-bottom:16px; }
+        .dmp-api-row { display:flex; gap:12px; align-items:flex-end; flex-wrap:wrap; }
+        .dmp-api-row .form-group { flex:1; min-width:200px; margin-bottom:0; }
+        .dmp-api-key-input { font-family:'JetBrains Mono',monospace; font-size:.8rem; letter-spacing:.5px; }
+        .dmp-results-table-wrap { overflow-x:auto; }
+        .dmp-audio-cell { display:flex; align-items:center; gap:8px; }
+        .dmp-audio-cell audio { height:32px; max-width:200px; }
+        .dmp-empty { text-align:center; padding:60px 20px; color:var(--text-muted); }
+        .dmp-empty-icon { font-size:40px; margin-bottom:10px; opacity:.5; }
+        .dmp-analytics { display:grid; grid-template-columns:repeat(auto-fill,minmax(200px,1fr)); gap:14px; margin-bottom:20px; }
+        .dmp-analytics .stat-card { text-align:center; }
+        .dmp-btn-start { background:linear-gradient(135deg,var(--success),#00cec9); border:none; color:#fff; }
+        .dmp-btn-start:hover { box-shadow:0 4px 16px rgba(0,184,148,.35); }
+        .dmp-btn-pause { background:linear-gradient(135deg,var(--warning),#e17055); border:none; color:#fff; }
+        .dmp-btn-pause:hover { box-shadow:0 4px 16px rgba(253,203,110,.35); }
+        .dmp-btn-stop { background:linear-gradient(135deg,var(--danger),#d63031); border:none; color:#fff; }
+        .dmp-btn-stop:hover { box-shadow:0 4px 16px rgba(231,76,60,.35); }
+        .dmp-status-indicator { display:inline-flex; align-items:center; gap:6px; }
+        .dmp-status-dot { width:8px; height:8px; border-radius:50%; display:inline-block; }
+        .dmp-status-dot.idle { background:var(--text-muted); }
+        .dmp-status-dot.active { background:var(--success); animation:dmpPulse 1.5s infinite; }
+        .dmp-status-dot.paused { background:var(--warning); }
+        .dmp-status-dot.stopped { background:var(--danger); }
+        @keyframes dmpPulse { 0%,100%{opacity:1;} 50%{opacity:.4;} }
+
+        /* Telemarketing */
+        .tm-tabs { display:flex; gap:0; margin-bottom:24px; border-radius:10px; overflow:hidden; border:1px solid var(--border-color); }
+        .tm-tab { flex:1; padding:12px 16px; border:none; background:var(--card-bg); color:var(--text-muted); font-family:inherit; font-size:.8rem; font-weight:600; cursor:pointer; transition:all .2s; text-align:center; }
+        .tm-tab.active { background:linear-gradient(135deg,#6c5ce7,#a855f7); color:#fff; }
+        .tm-tab:hover:not(.active) { background:var(--card-bg-hover); }
+        .tm-tab-content { display:none; }
+        .tm-tab-content.active { display:block; }
+        .tm-cl-card { background:var(--card-bg); border:1px solid var(--card-border); border-radius:14px; padding:20px; margin-bottom:16px; transition:all .2s; }
+        .tm-cl-card:hover { border-color:rgba(108,92,231,.3); }
+        .tm-cl-header { display:flex; justify-content:space-between; align-items:center; margin-bottom:12px; }
+        .tm-cl-title { font-size:.95rem; font-weight:700; }
+        .tm-cl-meta { font-size:.8rem; color:var(--text-muted); margin-top:4px; }
+        .tm-cl-stats { display:flex; gap:16px; margin:12px 0; flex-wrap:wrap; }
+        .tm-cl-stat { font-size:.8rem; color:var(--text-secondary); }
+        .tm-cl-stat b { color:var(--text); font-weight:700; }
+        .tm-agree-card { background:var(--card-bg); border:1px solid var(--card-border); border-radius:12px; padding:16px; margin-bottom:12px; }
+        .tm-agree-card:hover { border-color:rgba(108,92,231,.3); }
+        .tm-agree-header { display:flex; justify-content:space-between; align-items:flex-start; margin-bottom:8px; }
+        .tm-agree-phone { font-family:'JetBrains Mono',monospace; font-size:.9rem; font-weight:600; }
+        .tm-agree-name { font-size:.85rem; color:var(--text-secondary); }
+        .tm-agree-facts { font-size:.8rem; color:var(--text-muted); margin:8px 0; line-height:1.5; }
+        .tm-agree-footer { display:flex; gap:12px; align-items:center; flex-wrap:wrap; font-size:.75rem; color:var(--text-muted); }
+        .tm-interest { padding:3px 10px; border-radius:6px; font-size:.75rem; font-weight:600; }
+        .tm-interest-high { background:var(--success-bg); color:var(--success); }
+        .tm-interest-medium { background:var(--warning-bg); color:var(--warning); }
+        .tm-interest-low { background:var(--info-bg); color:var(--info); }
+        .tm-interest-none { background:var(--input-bg); color:var(--text-muted); }
     </style>
 </head>
 <body>
@@ -646,6 +723,14 @@
             <div class="nav-item" data-section="portation" onclick="showSection('portation')">
                 <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="16 3 21 3 21 8"/><line x1="4" y1="20" x2="21" y2="3"/><polyline points="21 16 21 21 16 21"/><line x1="15" y1="15" x2="21" y2="21"/><line x1="4" y1="4" x2="9" y2="9"/></svg>
                 Портация номеров
+            </div>
+            <div class="nav-item" data-section="telephony" onclick="showSection('telephony')">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M22 16.92v3a2 2 0 01-2.18 2 19.79 19.79 0 01-8.63-3.07 19.5 19.5 0 01-6-6A19.79 19.79 0 012.12 4.18 2 2 0 014.11 2h3a2 2 0 012 1.72c.127.96.361 1.903.7 2.81a2 2 0 01-.45 2.11L8.09 9.91a16 16 0 006 6l1.27-1.27a2 2 0 012.11-.45c.907.339 1.85.573 2.81.7A2 2 0 0122 16.92z"/><path d="M14.05 2a9 9 0 018 7.94M14.05 6A5 5 0 0120 11.95"/></svg>
+                Интеграция с телефонией
+            </div>
+            <div class="nav-item" data-section="telemarketing" onclick="showSection('telemarketing')">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M15.05 5A5 5 0 0119 8.95M15.05 1A9 9 0 0123 8.94"/><path d="M22 16.92v3a2 2 0 01-2.18 2 19.79 19.79 0 01-8.63-3.07 19.5 19.5 0 01-6-6A19.79 19.79 0 012.12 4.18 2 2 0 014.11 2h3a2 2 0 012 1.72c.127.96.361 1.903.7 2.81a2 2 0 01-.45 2.11L8.09 9.91a16 16 0 006 6l1.27-1.27a2 2 0 012.11-.45c.907.339 1.85.573 2.81.7A2 2 0 0122 16.92z"/></svg>
+                Телемаркетинг
             </div>
         </div>
         <div class="sidebar-bottom">
@@ -810,18 +895,262 @@
         <!-- Portation -->
         <div id="section-portation" class="section">
             <div class="page-header">
-                <div><div class="page-title">Портация номеров</div><div class="page-subtitle">Перенос номеров от конкурентов</div></div>
-                <button class="btn btn-primary" onclick="openPortationModal()">
-                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/></svg>
-                    Новая заявка
+                <div><div class="page-title">Портация номеров</div><div class="page-subtitle">Управление портацией и DMP-интеграция</div></div>
+            </div>
+
+            <div class="dmp-tabs">
+                <button class="dmp-tab active" onclick="switchPortationTab('portation',this)">Заявки на портацию</button>
+                <button class="dmp-tab" onclick="switchPortationTab('dmp',this)">DMP Интеграция</button>
+                <button class="dmp-tab" onclick="switchPortationTab('results',this)">Результаты парсинга</button>
+            </div>
+
+            <!-- Tab: Заявки на портацию -->
+            <div class="dmp-tab-content active" id="portation-tab-portation">
+                <div style="display:flex;justify-content:flex-end;margin-bottom:16px;">
+                    <button class="btn btn-primary" onclick="openPortationModal()">
+                        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" width="16" height="16"><line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/></svg>
+                        Новая заявка
+                    </button>
+                </div>
+                <div class="stats-grid" id="portation-stats"></div>
+                <div class="card" style="padding:0;overflow:hidden;">
+                    <table>
+                        <thead><tr><th>Дата</th><th>Клиент</th><th>Номера</th><th>Оператор</th><th>Статус</th><th>Действия</th></tr></thead>
+                        <tbody id="portation-table"></tbody>
+                    </table>
+                </div>
+            </div>
+
+            <!-- Tab: DMP Интеграция -->
+            <div class="dmp-tab-content" id="portation-tab-dmp">
+                <!-- API Config -->
+                <div class="dmp-api-config">
+                    <div class="dmp-api-config-title">Настройки API</div>
+                    <div class="dmp-api-config-sub">Подключение к DMP сервису для автоматического парсинга номеров</div>
+                    <div class="dmp-api-row">
+                        <div class="form-group">
+                            <label class="form-label">API URL</label>
+                            <input id="dmp-api-url" class="dmp-api-key-input" value="https://api.dmp-service.com/v1" placeholder="https://api.dmp-service.com/v1">
+                        </div>
+                        <div class="form-group">
+                            <label class="form-label">API Ключ</label>
+                            <input id="dmp-api-key" type="password" class="dmp-api-key-input" placeholder="Введите API ключ...">
+                        </div>
+                        <button class="btn btn-primary" onclick="saveDmpConfig()" style="height:38px;white-space:nowrap;">Сохранить</button>
+                    </div>
+                </div>
+
+                <!-- Analytics -->
+                <div class="dmp-analytics" id="dmp-analytics"></div>
+
+                <!-- Projects -->
+                <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:16px;">
+                    <h3 style="font-size:.95rem;font-weight:700;">Проекты DMP</h3>
+                    <button class="btn btn-primary" onclick="openDmpProjectModal()">
+                        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" width="16" height="16"><line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/></svg>
+                        Новый проект
+                    </button>
+                </div>
+                <div class="dmp-projects" id="dmp-projects"></div>
+                <div class="dmp-empty" id="dmp-projects-empty" style="display:none;">
+                    <div class="dmp-empty-icon">🔌</div>
+                    <div>Нет проектов DMP. Создайте первый проект для парсинга номеров.</div>
+                </div>
+            </div>
+
+            <!-- Tab: Результаты парсинга -->
+            <div class="dmp-tab-content" id="portation-tab-results">
+                <div class="dmp-analytics" id="dmp-results-analytics"></div>
+                <div style="display:flex;gap:12px;align-items:center;margin-bottom:16px;flex-wrap:wrap;">
+                    <div class="search-box" style="flex:1;min-width:200px;">
+                        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="11" cy="11" r="8"/><line x1="21" y1="21" x2="16.65" y2="16.65"/></svg>
+                        <input type="text" id="dmp-results-search" placeholder="Поиск по номеру..." oninput="renderDmpResults()">
+                    </div>
+                    <select id="dmp-results-filter" style="width:auto;min-width:180px;" onchange="renderDmpResults()">
+                        <option value="all">Все проекты</option>
+                    </select>
+                </div>
+                <div class="card" style="padding:0;overflow:hidden;">
+                    <div class="dmp-results-table-wrap">
+                        <table>
+                            <thead><tr><th>Дата</th><th>Проект</th><th>Номер телефона</th><th>Информация</th><th>Запись разговора</th><th>Действия</th></tr></thead>
+                            <tbody id="dmp-results-table"></tbody>
+                        </table>
+                    </div>
+                </div>
+                <div class="dmp-empty" id="dmp-results-empty" style="display:none;">
+                    <div class="dmp-empty-icon">📞</div>
+                    <div>Результатов парсинга пока нет. Запустите проект DMP для сбора данных.</div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Telephony Integration -->
+        <div id="section-telephony" class="section">
+            <div class="page-header">
+                <div><div class="page-title">Интеграция с телефонией</div><div class="page-subtitle">Подключение и управление телефонией</div></div>
+            </div>
+
+            <!-- Provider config -->
+            <div class="dmp-api-config">
+                <div class="dmp-api-config-title">Настройки провайдера</div>
+                <div class="dmp-api-config-sub">Подключите вашу АТС или облачную телефонию</div>
+                <div class="form-group">
+                    <label class="form-label">Провайдер</label>
+                    <select id="tel-provider" style="width:100%;" onchange="telProviderChange()">
+                        <option value="">— Выберите провайдер —</option>
+                        <option value="asterisk">Asterisk / FreePBX</option>
+                        <option value="mango">Mango Office</option>
+                        <option value="sipuni">Sipuni</option>
+                        <option value="zadarma">Zadarma</option>
+                        <option value="rostelecom">Ростелеком</option>
+                        <option value="megafon">МегаФон АТС</option>
+                        <option value="custom">Другой (SIP / API)</option>
+                    </select>
+                </div>
+                <div class="dmp-api-row" style="margin-top:12px;">
+                    <div class="form-group">
+                        <label class="form-label">API URL / SIP-сервер</label>
+                        <input id="tel-api-url" class="dmp-api-key-input" placeholder="sip.provider.ru или https://api.provider.ru">
+                    </div>
+                    <div class="form-group">
+                        <label class="form-label">API Ключ / Токен</label>
+                        <input id="tel-api-key" type="password" class="dmp-api-key-input" placeholder="Введите API ключ...">
+                    </div>
+                </div>
+                <div class="dmp-api-row" style="margin-top:12px;">
+                    <div class="form-group">
+                        <label class="form-label">SIP Логин</label>
+                        <input id="tel-sip-login" placeholder="100">
+                    </div>
+                    <div class="form-group">
+                        <label class="form-label">SIP Пароль</label>
+                        <input id="tel-sip-pass" type="password" placeholder="••••••">
+                    </div>
+                    <button class="btn btn-primary" onclick="saveTelConfig()" style="height:38px;white-space:nowrap;">Сохранить</button>
+                    <button class="btn" onclick="testTelConnection()" style="height:38px;white-space:nowrap;">Проверить</button>
+                </div>
+            </div>
+
+            <!-- Status & stats -->
+            <div class="stats-grid" id="tel-stats"></div>
+
+            <!-- Lines / Numbers -->
+            <div style="display:flex;justify-content:space-between;align-items:center;margin:20px 0 16px;">
+                <h3 style="font-size:.95rem;font-weight:700;">Линии и номера</h3>
+                <button class="btn btn-primary" onclick="openTelLineModal()">
+                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" width="16" height="16"><line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/></svg>
+                    Добавить линию
                 </button>
             </div>
-            <div class="stats-grid" id="portation-stats"></div>
             <div class="card" style="padding:0;overflow:hidden;">
                 <table>
-                    <thead><tr><th>Дата</th><th>Клиент</th><th>Номера</th><th>Оператор</th><th>Статус</th><th>Действия</th></tr></thead>
-                    <tbody id="portation-table"></tbody>
+                    <thead><tr><th>Номер</th><th>Название</th><th>Тип</th><th>Статус</th><th>Действия</th></tr></thead>
+                    <tbody id="tel-lines-table"></tbody>
                 </table>
+            </div>
+
+            <!-- Call log -->
+            <div style="margin-top:24px;">
+                <h3 style="font-size:.95rem;font-weight:700;margin-bottom:16px;">Последние звонки</h3>
+                <div class="card" style="padding:0;overflow:hidden;">
+                    <table>
+                        <thead><tr><th>Дата</th><th>Номер</th><th>Направление</th><th>Длительность</th><th>Статус</th><th>Запись</th></tr></thead>
+                        <tbody id="tel-calls-table"></tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+
+        <!-- Telemarketing -->
+        <div id="section-telemarketing" class="section">
+            <div class="page-header">
+                <div><div class="page-title">Интеграция с телемаркетингом</div><div class="page-subtitle">Sasha AI — автоматический обзвон и квалификация лидов</div></div>
+            </div>
+
+            <!-- API Config -->
+            <div class="dmp-api-config">
+                <div class="dmp-api-config-title">Подключение к Sasha AI</div>
+                <div class="dmp-api-config-sub">Настройте интеграцию с платформой телемаркетинга</div>
+                <div class="dmp-api-row">
+                    <div class="form-group">
+                        <label class="form-label">Webhook URL (для загрузки контактов)</label>
+                        <input id="tm-webhook-url" class="dmp-api-key-input" placeholder="https://platform.trysasha.ru/api/upload-contacts-integrations/webhook/ваш-токен">
+                    </div>
+                </div>
+                <div class="dmp-api-row" style="margin-top:12px;">
+                    <div class="form-group">
+                        <label class="form-label">Секретный ключ вебхука (для приёма событий)</label>
+                        <input id="tm-secret-key" type="password" class="dmp-api-key-input" placeholder="Секретный ключ для проверки подписи">
+                    </div>
+                    <button class="btn btn-primary" onclick="saveTmConfig()" style="height:38px;white-space:nowrap;">Сохранить</button>
+                </div>
+            </div>
+
+            <!-- Tabs -->
+            <div class="tm-tabs">
+                <button class="tm-tab active" onclick="switchTmTab('calllists',this)">Колл-листы</button>
+                <button class="tm-tab" onclick="switchTmTab('results',this)">Результаты звонков</button>
+                <button class="tm-tab" onclick="switchTmTab('agreements',this)">Договорённости</button>
+            </div>
+
+            <!-- Tab: Колл-листы -->
+            <div class="tm-tab-content active" id="tm-tab-calllists">
+                <div class="stats-grid" id="tm-cl-stats"></div>
+                <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:16px;">
+                    <h3 style="font-size:.95rem;font-weight:700;">Колл-листы</h3>
+                    <button class="btn btn-primary" onclick="openTmCallListModal()">
+                        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" width="16" height="16"><line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/></svg>
+                        Создать колл-лист
+                    </button>
+                </div>
+                <div id="tm-calllists-container"></div>
+                <div class="dmp-empty" id="tm-cl-empty" style="display:none;">
+                    <div class="dmp-empty-icon">📋</div>
+                    <div>Нет колл-листов. Создайте первый для запуска обзвона.</div>
+                </div>
+            </div>
+
+            <!-- Tab: Результаты звонков -->
+            <div class="tm-tab-content" id="tm-tab-results">
+                <div class="stats-grid" id="tm-results-stats"></div>
+                <div style="display:flex;gap:12px;align-items:center;margin-bottom:16px;flex-wrap:wrap;">
+                    <div class="search-box" style="flex:1;min-width:200px;">
+                        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="11" cy="11" r="8"/><line x1="21" y1="21" x2="16.65" y2="16.65"/></svg>
+                        <input type="text" id="tm-results-search" placeholder="Поиск по номеру..." oninput="renderTmResults()">
+                    </div>
+                    <select id="tm-results-filter" style="width:auto;min-width:180px;" onchange="renderTmResults()">
+                        <option value="all">Все колл-листы</option>
+                    </select>
+                </div>
+                <div class="card" style="padding:0;overflow:hidden;">
+                    <table>
+                        <thead><tr><th>Дата</th><th>Номер</th><th>Клиент</th><th>Статус</th><th>Длительность</th><th>Интерес</th><th>Запись</th></tr></thead>
+                        <tbody id="tm-results-table"></tbody>
+                    </table>
+                </div>
+            </div>
+
+            <!-- Tab: Договорённости -->
+            <div class="tm-tab-content" id="tm-tab-agreements">
+                <div class="stats-grid" id="tm-agree-stats"></div>
+                <div style="display:flex;gap:12px;align-items:center;margin-bottom:16px;flex-wrap:wrap;">
+                    <div class="search-box" style="flex:1;min-width:200px;">
+                        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="11" cy="11" r="8"/><line x1="21" y1="21" x2="16.65" y2="16.65"/></svg>
+                        <input type="text" id="tm-agree-search" placeholder="Поиск..." oninput="renderTmAgreements()">
+                    </div>
+                    <select id="tm-agree-filter" style="width:auto;min-width:160px;" onchange="renderTmAgreements()">
+                        <option value="all">Все</option>
+                        <option value="callback">Требуют перезвона</option>
+                        <option value="committed">С подтверждением</option>
+                        <option value="high">Высокий интерес</option>
+                    </select>
+                </div>
+                <div id="tm-agree-container"></div>
+                <div class="dmp-empty" id="tm-agree-empty" style="display:none;">
+                    <div class="dmp-empty-icon">🤝</div>
+                    <div>Договорённостей пока нет. Они появятся после обзвона.</div>
+                </div>
             </div>
         </div>
     </main>
@@ -1046,6 +1375,115 @@
         </div>
     </div>
 
+    <!-- DMP Project Modal -->
+    <div class="modal-overlay" id="dmp-project-modal">
+        <div class="modal">
+            <div class="modal-header">
+                <div class="modal-title">Новый проект DMP</div>
+                <button class="modal-close" onclick="closeModal('dmp-project-modal')">&times;</button>
+            </div>
+            <form onsubmit="saveDmpProject(event)">
+                <div class="form-group"><label class="form-label">Клиент *</label><select id="dmp-project-client" required></select></div>
+                <div class="form-group"><label class="form-label">Название проекта (ЦА + Имя клиента) *</label><input id="dmp-project-name" required placeholder="Например: B2B IT-компании — ООО Рога"></div>
+                <div class="form-group"><label class="form-label">Сайты для парсинга (по одному на строку) *</label><textarea id="dmp-project-sites" required rows="3" placeholder="competitor1.ru&#10;competitor2.com&#10;similar-company.ru"></textarea></div>
+                <div class="form-row">
+                    <div class="form-group"><label class="form-label">Дневной лимит номеров *</label><input id="dmp-project-daily-limit" type="number" required min="1" max="500" value="50" placeholder="50"></div>
+                    <div class="form-group"><label class="form-label">Общий лимит номеров *</label><input id="dmp-project-total-limit" type="number" required min="1" max="500" value="500" placeholder="500"></div>
+                </div>
+                <div class="form-group"><label class="form-label">Описание ЦА</label><textarea id="dmp-project-audience" rows="2" placeholder="Описание целевой аудитории..."></textarea></div>
+                <div class="modal-footer">
+                    <button type="button" class="btn" onclick="closeModal('dmp-project-modal')">Отмена</button>
+                    <button type="submit" class="btn btn-primary">Создать проект</button>
+                </div>
+            </form>
+        </div>
+    </div>
+
+    <!-- DMP Delete Confirm Modal -->
+    <div class="modal-overlay" id="dmp-delete-modal">
+        <div class="modal" style="max-width:420px;">
+            <div class="modal-header">
+                <div class="modal-title">Удалить проект?</div>
+                <button class="modal-close" onclick="closeModal('dmp-delete-modal')">&times;</button>
+            </div>
+            <p style="font-size:.875rem;color:var(--text-secondary);margin-bottom:20px;">Проект будет удалён вместе со всеми результатами парсинга. Это действие нельзя отменить.</p>
+            <input type="hidden" id="dmp-delete-target">
+            <div class="modal-footer">
+                <button class="btn" onclick="closeModal('dmp-delete-modal')">Отмена</button>
+                <button class="btn btn-danger" onclick="confirmDeleteDmpProject()">Удалить</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Telemarketing Call List Modal -->
+    <div class="modal-overlay" id="tm-calllist-modal">
+        <div class="modal">
+            <div class="modal-header">
+                <div class="modal-title">Создать колл-лист</div>
+                <button class="modal-close" onclick="closeModal('tm-calllist-modal')">&times;</button>
+            </div>
+            <form onsubmit="saveTmCallList(event)">
+                <div class="form-group"><label class="form-label">Название *</label><input id="tm-cl-name" required placeholder="Например: Обзвон B2B лидов"></div>
+                <div class="form-group"><label class="form-label">Источник контактов</label>
+                    <select id="tm-cl-source">
+                        <option value="">— Выберите DMP проект —</option>
+                    </select>
+                </div>
+                <div class="form-group"><label class="form-label">Описание</label><textarea id="tm-cl-desc" rows="2" placeholder="Описание колл-листа..."></textarea></div>
+                <div class="modal-footer">
+                    <button type="button" class="btn" onclick="closeModal('tm-calllist-modal')">Отмена</button>
+                    <button type="submit" class="btn btn-primary">Создать</button>
+                </div>
+            </form>
+        </div>
+    </div>
+
+    <!-- Telemarketing Send Contacts Modal -->
+    <div class="modal-overlay" id="tm-send-modal">
+        <div class="modal">
+            <div class="modal-header">
+                <div class="modal-title">Отправить контакты на обзвон</div>
+                <button class="modal-close" onclick="closeModal('tm-send-modal')">&times;</button>
+            </div>
+            <form onsubmit="tmSendContacts(event)">
+                <input type="hidden" id="tm-send-cl-id">
+                <div class="form-group"><label class="form-label">Контакты для отправки</label>
+                    <div id="tm-send-contacts-list" style="max-height:300px;overflow-y:auto;margin-bottom:12px;"></div>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn" onclick="closeModal('tm-send-modal')">Отмена</button>
+                    <button type="submit" class="btn btn-primary">Отправить в Sasha AI</button>
+                </div>
+            </form>
+        </div>
+    </div>
+
+    <!-- Telephony Line Modal -->
+    <div class="modal-overlay" id="tel-line-modal">
+        <div class="modal">
+            <div class="modal-header">
+                <div class="modal-title" id="tel-line-modal-title">Добавить линию</div>
+                <button class="modal-close" onclick="closeModal('tel-line-modal')">&times;</button>
+            </div>
+            <form onsubmit="saveTelLine(event)">
+                <input type="hidden" id="tel-line-id">
+                <div class="form-group"><label class="form-label">Номер телефона *</label><input id="tel-line-number" required placeholder="+7 495 123-45-67"></div>
+                <div class="form-group"><label class="form-label">Название</label><input id="tel-line-name" placeholder="Основная линия"></div>
+                <div class="form-group"><label class="form-label">Тип</label>
+                    <select id="tel-line-type">
+                        <option value="incoming">Входящая</option>
+                        <option value="outgoing">Исходящая</option>
+                        <option value="both">Двусторонняя</option>
+                    </select>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn" onclick="closeModal('tel-line-modal')">Отмена</button>
+                    <button type="submit" class="btn btn-primary">Сохранить</button>
+                </div>
+            </form>
+        </div>
+    </div>
+
 <script>
 // ==================== DATA LAYER ====================
 const STAGES = [
@@ -1075,6 +1513,13 @@ let tickets = loadData('tickets');
 let portations = loadData('portations');
 let activities = loadData('activities');
 let conversations = loadData('conversations');
+let dmpProjects = loadData('dmp_projects');
+let dmpResults = loadData('dmp_results');
+let telLines = loadData('tel_lines');
+let telCalls = loadData('tel_calls');
+let tmCallLists = loadData('tm_calllists');
+let tmCallResults = loadData('tm_results');
+let tmAgreements = loadData('tm_agreements');
 
 function persist() {
     saveData('clients', clients);
@@ -1086,6 +1531,13 @@ function persist() {
     saveData('conversations', conversations);
     saveData('portations', portations);
     saveData('activities', activities);
+    saveData('dmp_projects', dmpProjects);
+    saveData('dmp_results', dmpResults);
+    saveData('tel_lines', telLines);
+    saveData('tel_calls', telCalls);
+    saveData('tm_calllists', tmCallLists);
+    saveData('tm_results', tmCallResults);
+    saveData('tm_agreements', tmAgreements);
 }
 
 function addActivity(type, text, clientId) {
@@ -1156,6 +1608,8 @@ function renderSection(name) {
         case 'applications': renderApplications(); break;
         case 'support': renderSupport(); break;
         case 'portation': renderPortation(); break;
+        case 'telephony': renderTelephony(); break;
+        case 'telemarketing': renderTelemarketing(); break;
     }
 }
 
@@ -1168,7 +1622,7 @@ document.querySelectorAll('.modal-overlay').forEach(ov => {
 });
 
 function populateClientSelects() {
-    ['deal-client','task-client','call-client','ticket-client','portation-client'].forEach(sid => {
+    ['deal-client','task-client','call-client','ticket-client','portation-client','dmp-project-client'].forEach(sid => {
         const sel = document.getElementById(sid);
         if (!sel) return;
         const val = sel.value;
@@ -1980,21 +2434,25 @@ function renderPortation() {
     const tbody = document.getElementById('portation-table');
     if (portations.length === 0) {
         tbody.innerHTML = '<tr><td colspan="6" style="text-align:center;color:var(--text-muted);padding:40px;">Нет заявок на портацию</td></tr>';
-        return;
+    } else {
+        tbody.innerHTML = [...portations].reverse().map(p => `
+            <tr>
+                <td>${formatDate(p.created)}</td>
+                <td>${getClientName(p.clientId)}</td>
+                <td><span style="font-family:'JetBrains Mono',monospace;font-size:.8rem;">${(p.numbers||[]).join(', ')}</span></td>
+                <td>${esc(p.operator)}</td>
+                <td>${portationStatusTag(p.status)}</td>
+                <td>
+                    ${p.status === 'pending' ? `<button class="btn btn-sm" onclick="updatePortation('${p.id}','in_progress')">В работу</button>` : ''}
+                    ${p.status === 'in_progress' ? `<button class="btn btn-sm btn-primary" onclick="updatePortation('${p.id}','completed')">Завершить</button>` : ''}
+                </td>
+            </tr>
+        `).join('');
     }
-    tbody.innerHTML = [...portations].reverse().map(p => `
-        <tr>
-            <td>${formatDate(p.created)}</td>
-            <td>${getClientName(p.clientId)}</td>
-            <td><span style="font-family:'JetBrains Mono',monospace;font-size:.8rem;">${(p.numbers||[]).join(', ')}</span></td>
-            <td>${esc(p.operator)}</td>
-            <td>${portationStatusTag(p.status)}</td>
-            <td>
-                ${p.status === 'pending' ? `<button class="btn btn-sm" onclick="updatePortation('${p.id}','in_progress')">В работу</button>` : ''}
-                ${p.status === 'in_progress' ? `<button class="btn btn-sm btn-primary" onclick="updatePortation('${p.id}','completed')">Завершить</button>` : ''}
-            </td>
-        </tr>
-    `).join('');
+
+    // Also render active DMP tab content
+    if (dmpPortationTab === 'dmp') renderDmpProjects();
+    if (dmpPortationTab === 'results') renderDmpResults();
 }
 
 function openPortationModal() {
@@ -2273,18 +2731,1157 @@ function portationStatusTag(s) {
     return `<span class="tag ${v[1]}">${v[0]}</span>`;
 }
 
+// ==================== DMP INTEGRATION ====================
+let dmpPortationTab = 'portation';
+
+function switchPortationTab(tab, btn) {
+    dmpPortationTab = tab;
+    document.querySelectorAll('.dmp-tab').forEach(t => t.classList.remove('active'));
+    btn.classList.add('active');
+    document.querySelectorAll('.dmp-tab-content').forEach(c => c.classList.remove('active'));
+    const el = document.getElementById('portation-tab-' + tab);
+    if (el) el.classList.add('active');
+    if (tab === 'dmp') renderDmpProjects();
+    if (tab === 'results') renderDmpResults();
+    if (tab === 'portation') renderPortation();
+}
+
+function saveDmpConfig() {
+    const url = document.getElementById('dmp-api-url').value.trim();
+    const key = document.getElementById('dmp-api-key').value.trim();
+    if (!url || !key) { toast('Заполните URL и API ключ'); return; }
+    localStorage.setItem('crm_dmp_config', JSON.stringify({ url, key }));
+    toast('Настройки API сохранены');
+}
+
+function loadDmpConfig() {
+    try { return JSON.parse(localStorage.getItem('crm_dmp_config')) || {}; } catch { return {}; }
+}
+
+function openDmpProjectModal() {
+    populateClientSelects();
+    ['dmp-project-name','dmp-project-sites','dmp-project-audience'].forEach(id => document.getElementById(id).value = '');
+    document.getElementById('dmp-project-daily-limit').value = '50';
+    document.getElementById('dmp-project-total-limit').value = '500';
+    openModal('dmp-project-modal');
+}
+
+function saveDmpProject(e) {
+    e.preventDefault();
+    const sites = document.getElementById('dmp-project-sites').value.trim().split('\n').map(s => s.trim()).filter(Boolean);
+    const totalLimit = Math.min(parseInt(document.getElementById('dmp-project-total-limit').value) || 500, 500);
+    const dailyLimit = Math.min(parseInt(document.getElementById('dmp-project-daily-limit').value) || 50, totalLimit);
+
+    const project = {
+        id: genId(),
+        clientId: document.getElementById('dmp-project-client').value,
+        name: document.getElementById('dmp-project-name').value.trim(),
+        sites: sites,
+        dailyLimit: dailyLimit,
+        totalLimit: totalLimit,
+        audience: document.getElementById('dmp-project-audience').value.trim(),
+        status: 'idle', // idle | active | paused | stopped
+        parsed: 0,
+        created: now(),
+        updated: now()
+    };
+
+    dmpProjects.push(project);
+    addActivity('dmp', `Создан проект DMP: "${project.name}"`, project.clientId);
+    persist();
+    closeModal('dmp-project-modal');
+    renderDmpProjects();
+    toast('Проект DMP создан');
+
+    // Simulate API call
+    dmpApiCreateProject(project);
+}
+
+function dmpApiCreateProject(project) {
+    const config = loadDmpConfig();
+    if (!config.url || !config.key) { console.warn('[DMP] API не настроен'); return; }
+    const url = config.url.replace(/\/+$/, '') + '/projects';
+    fetch(url, {
+        method: 'POST',
+        headers: {
+            'Authorization': 'Bearer ' + config.key,
+            'Content-Type': 'application/json'
+        },
+        body: JSON.stringify({
+            projectName: project.name,
+            dailyLimit: project.dailyLimit,
+            totalLimit: project.totalLimit,
+            sites: project.sites,
+            audience: project.audience,
+            clientId: project.clientId,
+            webhookUrl: location.origin + '/api/dmp-webhook'
+        })
+    }).then(r => {
+        if (!r.ok) throw new Error('HTTP ' + r.status);
+        return r.json();
+    }).then(data => {
+        console.log('[DMP API] Проект создан:', data);
+        if (data.externalId) {
+            project.externalId = data.externalId;
+            persist();
+        }
+        toast('Проект отправлен в DMP');
+    }).catch(err => {
+        console.error('[DMP API] Ошибка создания проекта:', err);
+        toast('Ошибка DMP API: ' + err.message);
+    });
+}
+
+function dmpApiToggle(projectId, action) {
+    const config = loadDmpConfig();
+    const project = dmpProjects.find(p => p.id === projectId);
+    if (!project || !config.url || !config.key) return;
+    const extId = project.externalId || projectId;
+    const url = config.url.replace(/\/+$/, '') + '/projects/' + extId + '/' + action;
+    fetch(url, {
+        method: 'POST',
+        headers: {
+            'Authorization': 'Bearer ' + config.key,
+            'Content-Type': 'application/json'
+        }
+    }).then(r => {
+        if (!r.ok) throw new Error('HTTP ' + r.status);
+        return r.json();
+    }).then(data => {
+        console.log('[DMP API] ' + action + ':', data);
+    }).catch(err => {
+        console.error('[DMP API] Ошибка ' + action + ':', err);
+        toast('Ошибка DMP API: ' + err.message);
+    });
+}
+
+function dmpStartParsing(id) {
+    const p = dmpProjects.find(x => x.id === id);
+    if (!p) return;
+    if (p.parsed >= p.totalLimit) { toast('Достигнут лимит номеров'); return; }
+    p.status = 'active';
+    p.updated = now();
+    addActivity('dmp', `Парсинг запущен: "${p.name}"`, p.clientId);
+    persist();
+    renderDmpProjects();
+    toast('Парсинг запущен');
+    dmpApiToggle(id, 'start');
+    // Simulate incoming data
+    dmpSimulateResults(id);
+}
+
+function dmpPauseParsing(id) {
+    const p = dmpProjects.find(x => x.id === id);
+    if (!p) return;
+    p.status = 'paused';
+    p.updated = now();
+    addActivity('dmp', `Парсинг приостановлен: "${p.name}"`, p.clientId);
+    persist();
+    renderDmpProjects();
+    toast('Парсинг приостановлен');
+    dmpApiToggle(id, 'pause');
+}
+
+function dmpStopParsing(id) {
+    const p = dmpProjects.find(x => x.id === id);
+    if (!p) return;
+    p.status = 'stopped';
+    p.updated = now();
+    addActivity('dmp', `Парсинг остановлен: "${p.name}"`, p.clientId);
+    persist();
+    renderDmpProjects();
+    toast('Парсинг остановлен');
+    dmpApiToggle(id, 'stop');
+}
+
+function dmpResumeParsing(id) {
+    dmpStartParsing(id);
+}
+
+function dmpDeleteProject(id) {
+    document.getElementById('dmp-delete-target').value = id;
+    openModal('dmp-delete-modal');
+}
+
+function confirmDeleteDmpProject() {
+    const id = document.getElementById('dmp-delete-target').value;
+    const p = dmpProjects.find(x => x.id === id);
+    if (p) {
+        addActivity('dmp', `Проект DMP удалён: "${p.name}"`, p.clientId);
+    }
+    dmpProjects = dmpProjects.filter(x => x.id !== id);
+    dmpResults = dmpResults.filter(x => x.projectId !== id);
+    persist();
+    closeModal('dmp-delete-modal');
+    renderDmpProjects();
+    toast('Проект удалён');
+}
+
+function dmpStatusTag(status) {
+    const map = {
+        idle: ['Не запущен', 'idle'],
+        active: ['Активен', 'active'],
+        paused: ['Приостановлен', 'paused'],
+        stopped: ['Завершён', 'stopped']
+    };
+    const v = map[status] || ['—', 'idle'];
+    return `<span class="dmp-status-indicator"><span class="dmp-status-dot ${v[1]}"></span>${v[0]}</span>`;
+}
+
+function renderDmpProjects() {
+    // Load API config into fields
+    const config = loadDmpConfig();
+    const urlEl = document.getElementById('dmp-api-url');
+    const keyEl = document.getElementById('dmp-api-key');
+    if (urlEl && config.url) urlEl.value = config.url;
+    if (keyEl && config.key) keyEl.value = config.key;
+
+    // Analytics
+    const totalProjects = dmpProjects.length;
+    const activeProjects = dmpProjects.filter(p => p.status === 'active').length;
+    const totalParsed = dmpProjects.reduce((s, p) => s + (p.parsed || 0), 0);
+    const totalResults = dmpResults.length;
+
+    document.getElementById('dmp-analytics').innerHTML = `
+        <div class="stat-card"><div class="stat-label">Проектов</div><div class="stat-value">${totalProjects}</div></div>
+        <div class="stat-card"><div class="stat-label">Активных</div><div class="stat-value" style="color:var(--success);">${activeProjects}</div></div>
+        <div class="stat-card"><div class="stat-label">Спарсено номеров</div><div class="stat-value" style="color:var(--accent-light);">${totalParsed}</div></div>
+        <div class="stat-card"><div class="stat-label">Результатов с записями</div><div class="stat-value" style="color:var(--info);">${totalResults}</div></div>
+    `;
+
+    // Projects grid
+    const container = document.getElementById('dmp-projects');
+    const empty = document.getElementById('dmp-projects-empty');
+    if (dmpProjects.length === 0) {
+        container.innerHTML = '';
+        empty.style.display = '';
+        return;
+    }
+    empty.style.display = 'none';
+
+    container.innerHTML = dmpProjects.map(p => {
+        const pct = p.totalLimit > 0 ? Math.min(100, Math.round((p.parsed / p.totalLimit) * 100)) : 0;
+        const clientName = getClientName(p.clientId);
+        const siteTags = (p.sites || []).map(s => `<span class="dmp-site-tag">${esc(s)}</span>`).join('');
+
+        let actionBtns = '';
+        if (p.status === 'idle' || p.status === 'stopped') {
+            actionBtns = `<button class="btn btn-sm dmp-btn-start" onclick="dmpStartParsing('${p.id}')">▶ Начать</button>`;
+        } else if (p.status === 'active') {
+            actionBtns = `
+                <button class="btn btn-sm dmp-btn-pause" onclick="dmpPauseParsing('${p.id}')">⏸ Пауза</button>
+                <button class="btn btn-sm dmp-btn-stop" onclick="dmpStopParsing('${p.id}')">⏹ Стоп</button>
+            `;
+        } else if (p.status === 'paused') {
+            actionBtns = `
+                <button class="btn btn-sm dmp-btn-start" onclick="dmpResumeParsing('${p.id}')">▶ Продолжить</button>
+                <button class="btn btn-sm dmp-btn-stop" onclick="dmpStopParsing('${p.id}')">⏹ Стоп</button>
+            `;
+        }
+
+        return `
+        <div class="dmp-project-card">
+            <div class="dmp-project-header">
+                <div>
+                    <div class="dmp-project-title">${esc(p.name)}</div>
+                    <div class="dmp-project-client">${esc(clientName)}</div>
+                </div>
+                ${dmpStatusTag(p.status)}
+            </div>
+            <div class="dmp-project-stats">
+                <div class="dmp-project-stat">
+                    <div class="dmp-project-stat-label">Спарсено</div>
+                    <div class="dmp-project-stat-value">${p.parsed || 0} <span style="font-size:.75rem;font-weight:400;color:var(--text-muted);">/ ${p.totalLimit}</span></div>
+                </div>
+                <div class="dmp-project-stat">
+                    <div class="dmp-project-stat-label">Дневной лимит</div>
+                    <div class="dmp-project-stat-value">${p.dailyLimit}</div>
+                </div>
+            </div>
+            <div class="dmp-project-progress"><div class="dmp-project-progress-bar" style="width:${pct}%"></div></div>
+            <div class="dmp-project-sites">${siteTags}</div>
+            ${p.audience ? `<div style="font-size:.8rem;color:var(--text-secondary);margin-bottom:12px;">ЦА: ${esc(p.audience)}</div>` : ''}
+            <div class="dmp-project-actions">
+                ${actionBtns}
+                <button class="btn btn-sm" onclick="switchPortationTab('results',document.querySelectorAll('.dmp-tab')[2])">Результаты</button>
+                <button class="btn btn-sm btn-danger" onclick="dmpDeleteProject('${p.id}')">Удалить</button>
+            </div>
+        </div>`;
+    }).join('');
+}
+
+function renderDmpResults() {
+    const search = (document.getElementById('dmp-results-search')?.value || '').toLowerCase();
+    const filterProject = document.getElementById('dmp-results-filter')?.value || 'all';
+
+    // Update project filter
+    const filterEl = document.getElementById('dmp-results-filter');
+    if (filterEl) {
+        const sel = filterEl.value;
+        filterEl.innerHTML = '<option value="all">Все проекты</option>';
+        dmpProjects.forEach(p => {
+            filterEl.innerHTML += `<option value="${p.id}" ${p.id===sel?'selected':''}>${esc(p.name)}</option>`;
+        });
+    }
+
+    // Analytics
+    const totalResults = dmpResults.length;
+    const withAudio = dmpResults.filter(r => r.audioUrl).length;
+    const todayResults = dmpResults.filter(r => {
+        const d = new Date(r.created);
+        const t = new Date();
+        return d.toDateString() === t.toDateString();
+    }).length;
+
+    document.getElementById('dmp-results-analytics').innerHTML = `
+        <div class="stat-card"><div class="stat-label">Всего результатов</div><div class="stat-value">${totalResults}</div></div>
+        <div class="stat-card"><div class="stat-label">С записями</div><div class="stat-value" style="color:var(--info);">${withAudio}</div></div>
+        <div class="stat-card"><div class="stat-label">Сегодня</div><div class="stat-value" style="color:var(--success);">${todayResults}</div></div>
+    `;
+
+    let filtered = [...dmpResults];
+    if (filterProject !== 'all') filtered = filtered.filter(r => r.projectId === filterProject);
+    if (search) filtered = filtered.filter(r => (r.phone || '').includes(search) || (r.callInfo || '').toLowerCase().includes(search));
+    filtered.sort((a, b) => new Date(b.created) - new Date(a.created));
+
+    const tbody = document.getElementById('dmp-results-table');
+    const empty = document.getElementById('dmp-results-empty');
+    if (filtered.length === 0) {
+        tbody.innerHTML = '';
+        empty.style.display = '';
+        return;
+    }
+    empty.style.display = 'none';
+
+    tbody.innerHTML = filtered.map(r => {
+        const project = dmpProjects.find(p => p.id === r.projectId);
+        const projectName = project ? project.name : '—';
+        const audioHtml = r.audioUrl
+            ? `<div class="dmp-audio-cell"><audio controls src="${esc(r.audioUrl)}" preload="none"></audio></div>`
+            : '<span style="color:var(--text-muted);">—</span>';
+
+        return `<tr>
+            <td>${formatDateTime(r.created)}</td>
+            <td><span style="font-size:.8rem;">${esc(projectName)}</span></td>
+            <td><span style="font-family:'JetBrains Mono',monospace;font-size:.85rem;">${esc(r.phone)}</span></td>
+            <td><span style="font-size:.8rem;color:var(--text-secondary);">${esc(r.callInfo || '—')}</span></td>
+            <td>${audioHtml}</td>
+            <td><button class="btn btn-sm" onclick="dmpAddToClients('${r.id}')">В клиенты</button></td>
+        </tr>`;
+    }).join('');
+}
+
+function dmpAddToClients(resultId) {
+    const r = dmpResults.find(x => x.id === resultId);
+    if (!r) return;
+    // Check if already exists
+    const exists = clients.find(c => c.phone === r.phone);
+    if (exists) { toast('Клиент с таким номером уже существует'); return; }
+    const client = {
+        id: genId(),
+        name: 'Лид: ' + r.phone,
+        phone: r.phone,
+        company: '',
+        email: '',
+        login: '',
+        password: '',
+        notes: 'Источник: DMP парсинг. ' + (r.callInfo || ''),
+        created: now()
+    };
+    clients.push(client);
+    addActivity('client', `Клиент добавлен из DMP: ${r.phone}`, client.id);
+    persist();
+    updateBadges();
+    populateClientSelects();
+    toast('Контакт добавлен в клиенты');
+}
+
+// Simulate incoming webhook results (for demo)
+function dmpSimulateResults(projectId) {
+    const project = dmpProjects.find(p => p.id === projectId);
+    if (!project || project.status !== 'active') return;
+
+    const phones = ['+7 900 111-22-33','+7 901 222-33-44','+7 902 333-44-55','+7 903 444-55-66','+7 904 555-66-77','+7 905 666-77-88'];
+    const infos = ['Заинтересован в услуге','Просил перезвонить','Уточнял цену','Готов к встрече','Запросил КП','Нужна консультация'];
+
+    // Add 2-3 simulated results
+    const count = Math.min(2 + Math.floor(Math.random() * 2), project.totalLimit - project.parsed);
+    if (count <= 0) {
+        project.status = 'stopped';
+        persist();
+        renderDmpProjects();
+        return;
+    }
+
+    for (let i = 0; i < count; i++) {
+        const phone = phones[Math.floor(Math.random() * phones.length)].replace(/\d{2}-\d{2}$/, () =>
+            String(Math.floor(Math.random()*90)+10) + '-' + String(Math.floor(Math.random()*90)+10)
+        );
+        dmpResults.push({
+            id: genId(),
+            projectId: projectId,
+            phone: phone,
+            callInfo: infos[Math.floor(Math.random() * infos.length)],
+            audioUrl: '',
+            created: now()
+        });
+        project.parsed++;
+    }
+
+    if (project.parsed >= project.totalLimit) {
+        project.status = 'stopped';
+        toast('Лимит номеров достигнут для "' + project.name + '"');
+    }
+
+    project.updated = now();
+    persist();
+    renderDmpProjects();
+    renderDmpResults();
+}
+
+// Webhook handler for receiving DMP data
+window.CRM_dmpWebhook = function(data) {
+    // data: { projectId, phone, callInfo, audioUrl }
+    const project = dmpProjects.find(p => p.id === data.projectId);
+    if (!project) return;
+    if (project.parsed >= project.totalLimit) {
+        project.status = 'stopped';
+        persist();
+        return;
+    }
+
+    dmpResults.push({
+        id: genId(),
+        projectId: data.projectId,
+        phone: data.phone || '',
+        callInfo: data.callInfo || '',
+        audioUrl: data.audioUrl || '',
+        created: now()
+    });
+    project.parsed++;
+    if (project.parsed >= project.totalLimit) {
+        project.status = 'stopped';
+    }
+    project.updated = now();
+    addActivity('dmp', `Новый номер от DMP: ${data.phone}`, project.clientId);
+    persist();
+    updateBadges();
+};
+
 // ==================== INIT ====================
 // #reset в URL — очистка всех данных
 if (location.hash === '#reset' || location.href.includes('reset')) {
-    ['clients','deals','tasks','calls','applications','tickets','portations','activities','conversations'].forEach(k => localStorage.removeItem('crm_'+k));
-    clients=[]; deals=[]; tasks=[]; calls=[]; applications=[]; tickets=[]; portations=[]; activities=[]; conversations=[];
+    ['clients','deals','tasks','calls','applications','tickets','portations','activities','conversations','dmp_projects','dmp_results','dmp_config','tel_lines','tel_calls','tel_config','tm_calllists','tm_results','tm_agreements','tm_config'].forEach(k => localStorage.removeItem('crm_'+k));
+    clients=[]; deals=[]; tasks=[]; calls=[]; applications=[]; tickets=[]; portations=[]; activities=[]; conversations=[]; dmpProjects=[]; dmpResults=[]; telLines=[]; telCalls=[]; tmCallLists=[]; tmCallResults=[]; tmAgreements=[];
     location.hash = '';
 }
+
+// ==================== TELEPHONY INTEGRATION ====================
+function loadTelConfig() {
+    try { return JSON.parse(localStorage.getItem('crm_tel_config')) || {}; } catch { return {}; }
+}
+
+function saveTelConfig() {
+    const cfg = {
+        provider: document.getElementById('tel-provider').value,
+        apiUrl: document.getElementById('tel-api-url').value.trim(),
+        apiKey: document.getElementById('tel-api-key').value.trim(),
+        sipLogin: document.getElementById('tel-sip-login').value.trim(),
+        sipPass: document.getElementById('tel-sip-pass').value.trim()
+    };
+    localStorage.setItem('crm_tel_config', JSON.stringify(cfg));
+    toast('Настройки телефонии сохранены');
+}
+
+function testTelConnection() {
+    const cfg = loadTelConfig();
+    if (!cfg.apiUrl && !cfg.provider) { toast('Сначала настройте провайдера'); return; }
+    toast('Проверка подключения...');
+    // Simulate connection test
+    setTimeout(() => {
+        if (cfg.apiUrl && cfg.apiKey) {
+            toast('Подключение установлено');
+        } else {
+            toast('Ошибка: проверьте настройки');
+        }
+    }, 1500);
+}
+
+function telProviderChange() {
+    const provider = document.getElementById('tel-provider').value;
+    const urlEl = document.getElementById('tel-api-url');
+    const defaults = {
+        asterisk: 'https://pbx.yourcompany.ru:8089/ari',
+        mango: 'https://app.mango-office.ru/vpbx',
+        sipuni: 'https://sipuni.com/api',
+        zadarma: 'https://api.zadarma.com/v1',
+        rostelecom: 'https://api.rt.ru/telephony/v1',
+        megafon: 'https://api.megafon.ru/ats/v1'
+    };
+    if (defaults[provider]) urlEl.value = defaults[provider];
+}
+
+function renderTelephony() {
+    const cfg = loadTelConfig();
+    // Restore config fields
+    if (cfg.provider) document.getElementById('tel-provider').value = cfg.provider;
+    if (cfg.apiUrl) document.getElementById('tel-api-url').value = cfg.apiUrl;
+    if (cfg.apiKey) document.getElementById('tel-api-key').value = cfg.apiKey;
+    if (cfg.sipLogin) document.getElementById('tel-sip-login').value = cfg.sipLogin;
+    if (cfg.sipPass) document.getElementById('tel-sip-pass').value = cfg.sipPass;
+
+    // Stats
+    const connected = cfg.apiUrl && cfg.apiKey ? 'Подключено' : 'Не подключено';
+    const connColor = cfg.apiUrl && cfg.apiKey ? 'var(--success)' : 'var(--text-muted)';
+    const totalLines = telLines.length;
+    const activeLines = telLines.filter(l => l.active).length;
+    const totalCalls = telCalls.length;
+
+    document.getElementById('tel-stats').innerHTML = `
+        <div class="stat-card"><div class="stat-label">Статус</div><div class="stat-value" style="color:${connColor};font-size:.9rem;">${connected}</div></div>
+        <div class="stat-card"><div class="stat-label">Линий</div><div class="stat-value">${totalLines}</div></div>
+        <div class="stat-card"><div class="stat-label">Активных</div><div class="stat-value" style="color:var(--success);">${activeLines}</div></div>
+        <div class="stat-card"><div class="stat-label">Звонков</div><div class="stat-value" style="color:var(--info);">${totalCalls}</div></div>
+    `;
+
+    // Lines table
+    const linesTbody = document.getElementById('tel-lines-table');
+    if (telLines.length === 0) {
+        linesTbody.innerHTML = '<tr><td colspan="5" style="text-align:center;color:var(--text-muted);padding:40px;">Нет добавленных линий</td></tr>';
+    } else {
+        linesTbody.innerHTML = telLines.map(l => {
+            const typeMap = { incoming: 'Входящая', outgoing: 'Исходящая', both: 'Двусторонняя' };
+            const statusHtml = l.active
+                ? '<span class="dmp-status-indicator"><span class="dmp-status-dot active"></span>Активна</span>'
+                : '<span class="dmp-status-indicator"><span class="dmp-status-dot idle"></span>Неактивна</span>';
+            return `<tr>
+                <td style="font-family:'JetBrains Mono',monospace;font-size:.85rem;">${esc(l.number)}</td>
+                <td>${esc(l.name || '—')}</td>
+                <td><span class="tag tag-info">${typeMap[l.type] || l.type}</span></td>
+                <td>${statusHtml}</td>
+                <td>
+                    <button class="btn btn-sm" onclick="toggleTelLine('${l.id}')">${l.active ? 'Отключить' : 'Включить'}</button>
+                    <button class="btn btn-sm btn-danger" onclick="deleteTelLine('${l.id}')">Удалить</button>
+                </td>
+            </tr>`;
+        }).join('');
+    }
+
+    // Calls table
+    const callsTbody = document.getElementById('tel-calls-table');
+    if (telCalls.length === 0) {
+        callsTbody.innerHTML = '<tr><td colspan="6" style="text-align:center;color:var(--text-muted);padding:40px;">Нет звонков</td></tr>';
+    } else {
+        callsTbody.innerHTML = [...telCalls].reverse().slice(0, 50).map(c => {
+            const dirMap = { in: ['Входящий', 'tag-info'], out: ['Исходящий', 'tag-accent'], missed: ['Пропущенный', 'tag-danger'] };
+            const dir = dirMap[c.direction] || [c.direction, 'tag-muted'];
+            const statusMap = { answered: ['Принят', 'tag-success'], missed: ['Пропущен', 'tag-danger'], busy: ['Занято', 'tag-warning'], noanswer: ['Нет ответа', 'tag-muted'] };
+            const st = statusMap[c.status] || [c.status, 'tag-muted'];
+            const audioHtml = c.recordUrl ? `<audio controls src="${esc(c.recordUrl)}" preload="none" style="height:32px;max-width:180px;"></audio>` : '<span style="color:var(--text-muted);">—</span>';
+            return `<tr>
+                <td>${formatDateTime(c.created)}</td>
+                <td style="font-family:'JetBrains Mono',monospace;font-size:.85rem;">${esc(c.phone)}</td>
+                <td><span class="tag ${dir[1]}">${dir[0]}</span></td>
+                <td>${formatDuration(c.duration)}</td>
+                <td><span class="tag ${st[1]}">${st[0]}</span></td>
+                <td>${audioHtml}</td>
+            </tr>`;
+        }).join('');
+    }
+}
+
+function openTelLineModal(id) {
+    document.getElementById('tel-line-id').value = id || '';
+    document.getElementById('tel-line-modal-title').textContent = id ? 'Редактировать линию' : 'Добавить линию';
+    if (id) {
+        const l = telLines.find(x => x.id === id);
+        if (l) {
+            document.getElementById('tel-line-number').value = l.number;
+            document.getElementById('tel-line-name').value = l.name || '';
+            document.getElementById('tel-line-type').value = l.type || 'both';
+        }
+    } else {
+        document.getElementById('tel-line-number').value = '';
+        document.getElementById('tel-line-name').value = '';
+        document.getElementById('tel-line-type').value = 'both';
+    }
+    openModal('tel-line-modal');
+}
+
+function saveTelLine(e) {
+    e.preventDefault();
+    const id = document.getElementById('tel-line-id').value;
+    const data = {
+        number: document.getElementById('tel-line-number').value.trim(),
+        name: document.getElementById('tel-line-name').value.trim(),
+        type: document.getElementById('tel-line-type').value
+    };
+    if (id) {
+        const l = telLines.find(x => x.id === id);
+        if (l) { Object.assign(l, data); l.updated = now(); }
+    } else {
+        telLines.push({ id: genId(), ...data, active: true, created: now() });
+        addActivity('telephony', `Добавлена линия: ${data.number}`, null);
+    }
+    persist();
+    closeModal('tel-line-modal');
+    renderTelephony();
+    toast(id ? 'Линия обновлена' : 'Линия добавлена');
+}
+
+function toggleTelLine(id) {
+    const l = telLines.find(x => x.id === id);
+    if (l) { l.active = !l.active; persist(); renderTelephony(); toast(l.active ? 'Линия включена' : 'Линия отключена'); }
+}
+
+function deleteTelLine(id) {
+    telLines = telLines.filter(x => x.id !== id);
+    persist();
+    renderTelephony();
+    toast('Линия удалена');
+}
+
+// Webhook for incoming telephony events
+window.CRM_telWebhook = function(data) {
+    // data: { phone, direction, duration, status, recordUrl }
+    telCalls.push({
+        id: genId(),
+        phone: data.phone || '',
+        direction: data.direction || 'in',
+        duration: data.duration || 0,
+        status: data.status || 'answered',
+        recordUrl: data.recordUrl || '',
+        created: now()
+    });
+    if (telCalls.length > 500) telCalls = telCalls.slice(-500);
+    addActivity('telephony', `${data.direction === 'out' ? 'Исходящий' : 'Входящий'} звонок: ${data.phone}`, null);
+    persist();
+};
+
+// ==================== TELEMARKETING (SASHA AI) ====================
+const TM_PLATFORM = 'https://platform.trysasha.ru';
+let tmActiveTab = 'calllists';
+
+function loadTmConfig() {
+    try { return JSON.parse(localStorage.getItem('crm_tm_config')) || {}; } catch { return {}; }
+}
+
+function saveTmConfig() {
+    const cfg = {
+        webhookUrl: document.getElementById('tm-webhook-url').value.trim(),
+        secretKey: document.getElementById('tm-secret-key').value.trim()
+    };
+    localStorage.setItem('crm_tm_config', JSON.stringify(cfg));
+    toast('Настройки телемаркетинга сохранены');
+}
+
+function switchTmTab(tab, btn) {
+    tmActiveTab = tab;
+    document.querySelectorAll('.tm-tab').forEach(t => t.classList.remove('active'));
+    btn.classList.add('active');
+    document.querySelectorAll('.tm-tab-content').forEach(c => c.classList.remove('active'));
+    const el = document.getElementById('tm-tab-' + tab);
+    if (el) el.classList.add('active');
+    if (tab === 'calllists') renderTmCallLists();
+    if (tab === 'results') renderTmResults();
+    if (tab === 'agreements') renderTmAgreements();
+}
+
+function renderTelemarketing() {
+    const cfg = loadTmConfig();
+    if (cfg.webhookUrl) document.getElementById('tm-webhook-url').value = cfg.webhookUrl;
+    if (cfg.secretKey) document.getElementById('tm-secret-key').value = cfg.secretKey;
+    if (tmActiveTab === 'calllists') renderTmCallLists();
+    if (tmActiveTab === 'results') renderTmResults();
+    if (tmActiveTab === 'agreements') renderTmAgreements();
+}
+
+// --- Call Lists ---
+function renderTmCallLists() {
+    const total = tmCallLists.length;
+    const active = tmCallLists.filter(c => c.status === 'active').length;
+    const totalContacts = tmCallLists.reduce((s, c) => s + (c.contactCount || 0), 0);
+    const totalCalled = tmCallResults.length;
+
+    document.getElementById('tm-cl-stats').innerHTML = `
+        <div class="stat-card"><div class="stat-label">Колл-листов</div><div class="stat-value">${total}</div></div>
+        <div class="stat-card"><div class="stat-label">Активных</div><div class="stat-value" style="color:var(--success);">${active}</div></div>
+        <div class="stat-card"><div class="stat-label">Контактов</div><div class="stat-value" style="color:var(--accent-light);">${totalContacts}</div></div>
+        <div class="stat-card"><div class="stat-label">Обзвонено</div><div class="stat-value" style="color:var(--info);">${totalCalled}</div></div>
+    `;
+
+    const container = document.getElementById('tm-calllists-container');
+    const empty = document.getElementById('tm-cl-empty');
+    if (tmCallLists.length === 0) {
+        container.innerHTML = '';
+        empty.style.display = '';
+        return;
+    }
+    empty.style.display = 'none';
+
+    container.innerHTML = tmCallLists.map(cl => {
+        const results = tmCallResults.filter(r => r.callListId === cl.id);
+        const agrees = tmAgreements.filter(a => a.callListId === cl.id);
+        const statusMap = {
+            idle: ['Не запущен', 'tag-muted'],
+            active: ['Обзвон идёт', 'tag-success'],
+            paused: ['Приостановлен', 'tag-warning'],
+            completed: ['Завершён', 'tag-info']
+        };
+        const st = statusMap[cl.status] || [cl.status, 'tag-muted'];
+
+        let actions = '';
+        if (cl.status === 'idle' || cl.status === 'paused') {
+            actions += `<button class="btn btn-sm dmp-btn-start" onclick="tmStartCallList('${cl.id}')">▶ Запустить</button>`;
+        }
+        if (cl.status === 'active') {
+            actions += `<button class="btn btn-sm dmp-btn-pause" onclick="tmPauseCallList('${cl.id}')">⏸ Пауза</button>`;
+            actions += `<button class="btn btn-sm dmp-btn-stop" onclick="tmStopCallList('${cl.id}')">⏹ Стоп</button>`;
+        }
+        actions += `<button class="btn btn-sm" onclick="openTmSendModal('${cl.id}')">📤 Добавить контакты</button>`;
+        actions += `<button class="btn btn-sm btn-danger" onclick="tmDeleteCallList('${cl.id}')">Удалить</button>`;
+
+        return `<div class="tm-cl-card">
+            <div class="tm-cl-header">
+                <div>
+                    <div class="tm-cl-title">${esc(cl.name)}</div>
+                    <div class="tm-cl-meta">${cl.description || ''} · Создан ${formatDate(cl.created)}</div>
+                </div>
+                <span class="tag ${st[1]}">${st[0]}</span>
+            </div>
+            <div class="tm-cl-stats">
+                <div class="tm-cl-stat">Контактов: <b>${cl.contactCount || 0}</b></div>
+                <div class="tm-cl-stat">Обзвонено: <b>${results.length}</b></div>
+                <div class="tm-cl-stat">Договорённостей: <b>${agrees.length}</b></div>
+                ${cl.dmpProjectName ? `<div class="tm-cl-stat">Источник: <b>${esc(cl.dmpProjectName)}</b></div>` : ''}
+            </div>
+            <div class="dmp-project-actions">${actions}</div>
+        </div>`;
+    }).join('');
+}
+
+function openTmCallListModal() {
+    document.getElementById('tm-cl-name').value = '';
+    document.getElementById('tm-cl-desc').value = '';
+    // Populate DMP projects as sources
+    const sel = document.getElementById('tm-cl-source');
+    sel.innerHTML = '<option value="">— Без источника (добавить вручную) —</option>';
+    dmpProjects.forEach(p => {
+        const count = dmpResults.filter(r => r.projectId === p.id).length;
+        sel.innerHTML += `<option value="${p.id}">${esc(p.name)} (${count} номеров)</option>`;
+    });
+    openModal('tm-calllist-modal');
+}
+
+function saveTmCallList(e) {
+    e.preventDefault();
+    const sourceId = document.getElementById('tm-cl-source').value;
+    const dmpProject = sourceId ? dmpProjects.find(p => p.id === sourceId) : null;
+    const contacts = sourceId ? dmpResults.filter(r => r.projectId === sourceId) : [];
+
+    const cl = {
+        id: genId(),
+        name: document.getElementById('tm-cl-name').value.trim(),
+        description: document.getElementById('tm-cl-desc').value.trim(),
+        dmpProjectId: sourceId || null,
+        dmpProjectName: dmpProject ? dmpProject.name : '',
+        status: 'idle',
+        contactCount: contacts.length,
+        contacts: contacts.map(c => ({ phone: c.phone, callInfo: c.callInfo || '' })),
+        created: now()
+    };
+    tmCallLists.push(cl);
+    addActivity('telemarketing', `Колл-лист создан: "${cl.name}" (${cl.contactCount} контактов)`, null);
+    persist();
+    closeModal('tm-calllist-modal');
+    renderTmCallLists();
+    toast('Колл-лист создан');
+
+    // Auto-upload contacts to Sasha AI if webhook configured
+    if (contacts.length > 0) {
+        tmUploadContacts(cl.id, cl.contacts);
+    }
+}
+
+function tmUploadContacts(callListId, contacts) {
+    const cfg = loadTmConfig();
+    if (!cfg.webhookUrl) return;
+    const payload = contacts.map(c => ({
+        phone: c.phone.replace(/[\s\-\(\)]/g, ''),
+        tags: ['crm-import'],
+        additionalFields: { source: 'CRM DMP', info: c.callInfo || '' }
+    }));
+
+    fetch(cfg.webhookUrl, {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify(payload)
+    }).then(r => {
+        if (!r.ok) throw new Error('HTTP ' + r.status);
+        toast(`${contacts.length} контакт(ов) отправлено в Sasha AI`);
+    }).catch(err => {
+        console.error('[TM] Upload error:', err);
+        toast('Ошибка отправки: ' + err.message);
+    });
+}
+
+function openTmSendModal(clId) {
+    document.getElementById('tm-send-cl-id').value = clId;
+    // Show DMP results not yet in this call list
+    const cl = tmCallLists.find(c => c.id === clId);
+    const existingPhones = new Set((cl?.contacts || []).map(c => c.phone));
+
+    let available = [];
+    // From DMP results
+    dmpResults.forEach(r => { if (!existingPhones.has(r.phone)) available.push({ phone: r.phone, source: 'DMP', info: r.callInfo || '' }); });
+    // From CRM clients
+    clients.forEach(c => { if (c.phone && !existingPhones.has(c.phone)) available.push({ phone: c.phone, source: 'CRM', info: c.name || '' }); });
+
+    const container = document.getElementById('tm-send-contacts-list');
+    if (available.length === 0) {
+        container.innerHTML = '<div style="text-align:center;color:var(--text-muted);padding:20px;">Нет новых контактов для добавления</div>';
+    } else {
+        container.innerHTML = available.map((c, i) => `
+            <label style="display:flex;align-items:center;gap:10px;padding:8px;border-radius:8px;cursor:pointer;transition:background .15s;" onmouseover="this.style.background='var(--card-bg-hover)'" onmouseout="this.style.background=''">
+                <input type="checkbox" class="tm-send-check" value="${esc(c.phone)}" data-info="${esc(c.info)}" checked>
+                <span style="font-family:'JetBrains Mono',monospace;font-size:.85rem;">${esc(c.phone)}</span>
+                <span class="tag tag-muted" style="font-size:.65rem;">${c.source}</span>
+                <span style="font-size:.8rem;color:var(--text-muted);flex:1;text-align:right;">${esc(c.info)}</span>
+            </label>
+        `).join('');
+    }
+    openModal('tm-send-modal');
+}
+
+function tmSendContacts(e) {
+    e.preventDefault();
+    const clId = document.getElementById('tm-send-cl-id').value;
+    const cl = tmCallLists.find(c => c.id === clId);
+    if (!cl) return;
+
+    const checked = document.querySelectorAll('.tm-send-check:checked');
+    const newContacts = [];
+    checked.forEach(cb => {
+        newContacts.push({ phone: cb.value, callInfo: cb.dataset.info || '' });
+    });
+    if (newContacts.length === 0) { toast('Выберите контакты'); return; }
+
+    cl.contacts = (cl.contacts || []).concat(newContacts);
+    cl.contactCount = cl.contacts.length;
+    persist();
+    closeModal('tm-send-modal');
+    renderTmCallLists();
+    toast(`${newContacts.length} контакт(ов) добавлено`);
+    tmUploadContacts(clId, newContacts);
+}
+
+function tmStartCallList(id) {
+    const cl = tmCallLists.find(c => c.id === id);
+    if (!cl) return;
+    cl.status = 'active';
+    addActivity('telemarketing', `Обзвон запущен: "${cl.name}"`, null);
+    persist();
+    renderTmCallLists();
+    toast('Обзвон запущен');
+}
+
+function tmPauseCallList(id) {
+    const cl = tmCallLists.find(c => c.id === id);
+    if (!cl) return;
+    cl.status = 'paused';
+    addActivity('telemarketing', `Обзвон приостановлен: "${cl.name}"`, null);
+    persist();
+    renderTmCallLists();
+    toast('Обзвон приостановлен');
+}
+
+function tmStopCallList(id) {
+    const cl = tmCallLists.find(c => c.id === id);
+    if (!cl) return;
+    cl.status = 'completed';
+    addActivity('telemarketing', `Обзвон завершён: "${cl.name}"`, null);
+    persist();
+    renderTmCallLists();
+    toast('Обзвон завершён');
+}
+
+function tmDeleteCallList(id) {
+    const cl = tmCallLists.find(c => c.id === id);
+    if (cl) addActivity('telemarketing', `Колл-лист удалён: "${cl.name}"`, null);
+    tmCallLists = tmCallLists.filter(c => c.id !== id);
+    persist();
+    renderTmCallLists();
+    toast('Колл-лист удалён');
+}
+
+// --- Results ---
+function renderTmResults() {
+    const total = tmCallResults.length;
+    const completed = tmCallResults.filter(r => r.status === 'completed').length;
+    const failed = tmCallResults.filter(r => r.status === 'failed').length;
+    const avgDur = total > 0 ? Math.round(tmCallResults.reduce((s, r) => s + (r.duration || 0), 0) / total / 1000) : 0;
+
+    document.getElementById('tm-results-stats').innerHTML = `
+        <div class="stat-card"><div class="stat-label">Всего звонков</div><div class="stat-value">${total}</div></div>
+        <div class="stat-card"><div class="stat-label">Успешных</div><div class="stat-value" style="color:var(--success);">${completed}</div></div>
+        <div class="stat-card"><div class="stat-label">Неуспешных</div><div class="stat-value" style="color:var(--danger);">${failed}</div></div>
+        <div class="stat-card"><div class="stat-label">Средняя длит.</div><div class="stat-value" style="color:var(--info);">${formatDuration(avgDur)}</div></div>
+    `;
+
+    // Update filter
+    const filterEl = document.getElementById('tm-results-filter');
+    if (filterEl) {
+        const sel = filterEl.value;
+        filterEl.innerHTML = '<option value="all">Все колл-листы</option>';
+        tmCallLists.forEach(cl => {
+            filterEl.innerHTML += `<option value="${cl.id}" ${cl.id===sel?'selected':''}>${esc(cl.name)}</option>`;
+        });
+    }
+
+    const search = (document.getElementById('tm-results-search')?.value || '').toLowerCase();
+    const filter = (document.getElementById('tm-results-filter')?.value || 'all');
+    let filtered = [...tmCallResults];
+    if (filter !== 'all') filtered = filtered.filter(r => r.callListId === filter);
+    if (search) filtered = filtered.filter(r => (r.phone || '').includes(search) || (r.clientName || '').toLowerCase().includes(search));
+    filtered.sort((a, b) => new Date(b.timestamp) - new Date(a.timestamp));
+
+    const tbody = document.getElementById('tm-results-table');
+    if (filtered.length === 0) {
+        tbody.innerHTML = '<tr><td colspan="7" style="text-align:center;color:var(--text-muted);padding:40px;">Нет результатов</td></tr>';
+        return;
+    }
+
+    tbody.innerHTML = filtered.slice(0, 100).map(r => {
+        const stMap = { completed: ['Завершён', 'tag-success'], failed: ['Ошибка', 'tag-danger'], busy: ['Занято', 'tag-warning'], noanswer: ['Нет ответа', 'tag-muted'] };
+        const st = stMap[r.status] || [r.status, 'tag-muted'];
+        const interest = tmInterestTag(r.interestLevel);
+        const dur = r.duration ? formatDuration(Math.round(r.duration / 1000)) : '—';
+        const audio = r.recordUrl ? `<audio controls src="${esc(r.recordUrl)}" preload="none" style="height:32px;max-width:160px;"></audio>` : '—';
+        return `<tr>
+            <td>${formatDateTime(r.timestamp)}</td>
+            <td style="font-family:'JetBrains Mono',monospace;font-size:.85rem;">${esc(r.phone)}</td>
+            <td>${esc(r.clientName || '—')}</td>
+            <td><span class="tag ${st[1]}">${st[0]}</span></td>
+            <td>${dur}</td>
+            <td>${interest}</td>
+            <td>${audio}</td>
+        </tr>`;
+    }).join('');
+}
+
+function tmInterestTag(level) {
+    const map = {
+        high: ['Высокий', 'tm-interest-high'],
+        medium: ['Средний', 'tm-interest-medium'],
+        low: ['Низкий', 'tm-interest-low'],
+        none: ['Нет', 'tm-interest-none']
+    };
+    const v = map[level] || ['—', 'tm-interest-none'];
+    return `<span class="tm-interest ${v[1]}">${v[0]}</span>`;
+}
+
+// --- Agreements ---
+function renderTmAgreements() {
+    const total = tmAgreements.length;
+    const committed = tmAgreements.filter(a => a.isCommit).length;
+    const callbacks = tmAgreements.filter(a => a.needCallback).length;
+    const highInterest = tmAgreements.filter(a => a.interestLevel === 'high').length;
+
+    document.getElementById('tm-agree-stats').innerHTML = `
+        <div class="stat-card"><div class="stat-label">Всего</div><div class="stat-value">${total}</div></div>
+        <div class="stat-card"><div class="stat-label">Подтверждено</div><div class="stat-value" style="color:var(--success);">${committed}</div></div>
+        <div class="stat-card"><div class="stat-label">Перезвон</div><div class="stat-value" style="color:var(--warning);">${callbacks}</div></div>
+        <div class="stat-card"><div class="stat-label">Высокий интерес</div><div class="stat-value" style="color:var(--accent-light);">${highInterest}</div></div>
+    `;
+
+    const search = (document.getElementById('tm-agree-search')?.value || '').toLowerCase();
+    const filter = document.getElementById('tm-agree-filter')?.value || 'all';
+    let filtered = [...tmAgreements];
+    if (filter === 'callback') filtered = filtered.filter(a => a.needCallback);
+    if (filter === 'committed') filtered = filtered.filter(a => a.isCommit);
+    if (filter === 'high') filtered = filtered.filter(a => a.interestLevel === 'high');
+    if (search) filtered = filtered.filter(a => (a.phone || '').includes(search) || (a.clientName || '').toLowerCase().includes(search) || (a.agreements || '').toLowerCase().includes(search));
+    filtered.sort((a, b) => new Date(b.timestamp) - new Date(a.timestamp));
+
+    const container = document.getElementById('tm-agree-container');
+    const empty = document.getElementById('tm-agree-empty');
+    if (filtered.length === 0) {
+        container.innerHTML = '';
+        empty.style.display = '';
+        return;
+    }
+    empty.style.display = 'none';
+
+    container.innerHTML = filtered.map(a => {
+        const interest = tmInterestTag(a.interestLevel);
+        return `<div class="tm-agree-card">
+            <div class="tm-agree-header">
+                <div>
+                    <div class="tm-agree-phone">${esc(a.phone)}</div>
+                    ${a.clientName ? `<div class="tm-agree-name">${esc(a.clientName)}</div>` : ''}
+                </div>
+                <div style="display:flex;gap:6px;align-items:center;">
+                    ${interest}
+                    ${a.isCommit ? '<span class="tag tag-success">Подтверждено</span>' : ''}
+                    ${a.needCallback ? '<span class="tag tag-warning">Перезвон</span>' : ''}
+                </div>
+            </div>
+            ${a.agreements ? `<div style="font-size:.85rem;color:var(--text);margin:8px 0;"><b>Договорённость:</b> ${esc(a.agreements)}</div>` : ''}
+            ${a.agreementsTime ? `<div style="font-size:.8rem;color:var(--accent-light);margin-bottom:4px;">📅 ${esc(a.agreementsTime)}</div>` : ''}
+            ${a.clientFacts ? `<div class="tm-agree-facts">💡 ${esc(a.clientFacts)}</div>` : ''}
+            <div class="tm-agree-footer">
+                <span>${formatDateTime(a.timestamp)}</span>
+                ${a.callListName ? `<span>📋 ${esc(a.callListName)}</span>` : ''}
+                <button class="btn btn-sm" onclick="tmAddAgreementToClients('${a.id}')">В клиенты</button>
+            </div>
+        </div>`;
+    }).join('');
+}
+
+function tmAddAgreementToClients(agreeId) {
+    const a = tmAgreements.find(x => x.id === agreeId);
+    if (!a) return;
+    const exists = clients.find(c => c.phone === a.phone);
+    if (exists) { toast('Клиент с таким номером уже есть'); return; }
+    clients.push({
+        id: genId(),
+        name: a.clientName || 'Лид: ' + a.phone,
+        phone: a.phone,
+        company: '',
+        email: '',
+        login: '',
+        password: '',
+        notes: `Источник: Sasha AI. ${a.agreements || ''} ${a.clientFacts || ''}`.trim(),
+        created: now()
+    });
+    addActivity('client', `Клиент из телемаркетинга: ${a.phone}`, null);
+    persist();
+    updateBadges();
+    populateClientSelects();
+    toast('Контакт добавлен в клиенты');
+}
+
+// --- Webhook handler for Sasha AI events ---
+window.CRM_sashaWebhook = function(data) {
+    // data follows the Sasha AI call_result webhook format
+    if (!data || data.type !== 'call_result') return;
+
+    const call = data.call || {};
+    const contact = data.contact || {};
+    const callList = data.callList || {};
+    const agreements = call.agreements || {};
+
+    // Find matching call list
+    const clId = tmCallLists.find(cl => cl.name === callList.name)?.id || '';
+
+    // Store call result
+    const result = {
+        id: genId(),
+        eventId: data.id,
+        callListId: clId,
+        callListName: callList.name || '',
+        phone: contact.phone || '',
+        clientName: agreements.client_name || '',
+        status: call.status || 'completed',
+        duration: call.duration || 0,
+        startedAt: call.startedAt,
+        endedAt: call.endedAt,
+        hangupReason: call.hangupReason || '',
+        interestLevel: agreements.interest_level || 'none',
+        recordUrl: call.recordUrl || '',
+        timestamp: data.timestamp || now()
+    };
+    tmCallResults.push(result);
+
+    // If there are agreements, store them
+    if (agreements.isCommit || agreements.agreements || agreements.need_callback || (agreements.interest_level && agreements.interest_level !== 'none')) {
+        tmAgreements.push({
+            id: genId(),
+            callResultId: result.id,
+            callListId: clId,
+            callListName: callList.name || '',
+            phone: contact.phone || '',
+            clientName: agreements.client_name || '',
+            isCommit: agreements.isCommit || false,
+            agreements: agreements.agreements || '',
+            agreementsTime: agreements.agreements_time_local || agreements.agreements_time || '',
+            clientFacts: agreements.client_facts || '',
+            needCallback: agreements.need_callback || false,
+            interestLevel: agreements.interest_level || 'none',
+            timestamp: data.timestamp || now()
+        });
+    }
+
+    addActivity('telemarketing', `Звонок завершён: ${contact.phone || '?'} — ${call.status}`, null);
+    persist();
+};
+
+// ==================== SYNC FROM MAIN PROJECT ====================
+function dmpProcessSyncQueue() {
+    let queue = [];
+    try { queue = JSON.parse(localStorage.getItem('dmp_sync_queue') || '[]'); } catch { return; }
+    if (queue.length === 0) return;
+
+    let newCount = 0;
+    let remaining = [];
+
+    queue.forEach(item => {
+        // Already synced — remove from queue
+        const alreadyExists = dmpProjects.find(p => p.syncId === item.id);
+        if (alreadyExists) return;
+
+        // Skip empty entries
+        if (!item.niche && !item.client && (!item.sites || item.sites.length === 0)) return;
+
+        // Find client by login
+        let clientId = null;
+        if (item.login) {
+            const existing = clients.find(c => c.login === item.login);
+            if (existing) clientId = existing.id;
+        }
+
+        const projectName = (item.niche || 'ЦА') + ' — ' + (item.clientName || 'Клиент');
+        dmpProjects.push({
+            id: genId(),
+            syncId: item.id,
+            clientId: clientId,
+            name: projectName,
+            sites: item.sites || [],
+            dailyLimit: 50,
+            totalLimit: 500,
+            audience: item.client || '',
+            status: 'idle',
+            parsed: 0,
+            created: item.timestamp || now(),
+            updated: now()
+        });
+        addActivity('dmp', `Проект DMP создан из настроек ЦА: "${projectName}"`, clientId);
+        newCount++;
+    });
+
+    // Clear queue after processing
+    localStorage.setItem('dmp_sync_queue', '[]');
+
+    if (newCount > 0) {
+        persist();
+        toast('Получено из главного проекта: ' + newCount + ' проект(ов) DMP');
+        // Auto-switch to DMP tab if on portation page
+        const portSection = document.getElementById('section-portation');
+        if (portSection && portSection.classList.contains('active')) {
+            const dmpTab = document.querySelectorAll('.dmp-tab')[1];
+            if (dmpTab) switchPortationTab('dmp', dmpTab);
+        }
+    }
+}
+
+// Poll for new sync data every 3 seconds
+setInterval(dmpProcessSyncQueue, 3000);
 
 function init() {
     updateBadges();
     populateClientSelects();
     renderDashboard();
+    dmpProcessSyncQueue();
 }
 
 init();
