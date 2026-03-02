@@ -672,6 +672,30 @@
         .tm-interest-medium { background:var(--warning-bg); color:var(--warning); }
         .tm-interest-low { background:var(--info-bg); color:var(--info); }
         .tm-interest-none { background:var(--input-bg); color:var(--text-muted); }
+
+        /* Active/Inactive toggle */
+        .status-toggle { display:inline-flex; align-items:center; gap:8px; cursor:pointer; }
+        .status-toggle-track {
+            width:36px; height:20px; border-radius:10px; position:relative;
+            background:var(--danger-bg); border:1px solid rgba(239,68,68,0.3);
+            transition:all 0.3s;
+        }
+        .status-toggle-track.active {
+            background:var(--success-bg); border-color:rgba(52,211,153,0.3);
+        }
+        .status-toggle-thumb {
+            width:16px; height:16px; border-radius:50%; position:absolute; top:1px; left:1px;
+            background:var(--danger); transition:all 0.3s cubic-bezier(0.16,1,0.3,1);
+        }
+        .status-toggle-track.active .status-toggle-thumb {
+            transform:translateX(16px); background:var(--success);
+        }
+        .status-toggle-label { font-size:.8rem; font-weight:600; }
+        .status-toggle-label.active { color:var(--success); }
+        .status-toggle-label.inactive { color:var(--danger); }
+        .status-badge { padding:3px 10px; border-radius:6px; font-size:.75rem; font-weight:600; }
+        .status-badge.active { background:var(--success-bg); color:var(--success); }
+        .status-badge.inactive { background:var(--danger-bg); color:var(--danger); }
     </style>
 </head>
 <body>
@@ -795,7 +819,7 @@
             </div>
             <div class="card" style="padding:0;overflow:hidden;">
                 <table>
-                    <thead><tr><th>Имя</th><th>Компания</th><th>Телефон</th><th>Email</th><th>Сделки</th><th>Создан</th></tr></thead>
+                    <thead><tr><th>Имя</th><th>Компания</th><th>Телефон</th><th>Email</th><th>Статус</th><th>Сделки</th><th>Создан</th></tr></thead>
                     <tbody id="clients-table"></tbody>
                 </table>
             </div>
@@ -1687,18 +1711,20 @@ function renderClients() {
     );
     const tbody = document.getElementById('clients-table');
     if (filtered.length === 0) {
-        tbody.innerHTML = '<tr><td colspan="6" style="text-align:center;color:var(--text-muted);padding:40px;">Нет клиентов</td></tr>';
+        tbody.innerHTML = '<tr><td colspan="7" style="text-align:center;color:var(--text-muted);padding:40px;">Нет клиентов</td></tr>';
         return;
     }
     tbody.innerHTML = filtered.map(c => {
         const dCount = deals.filter(d => d.clientId === c.id).length;
-        return `<tr class="clickable-row" onclick="openClientDetail('${c.id}')">
-            <td><strong>${esc(c.name)}</strong></td>
-            <td>${esc(c.company||'—')}</td>
-            <td>${esc(c.phone||'—')}</td>
-            <td>${esc(c.email||'—')}</td>
-            <td>${dCount}</td>
-            <td>${formatDate(c.created)}</td>
+        const isActive = c.active !== false;
+        return `<tr class="clickable-row">
+            <td onclick="openClientDetail('${c.id}')"><strong>${esc(c.name)}</strong></td>
+            <td onclick="openClientDetail('${c.id}')">${esc(c.company||'—')}</td>
+            <td onclick="openClientDetail('${c.id}')">${esc(c.phone||'—')}</td>
+            <td onclick="openClientDetail('${c.id}')">${esc(c.email||'—')}</td>
+            <td><label class="status-toggle" onclick="event.stopPropagation()"><div class="status-toggle-track ${isActive?'active':''}" onclick="toggleClientActive('${c.id}',this)"><div class="status-toggle-thumb"></div></div><span class="status-toggle-label ${isActive?'active':'inactive'}">${isActive?'Активен':'Неактивен'}</span></label></td>
+            <td onclick="openClientDetail('${c.id}')">${dCount}</td>
+            <td onclick="openClientDetail('${c.id}')">${formatDate(c.created)}</td>
         </tr>`;
     }).join('');
 }
@@ -1721,7 +1747,7 @@ function saveClient(e) {
         addActivity('client', `Обновлён клиент: ${data.name}`, id);
         toast('Клиент обновлён');
     } else {
-        const newClient = { id: genId(), ...data, created: now() };
+        const newClient = { id: genId(), ...data, active: true, created: now() };
         clients.push(newClient);
         addActivity('client', `Создан клиент: ${data.name}`, newClient.id);
         toast('Клиент создан');
@@ -1738,6 +1764,25 @@ function resetClientForm() {
     document.getElementById('client-id').value = '';
     document.getElementById('client-modal-title').textContent = 'Новый клиент';
     ['client-name','client-company','client-phone','client-email','client-login','client-password','client-notes'].forEach(id => document.getElementById(id).value = '');
+}
+
+function toggleClientActive(id, el) {
+    const idx = clients.findIndex(c => c.id === id);
+    if (idx < 0) return;
+    clients[idx].active = clients[idx].active === false ? true : false;
+    clients[idx].updated = now();
+    persist();
+    const isActive = clients[idx].active !== false;
+    el.classList.toggle('active', isActive);
+    const label = el.parentElement.querySelector('.status-toggle-label');
+    if (label) {
+        label.textContent = isActive ? 'Активен' : 'Неактивен';
+        label.className = 'status-toggle-label ' + (isActive ? 'active' : 'inactive');
+    }
+    addActivity('client', (isActive ? 'Активирован' : 'Деактивирован') + ' клиент: ' + clients[idx].name, id);
+    toast(isActive ? 'Клиент активирован' : 'Клиент деактивирован');
+    // Re-render detail if open
+    if (currentDetailClient === id) renderClientDetail();
 }
 
 function editClient(id) {
@@ -1786,7 +1831,17 @@ function renderClientDetail() {
     const el = document.getElementById('client-detail-content');
 
     if (currentDetailTab === 'info') {
+        const isActive = c.active !== false;
         el.innerHTML = `
+            <div style="margin-bottom:16px;display:flex;align-items:center;gap:16px;">
+                <label class="status-toggle">
+                    <div class="status-toggle-track ${isActive?'active':''}" onclick="toggleClientActive('${c.id}',this)">
+                        <div class="status-toggle-thumb"></div>
+                    </div>
+                    <span class="status-toggle-label ${isActive?'active':'inactive'}">${isActive?'Активен':'Неактивен'}</span>
+                </label>
+                ${c.source === 'registration' ? '<span class="status-badge" style="background:var(--accent-bg);color:var(--accent-light);">Самостоятельная регистрация</span>' : ''}
+            </div>
             <div class="client-detail-grid">
                 <div>
                     <div class="client-detail-section">

@@ -1,0 +1,321 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Регистрация — AI Sales Platform</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800;900&family=Onest:wght@300;400;500;600;700&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --bg: #0a0a1a;
+            --card-bg: rgba(255, 255, 255, 0.04);
+            --card-border: rgba(255, 255, 255, 0.08);
+            --text: #fff;
+            --text-muted: rgba(255, 255, 255, 0.45);
+            --text-secondary: rgba(255, 255, 255, 0.85);
+            --text-label: rgba(255, 255, 255, 0.55);
+            --input-bg: rgba(255, 255, 255, 0.05);
+            --input-border: rgba(255, 255, 255, 0.1);
+            --modal-bg: #16162a;
+            --hover-bg: rgba(255, 255, 255, 0.04);
+            --link-bg: rgba(255, 255, 255, 0.06);
+            --divider-color: rgba(255, 255, 255, 0.25);
+            --divider-line: rgba(255, 255, 255, 0.08);
+            --border-color: rgba(255, 255, 255, 0.06);
+        }
+
+        body.light {
+            --bg: #f0f2f5;
+            --card-bg: rgba(0, 0, 0, 0.02);
+            --card-border: rgba(0, 0, 0, 0.06);
+            --text: #1a1a2e;
+            --text-muted: rgba(0, 0, 0, 0.4);
+            --text-secondary: rgba(0, 0, 0, 0.7);
+            --text-label: rgba(0, 0, 0, 0.55);
+            --input-bg: rgba(0, 0, 0, 0.03);
+            --input-border: rgba(0, 0, 0, 0.1);
+            --modal-bg: #ffffff;
+            --hover-bg: rgba(0, 0, 0, 0.04);
+            --link-bg: rgba(0, 0, 0, 0.04);
+            --divider-color: rgba(0, 0, 0, 0.25);
+            --divider-line: rgba(0, 0, 0, 0.08);
+            --border-color: rgba(0, 0, 0, 0.06);
+        }
+
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        body {
+            font-family: 'Onest', 'Inter', sans-serif;
+            background: var(--bg);
+            min-height: 100vh;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            transition: background 0.4s;
+            padding: 20px;
+        }
+
+        .orb {
+            position: fixed; border-radius: 50%; filter: blur(120px); pointer-events: none; opacity: 0.5;
+        }
+        .orb1 { width: 600px; height: 600px; background: rgba(108,92,231,0.15); top: -200px; left: -100px; }
+        .orb2 { width: 500px; height: 500px; background: rgba(168,85,247,0.1); bottom: -150px; right: -100px; }
+
+        .reg-container {
+            background: var(--modal-bg);
+            border: 1px solid var(--card-border);
+            border-radius: 28px;
+            padding: 44px 36px;
+            max-width: 460px;
+            width: 100%;
+            text-align: center;
+            box-shadow: 0 30px 80px rgba(0,0,0,0.5);
+            position: relative;
+            z-index: 1;
+            animation: slideUp 0.6s cubic-bezier(0.16,1,0.3,1) both;
+        }
+        @keyframes slideUp { from { opacity: 0; transform: translateY(30px) scale(0.96); } }
+
+        .reg-title { font-size: 26px; font-weight: 800; color: var(--text); margin-bottom: 8px; }
+        .reg-subtitle { font-size: 14px; color: var(--text-muted); margin-bottom: 28px; }
+
+        .form-group { margin-bottom: 14px; text-align: left; }
+        .form-group label { display: block; font-size: 13px; font-weight: 600; color: var(--text-label); margin-bottom: 6px; }
+        .form-group input {
+            width: 100%; padding: 13px 16px; background: var(--input-bg);
+            border: 1px solid var(--input-border); border-radius: 14px; color: var(--text);
+            font-family: inherit; font-size: 15px; outline: none; transition: border-color 0.3s, background 0.3s;
+        }
+        .form-group input::placeholder { color: var(--text-muted); }
+        .form-group input:focus { border-color: rgba(108,92,231,0.6); background: rgba(108,92,231,0.06); }
+        .form-group input.error { border-color: #ef4444; background: rgba(239,68,68,0.06); }
+
+        .error-msg {
+            display: none; margin-top: 12px; padding: 12px 16px;
+            background: rgba(239,68,68,0.1); border: 1px solid rgba(239,68,68,0.2);
+            border-radius: 12px; color: #f87171; font-size: 13px; font-weight: 500; text-align: center;
+        }
+        .error-msg.show { display: block; }
+
+        .success-msg {
+            display: none; margin-top: 12px; padding: 12px 16px;
+            background: rgba(52,211,153,0.1); border: 1px solid rgba(52,211,153,0.2);
+            border-radius: 12px; color: #34d399; font-size: 13px; font-weight: 500; text-align: center;
+        }
+        .success-msg.show { display: block; }
+
+        .submit-btn {
+            width: 100%; padding: 16px; margin-top: 8px;
+            background: linear-gradient(135deg, #6c5ce7, #a855f7); color: #fff; border: none;
+            border-radius: 14px; font-family: inherit; font-size: 15px; font-weight: 700;
+            cursor: pointer; transition: all 0.3s cubic-bezier(0.16,1,0.3,1);
+            box-shadow: 0 6px 24px rgba(108,92,231,0.3);
+        }
+        .submit-btn:hover { transform: translateY(-2px); box-shadow: 0 10px 32px rgba(108,92,231,0.45); }
+        .submit-btn:disabled { opacity: 0.5; cursor: not-allowed; transform: none; }
+
+        .divider {
+            display: flex; align-items: center; gap: 16px; margin: 20px 0;
+            color: var(--divider-color); font-size: 13px; font-weight: 500;
+        }
+        .divider::before, .divider::after { content: ''; flex: 1; height: 1px; background: var(--divider-line); }
+
+        .link-btn {
+            width: 100%; padding: 14px; background: var(--link-bg);
+            border: 1px solid var(--input-border); border-radius: 14px; color: var(--text);
+            font-family: inherit; font-size: 15px; font-weight: 600; cursor: pointer;
+            display: flex; align-items: center; justify-content: center; gap: 10px;
+            transition: all 0.3s cubic-bezier(0.16,1,0.3,1);
+            text-decoration: none;
+        }
+        .link-btn:hover { background: var(--hover-bg); transform: translateY(-2px); }
+
+        .field-hint {
+            font-size: 12px; color: #f87171; margin-top: 4px; display: none;
+        }
+        .field-hint.show { display: block; }
+
+        .theme-toggle {
+            position: absolute; top: 16px; right: 16px;
+            display: flex; align-items: center; gap: 6px;
+            cursor: pointer; padding: 6px 10px; border-radius: 10px;
+            transition: background 0.2s; border: none; background: transparent;
+        }
+        .theme-toggle:hover { background: var(--hover-bg); }
+        .toggle-track {
+            width: 44px; height: 24px; border-radius: 12px;
+            background: rgba(108,92,231,0.3); position: relative; transition: background 0.3s;
+        }
+        body.light .toggle-track { background: rgba(251,191,36,0.3); }
+        .toggle-thumb {
+            width: 20px; height: 20px; border-radius: 50%; background: #6c5ce7;
+            position: absolute; top: 2px; left: 2px;
+            transition: transform 0.3s cubic-bezier(0.16,1,0.3,1), background 0.3s;
+        }
+        body.light .toggle-thumb { transform: translateX(20px); background: #f59e0b; }
+
+        .password-row { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; }
+        @media (max-width: 480px) { .password-row { grid-template-columns: 1fr; } }
+    </style>
+</head>
+<body>
+    <div class="orb orb1"></div>
+    <div class="orb orb2"></div>
+
+    <div class="reg-container">
+        <button class="theme-toggle" onclick="toggleTheme()">
+            <div class="toggle-track"><div class="toggle-thumb"></div></div>
+        </button>
+
+        <div class="reg-title">Регистрация</div>
+        <div class="reg-subtitle">Создайте аккаунт для доступа к платформе</div>
+
+        <form id="regForm" onsubmit="handleRegister(event)">
+            <div class="form-group">
+                <label>Название компании</label>
+                <input type="text" id="regCompany" placeholder="ООО «Ваша компания»" required>
+            </div>
+            <div class="form-group">
+                <label>Номер телефона</label>
+                <input type="tel" id="regPhone" placeholder="+7 (999) 123-45-67" required>
+            </div>
+            <div class="form-group">
+                <label>Email</label>
+                <input type="email" id="regEmail" placeholder="mail@company.ru" required>
+            </div>
+            <div class="form-group">
+                <label>Логин <span style="color:var(--text-muted);font-weight:400;">(минимум 6 символов)</span></label>
+                <input type="text" id="regLogin" placeholder="Придумайте логин" required minlength="6">
+                <div class="field-hint" id="loginHint">Такой логин уже существует</div>
+            </div>
+            <div class="password-row">
+                <div class="form-group">
+                    <label>Пароль</label>
+                    <input type="password" id="regPassword" placeholder="Пароль" required minlength="6">
+                </div>
+                <div class="form-group">
+                    <label>Подтверждение</label>
+                    <input type="password" id="regPasswordConfirm" placeholder="Ещё раз" required minlength="6">
+                </div>
+            </div>
+
+            <div class="error-msg" id="regError"></div>
+            <div class="success-msg" id="regSuccess">Регистрация прошла успешно! Перенаправляем на страницу входа...</div>
+
+            <button type="submit" class="submit-btn" id="regSubmitBtn">Зарегистрироваться</button>
+        </form>
+
+        <div class="divider">или</div>
+
+        <a href="index.html" class="link-btn">
+            <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M15 3h4a2 2 0 0 1 2 2v14a2 2 0 0 1-2 2h-4"/><polyline points="10 17 15 12 10 7"/><line x1="15" y1="12" x2="3" y2="12"/></svg>
+            Уже есть аккаунт? Войти
+        </a>
+    </div>
+
+    <script>
+        // Theme
+        if (localStorage.getItem('theme') === 'light') document.body.classList.add('light');
+        function toggleTheme() {
+            document.body.classList.toggle('light');
+            localStorage.setItem('theme', document.body.classList.contains('light') ? 'light' : 'dark');
+        }
+
+        function handleRegister(e) {
+            e.preventDefault();
+            var company = document.getElementById('regCompany').value.trim();
+            var phone = document.getElementById('regPhone').value.trim();
+            var email = document.getElementById('regEmail').value.trim();
+            var login = document.getElementById('regLogin').value.trim();
+            var password = document.getElementById('regPassword').value;
+            var passwordConfirm = document.getElementById('regPasswordConfirm').value;
+            var errorEl = document.getElementById('regError');
+            var successEl = document.getElementById('regSuccess');
+            var loginHint = document.getElementById('loginHint');
+
+            // Reset errors
+            errorEl.classList.remove('show');
+            successEl.classList.remove('show');
+            loginHint.classList.remove('show');
+            document.querySelectorAll('.form-group input').forEach(function(inp) { inp.classList.remove('error'); });
+
+            // Validate login length
+            if (login.length < 6) {
+                errorEl.textContent = 'Логин должен содержать минимум 6 символов';
+                errorEl.classList.add('show');
+                document.getElementById('regLogin').classList.add('error');
+                return;
+            }
+
+            // Validate password match
+            if (password !== passwordConfirm) {
+                errorEl.textContent = 'Пароли не совпадают';
+                errorEl.classList.add('show');
+                document.getElementById('regPassword').classList.add('error');
+                document.getElementById('regPasswordConfirm').classList.add('error');
+                return;
+            }
+
+            // Validate password length
+            if (password.length < 6) {
+                errorEl.textContent = 'Пароль должен содержать минимум 6 символов';
+                errorEl.classList.add('show');
+                document.getElementById('regPassword').classList.add('error');
+                return;
+            }
+
+            // Check unique login
+            var clients = [];
+            try { clients = JSON.parse(localStorage.getItem('crm_clients') || '[]'); } catch(ex) {}
+
+            var loginExists = false;
+            for (var i = 0; i < clients.length; i++) {
+                if (clients[i].login === login) {
+                    loginExists = true;
+                    break;
+                }
+            }
+            // Also check hardcoded test account
+            if (login === 'test') loginExists = true;
+
+            if (loginExists) {
+                loginHint.classList.add('show');
+                document.getElementById('regLogin').classList.add('error');
+                errorEl.textContent = 'Такой логин уже существует. Придумайте другой';
+                errorEl.classList.add('show');
+                return;
+            }
+
+            // Generate ID
+            var id = Date.now().toString(36) + Math.random().toString(36).substr(2, 5);
+
+            // Create client
+            var newClient = {
+                id: id,
+                name: company,
+                company: company,
+                phone: phone,
+                email: email,
+                login: login,
+                password: password,
+                notes: '',
+                active: false,
+                source: 'registration',
+                created: new Date().toISOString()
+            };
+
+            clients.push(newClient);
+            localStorage.setItem('crm_clients', JSON.stringify(clients));
+
+            // Show success
+            successEl.classList.add('show');
+            document.getElementById('regSubmitBtn').disabled = true;
+
+            // Redirect to login after 2 seconds
+            setTimeout(function() {
+                window.location.href = 'index.html';
+            }, 2000);
+        }
+    </script>
+</body>
+</html>
