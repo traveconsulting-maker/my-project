@@ -1270,7 +1270,7 @@
         .st-cal-apply:hover { opacity: .85; }
 
         .st-stats-grid {
-            display: grid; grid-template-columns: repeat(3, 1fr); gap: 16px;
+            display: grid; grid-template-columns: repeat(4, 1fr); gap: 16px;
             margin-bottom: 28px;
         }
         .st-stat-card {
@@ -1282,118 +1282,46 @@
         .st-stat-value { font-size: 32px; font-weight: 700; letter-spacing: -1px; margin-bottom: 6px; color: #fff; }
         .st-stat-sub { font-size: 13px; color: rgba(255,255,255,0.7); }
         .st-stat-sub strong { color: #fff; }
-        .st-stat-badge {
-            display: inline-flex; align-items: center; gap: 4px;
-            font-size: 12px; font-weight: 600; padding: 3px 8px; border-radius: 6px; margin-left: 8px;
-        }
-        .st-badge-up { background: rgba(46,204,113,.15); color: #2ecc71; }
-        .st-badge-down { background: rgba(231,76,60,.15); color: #e74c3c; }
 
-        .st-calls-section { margin-top: 8px; }
-        .st-calls-header {
-            display: flex; align-items: center; justify-content: space-between;
-            margin-bottom: 16px; flex-wrap: wrap;
-        }
-        .st-calls-title { font-size: 18px; font-weight: 700; color: #fff; }
-
-        .st-filters-row { display: flex; gap: 8px; flex-wrap: wrap; margin-bottom: 16px; }
-        .st-filter-select {
+        .st-charts-row { display: grid; grid-template-columns: 1fr 1fr; gap: 20px; margin-bottom: 28px; }
+        .st-chart-card {
             background: rgba(255,255,255,0.04); border: 1px solid rgba(255,255,255,0.08);
-            color: #fff; border-radius: 9px; padding: 8px 14px;
-            font-size: 13px; font-family: 'Onest','Inter',sans-serif; cursor: pointer;
-            appearance: none; background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='8' viewBox='0 0 12 8'%3E%3Cpath d='M1 1l5 5 5-5' stroke='%236b7898' stroke-width='1.5' fill='none' stroke-linecap='round'/%3E%3C/svg%3E");
-            background-repeat: no-repeat; background-position: right 10px center;
-            padding-right: 28px; transition: border-color .2s;
+            border-radius: 14px; padding: 22px;
         }
-        .st-filter-select:hover, .st-filter-select:focus { border-color: #4f8eff; outline: none; }
+        .st-chart-title { font-size: 15px; font-weight: 700; color: #fff; margin-bottom: 18px; }
+        .st-bar-row { display: flex; align-items: center; gap: 12px; margin-bottom: 12px; }
+        .st-bar-label { width: 140px; font-size: 13px; color: rgba(255,255,255,0.85); overflow: hidden; text-overflow: ellipsis; white-space: nowrap; flex-shrink: 0; }
+        .st-bar-track { flex: 1; height: 24px; background: rgba(255,255,255,0.04); border-radius: 6px; overflow: hidden; position: relative; }
+        .st-bar-fill { height: 100%; border-radius: 6px; transition: width .4s; min-width: 2px; }
+        .st-bar-fill-purple { background: linear-gradient(90deg, #6c5ce7, #a855f7); }
+        .st-bar-fill-green { background: linear-gradient(90deg, #00b894, #00cec9); }
+        .st-bar-val { width: 40px; text-align: right; font-size: 14px; font-weight: 700; color: #fff; flex-shrink: 0; }
+        .st-bar-empty { text-align: center; padding: 20px; font-size: 13px; color: rgba(255,255,255,0.5); }
 
-        .st-search-input {
-            background: rgba(255,255,255,0.04); border: 1px solid rgba(255,255,255,0.08);
-            color: #fff; border-radius: 9px; padding: 8px 14px;
-            font-size: 13px; font-family: 'Onest','Inter',sans-serif; flex: 1; min-width: 180px;
-            transition: border-color .2s;
-        }
-        .st-search-input:focus { border-color: #4f8eff; outline: none; }
-        .st-search-input::placeholder { color: rgba(255,255,255,0.5); }
+        .st-rank-badge { display: inline-flex; align-items: center; justify-content: center; width: 22px; height: 22px; border-radius: 6px; font-size: 11px; font-weight: 700; margin-right: 6px; flex-shrink: 0; }
+        .st-rank-1 { background: rgba(241,196,15,0.2); color: #f1c40f; }
+        .st-rank-2 { background: rgba(192,192,192,0.15); color: #bdc3c7; }
+        .st-rank-3 { background: rgba(205,127,50,0.15); color: #e67e22; }
+        .st-rank-other { background: rgba(255,255,255,0.06); color: rgba(255,255,255,0.5); }
 
-        .st-calls-scroll {
-            max-height: 560px; overflow-y: auto; padding-right: 4px;
-        }
-        .st-calls-scroll::-webkit-scrollbar { width: 5px; }
-        .st-calls-scroll::-webkit-scrollbar-track { background: rgba(255,255,255,0.04); border-radius: 4px; }
-        .st-calls-scroll::-webkit-scrollbar-thumb { background: rgba(255,255,255,0.08); border-radius: 4px; }
-
-        .st-call-row {
-            background: rgba(255,255,255,0.04); border: 1px solid rgba(255,255,255,0.08);
-            border-radius: 14px; padding: 16px 20px;
-            margin-bottom: 10px; display: grid;
-            grid-template-columns: 40px 1fr 110px 100px 110px 120px 130px 60px;
-            align-items: center; gap: 12px;
-            transition: border-color .2s, transform .15s; cursor: pointer;
-        }
-        .st-call-row:hover { border-color: #4f8eff; transform: translateX(2px); }
-
-        .st-call-num { font-family: 'JetBrains Mono', monospace; font-size: 12px; color: #fff; }
-        .st-call-name { font-weight: 600; font-size: 14px; margin-bottom: 3px; color: #fff; }
-        .st-call-phone { font-family: 'JetBrains Mono', monospace; font-size: 12px; color: rgba(255,255,255,0.7); }
-
-        .st-status-badge {
-            display: inline-flex; align-items: center; gap: 5px;
-            padding: 4px 10px; border-radius: 7px; font-size: 12px; font-weight: 600;
-        }
-        .st-status-success { background: rgba(46,204,113,.12); color: #2ecc71; border: 1px solid rgba(46,204,113,.25); }
-        .st-status-fail { background: rgba(231,76,60,.12); color: #e74c3c; border: 1px solid rgba(231,76,60,.25); }
-        .st-status-noanswer { background: rgba(241,196,15,.12); color: #f1c40f; border: 1px solid rgba(241,196,15,.25); }
-        .st-status-busy { background: rgba(155,89,182,.12); color: #9b59b6; border: 1px solid rgba(155,89,182,.25); }
-
-        .st-lead-badge {
-            display: inline-flex; align-items: center; gap: 5px;
-            padding: 4px 10px; border-radius: 7px; font-size: 12px; font-weight: 600;
-        }
-        .st-lead-yes { background: rgba(79,142,255,.12); color: #4f8eff; border: 1px solid rgba(79,142,255,.25); }
-        .st-lead-no { background: rgba(255,255,255,0.03); color: rgba(255,255,255,0.7); border: 1px solid rgba(255,255,255,0.08); }
-
-        .st-call-dur { font-family: 'JetBrains Mono', monospace; font-size: 13px; font-weight: 500; color: #fff; }
-        .st-call-date { font-size: 12px; color: rgba(255,255,255,0.7); }
-
-        .st-play-btn {
-            width: 34px; height: 34px; border-radius: 50%;
-            background: rgba(255,255,255,0.03); border: 1px solid rgba(255,255,255,0.08);
-            color: rgba(255,255,255,0.7); display: flex; align-items: center; justify-content: center;
-            cursor: pointer; transition: all .2s; font-size: 11px;
-        }
-        .st-play-btn:hover { background: #4f8eff; border-color: #4f8eff; color: #fff; }
-
-        .st-player-expand {
-            display: none; grid-column: 1 / -1;
-            background: rgba(255,255,255,0.03); border-top: 1px solid rgba(255,255,255,0.08);
-            padding: 14px; border-radius: 0 0 10px 10px; margin-top: 8px;
-        }
-        .st-player-expand.open { display: block; }
-        .st-audio-bar { display: flex; align-items: center; gap: 12px; }
-        .st-audio-play { width: 32px; height: 32px; border-radius: 50%; background: #4f8eff;
-            border: none; color: #fff; cursor: pointer; font-size: 11px; display: flex; align-items: center; justify-content: center; }
-        .st-audio-track { flex: 1; height: 4px; background: rgba(255,255,255,0.08); border-radius: 4px; position: relative; cursor: pointer; }
-        .st-audio-fill { height: 100%; background: #4f8eff; border-radius: 4px; width: 35%; }
-        .st-audio-time { font-family: 'JetBrains Mono', monospace; font-size: 12px; color: #fff; }
-
-        .st-col-labels {
-            display: grid;
-            grid-template-columns: 40px 1fr 110px 100px 110px 120px 130px 60px;
-            gap: 12px; padding: 0 20px 10px;
-            font-size: 11px; font-weight: 600; color: rgba(255,255,255,0.7); text-transform: uppercase; letter-spacing: .5px;
-        }
-
-        .st-dot { width: 7px; height: 7px; border-radius: 50%; display: inline-block; }
-        .st-dot-green { background: #2ecc71; }
-        .st-dot-red { background: #e74c3c; }
-        .st-dot-yellow { background: #f1c40f; }
-        .st-dot-purple { background: #9b59b6; }
+        .st-breakdown { margin-top: 0; }
+        .st-breakdown-title { font-size: 16px; font-weight: 700; color: #fff; margin-bottom: 16px; }
+        .st-breakdown-tabs { display: flex; gap: 0; border-bottom: 1px solid rgba(255,255,255,0.08); margin-bottom: 16px; }
+        .st-breakdown-tab { padding: 8px 20px; font-size: 13px; font-weight: 600; color: rgba(255,255,255,0.5); cursor: pointer; border-bottom: 2px solid transparent; margin-bottom: -1px; transition: all .2s; background: none; border-top: none; border-left: none; border-right: none; }
+        .st-breakdown-tab.active { color: #fff; border-bottom-color: #6c5ce7; }
+        .st-breakdown-table { width: 100%; border-collapse: collapse; }
+        .st-breakdown-table th { text-align: left; padding: 10px 14px; font-size: 11px; text-transform: uppercase; letter-spacing: .5px; color: rgba(255,255,255,0.5); border-bottom: 1px solid rgba(255,255,255,0.08); font-weight: 700; }
+        .st-breakdown-table td { padding: 12px 14px; font-size: 13px; color: #fff; border-bottom: 1px solid rgba(255,255,255,0.04); }
+        .st-breakdown-table tr:hover td { background: rgba(255,255,255,0.02); }
+        .st-breakdown-table .st-td-name { font-weight: 600; max-width: 200px; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+        .st-conv-badge { padding: 3px 10px; border-radius: 20px; font-size: 12px; font-weight: 700; }
+        .st-conv-high { background: rgba(46,204,113,.12); color: #2ecc71; }
+        .st-conv-mid { background: rgba(241,196,15,.12); color: #f1c40f; }
+        .st-conv-low { background: rgba(231,76,60,.12); color: #e74c3c; }
 
         @media (max-width: 900px) {
             .st-stats-grid { grid-template-columns: 1fr 1fr; }
-            .st-call-row { grid-template-columns: 1fr 1fr 1fr; grid-template-rows: auto auto; }
-            .st-col-labels { display: none; }
+            .st-charts-row { grid-template-columns: 1fr; }
         }
         /* ===== SUPPORT CHAT ===== */
         .sc-fab {
@@ -2889,29 +2817,13 @@
             <!-- PAGE: Статистика -->
             <div class="page-section" id="pageStats">
                 <div class="st-wrap">
-                    <!-- HEADER -->
                     <div class="st-header">
-                      <div>
-                        <h2>Статистика</h2>
-                      </div>
+                      <div><h2>Статистика</h2></div>
                       <div style="display:flex;align-items:center;gap:12px;flex-wrap:wrap">
-                        <div class="st-tabs">
-                          <button class="st-tab active" onclick="stSwitchTab(this,'overview')">Обзор</button>
-                        </div>
-                        <!-- DIALOG PICKER -->
-                        <div class="st-dlg-picker">
-                          <button class="st-dlg-btn" id="st-dlg-btn" onclick="stToggleDlgPicker()">
-                            <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"/></svg>
-                            <span id="st-dlg-label" data-i18n="stDlgAll">Все диалоги</span>
-                            <svg width="10" height="10" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="6 9 12 15 18 9"/></svg>
-                          </button>
-                          <div class="st-dlg-dropdown" id="st-dlg-dropdown"></div>
-                        </div>
-                        <!-- DATE PICKER -->
                         <div class="st-datepicker-wrap">
                           <button class="st-datepicker-btn" onclick="stToggleCalendar()">
                             <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="4" width="18" height="18" rx="2"/><line x1="16" y1="2" x2="16" y2="6"/><line x1="8" y1="2" x2="8" y2="6"/><line x1="3" y1="10" x2="21" y2="10"/></svg>
-                            <span id="st-date-label">Сегодня</span>
+                            <span id="st-date-label">Все время</span>
                           </button>
                           <div class="st-calendar-popup" id="st-calendar-popup">
                             <div style="width:100%">
@@ -2925,6 +2837,7 @@
                                 <button class="st-preset-btn" onclick="stSetPreset(14)">14 дней</button>
                                 <button class="st-preset-btn" onclick="stSetPreset(30)">30 дней</button>
                                 <button class="st-preset-btn" onclick="stSetPreset(0,'month')">Этот месяц</button>
+                                <button class="st-preset-btn" onclick="stSetPreset(-1)">Все время</button>
                               </div>
                               <button class="st-cal-apply" onclick="stApplyDate()">Применить</button>
                             </div>
@@ -2933,57 +2846,29 @@
                       </div>
                     </div>
 
-                    <!-- STATS CARDS -->
+                    <!-- SUMMARY CARDS -->
                     <div class="st-stats-grid" id="st-stats-grid"></div>
 
-                    <!-- CALLS SECTION -->
-                    <div class="st-calls-section">
-                      <div class="st-calls-header">
-                        <div class="st-calls-title">Журнал звонков</div>
-                        <div style="font-size:13px;color:rgba(255,255,255,0.7)">Показано: <span id="st-count-shown">20</span> из <span id="st-count-total">84</span></div>
+                    <!-- CHARTS -->
+                    <div class="st-charts-row">
+                      <div class="st-chart-card">
+                        <div class="st-chart-title">Топ диалогов по квал лидам</div>
+                        <div id="st-chart-dialogs"></div>
                       </div>
-
-                      <div class="st-filters-row">
-                        <input class="st-search-input" type="text" placeholder="Поиск по имени или номеру..." oninput="stApplyFilters()">
-                        <select class="st-filter-select" id="st-f-status" onchange="stApplyFilters()">
-                          <option value="">Статус звонка</option>
-                          <option value="success">Успешный</option>
-                          <option value="fail">Неудачный</option>
-                          <option value="noanswer">Нет ответа</option>
-                          <option value="busy">Занято</option>
-                        </select>
-                        <select class="st-filter-select" id="st-f-lead" onchange="stApplyFilters()">
-                          <option value="">Квалификация лида</option>
-                          <option value="yes">Лид квалифицирован</option>
-                          <option value="no">Не квалифицирован</option>
-                        </select>
-                        <select class="st-filter-select" id="st-f-dur" onchange="stApplyFilters()">
-                          <option value="">Длительность</option>
-                          <option value="short">< 1 мин</option>
-                          <option value="mid">1–3 мин</option>
-                          <option value="long">> 3 мин</option>
-                        </select>
-                        <select class="st-filter-select" id="st-f-mp" onchange="stApplyFilters()">
-                          <option value="">Маркетплейс</option>
-                          <option value="wb">Wildberries</option>
-                          <option value="ozon">Ozon</option>
-                          <option value="ym">Яндекс Маркет</option>
-                        </select>
+                      <div class="st-chart-card">
+                        <div class="st-chart-title">Топ ЦА по квал лидам</div>
+                        <div id="st-chart-audiences"></div>
                       </div>
+                    </div>
 
-                      <div class="st-col-labels">
-                        <div>#</div>
-                        <div>Контакт</div>
-                        <div>Статус</div>
-                        <div>Длит.</div>
-                        <div>Лид</div>
-                        <div>Маркетплейс</div>
-                        <div>Дата и время</div>
-                        <div>Аудио</div>
+                    <!-- BREAKDOWN TABLE -->
+                    <div class="st-breakdown">
+                      <div class="st-breakdown-tabs">
+                        <button class="st-breakdown-tab active" onclick="stSwitchBreakdown('dialogs',this)">По диалогам</button>
+                        <button class="st-breakdown-tab" onclick="stSwitchBreakdown('audiences',this)">По целевым аудиториям</button>
                       </div>
-
-                      <div class="st-calls-scroll" id="st-calls-list">
-                        <!-- Generated by JS -->
+                      <div class="st-chart-card" style="border-radius:0 0 14px 14px;border-top:none;">
+                        <div id="st-breakdown-content"></div>
                       </div>
                     </div>
                 </div>
@@ -3328,8 +3213,51 @@
                 <div style="display:flex;gap:12px;justify-content:flex-end;margin-top:24px;">
                     <button type="button" class="cl-btn cl-btn-edit" onclick="clCloseLaunchModal()">Отмена</button>
                     <button type="submit" class="cl-create-btn" style="padding:10px 28px;" id="clSaveBtn">Сохранить</button>
+                    <button type="button" class="cl-create-btn" style="padding:10px 28px;background:linear-gradient(135deg,#00b894,#00cec9);" id="clSaveRunBtn" onclick="clSaveAndRun()">Сохранить и запустить</button>
                 </div>
             </form>
+        </div>
+    </div>
+
+    <!-- MODAL: Launch Disclaimer -->
+    <div class="modal-overlay" id="clDisclaimerModal" onclick="if(event.target===this)document.getElementById('clDisclaimerModal').classList.remove('active')">
+        <div class="modal" style="max-width:480px;text-align:left;">
+            <div style="text-align:center;margin-bottom:16px;">
+                <svg width="40" height="40" viewBox="0 0 24 24" fill="none" stroke="#f39c12" stroke-width="2"><path d="M10.29 3.86L1.82 18a2 2 0 001.71 3h16.94a2 2 0 001.71-3L13.71 3.86a2 2 0 00-3.42 0z"/><line x1="12" y1="9" x2="12" y2="13"/><line x1="12" y1="17" x2="12.01" y2="17"/></svg>
+            </div>
+            <h2 style="text-align:center;margin-bottom:16px;color:var(--text);">Дисклеймер при запуске</h2>
+            <p style="font-size:.88rem;color:var(--text);line-height:1.6;margin-bottom:12px;">После запуска рекламной кампании первые лиды обычно поступают в течение суток.</p>
+            <p style="font-size:.88rem;color:var(--text);line-height:1.6;margin-bottom:20px;">Если запуск происходит после 12:00, ожидание может занять до полутора суток — это нормально.</p>
+            <div style="display:flex;flex-direction:column;gap:10px;align-items:center;">
+                <button class="cl-create-btn" style="padding:12px 36px;width:100%;" onclick="clDisclaimerAccept(false)">Понятно</button>
+                <button class="cl-btn cl-btn-edit" style="width:100%;font-size:.8rem;" onclick="clDisclaimerAccept(true)">Понятно, больше не показывать</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- MODAL: Balance Confirm -->
+    <div class="modal-overlay" id="clBalanceConfirmModal" onclick="if(event.target===this)document.getElementById('clBalanceConfirmModal').classList.remove('active')">
+        <div class="modal" style="max-width:440px;text-align:left;">
+            <button class="modal-close" onclick="document.getElementById('clBalanceConfirmModal').classList.remove('active')">&times;</button>
+            <div style="text-align:center;margin-bottom:16px;">
+                <svg width="36" height="36" viewBox="0 0 24 24" fill="none" stroke="#6c5ce7" stroke-width="2"><rect x="1" y="4" width="22" height="16" rx="2" ry="2"/><line x1="1" y1="10" x2="23" y2="10"/></svg>
+            </div>
+            <h2 style="text-align:center;margin-bottom:12px;color:var(--text);">Подтверждение списания</h2>
+            <div style="background:var(--input-bg);border-radius:10px;padding:14px;margin-bottom:12px;">
+                <div style="display:flex;justify-content:space-between;margin-bottom:8px;">
+                    <span style="font-size:.85rem;color:var(--text-muted);">Списание в день:</span>
+                    <span style="font-size:1rem;font-weight:700;color:#6c5ce7;" id="clConfirmCost">—</span>
+                </div>
+                <div style="display:flex;justify-content:space-between;">
+                    <span style="font-size:.85rem;color:var(--text-muted);">Текущий баланс:</span>
+                    <span style="font-size:1rem;font-weight:700;color:#00b894;" id="clConfirmBalance">—</span>
+                </div>
+            </div>
+            <p style="font-size:.82rem;color:var(--text-muted);line-height:1.5;margin-bottom:16px;padding:10px 12px;background:rgba(108,92,231,0.06);border-radius:8px;border-left:3px solid #6c5ce7;">Средства будут списываться ежедневно при активном запуске. Для корректной работы сервиса баланс должен оставаться положительным.</p>
+            <div style="display:flex;gap:12px;justify-content:flex-end;">
+                <button class="cl-btn cl-btn-edit" onclick="document.getElementById('clBalanceConfirmModal').classList.remove('active')">Отмена</button>
+                <button class="cl-create-btn" style="padding:10px 28px;" id="clConfirmRunBtn" onclick="clConfirmRun()">Подтвердить и запустить</button>
+            </div>
         </div>
     </div>
 
@@ -3422,8 +3350,9 @@
                     </div>
                 </div>
                 <div class="cl-form-group">
-                    <label class="cl-form-label">Сайты конкурентов (до 10, каждый с новой строки)</label>
-                    <textarea class="cll-paste-area" id="taSites" style="min-height:80px;" placeholder="competitor1.ru&#10;competitor2.com"></textarea>
+                    <label class="cl-form-label">Сайты конкурентов (от 5 до 10, каждый с новой строки) *</label>
+                    <textarea class="cll-paste-area" id="taSites" style="min-height:80px;" placeholder="competitor1.ru&#10;competitor2.com&#10;competitor3.ru&#10;competitor4.com&#10;competitor5.ru"></textarea>
+                    <div style="font-size:.75rem;color:var(--text-muted);margin-top:6px;padding:6px 10px;background:rgba(108,92,231,0.06);border-radius:8px;border-left:3px solid #6c5ce7;">Укажите минимум 5 сайтов конкурентов для точного подбора целевой аудитории</div>
                 </div>
                 <div style="display:flex;gap:12px;justify-content:flex-end;margin-top:24px;">
                     <button type="button" class="cl-btn cl-btn-edit" onclick="taCloseModal()">Отмена</button>
@@ -5137,6 +5066,7 @@
                 if (pageId === 'pageLaunches') { clImportParsedPhones(); clRenderLaunches(); }
                 if (pageId === 'pageAudience') { taRenderCards(); }
                 if (pageId === 'pageQualLeads') { qlPopulateFilters(); qlRender(); }
+                if (pageId === 'pageStats') { stRenderAll(); }
             }
         }
 
@@ -6605,244 +6535,190 @@
                 btn.classList.add('active');
             };
 
-            // Calls data — full set (all dialogs)
-            var stCallsAll = [
-                {id:1,name:'Андрей Ситников',phone:'+7 912 345-67-89',status:'success',dur:247,lead:'yes',mp:'wb',date:'01.03.2026',time:'11:42',dlg:'dlg_1'},
-                {id:2,name:'Ольга Петрова',phone:'+7 905 234-56-78',status:'noanswer',dur:0,lead:'no',mp:'ozon',date:'01.03.2026',time:'10:15',dlg:'dlg_1'},
-                {id:3,name:'Дмитрий Каюмов',phone:'+7 916 789-01-23',status:'success',dur:183,lead:'yes',mp:'ym',date:'01.03.2026',time:'09:55',dlg:'dlg_1'},
-                {id:4,name:'Марина Лукьянова',phone:'+7 926 456-78-90',status:'fail',dur:34,lead:'no',mp:'wb',date:'28.02.2026',time:'17:30',dlg:'dlg_1'},
-                {id:5,name:'Игорь Семёнов',phone:'+7 903 321-54-76',status:'success',dur:512,lead:'yes',mp:'ozon',date:'28.02.2026',time:'16:08',dlg:'dlg_1'},
-                {id:6,name:'Екатерина Борисова',phone:'+7 919 654-32-10',status:'busy',dur:8,lead:'no',mp:'wb',date:'28.02.2026',time:'14:22',dlg:'dlg_1'},
-                {id:7,name:'Виктор Захаров',phone:'+7 931 112-23-34',status:'success',dur:298,lead:'no',mp:'ym',date:'27.02.2026',time:'13:45',dlg:'dlg_1'},
-                {id:8,name:'Наталья Фролова',phone:'+7 906 987-65-43',status:'noanswer',dur:0,lead:'no',mp:'ozon',date:'27.02.2026',time:'12:10',dlg:'dlg_1'},
-                {id:9,name:'Алексей Громов',phone:'+7 922 543-21-09',status:'success',dur:421,lead:'yes',mp:'wb',date:'27.02.2026',time:'11:30',dlg:'dlg_1'},
-                {id:10,name:'Светлана Орлова',phone:'+7 904 876-54-32',status:'fail',dur:17,lead:'no',mp:'wb',date:'26.02.2026',time:'18:05',dlg:'dlg_1'},
-                {id:11,name:'Максим Тихонов',phone:'+7 915 321-09-87',status:'success',dur:190,lead:'yes',mp:'ozon',date:'26.02.2026',time:'15:40',dlg:'dlg_2'},
-                {id:12,name:'Анна Кузнецова',phone:'+7 929 765-43-21',status:'noanswer',dur:0,lead:'no',mp:'ym',date:'26.02.2026',time:'14:55',dlg:'dlg_2'},
-                {id:13,name:'Руслан Абдуллин',phone:'+7 937 234-56-78',status:'success',dur:376,lead:'yes',mp:'wb',date:'25.02.2026',time:'17:20',dlg:'dlg_2'},
-                {id:14,name:'Татьяна Морозова',phone:'+7 911 890-12-34',status:'busy',dur:5,lead:'no',mp:'ozon',date:'25.02.2026',time:'16:00',dlg:'dlg_2'},
-                {id:15,name:'Сергей Лебедев',phone:'+7 923 456-78-01',status:'success',dur:305,lead:'no',mp:'ym',date:'25.02.2026',time:'13:15',dlg:'dlg_2'},
-                {id:16,name:'Валерия Новикова',phone:'+7 918 234-56-78',status:'fail',dur:42,lead:'no',mp:'wb',date:'24.02.2026',time:'10:30',dlg:'dlg_2'},
-                {id:17,name:'Артём Волков',phone:'+7 908 765-43-21',status:'success',dur:228,lead:'yes',mp:'ozon',date:'24.02.2026',time:'09:45',dlg:'dlg_2'},
-                {id:18,name:'Полина Козлова',phone:'+7 935 123-45-67',status:'noanswer',dur:0,lead:'no',mp:'wb',date:'23.02.2026',time:'16:50',dlg:'dlg_2'},
-                {id:19,name:'Никита Попов',phone:'+7 901 678-90-12',status:'success',dur:461,lead:'yes',mp:'ym',date:'23.02.2026',time:'15:05',dlg:'dlg_2'},
-                {id:20,name:'Юлия Смирнова',phone:'+7 925 345-67-89',status:'success',dur:134,lead:'no',mp:'ozon',date:'23.02.2026',time:'11:20',dlg:'dlg_2'}
-            ];
+            // ---- Stats: data from qlLeads and clLaunches ----
+            var stBreakdownMode = 'dialogs';
 
-            var stCurrentDlg = null; // null = all dialogs
-            var stCalls = stCallsAll;
-
-            var ST_STATUS_MAP = {
-                success: {label:'Успешный', cls:'st-status-success', dot:'st-dot-green'},
-                fail: {label:'Неудачный', cls:'st-status-fail', dot:'st-dot-red'},
-                noanswer: {label:'Нет ответа', cls:'st-status-noanswer', dot:'st-dot-yellow'},
-                busy: {label:'Занято', cls:'st-status-busy', dot:'st-dot-purple'}
-            };
-            var ST_MP_MAP = {wb:'Wildberries', ozon:'Ozon', ym:'Яндекс Маркет'};
-
-            function stFmtDur(sec) {
-                if (!sec) return '—';
-                var m = Math.floor(sec/60), s = sec%60;
-                return m + ':' + String(s).padStart(2,'0');
-            }
-
-            function stDurGroup(sec) {
-                if (sec < 60) return 'short';
-                if (sec < 180) return 'mid';
-                return 'long';
-            }
-
-            var stOpenPlayer = null;
-
-            function stRenderCalls(data) {
-                var list = document.getElementById('st-calls-list');
-                if (!list) return;
-                list.innerHTML = data.map(function(c) {
-                    var st = ST_STATUS_MAP[c.status];
-                    return '<div class="st-call-row" onclick="stTogglePlayer(' + c.id + ')">' +
-                        '<div class="st-call-num">' + c.id + '</div>' +
-                        '<div><div class="st-call-name">' + c.name + '</div><div class="st-call-phone">' + c.phone + '</div></div>' +
-                        '<div><span class="st-status-badge ' + st.cls + '"><span class="st-dot ' + st.dot + '"></span>' + st.label + '</span></div>' +
-                        '<div class="st-call-dur">' + stFmtDur(c.dur) + '</div>' +
-                        '<div><span class="st-lead-badge ' + (c.lead==='yes'?'st-lead-yes':'st-lead-no') + '">' + (c.lead==='yes'?'Лид':'Нет') + '</span></div>' +
-                        '<div style="font-size:13px;color:rgba(255,255,255,0.7)">' + ST_MP_MAP[c.mp] + '</div>' +
-                        '<div class="st-call-date">' + c.date + '<br><span style="color:rgba(255,255,255,0.7)">' + c.time + '</span></div>' +
-                        '<div><div class="st-play-btn" onclick="event.stopPropagation();stTogglePlayer(' + c.id + ')">' +
-                            '<svg width="12" height="12" viewBox="0 0 24 24" fill="currentColor"><polygon points="5,3 19,12 5,21"/></svg>' +
-                        '</div></div>' +
-                    '</div>' +
-                    '<div class="st-player-expand" id="st-player-' + c.id + '">' +
-                        '<div class="st-audio-bar">' +
-                            '<button class="st-audio-play"><svg width="11" height="11" viewBox="0 0 24 24" fill="white"><polygon points="5,3 19,12 5,21"/></svg></button>' +
-                            '<div class="st-audio-track"><div class="st-audio-fill" style="width:' + (c.dur ? Math.floor(Math.random()*70+5) : 0) + '%"></div></div>' +
-                            '<span class="st-audio-time">' + stFmtDur(Math.floor(c.dur*0.35)) + ' / ' + stFmtDur(c.dur) + '</span>' +
-                            '<span style="font-size:12px;color:rgba(255,255,255,0.7);margin-left:8px">' + c.name + ' · ' + c.date + ' ' + c.time + '</span>' +
-                            (c.dur===0 ? '<span style="font-size:12px;color:rgba(255,255,255,0.7);margin-left:12px">Нет записи</span>' : '') +
-                        '</div>' +
-                    '</div>';
-                }).join('');
-                var counter = document.getElementById('st-count-shown');
-                if (counter) counter.textContent = data.length;
-            }
-
-            window.stTogglePlayer = function(id) {
-                var el = document.getElementById('st-player-' + id);
-                if (!el) return;
-                if (stOpenPlayer && stOpenPlayer !== id) {
-                    var prev = document.getElementById('st-player-' + stOpenPlayer);
-                    if (prev) prev.classList.remove('open');
-                }
-                el.classList.toggle('open');
-                stOpenPlayer = el.classList.contains('open') ? id : null;
-            };
-
-            window.stApplyFilters = function() {
-                var q = document.querySelector('.st-search-input').value.toLowerCase();
-                var status = document.getElementById('st-f-status').value;
-                var lead = document.getElementById('st-f-lead').value;
-                var dur = document.getElementById('st-f-dur').value;
-                var mp = document.getElementById('st-f-mp').value;
-
-                var filtered = stCalls.filter(function(c) {
-                    if (q && c.name.toLowerCase().indexOf(q) === -1 && c.phone.indexOf(q) === -1) return false;
-                    if (status && c.status !== status) return false;
-                    if (lead && c.lead !== lead) return false;
-                    if (dur && stDurGroup(c.dur) !== dur) return false;
-                    if (mp && c.mp !== mp) return false;
-                    return true;
+            function stGetFilteredLeads() {
+                var leads = (typeof qlLeads !== 'undefined') ? qlLeads : [];
+                if (!stCalState.start) return leads;
+                var start = new Date(stCalState.start); start.setHours(0,0,0,0);
+                var end = stCalState.end ? new Date(stCalState.end) : new Date(stCalState.start);
+                end.setHours(23,59,59,999);
+                return leads.filter(function(l) {
+                    var d = new Date(l.createdAt);
+                    return d >= start && d <= end;
                 });
-                stRenderCalls(filtered);
-            };
-
-            // ---- Dialog picker ----
-            function stGetCurrentCalls() {
-                if (!stCurrentDlg) return stCallsAll;
-                return stCallsAll.filter(function(c) { return c.dlg === stCurrentDlg; });
             }
 
-            function stRenderStatsCards(data) {
+            function stRenderAll() {
+                var leads = stGetFilteredLeads();
+                stRenderSummary(leads);
+                stRenderCharts(leads);
+                stRenderBreakdown(leads);
+            }
+
+            function stRenderSummary(leads) {
                 var grid = document.getElementById('st-stats-grid');
                 if (!grid) return;
-                var totalDur = 0, contacts = 0, answers = 0, leads = 0, scheduled = 0, queued = 0;
-                data.forEach(function(c) {
-                    contacts++;
-                    totalDur += c.dur;
-                    if (c.status === 'success' || c.status === 'fail') answers++;
-                    if (c.lead === 'yes') leads++;
-                    if (c.status === 'noanswer') scheduled++;
-                    if (c.status === 'busy') queued++;
-                });
-                var durMin = Math.round(totalDur / 60);
-                var cost = (durMin * 3.6).toFixed(2).replace(/\B(?=(\d{3})+(?!\d))/g, ' ');
-                var conv = answers > 0 ? ((leads / answers) * 100).toFixed(1) : '0.0';
-                var convUp = parseFloat(conv) >= 30;
+                var total = leads.length;
+                var price = (typeof clGetPricePerLead === 'function') ? clGetPricePerLead() : 2000;
+                var spent = total * price;
+                var activeLaunches = (typeof clLaunches !== 'undefined') ? clLaunches.filter(function(l) { return l.status === 'active'; }).length : 0;
+                var totalLaunches = (typeof clLaunches !== 'undefined') ? clLaunches.length : 0;
+                var totalCalled = 0;
+                if (typeof clLaunches !== 'undefined') {
+                    clLaunches.forEach(function(l) { totalCalled += (l.called || 0); });
+                }
+                var conv = totalCalled > 0 ? ((total / totalCalled) * 100).toFixed(1) : '0.0';
+                var convVal = parseFloat(conv);
 
                 grid.innerHTML =
                     '<div class="st-stat-card">' +
-                        '<div class="st-stat-label">Потрачено</div>' +
-                        '<div class="st-stat-value">' + durMin + ' мин</div>' +
-                        '<div class="st-stat-sub">Списано: <strong>' + cost + ' ₽</strong></div>' +
-                        '<div class="st-stat-sub" style="margin-top:4px">За выбранный период</div>' +
+                        '<div class="st-stat-label">Квал лидов</div>' +
+                        '<div class="st-stat-value">' + total + '</div>' +
+                        '<div class="st-stat-sub">За выбранный период</div>' +
                     '</div>' +
                     '<div class="st-stat-card">' +
-                        '<div class="st-stat-label">Контактов обработано</div>' +
-                        '<div class="st-stat-value">+' + contacts + ' <span class="st-stat-badge st-badge-up">↑ 12%</span></div>' +
-                        '<div class="st-stat-sub">В процессе дозвона: <strong>' + scheduled + '</strong></div>' +
-                        '<div class="st-stat-sub" style="margin-top:4px"><span style="color:#2ecc71">↑ Рост контактов</span> — за период</div>' +
+                        '<div class="st-stat-label">Расход бюджета</div>' +
+                        '<div class="st-stat-value">' + clFormatMoney(spent) + '</div>' +
+                        '<div class="st-stat-sub">Цена за лид: <strong>' + clFormatMoney(price) + '</strong></div>' +
                     '</div>' +
                     '<div class="st-stat-card">' +
-                        '<div class="st-stat-label">Ответов</div>' +
-                        '<div class="st-stat-value">+' + answers + ' <span class="st-stat-badge st-badge-up">↑ 8%</span></div>' +
-                        '<div class="st-stat-sub" style="margin-top:4px"><span style="color:#2ecc71">↑ Рост ответов</span> — за период</div>' +
+                        '<div class="st-stat-label">Конверсия</div>' +
+                        '<div class="st-stat-value">' + conv + '%</div>' +
+                        '<div class="st-stat-sub"><span style="color:' + (convVal >= 10 ? '#2ecc71' : '#e74c3c') + '">' + (convVal >= 10 ? 'Хорошая' : 'Низкая') + ' конверсия</span></div>' +
                     '</div>' +
                     '<div class="st-stat-card">' +
-                        '<div class="st-stat-label">Лидов передано</div>' +
-                        '<div class="st-stat-value">+' + leads + ' <span class="st-stat-badge st-badge-up">↑ 19%</span></div>' +
-                        '<div class="st-stat-sub" style="margin-top:4px"><span style="color:#2ecc71">↑ Рост лидов</span> — за период</div>' +
-                    '</div>' +
-                    '<div class="st-stat-card">' +
-                        '<div class="st-stat-label">Конверсия из ответов в лида</div>' +
-                        '<div class="st-stat-value">' + conv + '% <span class="st-stat-badge ' + (convUp ? 'st-badge-up' : 'st-badge-down') + '">' + (convUp ? '↑' : '↓') + '</span></div>' +
-                        '<div class="st-stat-sub" style="margin-top:4px"><span style="color:' + (convUp ? '#2ecc71' : '#e74c3c') + '">' + (convUp ? '↑ Рост' : '↓ Снижение') + ' конверсии</span> — за период</div>' +
-                    '</div>' +
-                    '<div class="st-stat-card">' +
-                        '<div class="st-stat-label">Контакты в работе</div>' +
-                        '<div class="st-stat-value" style="font-size:20px;margin-top:8px">' +
-                          '<div style="display:flex;align-items:center;gap:8px;margin-bottom:6px">' +
-                            '<svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" style="opacity:0.5"><path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"/><circle cx="12" cy="7" r="4"/></svg>' +
-                            '<span style="font-size:16px;font-weight:600">Запланировано: <span style="color:#4f8eff">' + scheduled + '</span></span>' +
-                          '</div>' +
-                          '<div style="display:flex;align-items:center;gap:8px">' +
-                            '<svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" style="opacity:0.5"><path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"/><circle cx="12" cy="7" r="4"/></svg>' +
-                            '<span style="font-size:16px;font-weight:600">В очереди: <span style="color:#f1c40f">' + queued + '</span></span>' +
-                          '</div>' +
-                        '</div>' +
-                        '<div class="st-stat-sub" style="margin-top:8px">*Во всех активных колл-листах</div>' +
+                        '<div class="st-stat-label">Запуски</div>' +
+                        '<div class="st-stat-value">' + activeLaunches + ' <span style="font-size:16px;font-weight:500;color:rgba(255,255,255,0.5)">/ ' + totalLaunches + '</span></div>' +
+                        '<div class="st-stat-sub">Активных / всего</div>' +
                     '</div>';
             }
 
-            function stRenderDlgDropdown() {
-                var dd = document.getElementById('st-dlg-dropdown');
-                if (!dd) return;
-                var html = '<div class="st-dlg-dropdown-header">' + t('stDlgPick') + '</div>';
-                html += '<div class="st-dlg-item st-dlg-item-all' + (stCurrentDlg === null ? ' active' : '') + '" onclick="stSelectDlg(null)">' +
-                    '<div class="st-dlg-dot"></div><span>' + t('stDlgAll') + '</span></div>';
-                dialogs.forEach(function(dlg) {
-                    var pct = dlgCompleteness(dlg);
-                    var isOn = dlg.active && pct >= 100;
-                    var statusLabel = isOn ? t('dlgActive') : t('dlgInactive');
-                    var statusColor = isOn ? '#2ecc71' : 'var(--text-muted)';
-                    html += '<div class="st-dlg-item' + (stCurrentDlg === dlg.id ? ' active' : '') + '" onclick="stSelectDlg(\'' + dlg.id + '\')">' +
-                        dlgRingHTML(pct, 22) +
-                        '<div style="flex:1"><span>' + escapeHtml(dlg.name) + '</span>' +
-                        '<div class="dlg-status-hint" style="color:' + statusColor + '">' + statusLabel + '</div></div></div>';
+            function stGroupBy(leads, key) {
+                var groups = {};
+                leads.forEach(function(l) {
+                    var k = l[key] || 'Неизвестно';
+                    var name = l[key.replace('Id', 'Name')] || k;
+                    if (!groups[k]) groups[k] = { name: name, count: 0 };
+                    groups[k].count++;
                 });
-                dd.innerHTML = html;
+                return Object.keys(groups).map(function(k) { return groups[k]; })
+                    .sort(function(a, b) { return b.count - a.count; });
             }
 
-            window.stToggleDlgPicker = function() {
-                var dd = document.getElementById('st-dlg-dropdown');
-                var isOpen = dd.classList.toggle('open');
-                document.getElementById('st-dlg-btn').classList.toggle('active', isOpen);
-                if (isOpen) stRenderDlgDropdown();
-            };
+            function stRenderBarChart(containerId, data, fillClass) {
+                var el = document.getElementById(containerId);
+                if (!el) return;
+                if (data.length === 0) { el.innerHTML = '<div class="st-bar-empty">Нет данных за выбранный период</div>'; return; }
+                var max = data[0].count;
+                el.innerHTML = data.slice(0, 5).map(function(d, i) {
+                    var pct = max > 0 ? Math.round(d.count / max * 100) : 0;
+                    var rankCls = i === 0 ? 'st-rank-1' : i === 1 ? 'st-rank-2' : i === 2 ? 'st-rank-3' : 'st-rank-other';
+                    return '<div class="st-bar-row">' +
+                        '<span class="st-rank-badge ' + rankCls + '">' + (i + 1) + '</span>' +
+                        '<span class="st-bar-label">' + escapeHtml(d.name) + '</span>' +
+                        '<div class="st-bar-track"><div class="st-bar-fill ' + fillClass + '" style="width:' + pct + '%"></div></div>' +
+                        '<span class="st-bar-val">' + d.count + '</span>' +
+                        '</div>';
+                }).join('');
+            }
 
-            window.stSelectDlg = function(dlgId) {
-                stCurrentDlg = dlgId;
-                stCalls = stGetCurrentCalls();
-                // Update label
-                var label = document.getElementById('st-dlg-label');
-                if (dlgId === null) {
-                    label.textContent = t('stDlgAll');
+            function stRenderCharts(leads) {
+                var byDialog = stGroupBy(leads, 'dialogId');
+                var byAudience = stGroupBy(leads, 'audienceId');
+                stRenderBarChart('st-chart-dialogs', byDialog, 'st-bar-fill-purple');
+                stRenderBarChart('st-chart-audiences', byAudience, 'st-bar-fill-green');
+            }
+
+            function stSwitchBreakdown(mode, btn) {
+                stBreakdownMode = mode;
+                document.querySelectorAll('.st-breakdown-tab').forEach(function(t) { t.classList.remove('active'); });
+                btn.classList.add('active');
+                stRenderBreakdown(stGetFilteredLeads());
+            }
+
+            function stRenderBreakdown(leads) {
+                var el = document.getElementById('st-breakdown-content');
+                if (!el) return;
+                var key = stBreakdownMode === 'dialogs' ? 'dialogId' : 'audienceId';
+                var nameKey = stBreakdownMode === 'dialogs' ? 'dialogName' : 'audienceName';
+                var groups = {};
+                leads.forEach(function(l) {
+                    var k = l[key] || 'unknown';
+                    if (!groups[k]) groups[k] = { name: l[nameKey] || 'Неизвестно', leads: 0 };
+                    groups[k].leads++;
+                });
+                var rows = Object.keys(groups).map(function(k) { return groups[k]; })
+                    .sort(function(a, b) { return b.leads - a.leads; });
+
+                var price = (typeof clGetPricePerLead === 'function') ? clGetPricePerLead() : 2000;
+                var totalCalled = 0;
+                if (typeof clLaunches !== 'undefined') clLaunches.forEach(function(l) { totalCalled += (l.called || 0); });
+                var avgPerSource = totalCalled > 0 && rows.length > 0 ? Math.round(totalCalled / rows.length) : 0;
+
+                if (rows.length === 0) {
+                    el.innerHTML = '<div class="st-bar-empty">Нет данных за выбранный период</div>';
+                    return;
+                }
+
+                var html = '<table class="st-breakdown-table"><thead><tr>' +
+                    '<th>#</th><th>Название</th><th>Квал лидов</th><th>Расход</th><th>Конверсия</th>' +
+                    '</tr></thead><tbody>';
+                rows.forEach(function(r, i) {
+                    var spent = r.leads * price;
+                    var conv = avgPerSource > 0 ? ((r.leads / avgPerSource) * 100).toFixed(1) : '—';
+                    var convCls = conv === '—' ? 'st-conv-mid' : parseFloat(conv) >= 20 ? 'st-conv-high' : parseFloat(conv) >= 10 ? 'st-conv-mid' : 'st-conv-low';
+                    html += '<tr>' +
+                        '<td>' + (i + 1) + '</td>' +
+                        '<td class="st-td-name">' + escapeHtml(r.name) + '</td>' +
+                        '<td><strong>' + r.leads + '</strong></td>' +
+                        '<td>' + clFormatMoney(spent) + '</td>' +
+                        '<td><span class="st-conv-badge ' + convCls + '">' + conv + (conv !== '—' ? '%' : '') + '</span></td>' +
+                        '</tr>';
+                });
+                html += '</tbody></table>';
+                el.innerHTML = html;
+            }
+
+            // Override stApplyDate to also re-render stats
+            var _origStApplyDate = window.stApplyDate;
+            window.stApplyDate = function() {
+                var shortMonths = ['янв','фев','мар','апр','май','июн','июл','авг','сен','окт','ноя','дек'];
+                if (stCalState.start) {
+                    var fmt = function(d) { return d.getDate() + ' ' + shortMonths[d.getMonth()]; };
+                    var label = fmt(stCalState.start);
+                    if (stCalState.end && !stSameDay(stCalState.start, stCalState.end)) {
+                        label += ' – ' + fmt(stCalState.end) + ' ' + stCalState.end.getFullYear();
+                    } else {
+                        label += ' ' + stCalState.start.getFullYear();
+                    }
+                    document.getElementById('st-date-label').textContent = label;
                 } else {
-                    var dlg = dialogs.find(function(d) { return d.id === dlgId; });
-                    label.textContent = dlg ? dlg.name : t('stDlgAll');
+                    document.getElementById('st-date-label').textContent = 'Все время';
                 }
-                // Update button style
-                document.getElementById('st-dlg-btn').classList.toggle('active', dlgId !== null);
-                // Close dropdown
-                document.getElementById('st-dlg-dropdown').classList.remove('open');
-                // Re-render stats
-                stRenderStatsCards(stCalls);
-                stRenderCalls(stCalls);
-                var totalEl = document.getElementById('st-count-total');
-                if (totalEl) totalEl.textContent = stCalls.length;
+                document.getElementById('st-calendar-popup').classList.remove('open');
+                stRenderAll();
             };
 
-            // Close dropdown on outside click
-            document.addEventListener('mousedown', function(e) {
-                var dd = document.getElementById('st-dlg-dropdown');
-                var btn = document.getElementById('st-dlg-btn');
-                if (dd && btn && !dd.contains(e.target) && !btn.contains(e.target)) {
-                    dd.classList.remove('open');
-                    btn.classList.remove('active');
+            // Override stSetPreset to handle "all time"
+            var _origStSetPreset = window.stSetPreset;
+            window.stSetPreset = function(days, type) {
+                if (days === -1) {
+                    stCalState.start = null; stCalState.end = null;
+                    stRenderCals();
+                    return;
                 }
-            });
+                _origStSetPreset(days, type);
+            };
 
-            // Init stats page
+            // Expose globally
+            window.stRenderAll = stRenderAll;
+            window.stSwitchBreakdown = stSwitchBreakdown;
+
+            // Init stats
+            stCalState.start = null; stCalState.end = null;
             stRenderCals();
-            stRenderStatsCards(stCallsAll);
-            stRenderCalls(stCalls);
         })();
 
         // ===== CALL LAUNCHES & CALL LISTS =====
@@ -7093,13 +6969,16 @@
             var costEl = document.getElementById('clCostValue');
             var warnEl = document.getElementById('clCostWarning');
             var saveBtn = document.getElementById('clSaveBtn');
+            var saveRunBtn = document.getElementById('clSaveRunBtn');
             if (costEl) costEl.textContent = clFormatMoney(cost);
             if (userBalance < cost) {
                 if (warnEl) { warnEl.style.display = ''; warnEl.textContent = 'Недостаточно средств (баланс: ' + clFormatMoney(userBalance) + ')'; }
                 if (saveBtn) { saveBtn.disabled = true; saveBtn.style.opacity = '0.5'; }
+                if (saveRunBtn) { saveRunBtn.disabled = true; saveRunBtn.style.opacity = '0.5'; }
             } else {
                 if (warnEl) warnEl.style.display = 'none';
                 if (saveBtn) { saveBtn.disabled = false; saveBtn.style.opacity = '1'; }
+                if (saveRunBtn) { saveRunBtn.disabled = false; saveRunBtn.style.opacity = '1'; }
             }
         }
         // Init balance display
@@ -7203,6 +7082,20 @@
         }
 
         function clOpenCreateLaunch() {
+            if (!localStorage.getItem('cl_disclaimer_hidden')) {
+                document.getElementById('clDisclaimerModal').classList.add('active');
+                return;
+            }
+            clOpenCreateLaunchForm();
+        }
+
+        function clDisclaimerAccept(hide) {
+            if (hide) localStorage.setItem('cl_disclaimer_hidden', '1');
+            document.getElementById('clDisclaimerModal').classList.remove('active');
+            clOpenCreateLaunchForm();
+        }
+
+        function clOpenCreateLaunchForm() {
             clEditId = null;
             document.getElementById('clLaunchModalTitle').textContent = 'Создать запуск';
             clPopulateSelects();
@@ -7278,9 +7171,40 @@
                     processedIdx: 0, created: clNow(), updated: clNow()
                 });
             }
+            var newId = clEditId ? clEditId : clLaunches[clLaunches.length - 1].id;
             var wasEditLaunch = !!clEditId;
             clPersist(); clCloseLaunchModal(); clRenderLaunches();
             clToast(wasEditLaunch ? 'Запуск обновлён' : 'Запуск «' + name + '» создан');
+            return newId;
+        }
+
+        var clPendingRunId = null;
+        var clPendingSaveAndRun = false;
+
+        function clSaveAndRun() {
+            clPendingSaveAndRun = true;
+            var goal = parseInt(document.getElementById('clLaunchGoalLeads').value) || 1;
+            var cost = goal * clGetPricePerLead();
+            clShowBalanceConfirm(cost);
+        }
+
+        function clShowBalanceConfirm(cost) {
+            document.getElementById('clConfirmCost').textContent = clFormatMoney(cost);
+            document.getElementById('clConfirmBalance').textContent = clFormatMoney(userBalance);
+            document.getElementById('clBalanceConfirmModal').classList.add('active');
+        }
+
+        function clConfirmRun() {
+            document.getElementById('clBalanceConfirmModal').classList.remove('active');
+            if (clPendingSaveAndRun) {
+                clPendingSaveAndRun = false;
+                var newId = clSaveLaunch(new Event('submit'));
+                if (newId) clDoStartLaunch(newId);
+            } else if (clPendingRunId) {
+                var id = clPendingRunId;
+                clPendingRunId = null;
+                clDoStartLaunch(id);
+            }
         }
 
         function clDeleteLaunch(id) {
@@ -7293,6 +7217,16 @@
 
         // Start / Pause / Stop / Resume
         function clStartLaunch(id) {
+            var l = clLaunches.find(function(x) { return x.id === id; });
+            if (!l) return;
+            var price = clGetPricePerLead();
+            if (userBalance < price) { clToast('Недостаточно средств на балансе'); return; }
+            clPendingRunId = id;
+            var cost = (l.goalLeads || 1) * price;
+            clShowBalanceConfirm(cost);
+        }
+
+        function clDoStartLaunch(id) {
             var l = clLaunches.find(function(x) { return x.id === id; });
             if (!l) return;
             var callList = clCallLists.find(function(c) { return c.id === l.callListId; });
@@ -7571,6 +7505,7 @@
             var sites = document.getElementById('taSites').value.trim();
             if (!name) { clToast('Введите название ЦА'); return; }
             var siteLines = sites.split('\n').filter(function(l) { return l.trim().length > 0; });
+            if (siteLines.length < 5) { clToast('Укажите минимум 5 сайтов конкурентов'); return; }
             if (siteLines.length > 10) { clToast('Максимум 10 сайтов конкурентов'); return; }
             if (taEditId) {
                 var ta = taAudiences.find(function(x) { return x.id === taEditId; });
@@ -8119,12 +8054,127 @@
             localStorage.setItem('ql_demo_seeded', '1');
         }
 
+        // ===== EXTENDED STATS DEMO DATA =====
+        function seedStatsDemo() {
+            if (localStorage.getItem('stats_demo_seeded')) return;
+
+            // Extra dialogs (use existing if available)
+            var demoDialogs = [
+                { id: 'dlg_demo1', name: 'Продажа CRM-систем' },
+                { id: 'dlg_demo2', name: 'Консультация по автоматизации' },
+                { id: 'dlg_demo3', name: 'Холодные продажи B2B' },
+                { id: 'dlg_demo4', name: 'Запись на аудит' }
+            ];
+            if (typeof dialogs !== 'undefined' && dialogs.length > 0) {
+                demoDialogs[0] = { id: dialogs[0].id, name: dialogs[0].name };
+                if (dialogs.length > 1) demoDialogs[1] = { id: dialogs[1].id, name: dialogs[1].name };
+            }
+
+            // Extra audiences
+            var demoAudiences = [
+                { id: 'ta_demo1', name: 'IT-компании малого бизнеса' },
+                { id: 'ta_demo2', name: 'Автосервисы Москва' },
+                { id: 'ta_demo3', name: 'Стоматологии СПб' },
+                { id: 'ta_demo4', name: 'Рестораны и кафе' }
+            ];
+            // Add missing audiences
+            ['ta_demo3', 'ta_demo4'].forEach(function(aid, idx) {
+                if (!taAudiences.find(function(a) { return a.id === aid; })) {
+                    var d = new Date(); d.setDate(d.getDate() - 10 - idx * 5);
+                    var info = idx === 0
+                        ? { name: 'Стоматологии СПб', niche: 'Медицина', client: 'Владелец клиники, 35-55 лет', sites: 'dentist1.ru\ndentist2.ru\ndentist3.ru\ndentist4.ru\ndentist5.ru' }
+                        : { name: 'Рестораны и кафе', niche: 'HoReCa', client: 'Управляющий заведением, 28-45 лет', sites: 'rest1.ru\nrest2.ru\ncafe1.ru\ncafe2.ru\ncafe3.ru' };
+                    taAudiences.push({
+                        id: aid, name: info.name, niche: info.niche, client: info.client, sites: info.sites,
+                        created: d.toISOString(), updated: d.toISOString(),
+                        genStatus: 'done', genCount: 18 + idx * 5, lastGenDate: d.toISOString(), lastGenCount: 18 + idx * 5
+                    });
+                }
+            });
+            taPersist();
+
+            // Extra launches
+            var demoLaunches = [
+                { id: 'launch_demo1', name: 'Пилотный обзвон IT',       dialogIdx: 0, audienceIdx: 0, called: 48, leads: 6,  status: 'idle' },
+                { id: 'launch_demo2', name: 'Автосервисы обзвон',       dialogIdx: 1, audienceIdx: 1, called: 32, leads: 4,  status: 'active' },
+                { id: 'launch_demo3', name: 'Стоматологии холодные',    dialogIdx: 2, audienceIdx: 2, called: 55, leads: 8,  status: 'active' },
+                { id: 'launch_demo4', name: 'Рестораны B2B',            dialogIdx: 3, audienceIdx: 3, called: 22, leads: 3,  status: 'idle' },
+                { id: 'launch_demo5', name: 'IT повторный обзвон',      dialogIdx: 0, audienceIdx: 0, called: 38, leads: 5,  status: 'paused' },
+                { id: 'launch_demo6', name: 'Стомат повторный',         dialogIdx: 2, audienceIdx: 2, called: 28, leads: 4,  status: 'active' }
+            ];
+            demoLaunches.forEach(function(dl) {
+                if (!clLaunches.find(function(l) { return l.id === dl.id; })) {
+                    var d = new Date(); d.setDate(d.getDate() - 25 + demoLaunches.indexOf(dl) * 4);
+                    clLaunches.push({
+                        id: dl.id, name: dl.name,
+                        dialogId: demoDialogs[dl.dialogIdx].id,
+                        audienceId: demoAudiences[dl.audienceIdx].id,
+                        callListId: '', goalLeads: 1, timeFrom: '09:00', timeTo: '18:00',
+                        days: [1,2,3,4,5], status: dl.status,
+                        called: dl.called, leads: dl.leads, missed: Math.floor(dl.called * 0.15),
+                        processedIdx: dl.called, created: d.toISOString(), updated: clNow()
+                    });
+                }
+            });
+            clPersist();
+
+            // Rich qual leads — 30 leads spread over 30 days
+            var demoNames = [
+                'Громов Павел', 'Белова Ксения', 'Жуков Тимур', 'Орлова Дарья', 'Калинин Роман',
+                'Ершова Виктория', 'Тихонов Максим', 'Зайцева Полина', 'Щербаков Денис', 'Миронова Юлия',
+                'Панов Артём', 'Крылова Светлана', 'Богданов Олег', 'Суворова Ирина', 'Шестаков Никита',
+                'Фролова Алина', 'Гусев Кирилл', 'Данилова Вера', 'Чернов Руслан', 'Макарова Екатерина',
+                'Баранов Илья', 'Логинова Анастасия', 'Степанов Григорий', 'Комарова Марина', 'Рыбаков Владислав',
+                'Голубева Лидия', 'Корнеев Антон', 'Воронова Жанна', 'Трофимов Евгений', 'Абрамова Диана'
+            ];
+            var demoCities = ['Москва', 'Санкт-Петербург', 'Казань', 'Новосибирск', 'Екатеринбург', 'Краснодар', 'Нижний Новгород', 'Самара'];
+            var demoStatuses = ['new', 'new', 'new', 'downloaded', 'downloaded', 'transferred', 'new', 'new'];
+            var launchDistrib = [0, 0, 1, 2, 2, 2, 3, 4, 4, 5]; // indices into demoLaunches
+
+            for (var i = 0; i < 30; i++) {
+                var leadId = 'ql_stats_' + i;
+                if (qlLeads.find(function(l) { return l.id === leadId; })) continue;
+
+                var daysAgo = Math.floor(Math.random() * 30);
+                var d = new Date();
+                d.setDate(d.getDate() - daysAgo);
+                d.setHours(9 + Math.floor(Math.random() * 9), Math.floor(Math.random() * 60), Math.floor(Math.random() * 60));
+
+                var li = launchDistrib[i % launchDistrib.length];
+                var dl = demoLaunches[li];
+                var phoneCode = 900 + Math.floor(Math.random() * 99);
+                var phoneNum = String(1000000 + Math.floor(Math.random() * 8999999));
+
+                qlLeads.push({
+                    id: leadId,
+                    name: demoNames[i],
+                    phone: '+7 ' + phoneCode + ' ' + phoneNum.substring(0, 3) + '-' + phoneNum.substring(3, 5) + '-' + phoneNum.substring(5),
+                    email: i % 3 === 0 ? '' : demoNames[i].split(' ')[0].toLowerCase() + '@mail.ru',
+                    city: demoCities[Math.floor(Math.random() * demoCities.length)],
+                    launchId: dl.id,
+                    launchName: dl.name,
+                    dialogId: demoDialogs[dl.dialogIdx].id,
+                    dialogName: demoDialogs[dl.dialogIdx].name,
+                    audienceId: demoAudiences[dl.audienceIdx].id,
+                    audienceName: demoAudiences[dl.audienceIdx].name,
+                    status: demoStatuses[Math.floor(Math.random() * demoStatuses.length)],
+                    createdAt: d.toISOString()
+                });
+            }
+
+            qlLeads.sort(function(a, b) { return new Date(b.createdAt) - new Date(a.createdAt); });
+            qlPersist();
+            localStorage.setItem('stats_demo_seeded', '1');
+        }
+
         // Init
         clSeedDemo();
         clSeedParsedDemo();
         clImportParsedPhones();
         taSeedDemo();
         qlSeedDemo();
+        seedStatsDemo();
+        stRenderAll();
     </script>
 
 <!-- ===== SUPPORT CHAT ===== -->
