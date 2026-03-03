@@ -651,6 +651,8 @@
             width: 36px; height: 36px; border-radius: 10px; background: var(--nav-icon-bg);
             display: flex; align-items: center; justify-content: center; flex-shrink: 0; transition: background 0.2s;
         }
+        .nav-divider { height:1px; background:var(--input-border); margin:10px 16px; opacity:0.5; }
+        .nav-label { padding:6px 16px 4px; font-size:.65rem; font-weight:700; text-transform:uppercase; letter-spacing:1.2px; color:var(--text-muted); opacity:0.6; }
         .nav-icon svg { width: 18px; height: 18px; fill: var(--nav-icon-fill); transition: fill 0.2s; }
 
         .dash-content { flex: 1; margin-top: 64px; margin-right: 280px; padding: 40px; min-height: calc(100vh - 64px); }
@@ -2657,14 +2659,29 @@
                     <span class="nav-icon"><svg viewBox="0 0 24 24"><path d="M10 20v-6h4v6h5v-8h3L12 3 2 12h3v8z"/></svg></span>
                     <span data-i18n="navMain">Главное</span>
                 </a></li>
-                <li><a href="#" data-page="pageLaunches" onclick="setActive(this)">
-                    <span class="nav-icon"><svg viewBox="0 0 24 24"><path d="M20.01 15.38c-1.23 0-2.42-.2-3.53-.56a.977.977 0 00-1.01.24l-1.57 1.97c-2.83-1.35-5.48-3.9-6.89-6.83l1.95-1.66c.27-.28.35-.67.24-1.02-.37-1.11-.56-2.3-.56-3.53 0-.54-.45-.99-.99-.99H4.19C3.65 3 3 3.24 3 3.99 3 13.28 10.73 21 20.01 21c.71 0 .99-.63.99-1.18v-3.45c0-.54-.45-.99-.99-.99z"/></svg></span>
-                    <span>Запуск звонков</span>
+
+                <div class="nav-divider"></div>
+                <div class="nav-label">Рабочий процесс</div>
+
+                <li><a href="#" data-page="pageDialogs" onclick="setActive(this)">
+                    <span class="nav-icon"><svg viewBox="0 0 24 24"><path d="M20 2H4c-1.1 0-2 .9-2 2v18l4-4h14c1.1 0 2-.9 2-2V4c0-1.1-.9-2-2-2zm0 14H6l-2 2V4h16v12z"/></svg></span>
+                    <span>Диалоги</span>
                 </a></li>
                 <li><a href="#" data-page="pageAudience" onclick="setActive(this)">
                     <span class="nav-icon"><svg viewBox="0 0 24 24"><path d="M16 11c1.66 0 2.99-1.34 2.99-3S17.66 5 16 5c-1.66 0-3 1.34-3 3s1.34 3 3 3zm-8 0c1.66 0 2.99-1.34 2.99-3S9.66 5 8 5C6.34 5 5 6.34 5 8s1.34 3 3 3zm0 2c-2.33 0-7 1.17-7 3.5V19h14v-2.5c0-2.33-4.67-3.5-7-3.5zm8 0c-.29 0-.62.02-.97.05 1.16.84 1.97 1.97 1.97 3.45V19h6v-2.5c0-2.33-4.67-3.5-7-3.5z"/></svg></span>
                     <span>Целевая аудитория</span>
                 </a></li>
+                <li><a href="#" data-page="pageLaunches" onclick="setActive(this)">
+                    <span class="nav-icon"><svg viewBox="0 0 24 24"><path d="M20.01 15.38c-1.23 0-2.42-.2-3.53-.56a.977.977 0 00-1.01.24l-1.57 1.97c-2.83-1.35-5.48-3.9-6.89-6.83l1.95-1.66c.27-.28.35-.67.24-1.02-.37-1.11-.56-2.3-.56-3.53 0-.54-.45-.99-.99-.99H4.19C3.65 3 3 3.24 3 3.99 3 13.28 10.73 21 20.01 21c.71 0 .99-.63.99-1.18v-3.45c0-.54-.45-.99-.99-.99z"/></svg></span>
+                    <span>Запуск звонков</span>
+                </a></li>
+                <li><a href="#" data-page="pageQualLeads" onclick="setActive(this)">
+                    <span class="nav-icon"><svg viewBox="0 0 24 24"><path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm-2 15l-5-5 1.41-1.41L10 14.17l7.59-7.59L19 8l-9 9z"/></svg></span>
+                    <span>Квал лиды</span>
+                </a></li>
+
+                <div class="nav-divider"></div>
+
                 <li><a href="#" data-page="pageStats" onclick="setActive(this)">
                     <span class="nav-icon"><svg viewBox="0 0 24 24"><path d="M19 3H5c-1.1 0-2 .9-2 2v14c0 1.1.9 2 2 2h14c1.1 0 2-.9 2-2V5c0-1.1-.9-2-2-2zM9 17H7v-7h2v7zm4 0h-2V7h2v10zm4 0h-2v-4h2v4z"/></svg></span>
                     <span data-i18n="navStats">Статистика</span>
@@ -2672,10 +2689,6 @@
                 <li><a href="#" data-page="pageKnowledge" onclick="setActive(this)">
                     <span class="nav-icon"><svg viewBox="0 0 24 24"><path d="M18 2H6c-1.1 0-2 .9-2 2v16c0 1.1.9 2 2 2h12c1.1 0 2-.9 2-2V4c0-1.1-.9-2-2-2zM6 4h5v8l-2.5-1.5L6 12V4z"/></svg></span>
                     <span data-i18n="navKb">База знаний</span>
-                </a></li>
-                <li><a href="#" data-page="pageQualLeads" onclick="setActive(this)">
-                    <span class="nav-icon"><svg viewBox="0 0 24 24"><path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm-2 15l-5-5 1.41-1.41L10 14.17l7.59-7.59L19 8l-9 9z"/></svg></span>
-                    <span>Квал лиды</span>
                 </a></li>
                 <li><a href="#" data-page="pageTemplates" onclick="setActive(this)">
                     <span class="nav-icon"><svg viewBox="0 0 24 24"><path d="M14 2H6c-1.1 0-2 .9-2 2v16c0 1.1.9 2 2 2h12c1.1 0 2-.9 2-2V8l-6-6zm2 16H8v-2h8v2zm0-4H8v-2h8v2zm-3-5V3.5L18.5 9H13z"/></svg></span>
@@ -2691,6 +2704,13 @@
         <div class="dash-content">
             <!-- PAGE: Главное -->
             <div class="page-section active" id="pageMain">
+                <h1 data-i18n="navMain">Главное</h1>
+                <p class="subtitle">Обзор и аналитика</p>
+                <div class="stub-content" data-i18n="stub">Раздел в разработке</div>
+            </div>
+
+            <!-- PAGE: Диалоги -->
+            <div class="page-section" id="pageDialogs">
                 <!-- DIALOG LIST VIEW -->
                 <div id="dialogListView">
                     <div class="dlg-list-header">
@@ -4327,7 +4347,7 @@
             renderDialogTable();
 
             // Switch to Dialogs page
-            var mainLink = document.querySelector('a[data-page="pageMain"]');
+            var mainLink = document.querySelector('a[data-page="pageDialogs"]');
             if (mainLink) setActive(mainLink);
 
             // Open created dialog in edit mode
@@ -4439,7 +4459,7 @@
             dialogs.push(dlg);
             renderDialogTable();
 
-            var mainLink = document.querySelector('a[data-page="pageMain"]');
+            var mainLink = document.querySelector('a[data-page="pageDialogs"]');
             if (mainLink) setActive(mainLink);
             openDialogDetail(dlg.id);
         }
@@ -5112,6 +5132,7 @@
                 document.querySelectorAll('.page-section').forEach(function(p) { p.classList.remove('active'); });
                 var target = document.getElementById(pageId);
                 if (target) target.classList.add('active');
+                if (pageId === 'pageDialogs') { renderDialogTable(); }
                 if (pageId === 'pageKnowledge') kbRenderCentralList();
                 if (pageId === 'pageLaunches') { clImportParsedPhones(); clRenderLaunches(); }
                 if (pageId === 'pageAudience') { taRenderCards(); }
@@ -7232,6 +7253,10 @@
                 if (document.getElementById('clDay' + d).checked) days.push(d === 7 ? 0 : d);
             }
             if (!name || !dialogId || !audienceId) { clToast('Заполните все обязательные поля'); return; }
+            var duplicate = clLaunches.find(function(x) {
+                return x.dialogId === dialogId && x.audienceId === audienceId && x.id !== clEditId;
+            });
+            if (duplicate) { clToast('Запуск с таким диалогом и целевой аудиторией уже создан. Измените параметры.'); return; }
             var dailyCost = goalLeads * clGetPricePerLead();
             if (userBalance < dailyCost) { clToast('Недостаточно средств на балансе'); return; }
             // Find latest call list for this audience
