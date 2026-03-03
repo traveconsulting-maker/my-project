@@ -1813,6 +1813,7 @@ function resetClientForm() {
     document.getElementById('client-id').value = '';
     document.getElementById('client-modal-title').textContent = 'Новый клиент';
     ['client-name','client-company','client-phone','client-email','client-login','client-password','client-notes'].forEach(id => document.getElementById(id).value = '');
+    document.getElementById('client-price-per-lead').value = '2000';
 }
 
 // ===== Parsed Phones (Спарсенные номера) =====
@@ -2369,6 +2370,15 @@ function editClientFromDetail() {
     editClient(currentDetailClient);
 }
 
+function updateClientPricePerLead(clientId, value) {
+    const c = getClient(clientId);
+    if (!c) return;
+    c.pricePerLead = parseInt(value) || 2000;
+    c.updated = now();
+    persist();
+    toast('Цена за лид обновлена: ' + c.pricePerLead + ' ₽');
+}
+
 function renderClientDetail() {
     const c = getClient(currentDetailClient);
     if (!c) return;
@@ -2409,6 +2419,7 @@ function renderClientDetail() {
                         <div class="client-info-row"><span class="client-info-label">Задач</span><span>${tasks.filter(t=>t.clientId===c.id).length}</span></div>
                         <div class="client-info-row"><span class="client-info-label">Тикетов</span><span>${tickets.filter(t=>t.clientId===c.id).length}</span></div>
                         <div class="client-info-row"><span class="client-info-label">Создан</span><span>${formatDate(c.created)}</span></div>
+                        <div class="client-info-row"><span class="client-info-label">Цена за лид</span><span><input type="number" min="0" value="${c.pricePerLead||2000}" style="width:90px;padding:4px 8px;border-radius:6px;border:1px solid var(--border);background:var(--bg);color:var(--text);font-size:.85rem;text-align:right;" onchange="updateClientPricePerLead('${c.id}',this.value)"> ₽</span></div>
                     </div>
                     ${c.notes ? `<div class="client-detail-section"><h3>Заметки</h3><p style="font-size:.85rem;color:var(--text-secondary);white-space:pre-wrap;">${esc(c.notes)}</p></div>` : ''}
                 </div>
