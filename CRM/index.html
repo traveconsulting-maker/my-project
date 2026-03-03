@@ -3757,6 +3757,7 @@ function dmpSimulateResults(projectId) {
 
     project.updated = now();
     persist();
+    syncParsedPhonesToClients();
     renderDmpProjects();
     renderDmpResults();
 }
@@ -3788,8 +3789,32 @@ window.CRM_dmpWebhook = function(data) {
     project.updated = now();
     addActivity('dmp', `Новый номер от DMP: ${data.phone}`, project.clientId);
     persist();
+    syncParsedPhonesToClients();
     updateBadges();
 };
+
+// ===== Sync parsed phones to client personal dashboard =====
+function syncParsedPhonesToClients() {
+    // Group DMP results by client login and date
+    const clientMap = {};
+    dmpResults.forEach(r => {
+        const project = dmpProjects.find(p => p.id === r.projectId);
+        if (!project || !project.clientId) return;
+        const client = clients.find(c => c.id === project.clientId);
+        if (!client || !client.login) return;
+        const login = client.login;
+        if (!clientMap[login]) clientMap[login] = [];
+        clientMap[login].push({
+            phone: r.phone || '',
+            name: r.contactName || '',
+            date: r.created ? r.created.substring(0, 10) : new Date().toISOString().substring(0, 10)
+        });
+    });
+    // Write to localStorage keyed by login
+    Object.keys(clientMap).forEach(login => {
+        localStorage.setItem('user_' + login + '_parsed_phones', JSON.stringify(clientMap[login]));
+    });
+}
 
 // ==================== INIT ====================
 // #reset в URL — очистка всех данных
@@ -4549,6 +4574,7 @@ function aipSeedDemoData() {
 function init() {
     ppSeedDemoData();
     aipSeedDemoData();
+    syncParsedPhonesToClients();
     updateBadges();
     populateClientSelects();
     renderDashboard();
