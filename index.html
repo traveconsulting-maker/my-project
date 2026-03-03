@@ -1635,6 +1635,127 @@
         .kb-url-input { width:100%; padding:10px 14px; border-radius:10px; border:1px solid var(--input-border); background:var(--input-bg); color:var(--text); font-family:inherit; font-size:14px; outline:none; margin-bottom:12px; box-sizing:border-box; }
         .kb-url-input:focus { border-color:rgba(108,92,231,0.5); }
 
+        /* ===== CALL LAUNCHES PAGE ===== */
+        #clLaunchModal .modal, #cllCreateModal .modal, #cllImportModal .modal { text-align:left; }
+        .cl-tabs { display:flex; gap:0; margin-bottom:24px; border-bottom:2px solid var(--input-border); }
+        .cl-tab { padding:12px 24px; font-size:.9rem; font-weight:600; color:var(--text-muted); cursor:pointer; border-bottom:2px solid transparent; margin-bottom:-2px; transition:all .2s; }
+        .cl-tab:hover { color:var(--text-secondary); }
+        .cl-tab.active { color:var(--text); border-bottom-color:#6c5ce7; }
+        .cl-tab-content { display:none; }
+        .cl-tab-content.active { display:block; }
+
+        /* Launch cards grid */
+        .cl-cards { display:grid; grid-template-columns:repeat(auto-fill,minmax(360px,1fr)); gap:20px; }
+        .cl-card { background:var(--card-bg); border:1px solid var(--input-border); border-radius:16px; padding:24px; transition:all .2s; }
+        .cl-card:hover { transform:translateY(-2px); border-color:rgba(108,92,231,0.3); box-shadow:0 8px 32px rgba(0,0,0,0.15); }
+        .cl-card-header { display:flex; justify-content:space-between; align-items:flex-start; margin-bottom:16px; }
+        .cl-card-title { font-size:1rem; font-weight:700; color:var(--text); margin-bottom:4px; }
+        .cl-card-subtitle { font-size:.8rem; color:var(--text-muted); }
+        .cl-status { display:inline-flex; align-items:center; gap:6px; padding:4px 12px; border-radius:8px; font-size:.75rem; font-weight:600; }
+        .cl-status-dot { width:8px; height:8px; border-radius:50%; }
+        .cl-status-idle .cl-status-dot { background:#95a5a6; }
+        .cl-status-idle { background:rgba(149,165,166,0.12); color:#95a5a6; }
+        .cl-status-active .cl-status-dot { background:#00b894; animation:clPulse 1.5s infinite; }
+        .cl-status-active { background:rgba(0,184,148,0.12); color:#00b894; }
+        .cl-status-paused .cl-status-dot { background:#fdcb6e; }
+        .cl-status-paused { background:rgba(253,203,110,0.12); color:#fdcb6e; }
+        .cl-status-stopped .cl-status-dot { background:#e74c3c; }
+        .cl-status-stopped { background:rgba(231,76,60,0.12); color:#e74c3c; }
+        .cl-status-done .cl-status-dot { background:#6c5ce7; }
+        .cl-status-done { background:rgba(108,92,231,0.12); color:#6c5ce7; }
+        @keyframes clPulse { 0%,100%{opacity:1} 50%{opacity:.4} }
+
+        /* Stats row */
+        .cl-stats { display:grid; grid-template-columns:repeat(4,1fr); gap:8px; margin-bottom:16px; }
+        .cl-stat { background:var(--input-bg); border-radius:10px; padding:10px 12px; text-align:center; }
+        .cl-stat-num { font-size:1.2rem; font-weight:800; color:var(--text); }
+        .cl-stat-label { font-size:.7rem; color:var(--text-muted); margin-top:2px; text-transform:uppercase; letter-spacing:.5px; }
+
+        /* Progress */
+        .cl-progress { margin-bottom:16px; }
+        .cl-progress-label { display:flex; justify-content:space-between; font-size:.8rem; margin-bottom:4px; }
+        .cl-progress-bar { height:8px; border-radius:4px; background:var(--input-bg); overflow:hidden; position:relative; }
+        .cl-progress-fill { height:100%; border-radius:4px; background:linear-gradient(90deg,#6c5ce7,#a855f7); transition:width .5s; }
+
+        /* Card info rows */
+        .cl-info-row { display:flex; justify-content:space-between; align-items:center; padding:6px 0; font-size:.82rem; }
+        .cl-info-label { color:var(--text-muted); }
+        .cl-info-value { color:var(--text); font-weight:600; }
+        .cl-info-tag { display:inline-block; padding:2px 10px; border-radius:6px; font-size:.75rem; font-weight:600; background:rgba(108,92,231,0.12); color:#a855f7; }
+
+        /* Schedule pills */
+        .cl-schedule-days { display:flex; gap:4px; }
+        .cl-day { width:28px; height:28px; border-radius:50%; display:flex; align-items:center; justify-content:center; font-size:.7rem; font-weight:700; background:var(--input-bg); color:var(--text-muted); }
+        .cl-day.active { background:linear-gradient(135deg,#6c5ce7,#a855f7); color:#fff; }
+
+        /* Action buttons */
+        .cl-actions { display:flex; gap:8px; flex-wrap:wrap; margin-top:16px; padding-top:16px; border-top:1px solid var(--input-border); }
+        .cl-btn { padding:8px 16px; border-radius:10px; border:none; font-size:.8rem; font-weight:600; cursor:pointer; transition:all .2s; display:inline-flex; align-items:center; gap:6px; }
+        .cl-btn:hover { transform:translateY(-1px); }
+        .cl-btn-start { background:linear-gradient(135deg,#00b894,#00cec9); color:#fff; }
+        .cl-btn-start:hover { box-shadow:0 4px 16px rgba(0,184,148,.35); }
+        .cl-btn-pause { background:linear-gradient(135deg,#fdcb6e,#e17055); color:#fff; }
+        .cl-btn-pause:hover { box-shadow:0 4px 16px rgba(253,203,110,.35); }
+        .cl-btn-stop { background:linear-gradient(135deg,#e74c3c,#d63031); color:#fff; }
+        .cl-btn-stop:hover { box-shadow:0 4px 16px rgba(231,76,60,.35); }
+        .cl-btn-edit { background:var(--input-bg); color:var(--text); border:1px solid var(--input-border); }
+        .cl-btn-delete { background:rgba(231,76,60,0.1); color:#e74c3c; border:1px solid rgba(231,76,60,0.2); }
+
+        /* Create launch button */
+        .cl-create-btn { padding:12px 24px; border-radius:14px; border:none; font-size:.9rem; font-weight:700; cursor:pointer; background:linear-gradient(135deg,#6c5ce7,#a855f7); color:#fff; display:inline-flex; align-items:center; gap:8px; transition:all .2s; }
+        .cl-create-btn:hover { transform:translateY(-2px); box-shadow:0 8px 24px rgba(108,92,231,.35); }
+
+        /* ===== CALL LIST STYLES ===== */
+        .cll-cards { display:grid; grid-template-columns:repeat(auto-fill,minmax(300px,1fr)); gap:16px; }
+        .cll-card { background:var(--card-bg); border:1px solid var(--input-border); border-radius:14px; padding:20px; transition:all .2s; cursor:pointer; }
+        .cll-card:hover { transform:translateY(-2px); border-color:rgba(108,92,231,0.3); box-shadow:0 8px 24px rgba(0,0,0,0.12); }
+        .cll-card-header { display:flex; justify-content:space-between; align-items:flex-start; margin-bottom:12px; }
+        .cll-card-title { font-size:.95rem; font-weight:700; color:var(--text); }
+        .cll-card-count { padding:4px 12px; border-radius:8px; background:rgba(108,92,231,0.12); color:#a855f7; font-size:.8rem; font-weight:700; }
+        .cll-card-desc { font-size:.8rem; color:var(--text-muted); margin-bottom:12px; }
+        .cll-card-meta { display:flex; gap:12px; font-size:.75rem; color:var(--text-muted); }
+        .cll-card-actions { display:flex; gap:6px; margin-top:12px; }
+        .cll-empty { text-align:center; padding:60px 20px; }
+        .cll-empty-icon { font-size:48px; margin-bottom:12px; opacity:0.5; }
+        .cll-empty-text { font-size:15px; color:var(--text-muted); }
+
+        /* Call list detail */
+        .cll-detail-header { display:flex; justify-content:space-between; align-items:center; margin-bottom:20px; }
+        .cll-contacts-table { width:100%; border-collapse:collapse; }
+        .cll-contacts-table th { text-align:left; padding:10px 12px; font-size:.75rem; text-transform:uppercase; letter-spacing:.5px; color:var(--text-muted); border-bottom:1px solid var(--input-border); }
+        .cll-contacts-table td { padding:10px 12px; font-size:.85rem; border-bottom:1px solid var(--input-border); }
+        .cll-contacts-table tr:hover td { background:rgba(108,92,231,0.04); }
+
+        /* Import tabs */
+        .cll-import-tabs { display:flex; gap:0; margin-bottom:16px; border-bottom:1px solid var(--input-border); }
+        .cll-import-tab { padding:8px 16px; font-size:.82rem; font-weight:600; color:var(--text-muted); cursor:pointer; border-bottom:2px solid transparent; margin-bottom:-1px; transition:all .2s; }
+        .cll-import-tab.active { color:var(--text); border-bottom-color:#6c5ce7; }
+        .cll-import-content { display:none; }
+        .cll-import-content.active { display:block; }
+        .cll-drop-area { border:2px dashed var(--input-border); border-radius:12px; padding:40px 20px; text-align:center; cursor:pointer; transition:all .2s; }
+        .cll-drop-area:hover, .cll-drop-area.dragover { border-color:#6c5ce7; background:rgba(108,92,231,0.04); }
+        .cll-drop-icon { font-size:36px; margin-bottom:8px; opacity:0.5; }
+        .cll-drop-text { font-size:.85rem; color:var(--text-muted); }
+        .cll-paste-area { width:100%; min-height:120px; padding:12px; border-radius:10px; border:1px solid var(--input-border); background:var(--input-bg); color:var(--text); font-family:'JetBrains Mono',monospace; font-size:.82rem; resize:vertical; box-sizing:border-box; }
+        .cll-paste-area:focus { border-color:rgba(108,92,231,0.5); outline:none; }
+        .cll-manual-row { display:flex; gap:10px; margin-bottom:8px; }
+        .cll-manual-input { flex:1; padding:8px 12px; border-radius:8px; border:1px solid var(--input-border); background:var(--input-bg); color:var(--text); font-size:.85rem; }
+        .cll-manual-input:focus { border-color:rgba(108,92,231,0.5); outline:none; }
+
+        /* Launch modal form */
+        .cl-form-group { margin-bottom:16px; }
+        .cl-form-label { display:block; font-size:.8rem; font-weight:600; color:var(--text-muted); margin-bottom:6px; text-transform:uppercase; letter-spacing:.5px; }
+        .cl-form-input, .cl-form-select { width:100%; padding:10px 14px; border-radius:10px; border:1px solid var(--input-border); background:var(--input-bg); color:var(--text); font-family:inherit; font-size:.85rem; box-sizing:border-box; }
+        .cl-form-input:focus, .cl-form-select:focus { border-color:rgba(108,92,231,0.5); outline:none; }
+        .cl-form-row { display:flex; gap:16px; }
+        .cl-form-row > * { flex:1; }
+        .cl-schedule-grid { display:flex; gap:6px; margin-bottom:12px; }
+        .cl-schedule-check { display:none; }
+        .cl-schedule-label { width:40px; height:40px; border-radius:50%; display:flex; align-items:center; justify-content:center; font-size:.75rem; font-weight:700; background:var(--input-bg); color:var(--text-muted); cursor:pointer; transition:all .2s; border:2px solid transparent; }
+        .cl-schedule-check:checked + .cl-schedule-label { background:linear-gradient(135deg,#6c5ce7,#a855f7); color:#fff; border-color:rgba(108,92,231,0.3); }
+        .cl-time-row { display:flex; gap:12px; align-items:center; }
+        .cl-time-input { padding:8px 12px; border-radius:8px; border:1px solid var(--input-border); background:var(--input-bg); color:var(--text); font-family:inherit; font-size:.85rem; }
+
     </style>
 </head>
 <body>
@@ -2456,6 +2577,10 @@
                     <span class="nav-icon"><svg viewBox="0 0 24 24"><path d="M10 20v-6h4v6h5v-8h3L12 3 2 12h3v8z"/></svg></span>
                     <span data-i18n="navMain">Главное</span>
                 </a></li>
+                <li><a href="#" data-page="pageLaunches" onclick="setActive(this)">
+                    <span class="nav-icon"><svg viewBox="0 0 24 24"><path d="M20.01 15.38c-1.23 0-2.42-.2-3.53-.56a.977.977 0 00-1.01.24l-1.57 1.97c-2.83-1.35-5.48-3.9-6.89-6.83l1.95-1.66c.27-.28.35-.67.24-1.02-.37-1.11-.56-2.3-.56-3.53 0-.54-.45-.99-.99-.99H4.19C3.65 3 3 3.24 3 3.99 3 13.28 10.73 21 20.01 21c.71 0 .99-.63.99-1.18v-3.45c0-.54-.45-.99-.99-.99z"/></svg></span>
+                    <span>Запуск звонков</span>
+                </a></li>
                 <li><a href="#" data-page="pageStats" onclick="setActive(this)">
                     <span class="nav-icon"><svg viewBox="0 0 24 24"><path d="M19 3H5c-1.1 0-2 .9-2 2v14c0 1.1.9 2 2 2h14c1.1 0 2-.9 2-2V5c0-1.1-.9-2-2-2zM9 17H7v-7h2v7zm4 0h-2V7h2v10zm4 0h-2v-4h2v4z"/></svg></span>
                     <span data-i18n="navStats">Статистика</span>
@@ -2844,6 +2969,76 @@
                 <div class="stub-content" data-i18n="stub">Раздел в разработке</div>
             </div>
 
+            <!-- PAGE: Запуск звонков -->
+            <div class="page-section" id="pageLaunches">
+                <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:8px;">
+                    <div>
+                        <h1>Запуск звонков</h1>
+                        <p class="subtitle">Создавайте и управляйте автоматическими обзвонами</p>
+                    </div>
+                </div>
+                <div class="cl-tabs">
+                    <div class="cl-tab active" onclick="clSwitchTab('launches',this)">Запуски</div>
+                    <div class="cl-tab" onclick="clSwitchTab('calllists',this)">Колл-листы</div>
+                </div>
+
+                <!-- TAB: Launches -->
+                <div class="cl-tab-content active" id="clTabLaunches">
+                    <div style="margin-bottom:20px;">
+                        <button class="cl-create-btn" onclick="clOpenCreateLaunch()">
+                            <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/></svg>
+                            Создать запуск
+                        </button>
+                    </div>
+                    <div class="cl-cards" id="clLaunchCards"></div>
+                    <div id="clLaunchEmpty" style="display:none;">
+                        <div class="cll-empty">
+                            <div class="cll-empty-icon">&#128222;</div>
+                            <div class="cll-empty-text">Нет запусков. Создайте первый!</div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- TAB: Call Lists -->
+                <div class="cl-tab-content" id="clTabCalllists">
+                    <!-- List view -->
+                    <div id="cllListView">
+                        <div style="margin-bottom:20px;">
+                            <button class="cl-create-btn" onclick="cllOpenCreate()">
+                                <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/></svg>
+                                Создать колл-лист
+                            </button>
+                        </div>
+                        <div class="cll-cards" id="cllCards"></div>
+                        <div id="cllEmpty" style="display:none;">
+                            <div class="cll-empty">
+                                <div class="cll-empty-icon">&#128203;</div>
+                                <div class="cll-empty-text">Нет колл-листов. Создайте первый!</div>
+                            </div>
+                        </div>
+                    </div>
+                    <!-- Detail view -->
+                    <div id="cllDetailView" style="display:none;">
+                        <button class="dlg-back-btn" onclick="cllBackToList()">
+                            <span>&#8592;</span>
+                            <span>Назад к колл-листам</span>
+                        </button>
+                        <div class="cll-detail-header">
+                            <div>
+                                <h2 id="cllDetailTitle"></h2>
+                                <p class="subtitle" id="cllDetailDesc"></p>
+                            </div>
+                            <div style="display:flex;gap:8px;">
+                                <button class="cl-btn cl-btn-edit" onclick="cllOpenImport()">+ Добавить контакты</button>
+                                <button class="cl-btn cl-btn-delete" onclick="cllDeleteCurrent()">Удалить лист</button>
+                            </div>
+                        </div>
+                        <div style="font-size:.85rem;color:var(--text-muted);margin-bottom:16px;">Контактов: <strong id="cllDetailCount" style="color:var(--text);">0</strong></div>
+                        <div id="cllDetailContacts"></div>
+                    </div>
+                </div>
+            </div>
+
             <!-- PAGE: Шаблоны -->
             <div class="page-section" id="pageTemplates">
                 <h1 data-i18n="pTplT">Шаблоны</h1>
@@ -2933,6 +3128,123 @@
                         </div>
                     </div>
                 </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- MODAL: Create/Edit Launch -->
+    <div class="modal-overlay" id="clLaunchModal">
+        <div class="modal" style="max-width:600px;">
+            <h2 id="clLaunchModalTitle" style="margin-bottom:20px;">Создать запуск</h2>
+            <form onsubmit="clSaveLaunch(event)">
+                <div class="cl-form-group">
+                    <label class="cl-form-label">Название запуска *</label>
+                    <input class="cl-form-input" id="clLaunchName" required placeholder="Например: Обзвон B2B клиентов">
+                </div>
+                <div class="cl-form-row">
+                    <div class="cl-form-group">
+                        <label class="cl-form-label">Диалог *</label>
+                        <select class="cl-form-select" id="clLaunchDialog" required></select>
+                    </div>
+                    <div class="cl-form-group">
+                        <label class="cl-form-label">Колл-лист *</label>
+                        <select class="cl-form-select" id="clLaunchCallList" required></select>
+                    </div>
+                </div>
+                <div class="cl-form-row">
+                    <div class="cl-form-group">
+                        <label class="cl-form-label">Макс. лидов</label>
+                        <input class="cl-form-input" type="number" id="clLaunchMaxLeads" min="1" max="10000" value="50" placeholder="50">
+                    </div>
+                    <div class="cl-form-group">
+                        <label class="cl-form-label">Цель лидов (план)</label>
+                        <input class="cl-form-input" type="number" id="clLaunchGoalLeads" min="1" max="10000" value="20" placeholder="20">
+                    </div>
+                </div>
+                <div class="cl-form-group">
+                    <label class="cl-form-label">Дни работы</label>
+                    <div class="cl-schedule-grid">
+                        <input type="checkbox" class="cl-schedule-check" id="clDay1" value="1" checked><label class="cl-schedule-label" for="clDay1">Пн</label>
+                        <input type="checkbox" class="cl-schedule-check" id="clDay2" value="2" checked><label class="cl-schedule-label" for="clDay2">Вт</label>
+                        <input type="checkbox" class="cl-schedule-check" id="clDay3" value="3" checked><label class="cl-schedule-label" for="clDay3">Ср</label>
+                        <input type="checkbox" class="cl-schedule-check" id="clDay4" value="4" checked><label class="cl-schedule-label" for="clDay4">Чт</label>
+                        <input type="checkbox" class="cl-schedule-check" id="clDay5" value="5" checked><label class="cl-schedule-label" for="clDay5">Пт</label>
+                        <input type="checkbox" class="cl-schedule-check" id="clDay6" value="6"><label class="cl-schedule-label" for="clDay6">Сб</label>
+                        <input type="checkbox" class="cl-schedule-check" id="clDay7" value="0"><label class="cl-schedule-label" for="clDay7">Вс</label>
+                    </div>
+                </div>
+                <div class="cl-form-group">
+                    <label class="cl-form-label">Часы работы</label>
+                    <div class="cl-time-row">
+                        <span style="font-size:.82rem;color:var(--text-muted);">с</span>
+                        <input type="time" class="cl-time-input" id="clLaunchTimeFrom" value="09:00">
+                        <span style="font-size:.82rem;color:var(--text-muted);">до</span>
+                        <input type="time" class="cl-time-input" id="clLaunchTimeTo" value="18:00">
+                    </div>
+                </div>
+                <div style="display:flex;gap:12px;justify-content:flex-end;margin-top:24px;">
+                    <button type="button" class="cl-btn cl-btn-edit" onclick="clCloseLaunchModal()">Отмена</button>
+                    <button type="submit" class="cl-create-btn" style="padding:10px 28px;">Сохранить</button>
+                </div>
+            </form>
+        </div>
+    </div>
+
+    <!-- MODAL: Create Call List -->
+    <div class="modal-overlay" id="cllCreateModal">
+        <div class="modal" style="max-width:500px;">
+            <h2 style="margin-bottom:20px;">Создать колл-лист</h2>
+            <form onsubmit="cllSaveNew(event)">
+                <div class="cl-form-group">
+                    <label class="cl-form-label">Название *</label>
+                    <input class="cl-form-input" id="cllCreateName" required placeholder="Например: IT-компании Москва">
+                </div>
+                <div class="cl-form-group">
+                    <label class="cl-form-label">Описание</label>
+                    <input class="cl-form-input" id="cllCreateDesc" placeholder="Краткое описание списка">
+                </div>
+                <div style="display:flex;gap:12px;justify-content:flex-end;margin-top:24px;">
+                    <button type="button" class="cl-btn cl-btn-edit" onclick="cllCloseCreate()">Отмена</button>
+                    <button type="submit" class="cl-create-btn" style="padding:10px 28px;">Создать</button>
+                </div>
+            </form>
+        </div>
+    </div>
+
+    <!-- MODAL: Import Contacts -->
+    <div class="modal-overlay" id="cllImportModal">
+        <div class="modal" style="max-width:600px;">
+            <h2 style="margin-bottom:20px;">Добавить контакты</h2>
+            <div class="cll-import-tabs">
+                <div class="cll-import-tab active" onclick="cllSwitchImportTab('csv',this)">CSV файл</div>
+                <div class="cll-import-tab" onclick="cllSwitchImportTab('paste',this)">Вставить текст</div>
+                <div class="cll-import-tab" onclick="cllSwitchImportTab('manual',this)">Вручную</div>
+            </div>
+            <div class="cll-import-content active" id="cllImportCsv">
+                <div class="cll-drop-area" id="cllDropArea" onclick="document.getElementById('cllFileInput').click()">
+                    <div class="cll-drop-icon">&#128193;</div>
+                    <div class="cll-drop-text">Перетащите CSV файл сюда или нажмите для выбора</div>
+                    <div style="font-size:.75rem;color:var(--text-muted);margin-top:8px;">Формат: телефон;имя (каждый контакт на новой строке)</div>
+                </div>
+                <input type="file" id="cllFileInput" accept=".csv,.txt" style="display:none;" onchange="cllHandleFile(this.files)">
+                <div id="cllFilePreview" style="display:none;margin-top:12px;padding:12px;border-radius:10px;background:var(--input-bg);font-size:.82rem;"></div>
+            </div>
+            <div class="cll-import-content" id="cllImportPaste">
+                <p style="font-size:.82rem;color:var(--text-muted);margin-bottom:8px;">Вставьте список контактов (телефон;имя — каждый с новой строки):</p>
+                <textarea class="cll-paste-area" id="cllPasteArea" placeholder="+7 495 123-45-67;Иванов Алексей&#10;+7 812 987-65-43;Петрова Мария&#10;+7 925 111-22-33"></textarea>
+            </div>
+            <div class="cll-import-content" id="cllImportManual">
+                <div id="cllManualRows">
+                    <div class="cll-manual-row">
+                        <input class="cll-manual-input" placeholder="Телефон" data-field="phone">
+                        <input class="cll-manual-input" placeholder="Имя" data-field="name">
+                    </div>
+                </div>
+                <button type="button" class="cl-btn cl-btn-edit" style="margin-top:8px;" onclick="cllAddManualRow()">+ Ещё контакт</button>
+            </div>
+            <div style="display:flex;gap:12px;justify-content:flex-end;margin-top:24px;">
+                <button type="button" class="cl-btn cl-btn-edit" onclick="cllCloseImport()">Отмена</button>
+                <button type="button" class="cl-create-btn" style="padding:10px 28px;" onclick="cllDoImport()">Импортировать</button>
             </div>
         </div>
     </div>
@@ -4663,6 +4975,7 @@
                 var target = document.getElementById(pageId);
                 if (target) target.classList.add('active');
                 if (pageId === 'pageKnowledge') kbRenderCentralList();
+                if (pageId === 'pageLaunches') { clRenderLaunches(); cllRenderList(); }
             }
         }
 
@@ -6370,6 +6683,497 @@
             stRenderStatsCards(stCallsAll);
             stRenderCalls(stCalls);
         })();
+
+        // ===== CALL LAUNCHES & CALL LISTS =====
+        var clLaunches = JSON.parse(localStorage.getItem('cl_launches') || '[]');
+        var clCallLists = JSON.parse(localStorage.getItem('cl_calllists') || '[]');
+        var clIdCounter = parseInt(localStorage.getItem('cl_id_counter') || '0', 10);
+        var clEditId = null;
+        var cllCurrentId = null;
+        var cllCsvData = [];
+        var clSimTimers = {};
+
+        function clGenId() { clIdCounter++; localStorage.setItem('cl_id_counter', clIdCounter); return 'cl_' + clIdCounter; }
+        function clPersist() { localStorage.setItem('cl_launches', JSON.stringify(clLaunches)); localStorage.setItem('cl_calllists', JSON.stringify(clCallLists)); }
+        function clToast(msg) { showTtsToast(msg); }
+        function clEsc(s) { return escapeHtml(s || ''); }
+        function clNow() { return new Date().toISOString(); }
+        function clFormatDate(d) { if (!d) return '—'; var dt = new Date(d); return dt.toLocaleDateString('ru') + ' ' + dt.toLocaleTimeString('ru', {hour:'2-digit',minute:'2-digit'}); }
+
+        // ===== TAB SWITCHING =====
+        function clSwitchTab(tab, btn) {
+            document.querySelectorAll('.cl-tab').forEach(function(t) { t.classList.remove('active'); });
+            document.querySelectorAll('.cl-tab-content').forEach(function(c) { c.classList.remove('active'); });
+            btn.classList.add('active');
+            if (tab === 'launches') { document.getElementById('clTabLaunches').classList.add('active'); clRenderLaunches(); }
+            else { document.getElementById('clTabCalllists').classList.add('active'); cllRenderList(); }
+        }
+
+        // ===== CALL LISTS =====
+        function cllRenderList() {
+            var container = document.getElementById('cllCards');
+            var empty = document.getElementById('cllEmpty');
+            if (clCallLists.length === 0) { container.innerHTML = ''; empty.style.display = ''; return; }
+            empty.style.display = 'none';
+            container.innerHTML = clCallLists.map(function(cl) {
+                return '<div class="cll-card" onclick="cllOpenDetail(\'' + cl.id + '\')">' +
+                    '<div class="cll-card-header"><div class="cll-card-title">' + clEsc(cl.name) + '</div><div class="cll-card-count">' + (cl.contacts ? cl.contacts.length : 0) + ' контактов</div></div>' +
+                    (cl.description ? '<div class="cll-card-desc">' + clEsc(cl.description) + '</div>' : '') +
+                    '<div class="cll-card-meta"><span>Создан: ' + clFormatDate(cl.created) + '</span></div>' +
+                    '<div class="cll-card-actions">' +
+                        '<button class="cl-btn cl-btn-edit" onclick="event.stopPropagation();cllOpenDetail(\'' + cl.id + '\')">Открыть</button>' +
+                        '<button class="cl-btn cl-btn-delete" onclick="event.stopPropagation();cllDelete(\'' + cl.id + '\')">Удалить</button>' +
+                    '</div>' +
+                '</div>';
+            }).join('');
+        }
+
+        function cllOpenCreate() { document.getElementById('cllCreateModal').classList.add('active'); document.getElementById('cllCreateName').value = ''; document.getElementById('cllCreateDesc').value = ''; }
+        function cllCloseCreate() { document.getElementById('cllCreateModal').classList.remove('active'); }
+
+        function cllSaveNew(e) {
+            e.preventDefault();
+            var name = document.getElementById('cllCreateName').value.trim();
+            var desc = document.getElementById('cllCreateDesc').value.trim();
+            if (!name) return;
+            clCallLists.push({ id: clGenId(), name: name, description: desc, contacts: [], created: clNow(), updated: clNow() });
+            clPersist(); cllCloseCreate(); cllRenderList();
+            clToast('Колл-лист «' + name + '» создан');
+        }
+
+        function cllDelete(id) {
+            if (!confirm('Удалить колл-лист?')) return;
+            clCallLists = clCallLists.filter(function(c) { return c.id !== id; });
+            clPersist(); cllRenderList();
+            clToast('Колл-лист удалён');
+        }
+
+        function cllOpenDetail(id) {
+            cllCurrentId = id;
+            var cl = clCallLists.find(function(c) { return c.id === id; });
+            if (!cl) return;
+            document.getElementById('cllListView').style.display = 'none';
+            document.getElementById('cllDetailView').style.display = '';
+            document.getElementById('cllDetailTitle').textContent = cl.name;
+            document.getElementById('cllDetailDesc').textContent = cl.description || '';
+            cllRenderContacts(cl);
+        }
+
+        function cllBackToList() {
+            cllCurrentId = null;
+            document.getElementById('cllDetailView').style.display = 'none';
+            document.getElementById('cllListView').style.display = '';
+            cllRenderList();
+        }
+
+        function cllDeleteCurrent() {
+            if (!cllCurrentId) return;
+            if (!confirm('Удалить этот колл-лист и все контакты?')) return;
+            clCallLists = clCallLists.filter(function(c) { return c.id !== cllCurrentId; });
+            clPersist(); cllBackToList();
+            clToast('Колл-лист удалён');
+        }
+
+        function cllRenderContacts(cl) {
+            document.getElementById('cllDetailCount').textContent = cl.contacts.length;
+            var container = document.getElementById('cllDetailContacts');
+            if (cl.contacts.length === 0) {
+                container.innerHTML = '<div class="cll-empty"><div class="cll-empty-icon">&#128100;</div><div class="cll-empty-text">Нет контактов. Нажмите «+ Добавить контакты»</div></div>';
+                return;
+            }
+            var html = '<table class="cll-contacts-table"><thead><tr><th>#</th><th>Телефон</th><th>Имя</th><th></th></tr></thead><tbody>';
+            cl.contacts.forEach(function(c, i) {
+                html += '<tr><td>' + (i + 1) + '</td><td style="font-family:\'JetBrains Mono\',monospace;font-size:.85rem;">' + clEsc(c.phone) + '</td><td>' + (c.name ? '<strong>' + clEsc(c.name) + '</strong>' : '<span style="color:var(--text-muted);">—</span>') + '</td><td><button class="cl-btn cl-btn-delete" style="padding:4px 10px;font-size:.75rem;" onclick="cllRemoveContact(\'' + cl.id + '\',' + i + ')">&#10005;</button></td></tr>';
+            });
+            html += '</tbody></table>';
+            container.innerHTML = html;
+        }
+
+        function cllRemoveContact(listId, idx) {
+            var cl = clCallLists.find(function(c) { return c.id === listId; });
+            if (!cl) return;
+            cl.contacts.splice(idx, 1);
+            cl.updated = clNow();
+            clPersist();
+            cllRenderContacts(cl);
+        }
+
+        // Import
+        function cllOpenImport() {
+            cllCsvData = [];
+            document.getElementById('cllImportModal').classList.add('active');
+            document.getElementById('cllPasteArea').value = '';
+            document.getElementById('cllFilePreview').style.display = 'none';
+            document.getElementById('cllManualRows').innerHTML = '<div class="cll-manual-row"><input class="cll-manual-input" placeholder="Телефон" data-field="phone"><input class="cll-manual-input" placeholder="Имя" data-field="name"></div>';
+            cllSwitchImportTab('csv', document.querySelector('.cll-import-tab'));
+        }
+        function cllCloseImport() { document.getElementById('cllImportModal').classList.remove('active'); }
+
+        function cllSwitchImportTab(tab, btn) {
+            document.querySelectorAll('.cll-import-tab').forEach(function(t) { t.classList.remove('active'); });
+            document.querySelectorAll('.cll-import-content').forEach(function(c) { c.classList.remove('active'); });
+            btn.classList.add('active');
+            var map = { csv: 'cllImportCsv', paste: 'cllImportPaste', manual: 'cllImportManual' };
+            document.getElementById(map[tab]).classList.add('active');
+        }
+
+        function cllHandleFile(files) {
+            if (!files || !files.length) return;
+            var file = files[0];
+            var reader = new FileReader();
+            reader.onload = function(e) {
+                var text = e.target.result;
+                cllCsvData = cllParseCSV(text);
+                document.getElementById('cllFilePreview').style.display = '';
+                document.getElementById('cllFilePreview').innerHTML = '<strong>Распознано: ' + cllCsvData.length + ' контактов</strong><br><span style="color:var(--text-muted);font-size:.75rem;">Файл: ' + clEsc(file.name) + '</span>';
+            };
+            reader.readAsText(file);
+        }
+
+        function cllParseCSV(text) {
+            var lines = text.split(/\r?\n/).filter(function(l) { return l.trim(); });
+            var result = [];
+            lines.forEach(function(line) {
+                var parts = line.split(/[;,\t]/);
+                var phone = (parts[0] || '').trim();
+                var name = (parts[1] || '').trim();
+                if (phone && /[\d+]/.test(phone)) result.push({ phone: phone, name: name });
+            });
+            return result;
+        }
+
+        function cllAddManualRow() {
+            var container = document.getElementById('cllManualRows');
+            var row = document.createElement('div');
+            row.className = 'cll-manual-row';
+            row.innerHTML = '<input class="cll-manual-input" placeholder="Телефон" data-field="phone"><input class="cll-manual-input" placeholder="Имя" data-field="name"><button type="button" class="cl-btn cl-btn-delete" style="padding:4px 10px;font-size:.75rem;flex:0;" onclick="this.parentElement.remove()">&#10005;</button>';
+            container.appendChild(row);
+        }
+
+        function cllDoImport() {
+            if (!cllCurrentId) return;
+            var cl = clCallLists.find(function(c) { return c.id === cllCurrentId; });
+            if (!cl) return;
+            var contacts = [];
+            // Check which tab is active
+            var csvTab = document.getElementById('cllImportCsv');
+            var pasteTab = document.getElementById('cllImportPaste');
+            var manualTab = document.getElementById('cllImportManual');
+            if (csvTab.classList.contains('active') && cllCsvData.length > 0) {
+                contacts = cllCsvData;
+            } else if (pasteTab.classList.contains('active')) {
+                var text = document.getElementById('cllPasteArea').value;
+                contacts = cllParseCSV(text);
+            } else if (manualTab.classList.contains('active')) {
+                var rows = document.querySelectorAll('#cllManualRows .cll-manual-row');
+                rows.forEach(function(row) {
+                    var phone = row.querySelector('[data-field="phone"]').value.trim();
+                    var name = row.querySelector('[data-field="name"]').value.trim();
+                    if (phone) contacts.push({ phone: phone, name: name });
+                });
+            }
+            if (contacts.length === 0) { clToast('Нет контактов для импорта'); return; }
+            cl.contacts = cl.contacts.concat(contacts);
+            cl.updated = clNow();
+            clPersist();
+            cllCloseImport();
+            cllRenderContacts(cl);
+            clToast('Импортировано ' + contacts.length + ' контактов');
+        }
+
+        // Drag & drop for CSV
+        (function() {
+            document.addEventListener('DOMContentLoaded', function() {
+                var drop = document.getElementById('cllDropArea');
+                if (!drop) return;
+                drop.addEventListener('dragover', function(e) { e.preventDefault(); drop.classList.add('dragover'); });
+                drop.addEventListener('dragleave', function() { drop.classList.remove('dragover'); });
+                drop.addEventListener('drop', function(e) { e.preventDefault(); drop.classList.remove('dragover'); cllHandleFile(e.dataTransfer.files); });
+            });
+        })();
+
+        // ===== LAUNCHES =====
+        function clRenderLaunches() {
+            var container = document.getElementById('clLaunchCards');
+            var empty = document.getElementById('clLaunchEmpty');
+            if (clLaunches.length === 0) { container.innerHTML = ''; empty.style.display = ''; return; }
+            empty.style.display = 'none';
+            container.innerHTML = clLaunches.map(function(l) { return clRenderCard(l); }).join('');
+        }
+
+        function clStatusLabel(s) {
+            var m = { idle:'Не запущен', active:'Активен', paused:'Приостановлен', stopped:'Остановлен', done:'Завершён' };
+            return m[s] || s;
+        }
+
+        function clRenderCard(l) {
+            var callList = clCallLists.find(function(c) { return c.id === l.callListId; });
+            var totalContacts = callList ? callList.contacts.length : 0;
+            var called = l.called || 0;
+            var leads = l.leads || 0;
+            var missed = l.missed || 0;
+            var processed = called + leads + missed;
+            var pct = totalContacts > 0 ? Math.round(processed / totalContacts * 100) : 0;
+            var conversion = processed > 0 ? (leads / processed * 100).toFixed(1) : '0.0';
+            var dialogName = '—';
+            if (l.dialogId && typeof dialogs !== 'undefined') {
+                var dlg = dialogs.find(function(d) { return d.id === l.dialogId; });
+                if (dlg) dialogName = dlg.name;
+            }
+            var dayNames = ['Вс','Пн','Вт','Ср','Чт','Пт','Сб'];
+            var daysHtml = '';
+            for (var d = 1; d <= 7; d++) {
+                var dayIdx = d === 7 ? 0 : d;
+                var isActive = l.days && l.days.indexOf(dayIdx) >= 0;
+                daysHtml += '<div class="cl-day' + (isActive ? ' active' : '') + '">' + dayNames[dayIdx] + '</div>';
+            }
+
+            var btns = '';
+            if (l.status === 'idle' || l.status === 'stopped') {
+                btns = '<button class="cl-btn cl-btn-start" onclick="clStartLaunch(\'' + l.id + '\')">&#9654; Запустить</button>';
+            } else if (l.status === 'active') {
+                btns = '<button class="cl-btn cl-btn-pause" onclick="clPauseLaunch(\'' + l.id + '\')">&#9208; Пауза</button>' +
+                       '<button class="cl-btn cl-btn-stop" onclick="clStopLaunch(\'' + l.id + '\')">&#9209; Стоп</button>';
+            } else if (l.status === 'paused') {
+                btns = '<button class="cl-btn cl-btn-start" onclick="clResumeLaunch(\'' + l.id + '\')">&#9654; Продолжить</button>' +
+                       '<button class="cl-btn cl-btn-stop" onclick="clStopLaunch(\'' + l.id + '\')">&#9209; Стоп</button>';
+            }
+            if (l.status !== 'active') {
+                btns += '<button class="cl-btn cl-btn-edit" onclick="clEditLaunch(\'' + l.id + '\')">&#9998; Изменить</button>';
+            }
+            btns += '<button class="cl-btn cl-btn-delete" onclick="clDeleteLaunch(\'' + l.id + '\')">Удалить</button>';
+
+            return '<div class="cl-card">' +
+                '<div class="cl-card-header">' +
+                    '<div><div class="cl-card-title">' + clEsc(l.name) + '</div><div class="cl-card-subtitle">Диалог: ' + clEsc(dialogName) + '</div></div>' +
+                    '<div class="cl-status cl-status-' + l.status + '"><span class="cl-status-dot"></span>' + clStatusLabel(l.status) + '</div>' +
+                '</div>' +
+                '<div class="cl-stats">' +
+                    '<div class="cl-stat"><div class="cl-stat-num">' + totalContacts + '</div><div class="cl-stat-label">Всего</div></div>' +
+                    '<div class="cl-stat"><div class="cl-stat-num" style="color:#3498db;">' + called + '</div><div class="cl-stat-label">Позвонил</div></div>' +
+                    '<div class="cl-stat"><div class="cl-stat-num" style="color:#e74c3c;">' + missed + '</div><div class="cl-stat-label">Недозвон</div></div>' +
+                    '<div class="cl-stat"><div class="cl-stat-num" style="color:#00b894;">' + leads + '</div><div class="cl-stat-label">Лиды</div></div>' +
+                '</div>' +
+                '<div class="cl-progress">' +
+                    '<div class="cl-progress-label"><span style="color:var(--text-muted);">Прогресс</span><span style="color:var(--text);">' + processed + '/' + totalContacts + ' (' + pct + '%)</span></div>' +
+                    '<div class="cl-progress-bar"><div class="cl-progress-fill" style="width:' + pct + '%"></div></div>' +
+                '</div>' +
+                '<div class="cl-info-row"><span class="cl-info-label">Колл-лист</span><span class="cl-info-tag">' + clEsc(callList ? callList.name : '—') + '</span></div>' +
+                '<div class="cl-info-row"><span class="cl-info-label">Лидов</span><span class="cl-info-value">' + leads + ' / ' + (l.maxLeads || '∞') + '</span></div>' +
+                '<div class="cl-info-row"><span class="cl-info-label">Цель</span><span class="cl-info-value">' + (l.goalLeads || '—') + ' лидов</span></div>' +
+                '<div class="cl-info-row"><span class="cl-info-label">Конверсия</span><span class="cl-info-value">' + conversion + '%</span></div>' +
+                '<div class="cl-info-row"><span class="cl-info-label">Расписание</span><span class="cl-info-value">' + (l.timeFrom || '09:00') + ' — ' + (l.timeTo || '18:00') + '</span></div>' +
+                '<div class="cl-info-row" style="padding-bottom:0;"><span class="cl-info-label">Дни</span><div class="cl-schedule-days">' + daysHtml + '</div></div>' +
+                '<div class="cl-actions">' + btns + '</div>' +
+            '</div>';
+        }
+
+        // Create/Edit Launch Modal
+        function clPopulateSelects() {
+            var dlgSelect = document.getElementById('clLaunchDialog');
+            var clSelect = document.getElementById('clLaunchCallList');
+            dlgSelect.innerHTML = '<option value="">Выберите диалог</option>';
+            if (typeof dialogs !== 'undefined') {
+                dialogs.forEach(function(d) {
+                    dlgSelect.innerHTML += '<option value="' + d.id + '">' + clEsc(d.name) + '</option>';
+                });
+            }
+            clSelect.innerHTML = '<option value="">Выберите колл-лист</option>';
+            clCallLists.forEach(function(c) {
+                clSelect.innerHTML += '<option value="' + c.id + '">' + clEsc(c.name) + ' (' + c.contacts.length + ' конт.)</option>';
+            });
+        }
+
+        function clOpenCreateLaunch() {
+            clEditId = null;
+            document.getElementById('clLaunchModalTitle').textContent = 'Создать запуск';
+            clPopulateSelects();
+            document.getElementById('clLaunchName').value = '';
+            document.getElementById('clLaunchDialog').value = '';
+            document.getElementById('clLaunchCallList').value = '';
+            document.getElementById('clLaunchMaxLeads').value = '50';
+            document.getElementById('clLaunchGoalLeads').value = '20';
+            document.getElementById('clLaunchTimeFrom').value = '09:00';
+            document.getElementById('clLaunchTimeTo').value = '18:00';
+            [1,2,3,4,5].forEach(function(d) { document.getElementById('clDay' + d).checked = true; });
+            [6,7].forEach(function(d) { document.getElementById('clDay' + d).checked = false; });
+            document.getElementById('clLaunchModal').classList.add('active');
+        }
+
+        function clEditLaunch(id) {
+            var l = clLaunches.find(function(x) { return x.id === id; });
+            if (!l) return;
+            clEditId = id;
+            document.getElementById('clLaunchModalTitle').textContent = 'Редактировать запуск';
+            clPopulateSelects();
+            document.getElementById('clLaunchName').value = l.name;
+            document.getElementById('clLaunchDialog').value = l.dialogId || '';
+            document.getElementById('clLaunchCallList').value = l.callListId || '';
+            document.getElementById('clLaunchMaxLeads').value = l.maxLeads || 50;
+            document.getElementById('clLaunchGoalLeads').value = l.goalLeads || 20;
+            document.getElementById('clLaunchTimeFrom').value = l.timeFrom || '09:00';
+            document.getElementById('clLaunchTimeTo').value = l.timeTo || '18:00';
+            for (var d = 1; d <= 7; d++) {
+                var dayIdx = d === 7 ? 0 : d;
+                document.getElementById('clDay' + d).checked = l.days && l.days.indexOf(dayIdx) >= 0;
+            }
+            document.getElementById('clLaunchModal').classList.add('active');
+        }
+
+        function clCloseLaunchModal() { document.getElementById('clLaunchModal').classList.remove('active'); clEditId = null; }
+
+        function clSaveLaunch(e) {
+            e.preventDefault();
+            var name = document.getElementById('clLaunchName').value.trim();
+            var dialogId = document.getElementById('clLaunchDialog').value;
+            var callListId = document.getElementById('clLaunchCallList').value;
+            var maxLeads = parseInt(document.getElementById('clLaunchMaxLeads').value) || 50;
+            var goalLeads = parseInt(document.getElementById('clLaunchGoalLeads').value) || 20;
+            var timeFrom = document.getElementById('clLaunchTimeFrom').value || '09:00';
+            var timeTo = document.getElementById('clLaunchTimeTo').value || '18:00';
+            var days = [];
+            for (var d = 1; d <= 7; d++) {
+                if (document.getElementById('clDay' + d).checked) days.push(d === 7 ? 0 : d);
+            }
+            if (!name || !dialogId || !callListId) { clToast('Заполните все обязательные поля'); return; }
+            if (clEditId) {
+                var l = clLaunches.find(function(x) { return x.id === clEditId; });
+                if (l) {
+                    l.name = name; l.dialogId = dialogId; l.callListId = callListId;
+                    l.maxLeads = maxLeads; l.goalLeads = goalLeads;
+                    l.timeFrom = timeFrom; l.timeTo = timeTo; l.days = days;
+                    l.updated = clNow();
+                }
+            } else {
+                clLaunches.push({
+                    id: clGenId(), name: name, dialogId: dialogId, callListId: callListId,
+                    maxLeads: maxLeads, goalLeads: goalLeads, timeFrom: timeFrom, timeTo: timeTo,
+                    days: days, status: 'idle', called: 0, leads: 0, missed: 0,
+                    processedIdx: 0, created: clNow(), updated: clNow()
+                });
+            }
+            clPersist(); clCloseLaunchModal(); clRenderLaunches();
+            clToast(clEditId ? 'Запуск обновлён' : 'Запуск «' + name + '» создан');
+        }
+
+        function clDeleteLaunch(id) {
+            if (!confirm('Удалить этот запуск?')) return;
+            if (clSimTimers[id]) { clearInterval(clSimTimers[id]); delete clSimTimers[id]; }
+            clLaunches = clLaunches.filter(function(x) { return x.id !== id; });
+            clPersist(); clRenderLaunches();
+            clToast('Запуск удалён');
+        }
+
+        // Start / Pause / Stop / Resume
+        function clStartLaunch(id) {
+            var l = clLaunches.find(function(x) { return x.id === id; });
+            if (!l) return;
+            var callList = clCallLists.find(function(c) { return c.id === l.callListId; });
+            if (!callList || callList.contacts.length === 0) { clToast('Колл-лист пуст! Добавьте контакты.'); return; }
+            l.status = 'active';
+            l.updated = clNow();
+            clPersist(); clRenderLaunches();
+            clToast('Обзвон «' + l.name + '» запущен!');
+            clStartSimulation(id);
+        }
+
+        function clPauseLaunch(id) {
+            var l = clLaunches.find(function(x) { return x.id === id; });
+            if (!l) return;
+            l.status = 'paused'; l.updated = clNow();
+            if (clSimTimers[id]) { clearInterval(clSimTimers[id]); delete clSimTimers[id]; }
+            clPersist(); clRenderLaunches();
+            clToast('Обзвон приостановлен');
+        }
+
+        function clStopLaunch(id) {
+            var l = clLaunches.find(function(x) { return x.id === id; });
+            if (!l) return;
+            l.status = 'stopped'; l.updated = clNow();
+            if (clSimTimers[id]) { clearInterval(clSimTimers[id]); delete clSimTimers[id]; }
+            clPersist(); clRenderLaunches();
+            clToast('Обзвон остановлен');
+        }
+
+        function clResumeLaunch(id) {
+            clStartLaunch(id);
+        }
+
+        // Simulation
+        function clStartSimulation(id) {
+            if (clSimTimers[id]) clearInterval(clSimTimers[id]);
+            clSimTimers[id] = setInterval(function() {
+                var l = clLaunches.find(function(x) { return x.id === id; });
+                if (!l || l.status !== 'active') { clearInterval(clSimTimers[id]); delete clSimTimers[id]; return; }
+                var callList = clCallLists.find(function(c) { return c.id === l.callListId; });
+                if (!callList) { clearInterval(clSimTimers[id]); delete clSimTimers[id]; return; }
+                var total = callList.contacts.length;
+                var processed = (l.called || 0) + (l.leads || 0) + (l.missed || 0);
+                // Check if all contacts processed
+                if (processed >= total) {
+                    l.status = 'done'; l.updated = clNow();
+                    clearInterval(clSimTimers[id]); delete clSimTimers[id];
+                    clPersist(); clRenderLaunches();
+                    clToast('Обзвон «' + l.name + '» завершён — все контакты обработаны!');
+                    return;
+                }
+                // Check lead limit
+                if (l.leads >= l.maxLeads) {
+                    l.status = 'stopped'; l.updated = clNow();
+                    clearInterval(clSimTimers[id]); delete clSimTimers[id];
+                    clPersist(); clRenderLaunches();
+                    clToast('Обзвон «' + l.name + '» остановлен — достигнут лимит лидов (' + l.maxLeads + ')!');
+                    return;
+                }
+                // Simulate one call
+                var rand = Math.random();
+                if (rand < 0.25) { l.leads = (l.leads || 0) + 1; }
+                else if (rand < 0.6) { l.called = (l.called || 0) + 1; }
+                else { l.missed = (l.missed || 0) + 1; }
+                l.updated = clNow();
+                clPersist(); clRenderLaunches();
+            }, 2500);
+        }
+
+        // Seed demo data
+        function clSeedDemo() {
+            if (localStorage.getItem('cl_demo_seeded')) return;
+            // Demo call lists
+            if (clCallLists.length === 0) {
+                var demoList1 = { id: clGenId(), name: 'IT-компании Москва', description: 'Малый и средний бизнес, IT-сектор', contacts: [
+                    { phone: '+7 495 123-45-67', name: 'Иванов Алексей' },
+                    { phone: '+7 495 234-56-78', name: 'Петрова Мария' },
+                    { phone: '+7 495 345-67-89', name: 'Сидоров Дмитрий' },
+                    { phone: '+7 495 456-78-90', name: 'Козлова Анна' },
+                    { phone: '+7 495 567-89-01', name: 'Новиков Сергей' },
+                    { phone: '+7 495 678-90-12', name: 'Федорова Елена' },
+                    { phone: '+7 495 789-01-23', name: 'Морозов Андрей' },
+                    { phone: '+7 495 890-12-34', name: 'Волкова Ольга' }
+                ], created: clNow(), updated: clNow() };
+                var demoList2 = { id: clGenId(), name: 'Автосервисы СПб', description: 'Автосервисы и автомойки Санкт-Петербурга', contacts: [
+                    { phone: '+7 812 111-22-33', name: 'Кузнецов Игорь' },
+                    { phone: '+7 812 222-33-44', name: 'Соколова Татьяна' },
+                    { phone: '+7 812 333-44-55', name: 'Лебедев Виктор' },
+                    { phone: '+7 812 444-55-66', name: 'Попова Наталья' },
+                    { phone: '+7 812 555-66-77', name: 'Новиков Павел' }
+                ], created: clNow(), updated: clNow() };
+                clCallLists.push(demoList1, demoList2);
+            }
+            // Demo launch
+            if (clLaunches.length === 0 && clCallLists.length > 0 && typeof dialogs !== 'undefined' && dialogs.length > 0) {
+                clLaunches.push({
+                    id: clGenId(), name: 'Пилотный обзвон IT', dialogId: dialogs[0].id, callListId: clCallLists[0].id,
+                    maxLeads: 30, goalLeads: 10, timeFrom: '09:00', timeTo: '18:00',
+                    days: [1, 2, 3, 4, 5], status: 'idle', called: 3, leads: 1, missed: 1,
+                    processedIdx: 5, created: clNow(), updated: clNow()
+                });
+            }
+            clPersist();
+            localStorage.setItem('cl_demo_seeded', '1');
+        }
+
+        // Init
+        clSeedDemo();
     </script>
 
 <!-- ===== SUPPORT CHAT ===== -->
