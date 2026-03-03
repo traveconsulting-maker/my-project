@@ -335,7 +335,7 @@
             transition:transform .2s;
         }
         .modal-overlay.open .modal { transform:translateY(0); }
-        .modal-wide { max-width:900px; }
+        .modal-wide { max-width:1200px; width:95%; max-height:90vh; overflow-y:auto; }
         .modal-header {
             display:flex;
             align-items:center;
@@ -696,6 +696,48 @@
         .status-badge { padding:3px 10px; border-radius:6px; font-size:.75rem; font-weight:600; }
         .status-badge.active { background:var(--success-bg); color:var(--success); }
         .status-badge.inactive { background:var(--danger-bg); color:var(--danger); }
+
+        /* Parsed phones tab */
+        .pp-filters { display:flex; gap:10px; flex-wrap:wrap; margin-bottom:16px; }
+        .pp-filters select, .pp-filters input {
+            padding:8px 12px; border-radius:8px; border:1px solid var(--border-color);
+            background:var(--input-bg); color:var(--text); font-family:inherit; font-size:.85rem;
+        }
+        .pp-filters input[type="date"] { min-width:140px; }
+        .pp-actions { display:flex; gap:8px; margin-bottom:12px; }
+        .pp-scroll { max-height:420px; overflow-y:auto; border-radius:8px; }
+        .pp-scroll::-webkit-scrollbar { width:6px; }
+        .pp-scroll::-webkit-scrollbar-thumb { background:var(--border-color); border-radius:3px; }
+        .pp-check { width:16px; height:16px; accent-color:var(--accent); cursor:pointer; }
+        .pp-region { padding:2px 8px; border-radius:5px; font-size:.72rem; font-weight:600; background:var(--info-bg); color:var(--info); white-space:nowrap; }
+        .pp-source { padding:2px 8px; border-radius:5px; font-size:.72rem; font-weight:600; background:var(--accent-bg); color:var(--accent-light); white-space:nowrap; max-width:180px; overflow:hidden; text-overflow:ellipsis; }
+
+        /* AI Processes */
+        .aip-progress { margin-bottom:20px; }
+        .aip-progress-bar { height:20px; border-radius:10px; background:var(--input-bg); overflow:hidden; position:relative; }
+        .aip-progress-fill { height:100%; border-radius:10px; background:linear-gradient(90deg,#6c5ce7,#a855f7); transition:width 0.5s; }
+        .aip-progress-text { position:absolute; top:0; left:0; right:0; text-align:center; font-size:.72rem; font-weight:700; color:#fff; line-height:20px; }
+        .aip-stats { display:flex; gap:16px; flex-wrap:wrap; margin-bottom:16px; }
+        .aip-stat { padding:12px 16px; border-radius:10px; background:var(--card-bg); border:1px solid var(--border-color); text-align:center; min-width:100px; }
+        .aip-stat-num { font-size:1.4rem; font-weight:800; color:var(--text); }
+        .aip-stat-label { font-size:.72rem; color:var(--text-muted); margin-top:2px; }
+        .aip-filters { display:flex; gap:10px; flex-wrap:wrap; margin-bottom:12px; }
+        .aip-filters select { padding:8px 12px; border-radius:8px; border:1px solid var(--border-color); background:var(--input-bg); color:var(--text); font-family:inherit; font-size:.85rem; }
+        .aip-scroll { max-height:380px; overflow-y:auto; border-radius:8px; }
+        .aip-scroll::-webkit-scrollbar { width:6px; }
+        .aip-scroll::-webkit-scrollbar-thumb { background:var(--border-color); border-radius:3px; }
+        .aip-status { padding:3px 10px; border-radius:6px; font-size:.72rem; font-weight:600; white-space:nowrap; }
+        .aip-status-waiting { background:var(--input-bg); color:var(--text-muted); }
+        .aip-status-calling { background:var(--warning-bg); color:var(--warning); }
+        .aip-status-called { background:var(--info-bg); color:var(--info); }
+        .aip-status-missed { background:var(--danger-bg); color:var(--danger); }
+        .aip-status-lead { background:var(--success-bg); color:var(--success); }
+        .aip-dialog-tag { padding:2px 8px; border-radius:5px; font-size:.72rem; font-weight:600; background:var(--accent-bg); color:var(--accent-light); }
+        .aip-attempts { font-family:'JetBrains Mono',monospace; font-size:.8rem; color:var(--text-muted); }
+        .aip-launch { display:flex; gap:12px; align-items:flex-end; flex-wrap:wrap; margin-bottom:16px; padding:16px; border-radius:12px; background:var(--card-bg); border:1px solid var(--border-color); }
+        .aip-launch select { padding:8px 12px; border-radius:8px; border:1px solid var(--border-color); background:var(--input-bg); color:var(--text); font-family:inherit; font-size:.85rem; min-width:200px; }
+        .aip-launch label { font-size:.8rem; font-weight:600; color:var(--text-muted); margin-bottom:4px; display:block; }
+        .aip-active-warn { padding:8px 12px; border-radius:8px; background:var(--warning-bg); color:var(--warning); font-size:.8rem; font-weight:600; }
     </style>
 </head>
 <body>
@@ -1225,6 +1267,9 @@
             </div>
             <div class="tabs" id="client-detail-tabs">
                 <div class="tab active" onclick="switchClientTab('info',this)">Информация</div>
+                <div class="tab" onclick="switchClientTab('dialogs',this)">Диалоги</div>
+                <div class="tab" onclick="switchClientTab('phones',this)">Спарсенные номера</div>
+                <div class="tab" onclick="switchClientTab('aiprocess',this)">AI Процессы</div>
                 <div class="tab" onclick="switchClientTab('deals',this)">Сделки</div>
                 <div class="tab" onclick="switchClientTab('calls',this)">Звонки</div>
                 <div class="tab" onclick="switchClientTab('tasks',this)">Задачи</div>
@@ -1544,6 +1589,8 @@ let telCalls = loadData('tel_calls');
 let tmCallLists = loadData('tm_calllists');
 let tmCallResults = loadData('tm_results');
 let tmAgreements = loadData('tm_agreements');
+let aiProcesses = loadData('ai_processes');
+let aiProcessItems = loadData('ai_process_items');
 
 function persist() {
     saveData('clients', clients);
@@ -1562,6 +1609,8 @@ function persist() {
     saveData('tm_calllists', tmCallLists);
     saveData('tm_results', tmCallResults);
     saveData('tm_agreements', tmAgreements);
+    saveData('ai_processes', aiProcesses);
+    saveData('ai_process_items', aiProcessItems);
 }
 
 function addActivity(type, text, clientId) {
@@ -1766,6 +1815,502 @@ function resetClientForm() {
     ['client-name','client-company','client-phone','client-email','client-login','client-password','client-notes'].forEach(id => document.getElementById(id).value = '');
 }
 
+// ===== Parsed Phones (Спарсенные номера) =====
+function ppDetectRegion(phone) {
+    const clean = (phone || '').replace(/\D/g, '');
+    if (clean.length < 4) return 'Неизвестно';
+    let code = '';
+    if (clean.startsWith('7') || clean.startsWith('8')) code = clean.substring(1, 4);
+    else if (clean.startsWith('3') || clean.startsWith('4') || clean.startsWith('9')) code = clean.substring(0, 3);
+    else return 'Неизвестно';
+    const map = {
+        '495':'Москва','499':'Москва','498':'Московская обл.','496':'Московская обл.','497':'Московская обл.',
+        '812':'Санкт-Петербург','813':'Ленинградская обл.',
+        '383':'Новосибирск','384':'Кемеровская обл.',
+        '343':'Екатеринбург','345':'Тюменская обл.','346':'ХМАО',
+        '846':'Самара','848':'Пензенская обл.',
+        '831':'Нижний Новгород',
+        '863':'Ростов-на-Дону','861':'Краснодар','862':'Сочи',
+        '843':'Казань','842':'Ульяновск',
+        '351':'Челябинск','347':'Уфа','342':'Пермь',
+        '381':'Омск','391':'Красноярск','395':'Иркутск',
+        '473':'Воронеж','471':'Курск','472':'Белгород',
+        '341':'Ижевск','362':'Крым','378':'Крым',
+        '421':'Хабаровск','423':'Владивосток',
+        '401':'Калининград','482':'Тверь','481':'Смоленск','483':'Великий Новгород',
+        '411':'Якутск','301':'Улан-Удэ','302':'Чита',
+        '844':'Волгоград','845':'Саратов','855':'Набережные Челны',
+        '900':'Мобильный','901':'Мобильный','902':'Мобильный','903':'Мобильный',
+        '904':'Мобильный','905':'Мобильный','906':'Мобильный','908':'Мобильный',
+        '909':'Мобильный','910':'Мобильный','911':'Мобильный','912':'Мобильный',
+        '913':'Мобильный','914':'Мобильный','915':'Мобильный','916':'Мобильный',
+        '917':'Мобильный','918':'Мобильный','919':'Мобильный','920':'Мобильный',
+        '921':'Мобильный','922':'Мобильный','923':'Мобильный','924':'Мобильный',
+        '925':'Мобильный','926':'Мобильный','927':'Мобильный','928':'Мобильный',
+        '929':'Мобильный','930':'Мобильный','931':'Мобильный','932':'Мобильный',
+        '933':'Мобильный','934':'Мобильный','936':'Мобильный','937':'Мобильный',
+        '938':'Мобильный','939':'Мобильный','950':'Мобильный','951':'Мобильный',
+        '952':'Мобильный','953':'Мобильный','958':'Мобильный','960':'Мобильный',
+        '961':'Мобильный','962':'Мобильный','963':'Мобильный','964':'Мобильный',
+        '965':'Мобильный','966':'Мобильный','967':'Мобильный','968':'Мобильный',
+        '969':'Мобильный','977':'Мобильный','978':'Мобильный','980':'Мобильный',
+        '981':'Мобильный','982':'Мобильный','983':'Мобильный','984':'Мобильный',
+        '985':'Мобильный','986':'Мобильный','987':'Мобильный','988':'Мобильный',
+        '989':'Мобильный','991':'Мобильный','992':'Мобильный','993':'Мобильный',
+        '994':'Мобильный','995':'Мобильный','996':'Мобильный','997':'Мобильный',
+        '999':'Мобильный'
+    };
+    return map[code] || 'Регион ' + code;
+}
+
+function ppGetAllPhones(clientId) {
+    // Deduplicate dmpResults by phone, merge sources
+    // If clientId provided, filter by DMP projects belonging to that client
+    let projectIds = null;
+    if (clientId) {
+        projectIds = new Set(dmpProjects.filter(p => p.clientId === clientId).map(p => p.id));
+    }
+    const phoneMap = {};
+    dmpResults.forEach(r => {
+        if (projectIds && !projectIds.has(r.projectId)) return;
+        const clean = (r.phone || '').replace(/\s+/g, '').replace(/-/g, '');
+        if (!clean) return;
+        if (!phoneMap[clean]) {
+            const project = dmpProjects.find(p => p.id === r.projectId);
+            phoneMap[clean] = {
+                phone: r.phone,
+                phoneClean: clean,
+                contactName: r.contactName || '',
+                clientId: clientId || '',
+                sources: [],
+                region: ppDetectRegion(r.phone),
+                created: r.created,
+                ids: [r.id]
+            };
+            if (project && project.sites) {
+                project.sites.forEach(s => { if (!phoneMap[clean].sources.includes(s)) phoneMap[clean].sources.push(s); });
+            }
+        } else {
+            const existing = phoneMap[clean];
+            if (!existing.contactName && r.contactName) existing.contactName = r.contactName;
+            if (new Date(r.created) < new Date(existing.created)) existing.created = r.created;
+            existing.ids.push(r.id);
+            const project = dmpProjects.find(p => p.id === r.projectId);
+            if (project && project.sites) {
+                project.sites.forEach(s => { if (!existing.sources.includes(s)) existing.sources.push(s); });
+            }
+        }
+    });
+    return Object.values(phoneMap);
+}
+
+let ppFilterSource = 'all';
+let ppFilterRegion = 'all';
+let ppFilterDateFrom = '';
+let ppFilterDateTo = '';
+let ppSelectedIds = new Set();
+
+function renderParsedPhones(el, client) {
+    const cId = client ? client.id : '';
+    let all = ppGetAllPhones(cId);
+
+    // Collect unique sources & regions for filters
+    const allSources = new Set();
+    const allRegions = new Set();
+    all.forEach(p => {
+        p.sources.forEach(s => allSources.add(s));
+        allRegions.add(p.region);
+    });
+
+    // Apply filters
+    if (ppFilterSource !== 'all') all = all.filter(p => p.sources.includes(ppFilterSource));
+    if (ppFilterRegion !== 'all') all = all.filter(p => p.region === ppFilterRegion);
+    if (ppFilterDateFrom) all = all.filter(p => p.created >= ppFilterDateFrom);
+    if (ppFilterDateTo) all = all.filter(p => p.created <= ppFilterDateTo + 'T23:59:59');
+
+    // Sort by date desc
+    all.sort((a, b) => new Date(b.created) - new Date(a.created));
+
+    const sourcesOpts = [...allSources].sort().map(s => `<option value="${esc(s)}" ${ppFilterSource===s?'selected':''}>${esc(s)}</option>`).join('');
+    const regionsOpts = [...allRegions].sort().map(r => `<option value="${esc(r)}" ${ppFilterRegion===r?'selected':''}>${esc(r)}</option>`).join('');
+
+    el.innerHTML = `
+        <div class="pp-filters">
+            <select onchange="ppFilterSource=this.value;renderParsedPhones(document.getElementById('client-detail-content'),getClient(currentDetailClient))">
+                <option value="all">Все источники</option>${sourcesOpts}
+            </select>
+            <select onchange="ppFilterRegion=this.value;renderParsedPhones(document.getElementById('client-detail-content'),getClient(currentDetailClient))">
+                <option value="all">Все регионы</option>${regionsOpts}
+            </select>
+            <input type="date" value="${ppFilterDateFrom}" onchange="ppFilterDateFrom=this.value;renderParsedPhones(document.getElementById('client-detail-content'),getClient(currentDetailClient))" title="Дата от">
+            <input type="date" value="${ppFilterDateTo}" onchange="ppFilterDateTo=this.value;renderParsedPhones(document.getElementById('client-detail-content'),getClient(currentDetailClient))" title="Дата до">
+        </div>
+        <div class="pp-actions">
+            <button class="btn btn-sm" onclick="ppSelectAll()"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="9 11 12 14 22 4"/><path d="M21 12v7a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h11"/></svg> Выбрать все</button>
+            <button class="btn btn-sm" onclick="ppExportSelected()"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="7 10 12 15 17 10"/><line x1="12" y1="15" x2="12" y2="3"/></svg> Экспорт</button>
+            <button class="btn btn-sm" onclick="ppSendToTelemarketing()"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M22 16.92v3a2 2 0 0 1-2.18 2 19.79 19.79 0 0 1-8.63-3.07 19.5 19.5 0 0 1-6-6 19.79 19.79 0 0 1-3.07-8.67A2 2 0 0 1 4.11 2h3a2 2 0 0 1 2 1.72c.127.96.361 1.903.7 2.81a2 2 0 0 1-.45 2.11L8.09 9.91a16 16 0 0 0 6 6l1.27-1.27a2 2 0 0 1 2.11-.45c.907.339 1.85.573 2.81.7A2 2 0 0 1 22 16.92z"/></svg> В телемаркетинг</button>
+            <button class="btn btn-sm" onclick="ppSendToAiProcess()" style="background:linear-gradient(135deg,#6c5ce7,#a855f7);color:#fff;"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><path d="M12 6v6l4 2"/></svg> В AI Процессы</button>
+            <button class="btn btn-sm btn-danger" onclick="ppDeleteSelected()"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="3 6 5 6 21 6"/><path d="M19 6l-2 14H7L5 6"/><path d="M10 11v6"/><path d="M14 11v6"/></svg> Удалить</button>
+        </div>
+        <div style="font-size:.8rem;color:var(--text-muted);margin-bottom:8px;">Всего: ${all.length} номеров</div>
+        <div class="pp-scroll">
+            <table>
+                <thead><tr><th style="width:30px;"><input type="checkbox" class="pp-check" onchange="ppToggleAll(this.checked)"></th><th>Телефон</th><th>Контакт</th><th>Регион</th><th>Источник</th><th>Дата</th></tr></thead>
+                <tbody>${all.length === 0 ? '<tr><td colspan="6" style="text-align:center;color:var(--text-muted);padding:30px;">Нет спарсенных номеров</td></tr>' :
+                    all.map(p => `<tr>
+                        <td><input type="checkbox" class="pp-check" data-phone="${esc(p.phoneClean)}" ${ppSelectedIds.has(p.phoneClean)?'checked':''} onchange="ppTogglePhone('${esc(p.phoneClean)}',this.checked)"></td>
+                        <td style="font-family:'JetBrains Mono',monospace;font-size:.85rem;">${esc(p.phone)}</td>
+                        <td>${p.contactName ? '<strong style="font-size:.85rem;">'+esc(p.contactName)+'</strong>' : '<span style="color:var(--text-muted);font-size:.8rem;">—</span>'}</td>
+                        <td><span class="pp-region">${esc(p.region)}</span></td>
+                        <td>${p.sources.map(s => '<span class="pp-source" title="'+esc(s)+'">'+esc(s)+'</span>').join(' ')}</td>
+                        <td>${formatDate(p.created)}</td>
+                    </tr>`).join('')}
+                </tbody>
+            </table>
+        </div>
+    `;
+}
+
+function ppTogglePhone(phoneClean, checked) {
+    if (checked) ppSelectedIds.add(phoneClean);
+    else ppSelectedIds.delete(phoneClean);
+}
+
+function ppToggleAll(checked) {
+    const all = ppGetAllPhones();
+    ppSelectedIds.clear();
+    if (checked) all.forEach(p => ppSelectedIds.add(p.phoneClean));
+    document.querySelectorAll('.pp-check[data-phone]').forEach(cb => cb.checked = checked);
+}
+
+function ppSelectAll() {
+    ppToggleAll(true);
+    const headerCb = document.querySelector('.pp-scroll thead .pp-check');
+    if (headerCb) headerCb.checked = true;
+    document.querySelectorAll('.pp-check[data-phone]').forEach(cb => cb.checked = true);
+    toast('Выбрано ' + ppSelectedIds.size + ' номеров');
+}
+
+function ppExportSelected() {
+    const c = getClient(currentDetailClient);
+    const all = ppGetAllPhones(c ? c.id : '');
+    const selected = ppSelectedIds.size > 0 ? all.filter(p => ppSelectedIds.has(p.phoneClean)) : all;
+    if (selected.length === 0) { toast('Нет номеров для экспорта'); return; }
+    let csv = 'Телефон;Контакт;Регион;Источник;Дата\n';
+    selected.forEach(p => {
+        csv += `${p.phone};${p.contactName || ''};${p.region};${p.sources.join(', ')};${formatDate(p.created)}\n`;
+    });
+    const blob = new Blob(['\uFEFF' + csv], { type: 'text/csv;charset=utf-8;' });
+    const url = URL.createObjectURL(blob);
+    const a = document.createElement('a');
+    a.href = url; a.download = 'parsed_phones_' + new Date().toISOString().slice(0,10) + '.csv';
+    a.click(); URL.revokeObjectURL(url);
+    toast('Экспортировано ' + selected.length + ' номеров');
+}
+
+function ppSendToTelemarketing() {
+    const c = getClient(currentDetailClient);
+    const all = ppGetAllPhones(c ? c.id : '');
+    const selected = ppSelectedIds.size > 0 ? all.filter(p => ppSelectedIds.has(p.phoneClean)) : all;
+    if (selected.length === 0) { toast('Нет номеров для отправки'); return; }
+    // Add to tmCallLists as new call list
+    const cl = {
+        id: genId(),
+        name: 'Спарсенные ' + new Date().toLocaleDateString('ru'),
+        source: 'dmp',
+        sourceId: '',
+        contacts: selected.map(p => ({ phone: p.phone, tags: [p.region], additionalFields: { source: p.sources.join(', ') } })),
+        totalContacts: selected.length,
+        sentContacts: 0,
+        status: 'idle',
+        created: now()
+    };
+    tmCallLists.push(cl);
+    persist();
+    toast('Отправлено ' + selected.length + ' номеров в телемаркетинг');
+}
+
+function ppDeleteSelected() {
+    if (ppSelectedIds.size === 0) { toast('Выберите номера для удаления'); return; }
+    const c = getClient(currentDetailClient);
+    const all = ppGetAllPhones(c ? c.id : '');
+    const toDelete = all.filter(p => ppSelectedIds.has(p.phoneClean));
+    const idsToRemove = new Set();
+    toDelete.forEach(p => p.ids.forEach(id => idsToRemove.add(id)));
+    dmpResults = dmpResults.filter(r => !idsToRemove.has(r.id));
+    persist();
+    ppSelectedIds.clear();
+    renderParsedPhones(document.getElementById('client-detail-content'), c);
+    toast('Удалено ' + toDelete.length + ' номеров');
+}
+
+function ppSendToAiProcess() {
+    const c = getClient(currentDetailClient);
+    const cId = c ? c.id : '';
+    const all = ppGetAllPhones(cId);
+    const selected = ppSelectedIds.size > 0 ? all.filter(p => ppSelectedIds.has(p.phoneClean)) : all;
+    if (selected.length === 0) { toast('Нет номеров для отправки'); return; }
+    // Add each phone as an AI process item with status 'waiting'
+    let added = 0;
+    selected.forEach(p => {
+        const exists = aiProcessItems.find(i => i.phoneClean === p.phoneClean && i.clientId === cId);
+        if (exists) return;
+        aiProcessItems.push({
+            id: genId(),
+            clientId: cId,
+            phone: p.phone,
+            phoneClean: p.phoneClean,
+            contactName: p.contactName || '',
+            region: p.region,
+            source: p.sources.join(', '),
+            dialogId: '',
+            dialogName: '',
+            status: 'waiting',
+            attempts: 0,
+            maxAttempts: 3,
+            lastCallAt: '',
+            recordUrl: '',
+            created: now()
+        });
+        added++;
+    });
+    persist();
+    ppSelectedIds.clear();
+    toast(added > 0 ? 'Добавлено ' + added + ' номеров в AI Процессы' : 'Все номера уже в AI Процессах');
+}
+
+// ===== AI Processes =====
+let aipFilterStatus = 'all';
+let aipFilterDialog = 'all';
+
+function aipStatusName(s) {
+    const m = { waiting:'Ожидает звонка', calling:'Звонок...', called:'Позвонил', missed:'Недозвон', lead:'Квал. лид' };
+    return m[s] || s;
+}
+function aipStatusClass(s) {
+    const m = { waiting:'aip-status-waiting', calling:'aip-status-calling', called:'aip-status-called', missed:'aip-status-missed', lead:'aip-status-lead' };
+    return m[s] || 'aip-status-waiting';
+}
+
+function aipGetDialogs(login) {
+    try { return JSON.parse(localStorage.getItem('user_' + (login || '') + '_dialogs') || '[]'); } catch(e) { return []; }
+}
+
+function aipCountActiveDialogs() {
+    const activeIds = new Set();
+    aiProcessItems.forEach(i => {
+        if ((i.status === 'waiting' || i.status === 'calling') && i.dialogId) activeIds.add(i.dialogId);
+    });
+    return activeIds.size;
+}
+
+function renderAiProcesses(el, client) {
+    const cId = client ? client.id : '';
+    const items = aiProcessItems.filter(i => i.clientId === cId);
+    const login = client ? client.login : '';
+    const dialogs = aipGetDialogs(login);
+
+    // Stats
+    const total = items.length;
+    const waiting = items.filter(i => i.status === 'waiting').length;
+    const called = items.filter(i => i.status === 'called').length;
+    const missed = items.filter(i => i.status === 'missed').length;
+    const leads = items.filter(i => i.status === 'lead').length;
+    const processed = called + missed + leads;
+    const pct = total > 0 ? Math.round(processed / total * 100) : 0;
+
+    // Active dialogs count
+    const activeDialogIds = new Set();
+    items.forEach(i => { if ((i.status === 'waiting' || i.status === 'calling') && i.dialogId) activeDialogIds.add(i.dialogId); });
+    const activeCount = activeDialogIds.size;
+
+    // Unique dialog names for filter
+    const dialogNames = new Set();
+    items.forEach(i => { if (i.dialogName) dialogNames.add(i.dialogName); });
+
+    // Apply filters
+    let filtered = [...items];
+    if (aipFilterStatus !== 'all') filtered = filtered.filter(i => i.status === aipFilterStatus);
+    if (aipFilterDialog !== 'all') filtered = filtered.filter(i => i.dialogName === aipFilterDialog);
+
+    const dialogOpts = dialogs.map(d => `<option value="${esc(d.id)}">${esc(d.name)}</option>`).join('');
+    const activeWarn = activeCount >= 3 ? '<div class="aip-active-warn">Достигнут лимит: одновременно активно 3 диалога. Завершите обзвон по одному диалогу, чтобы запустить новый.</div>' : '';
+
+    el.innerHTML = `
+        <div class="aip-progress">
+            <div style="display:flex;justify-content:space-between;margin-bottom:6px;">
+                <span style="font-size:.85rem;font-weight:600;color:var(--text);">Прогресс обзвона</span>
+                <span style="font-size:.85rem;color:var(--text-muted);">${processed}/${total} (${pct}%)</span>
+            </div>
+            <div class="aip-progress-bar">
+                <div class="aip-progress-fill" style="width:${pct}%"></div>
+                <div class="aip-progress-text">${pct}%</div>
+            </div>
+        </div>
+        <div class="aip-stats">
+            <div class="aip-stat"><div class="aip-stat-num">${total}</div><div class="aip-stat-label">Всего</div></div>
+            <div class="aip-stat"><div class="aip-stat-num" style="color:var(--text-muted);">${waiting}</div><div class="aip-stat-label">Ожидают</div></div>
+            <div class="aip-stat"><div class="aip-stat-num" style="color:var(--info);">${called}</div><div class="aip-stat-label">Позвонил</div></div>
+            <div class="aip-stat"><div class="aip-stat-num" style="color:var(--danger);">${missed}</div><div class="aip-stat-label">Недозвон</div></div>
+            <div class="aip-stat"><div class="aip-stat-num" style="color:var(--success);">${leads}</div><div class="aip-stat-label">Квал. лиды</div></div>
+            <div class="aip-stat"><div class="aip-stat-num" style="color:var(--accent-light);">${activeCount}/3</div><div class="aip-stat-label">Активных диалогов</div></div>
+        </div>
+        ${activeWarn}
+        <div class="aip-launch">
+            <div>
+                <label>Диалог для обзвона</label>
+                <select id="aip-dialog-select">${dialogOpts.length ? dialogOpts : '<option value="">Нет диалогов</option>'}</select>
+            </div>
+            <div>
+                <label>Назначить для</label>
+                <select id="aip-assign-target">
+                    <option value="unassigned">Без диалога (${items.filter(i=>!i.dialogId).length})</option>
+                    <option value="waiting">Ожидающих звонка (${waiting})</option>
+                    <option value="missed">Недозвон — повтор (${missed})</option>
+                    <option value="selected">Выбранных</option>
+                </select>
+            </div>
+            <button class="btn btn-sm" style="background:linear-gradient(135deg,#6c5ce7,#a855f7);color:#fff;padding:8px 20px;" onclick="aipAssignDialog()">Назначить диалог</button>
+            <button class="btn btn-sm" style="background:linear-gradient(135deg,#34d399,#10b981);color:#fff;padding:8px 20px;" onclick="aipStartCalling()">Запустить обзвон</button>
+        </div>
+        <div class="aip-filters">
+            <select onchange="aipFilterStatus=this.value;renderAiProcesses(document.getElementById('client-detail-content'),getClient(currentDetailClient))">
+                <option value="all" ${aipFilterStatus==='all'?'selected':''}>Все статусы</option>
+                <option value="waiting" ${aipFilterStatus==='waiting'?'selected':''}>Ожидает звонка</option>
+                <option value="calling" ${aipFilterStatus==='calling'?'selected':''}>Звонок...</option>
+                <option value="called" ${aipFilterStatus==='called'?'selected':''}>Позвонил</option>
+                <option value="missed" ${aipFilterStatus==='missed'?'selected':''}>Недозвон</option>
+                <option value="lead" ${aipFilterStatus==='lead'?'selected':''}>Квал. лид</option>
+            </select>
+            <select onchange="aipFilterDialog=this.value;renderAiProcesses(document.getElementById('client-detail-content'),getClient(currentDetailClient))">
+                <option value="all" ${aipFilterDialog==='all'?'selected':''}>Все диалоги</option>
+                ${[...dialogNames].sort().map(n => `<option value="${esc(n)}" ${aipFilterDialog===n?'selected':''}>${esc(n)}</option>`).join('')}
+            </select>
+        </div>
+        <div class="aip-scroll">
+            <table>
+                <thead><tr><th style="width:30px;"><input type="checkbox" class="pp-check" onchange="aipToggleAll(this.checked)"></th><th>Телефон</th><th>Контакт</th><th>Диалог</th><th>Статус</th><th>Попытки</th><th>Запись</th></tr></thead>
+                <tbody>${filtered.length === 0 ? '<tr><td colspan="7" style="text-align:center;color:var(--text-muted);padding:30px;">Нет номеров в AI Процессах</td></tr>' :
+                    filtered.map(i => `<tr>
+                        <td><input type="checkbox" class="pp-check" data-aip="${esc(i.id)}" onchange="aipToggleItem('${esc(i.id)}',this.checked)"></td>
+                        <td style="font-family:'JetBrains Mono',monospace;font-size:.85rem;">${esc(i.phone)}</td>
+                        <td>${i.contactName ? '<strong style="font-size:.85rem;">'+esc(i.contactName)+'</strong>' : '<span style="color:var(--text-muted);">—</span>'}</td>
+                        <td>${i.dialogName ? '<span class="aip-dialog-tag">'+esc(i.dialogName)+'</span>' : '<span style="color:var(--text-muted);font-size:.8rem;">Не назначен</span>'}</td>
+                        <td><span class="aip-status ${aipStatusClass(i.status)}">${aipStatusName(i.status)}</span></td>
+                        <td class="aip-attempts">${i.attempts}/${i.maxAttempts}</td>
+                        <td>${i.recordUrl ? '<audio controls src="'+esc(i.recordUrl)+'" preload="none" style="height:28px;max-width:140px;"></audio>' : '<span style="color:var(--text-muted);font-size:.8rem;">—</span>'}</td>
+                    </tr>`).join('')}
+                </tbody>
+            </table>
+        </div>
+    `;
+}
+
+let aipSelectedIds = new Set();
+
+function aipToggleItem(id, checked) {
+    if (checked) aipSelectedIds.add(id);
+    else aipSelectedIds.delete(id);
+}
+
+function aipToggleAll(checked) {
+    aipSelectedIds.clear();
+    if (checked) aiProcessItems.forEach(i => aipSelectedIds.add(i.id));
+    document.querySelectorAll('.pp-check[data-aip]').forEach(cb => cb.checked = checked);
+}
+
+function aipAssignDialog() {
+    const c = getClient(currentDetailClient);
+    const cId = c ? c.id : '';
+    const selDlg = document.getElementById('aip-dialog-select');
+    const target = document.getElementById('aip-assign-target');
+    if (!selDlg || !selDlg.value) { toast('Выберите диалог'); return; }
+    const dialogId = selDlg.value;
+    const dialogName = selDlg.options[selDlg.selectedIndex].text;
+
+    // Check active dialogs limit (for this client)
+    const clientItems = aiProcessItems.filter(i => i.clientId === cId);
+    const activeDialogIds = new Set();
+    clientItems.forEach(i => { if ((i.status === 'waiting' || i.status === 'calling') && i.dialogId && i.dialogId !== dialogId) activeDialogIds.add(i.dialogId); });
+    if (activeDialogIds.size >= 3) {
+        toast('Максимум 3 активных диалога одновременно!');
+        return;
+    }
+
+    let count = 0;
+    const tv = target.value;
+    aiProcessItems.forEach(i => {
+        if (i.clientId !== cId) return;
+        let match = false;
+        if (tv === 'unassigned' && !i.dialogId) match = true;
+        else if (tv === 'waiting' && i.status === 'waiting') match = true;
+        else if (tv === 'missed' && i.status === 'missed') match = true;
+        else if (tv === 'selected' && aipSelectedIds.has(i.id)) match = true;
+        if (match) {
+            i.dialogId = dialogId;
+            i.dialogName = dialogName;
+            if (i.status === 'missed') { i.status = 'waiting'; }
+            count++;
+        }
+    });
+    persist();
+    toast('Диалог «' + dialogName + '» назначен для ' + count + ' номеров');
+    renderAiProcesses(document.getElementById('client-detail-content'), c);
+}
+
+function aipStartCalling() {
+    const c = getClient(currentDetailClient);
+    const cId = c ? c.id : '';
+    const clientItems = aiProcessItems.filter(i => i.clientId === cId);
+    const activeDialogIds = new Set();
+    clientItems.forEach(i => { if ((i.status === 'waiting' || i.status === 'calling') && i.dialogId) activeDialogIds.add(i.dialogId); });
+    if (activeDialogIds.size > 3) {
+        toast('Одновременно можно запустить не больше 3 диалогов!');
+        return;
+    }
+    const waitingWithDialog = clientItems.filter(i => i.status === 'waiting' && i.dialogId);
+    if (waitingWithDialog.length === 0) { toast('Нет номеров с назначенным диалогом для обзвона'); return; }
+    waitingWithDialog.forEach(i => { i.status = 'calling'; });
+    persist();
+    toast('Обзвон запущен для ' + waitingWithDialog.length + ' номеров');
+    renderAiProcesses(document.getElementById('client-detail-content'), getClient(currentDetailClient));
+
+    // Simulate calls completing after a short delay (in real app, Sasha AI webhook would update these)
+    setTimeout(() => {
+        aiProcessItems.forEach(i => {
+            if (i.status !== 'calling') return;
+            i.attempts++;
+            i.lastCallAt = now();
+            // Simulate outcomes
+            const rand = Math.random();
+            if (rand < 0.25) { i.status = 'lead'; i.recordUrl = ''; }
+            else if (rand < 0.55) { i.status = 'called'; i.recordUrl = ''; }
+            else { i.status = i.attempts >= i.maxAttempts ? 'missed' : 'waiting'; }
+        });
+        persist();
+        if (currentDetailTab === 'aiprocess') renderAiProcesses(document.getElementById('client-detail-content'), getClient(currentDetailClient));
+    }, 2000);
+}
+
+function toggleDialogActive(login, dialogId, el) {
+    if (!login) return;
+    let dlgs = [];
+    try { dlgs = JSON.parse(localStorage.getItem('user_' + login + '_dialogs') || '[]'); } catch(e) {}
+    const idx = dlgs.findIndex(d => d.id === dialogId);
+    if (idx < 0) return;
+    dlgs[idx].active = !dlgs[idx].active;
+    dlgs[idx].updatedAt = new Date().toISOString();
+    localStorage.setItem('user_' + login + '_dialogs', JSON.stringify(dlgs));
+    const isAct = !!dlgs[idx].active;
+    el.classList.toggle('active', isAct);
+    const label = el.parentElement.querySelector('.status-toggle-label');
+    if (label) {
+        label.textContent = isAct ? 'Активен' : 'Неактивен';
+        label.className = 'status-toggle-label ' + (isAct ? 'active' : 'inactive');
+    }
+    toast(isAct ? 'Диалог активирован' : 'Диалог деактивирован');
+}
+
 function toggleClientActive(id, el) {
     const idx = clients.findIndex(c => c.id === id);
     if (idx < 0) return;
@@ -1872,6 +2417,28 @@ function renderClientDetail() {
                 <button class="btn btn-danger btn-sm" onclick="deleteClient('${c.id}')">Удалить клиента</button>
             </div>
         `;
+    } else if (currentDetailTab === 'dialogs') {
+        let cDialogs = [];
+        try { cDialogs = JSON.parse(localStorage.getItem('user_' + (c.login || '') + '_dialogs') || '[]'); } catch(e) {}
+        if (cDialogs.length === 0) {
+            el.innerHTML = '<div class="empty-state"><p>Нет диалогов</p></div>';
+        } else {
+            el.innerHTML = '<table><thead><tr><th>Название</th><th>Статус</th><th>Создан</th><th>Обновлён</th></tr></thead><tbody>' +
+                cDialogs.map(d => {
+                    const isAct = !!d.active;
+                    return `<tr>
+                        <td><strong>${esc(d.name)}</strong></td>
+                        <td><label class="status-toggle"><div class="status-toggle-track ${isAct?'active':''}" onclick="toggleDialogActive('${esc(c.login||'')}','${esc(d.id)}',this)"><div class="status-toggle-thumb"></div></div><span class="status-toggle-label ${isAct?'active':'inactive'}">${isAct?'Активен':'Неактивен'}</span></label></td>
+                        <td>${formatDate(d.createdAt)}</td>
+                        <td>${formatDate(d.updatedAt)}</td>
+                    </tr>`;
+                }).join('') +
+                '</tbody></table>';
+        }
+    } else if (currentDetailTab === 'phones') {
+        renderParsedPhones(el, c);
+    } else if (currentDetailTab === 'aiprocess') {
+        renderAiProcesses(el, c);
     } else if (currentDetailTab === 'deals') {
         const cDeals = deals.filter(d => d.clientId === c.id);
         if (cDeals.length === 0) {
@@ -3196,7 +3763,7 @@ function dmpSimulateResults(projectId) {
 
 // Webhook handler for receiving DMP data
 window.CRM_dmpWebhook = function(data) {
-    // data: { projectId, phone, callInfo, audioUrl }
+    // data: { projectId, phone, contactName, callInfo, audioUrl }
     const project = dmpProjects.find(p => p.id === data.projectId);
     if (!project) return;
     if (project.parsed >= project.totalLimit) {
@@ -3209,6 +3776,7 @@ window.CRM_dmpWebhook = function(data) {
         id: genId(),
         projectId: data.projectId,
         phone: data.phone || '',
+        contactName: data.contactName || '',
         callInfo: data.callInfo || '',
         audioUrl: data.audioUrl || '',
         created: now()
@@ -3226,7 +3794,9 @@ window.CRM_dmpWebhook = function(data) {
 // ==================== INIT ====================
 // #reset в URL — очистка всех данных
 if (location.hash === '#reset' || location.href.includes('reset')) {
-    ['clients','deals','tasks','calls','applications','tickets','portations','activities','conversations','dmp_projects','dmp_results','dmp_config','tel_lines','tel_calls','tel_config','tm_calllists','tm_results','tm_agreements','tm_config'].forEach(k => localStorage.removeItem('crm_'+k));
+    ['clients','deals','tasks','calls','applications','tickets','portations','activities','conversations','dmp_projects','dmp_results','dmp_config','tel_lines','tel_calls','tel_config','tm_calllists','tm_results','tm_agreements','tm_config','ai_processes','ai_process_items'].forEach(k => localStorage.removeItem('crm_'+k));
+    localStorage.removeItem('crm_pp_demo_seeded');
+    localStorage.removeItem('crm_aip_demo_seeded');
     clients=[]; deals=[]; tasks=[]; calls=[]; applications=[]; tickets=[]; portations=[]; activities=[]; conversations=[]; dmpProjects=[]; dmpResults=[]; telLines=[]; telCalls=[]; tmCallLists=[]; tmCallResults=[]; tmAgreements=[];
     location.hash = '';
 }
@@ -3932,7 +4502,53 @@ function dmpProcessSyncQueue() {
 // Poll for new sync data every 3 seconds
 setInterval(dmpProcessSyncQueue, 3000);
 
+function ppSeedDemoData() {
+    if (localStorage.getItem('crm_pp_demo_seeded')) return;
+    // Ensure demo client exists
+    let demoClient = clients.find(c => c.id === 'demo_client');
+    if (!demoClient) {
+        demoClient = { id:'demo_client', name:'ООО Тест', company:'ООО Тест', phone:'+7 495 000-00-00', email:'test@oootest.ru', login:'oootest', password:'test123', notes:'', active:true, created:now() };
+        clients.push(demoClient);
+    }
+    // Ensure demo DMP project exists linked to demo client
+    let demoProject = dmpProjects.find(p => p.id === 'demo_pp');
+    if (!demoProject) {
+        demoProject = { id:'demo_pp', clientId:'demo_client', name:'Демо парсинг', sites:['avito.ru','2gis.ru','yandex.ru/maps'], dailyLimit:50, totalLimit:500, audience:'Малый бизнес', status:'stopped', parsed:5, created:now(), updated:now() };
+        dmpProjects.push(demoProject);
+    }
+    const demoPhones = [
+        { phone:'+7 495 123-45-67', contactName:'Иванов Алексей', callInfo:'Директор, заинтересован', projectId:'demo_pp', created:'2026-02-28T14:30:00.000Z' },
+        { phone:'+7 812 987-65-43', contactName:'Петрова Мария', callInfo:'Менеджер по закупкам', projectId:'demo_pp', created:'2026-02-28T15:10:00.000Z' },
+        { phone:'+7 383 555-22-11', contactName:'', callInfo:'Не представился, перезвонить', projectId:'demo_pp', created:'2026-03-01T09:45:00.000Z' },
+        { phone:'+7 863 333-44-55', contactName:'Сидоров Дмитрий', callInfo:'Владелец автосервиса', projectId:'demo_pp', created:'2026-03-01T11:20:00.000Z' },
+        { phone:'+7 925 777-88-99', contactName:'Козлова Анна', callInfo:'Интернет-магазин, нужна CRM', projectId:'demo_pp', created:'2026-03-02T08:00:00.000Z' }
+    ];
+    demoPhones.forEach(d => {
+        dmpResults.push({ id:genId(), projectId:d.projectId, phone:d.phone, contactName:d.contactName||'', callInfo:d.callInfo, audioUrl:'', created:d.created });
+    });
+    persist();
+    localStorage.setItem('crm_pp_demo_seeded', '1');
+}
+
+function aipSeedDemoData() {
+    if (localStorage.getItem('crm_aip_demo_seeded')) return;
+    const demoItems = [
+        { phone:'+7 925 777-88-99', phoneClean:'79257778899', contactName:'Козлова Анна', region:'Мобильный', source:'avito.ru', dialogId:'demo_dlg1', dialogName:'Дружелюбный — встреча', status:'lead', attempts:1, recordUrl:'', created:'2026-03-01T10:00:00.000Z', lastCallAt:'2026-03-01T10:05:00.000Z' },
+        { phone:'+7 495 123-45-67', phoneClean:'74951234567', contactName:'Иванов Алексей', region:'Москва', source:'2gis.ru', dialogId:'demo_dlg1', dialogName:'Дружелюбный — встреча', status:'called', attempts:1, recordUrl:'', created:'2026-03-01T10:10:00.000Z', lastCallAt:'2026-03-01T10:15:00.000Z' },
+        { phone:'+7 812 987-65-43', phoneClean:'78129876543', contactName:'Петрова Мария', region:'Санкт-Петербург', source:'avito.ru', dialogId:'demo_dlg2', dialogName:'Продажа — презентация', status:'missed', attempts:2, recordUrl:'', created:'2026-03-01T10:20:00.000Z', lastCallAt:'2026-03-01T14:30:00.000Z' },
+        { phone:'+7 863 333-44-55', phoneClean:'78633334455', contactName:'Сидоров Дмитрий', region:'Ростов-на-Дону', source:'yandex.ru/maps', dialogId:'demo_dlg2', dialogName:'Продажа — презентация', status:'waiting', attempts:0, recordUrl:'', created:'2026-03-01T10:30:00.000Z', lastCallAt:'' },
+        { phone:'+7 383 555-22-11', phoneClean:'73835552211', contactName:'', region:'Новосибирск', source:'2gis.ru', dialogId:'', dialogName:'', status:'waiting', attempts:0, recordUrl:'', created:'2026-03-01T10:40:00.000Z', lastCallAt:'' }
+    ];
+    demoItems.forEach(d => {
+        aiProcessItems.push({ id:genId(), clientId:'demo_client', phone:d.phone, phoneClean:d.phoneClean, contactName:d.contactName, region:d.region, source:d.source, dialogId:d.dialogId, dialogName:d.dialogName, status:d.status, attempts:d.attempts, maxAttempts:3, lastCallAt:d.lastCallAt, recordUrl:d.recordUrl, created:d.created });
+    });
+    persist();
+    localStorage.setItem('crm_aip_demo_seeded', '1');
+}
+
 function init() {
+    ppSeedDemoData();
+    aipSeedDemoData();
     updateBadges();
     populateClientSelects();
     renderDashboard();

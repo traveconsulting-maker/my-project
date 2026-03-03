@@ -3607,6 +3607,15 @@
             closeSettingsAudience();
         }
 
+        function syncDialogsToCRM() {
+            var login = sessionStorage.getItem('current_login') || '';
+            if (!login) return;
+            var data = dialogs.map(function(d) {
+                return { id: d.id, name: d.name, active: d.active, createdAt: d.createdAt, updatedAt: d.updatedAt };
+            });
+            localStorage.setItem('user_' + login + '_dialogs', JSON.stringify(data));
+        }
+
         function syncAudienceToCRM() {
             var login = sessionStorage.getItem('current_login') || '';
             var clientName = login;
@@ -4025,6 +4034,7 @@
             dialogs.push(dlg);
             closeCreateDialogModal();
             renderDialogTable();
+            syncDialogsToCRM();
         }
 
         var qsCurrentStep = 1;
@@ -4275,6 +4285,7 @@
             }
             closeDeleteDialogModal();
             renderDialogTable();
+            syncDialogsToCRM();
         }
 
         // ===== MANAGEMENT MODAL =====
@@ -4577,6 +4588,7 @@
             dlg.active = !dlg.active;
             renderDialogTable();
             updateDetailRing();
+            syncDialogsToCRM();
         }
 
         function showDialogList() {
@@ -4632,6 +4644,7 @@
             dlg.greetings = JSON.parse(JSON.stringify(botGreetings));
             dlg.planItems = JSON.parse(JSON.stringify(botPlanItems));
             dlg.updatedAt = new Date().toISOString();
+            syncDialogsToCRM();
         }
 
         function setActive(el) {
