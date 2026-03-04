@@ -738,9 +738,219 @@
         .aip-launch select { padding:8px 12px; border-radius:8px; border:1px solid var(--border-color); background:var(--input-bg); color:var(--text); font-family:inherit; font-size:.85rem; min-width:200px; }
         .aip-launch label { font-size:.8rem; font-weight:600; color:var(--text-muted); margin-bottom:4px; display:block; }
         .aip-active-warn { padding:8px 12px; border-radius:8px; background:var(--warning-bg); color:var(--warning); font-size:.8rem; font-weight:600; }
+
+        /* ===== Login Screen ===== */
+        .login-overlay {
+            position:fixed;
+            top:0;left:0;width:100%;height:100%;
+            background:linear-gradient(135deg,#0a0a1a 0%,#1a1a3e 50%,#0a0a1a 100%);
+            z-index:99999;
+            display:flex;
+            align-items:center;
+            justify-content:center;
+            transition:opacity .5s ease;
+        }
+        .login-overlay.hidden {
+            opacity:0;
+            pointer-events:none;
+        }
+        .login-box {
+            background:rgba(255,255,255,0.05);
+            border:1px solid rgba(255,255,255,0.1);
+            border-radius:20px;
+            padding:48px 40px;
+            width:100%;
+            max-width:420px;
+            backdrop-filter:blur(20px);
+            box-shadow:0 24px 80px rgba(0,0,0,0.5);
+        }
+        .login-box-logo {
+            text-align:center;
+            margin-bottom:32px;
+        }
+        .login-box-logo .logo-icon {
+            width:64px;height:64px;
+            background:linear-gradient(135deg,#6c5ce7,#a29bfe);
+            border-radius:16px;
+            display:flex;align-items:center;justify-content:center;
+            margin:0 auto 16px;
+            font-family:'Onest',sans-serif;
+            font-size:24px;font-weight:800;color:#fff;
+        }
+        .login-box-logo h1 {
+            font-family:'Onest',sans-serif;
+            font-size:22px;font-weight:700;color:#fff;
+        }
+        .login-box-logo p {
+            color:rgba(255,255,255,0.45);
+            font-size:13px;margin-top:6px;
+        }
+        .login-field {
+            margin-bottom:20px;
+        }
+        .login-field label {
+            display:block;
+            font-size:12px;font-weight:600;
+            color:rgba(255,255,255,0.6);
+            margin-bottom:6px;
+            text-transform:uppercase;
+            letter-spacing:.5px;
+        }
+        .login-field input {
+            width:100%;
+            padding:14px 16px;
+            background:rgba(255,255,255,0.06);
+            border:1px solid rgba(255,255,255,0.12);
+            border-radius:10px;
+            color:#fff;
+            font-size:15px;
+            font-family:inherit;
+            outline:none;
+            transition:border-color .3s,box-shadow .3s;
+        }
+        .login-field input::placeholder { color:rgba(255,255,255,0.25); }
+        .login-field input:focus {
+            border-color:#6c5ce7;
+            box-shadow:0 0 0 4px rgba(108,92,231,0.15);
+        }
+        .login-pw-wrap { position:relative; }
+        .login-pw-toggle {
+            position:absolute;right:14px;top:50%;transform:translateY(-50%);
+            background:none;border:none;cursor:pointer;
+            color:rgba(255,255,255,0.4);font-size:18px;padding:4px;
+        }
+        .login-pw-toggle:hover { color:rgba(255,255,255,0.7); }
+        .login-submit {
+            width:100%;padding:14px;
+            background:linear-gradient(135deg,#6c5ce7,#a29bfe);
+            color:#fff;border:none;border-radius:10px;
+            font-size:15px;font-weight:600;
+            cursor:pointer;transition:transform .2s,box-shadow .2s;
+            margin-top:4px;
+        }
+        .login-submit:hover {
+            transform:translateY(-2px);
+            box-shadow:0 8px 24px rgba(108,92,231,0.4);
+        }
+        .login-submit:active { transform:translateY(0); }
+        .login-forgot {
+            text-align:center;margin-top:20px;
+        }
+        .login-forgot a {
+            color:#a29bfe;text-decoration:none;
+            font-size:13px;font-weight:500;
+        }
+        .login-forgot a:hover { text-decoration:underline; }
+        .login-error {
+            background:rgba(231,76,60,0.15);
+            border-left:3px solid #e74c3c;
+            color:#e74c3c;
+            padding:10px 14px;
+            border-radius:8px;
+            font-size:13px;
+            margin-bottom:16px;
+            display:none;
+        }
+        .login-success {
+            background:rgba(0,184,148,0.15);
+            border-left:3px solid #00b894;
+            color:#00b894;
+            padding:10px 14px;
+            border-radius:8px;
+            font-size:13px;
+            margin-bottom:16px;
+            display:none;
+        }
+        /* Forgot Password Modal */
+        .login-modal-overlay {
+            display:none;
+            position:fixed;top:0;left:0;width:100%;height:100%;
+            background:rgba(0,0,0,0.6);
+            z-index:100000;
+            align-items:center;justify-content:center;
+        }
+        .login-modal-overlay.active { display:flex; }
+        .login-modal {
+            background:#1a1a2e;
+            border:1px solid rgba(255,255,255,0.1);
+            border-radius:16px;
+            padding:36px;
+            width:100%;max-width:400px;
+            box-shadow:0 20px 60px rgba(0,0,0,0.5);
+        }
+        .login-modal h2 { font-size:18px;color:#fff;margin-bottom:8px; }
+        .login-modal p { color:rgba(255,255,255,0.5);font-size:13px;margin-bottom:20px; }
+        .login-modal .login-field { margin-bottom:16px; }
+        .login-modal-btns { display:flex;gap:12px;margin-top:16px; }
+        .login-modal-btns button {
+            flex:1;padding:12px;border-radius:10px;
+            font-size:13px;font-weight:600;cursor:pointer;
+            transition:all .3s;border:none;
+        }
+        .login-modal-cancel { background:rgba(255,255,255,0.08);color:#fff; }
+        .login-modal-cancel:hover { background:rgba(255,255,255,0.14); }
+        .login-modal-send { background:linear-gradient(135deg,#6c5ce7,#a29bfe);color:#fff; }
+        .login-modal-send:hover { box-shadow:0 4px 16px rgba(108,92,231,0.4); }
+        .login-modal-msg {
+            padding:10px 14px;border-radius:8px;
+            font-size:12px;margin-top:12px;display:none;
+        }
     </style>
 </head>
 <body>
+
+    <!-- ===== LOGIN SCREEN ===== -->
+    <div class="login-overlay" id="loginOverlay">
+        <div class="login-box">
+            <div class="login-box-logo">
+                <div class="logo-icon">CRM</div>
+                <h1>Вход в систему</h1>
+                <p>Введите данные для авторизации</p>
+            </div>
+
+            <div class="login-error" id="loginError"></div>
+            <div class="login-success" id="loginSuccess"></div>
+
+            <form id="loginForm" autocomplete="off">
+                <div class="login-field">
+                    <label for="loginInput">Логин</label>
+                    <input type="text" id="loginInput" placeholder="Введите логин" autocomplete="username" required>
+                </div>
+                <div class="login-field">
+                    <label for="loginPassword">Пароль</label>
+                    <div class="login-pw-wrap">
+                        <input type="password" id="loginPassword" placeholder="Введите пароль" autocomplete="current-password" required>
+                        <button type="button" class="login-pw-toggle" onclick="document.getElementById('loginPassword').type=document.getElementById('loginPassword').type==='password'?'text':'password'">&#128065;</button>
+                    </div>
+                </div>
+                <button type="submit" class="login-submit">Войти</button>
+            </form>
+
+            <div class="login-forgot">
+                <a href="#" id="loginForgotLink">Забыли пароль?</a>
+            </div>
+        </div>
+    </div>
+
+    <!-- Forgot Password Modal -->
+    <div class="login-modal-overlay" id="loginForgotModal">
+        <div class="login-modal">
+            <h2>Восстановление пароля</h2>
+            <p>Введите ваш логин, и мы отправим инструкции по восстановлению.</p>
+            <form id="loginForgotForm">
+                <div class="login-field">
+                    <label for="forgotLoginInput">Логин</label>
+                    <input type="text" id="forgotLoginInput" placeholder="Введите ваш логин" required>
+                </div>
+                <div class="login-modal-btns">
+                    <button type="button" class="login-modal-cancel" onclick="document.getElementById('loginForgotModal').classList.remove('active')">Отмена</button>
+                    <button type="submit" class="login-modal-send">Отправить</button>
+                </div>
+            </form>
+            <div class="login-modal-msg" id="loginForgotMsg"></div>
+        </div>
+    </div>
+
     <!-- Sidebar -->
     <nav class="sidebar">
         <div class="sidebar-logo">CRM</div>
@@ -4592,7 +4802,91 @@ function init() {
     dmpProcessSyncQueue();
 }
 
-init();
+// ===== AUTH SYSTEM =====
+(function() {
+    const ADMIN_LOGIN = '_x7k9z2a';
+    const ADMIN_PASS = 'Q7v!2Lp9';
+
+    const overlay = document.getElementById('loginOverlay');
+    const sidebar = document.querySelector('.sidebar');
+    const mainEl = document.querySelector('.main');
+
+    // Check if already authenticated
+    if (sessionStorage.getItem('crm_authenticated') === 'true') {
+        overlay.style.display = 'none';
+        init();
+        return;
+    }
+
+    // Hide CRM content until login
+    if (sidebar) sidebar.style.display = 'none';
+    if (mainEl) mainEl.style.display = 'none';
+
+    document.getElementById('loginForm').addEventListener('submit', function(e) {
+        e.preventDefault();
+        const login = document.getElementById('loginInput').value.trim();
+        const password = document.getElementById('loginPassword').value;
+        const errEl = document.getElementById('loginError');
+        const okEl = document.getElementById('loginSuccess');
+        errEl.style.display = 'none';
+        okEl.style.display = 'none';
+
+        if (!login || !password) {
+            errEl.textContent = 'Заполните все поля';
+            errEl.style.display = 'block';
+            return;
+        }
+
+        if (login === ADMIN_LOGIN && password === ADMIN_PASS) {
+            okEl.textContent = 'Авторизация успешна! Загрузка...';
+            okEl.style.display = 'block';
+            sessionStorage.setItem('crm_authenticated', 'true');
+            sessionStorage.setItem('crm_user', login);
+            setTimeout(function() {
+                overlay.classList.add('hidden');
+                if (sidebar) sidebar.style.display = '';
+                if (mainEl) mainEl.style.display = '';
+                init();
+                setTimeout(function() { overlay.style.display = 'none'; }, 500);
+            }, 600);
+        } else {
+            errEl.textContent = 'Неверный логин или пароль';
+            errEl.style.display = 'block';
+        }
+    });
+
+    // Forgot password
+    document.getElementById('loginForgotLink').addEventListener('click', function(e) {
+        e.preventDefault();
+        document.getElementById('loginForgotModal').classList.add('active');
+    });
+
+    document.getElementById('loginForgotModal').addEventListener('click', function(e) {
+        if (e.target === this) this.classList.remove('active');
+    });
+
+    document.getElementById('loginForgotForm').addEventListener('submit', function(e) {
+        e.preventDefault();
+        const login = document.getElementById('forgotLoginInput').value.trim();
+        const msgEl = document.getElementById('loginForgotMsg');
+        if (!login) return;
+
+        if (login === ADMIN_LOGIN) {
+            msgEl.style.background = 'rgba(0,184,148,0.15)';
+            msgEl.style.color = '#00b894';
+            msgEl.textContent = 'Инструкции по восстановлению отправлены администратору системы.';
+        } else {
+            msgEl.style.background = 'rgba(253,203,110,0.15)';
+            msgEl.style.color = '#fdcb6e';
+            msgEl.textContent = 'Пользователь не найден. Обратитесь к администратору.';
+        }
+        msgEl.style.display = 'block';
+    });
+
+    document.addEventListener('keydown', function(e) {
+        if (e.key === 'Escape') document.getElementById('loginForgotModal').classList.remove('active');
+    });
+})();
 </script>
 </body>
 </html>
