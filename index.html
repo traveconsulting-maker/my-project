@@ -8502,27 +8502,44 @@
         }).catch(function() {});
     }
 
+    var scLastApiMsgId = 0;
+
     function scLoadMessages() {
         if (!scConvId) return;
         fetch(SC_API + '/api/tickets/' + scConvId + '/messages', { headers: scApiHeaders() })
         .then(function(r) { return r.json(); })
         .then(function(messages) {
             var msgs = document.getElementById('scMessages');
-            var html = '<div class="sc-msg support"><div class="sc-msg-text" data-i18n="scWelcome">' + t('scWelcome') + '</div><div class="sc-msg-time">·</div></div>';
-            for (var j = 0; j < messages.length; j++) {
-                var m = messages[j];
-                var d = new Date(m.created_at);
-                var tm = d.getHours().toString().padStart(2,'0') + ':' + d.getMinutes().toString().padStart(2,'0');
-                var cls = m.is_staff ? 'support' : 'user';
-                html += '<div class="sc-msg ' + cls + '">';
-                if (m.text) html += '<div class="sc-msg-text">' + m.text.replace(/</g,'&lt;').replace(/>/g,'&gt;') + '</div>';
-                html += '<div class="sc-msg-time">' + tm + '</div></div>';
+            // Первая загрузка — рендерим всё
+            if (scLastMsgCount === 0) {
+                var html = '<div class="sc-msg support"><div class="sc-msg-text" data-i18n="scWelcome">' + t('scWelcome') + '</div><div class="sc-msg-time">·</div></div>';
+                for (var j = 0; j < messages.length; j++) {
+                    html += scRenderBubble(messages[j]);
+                }
+                msgs.innerHTML = html;
+            } else {
+                // Добавляем только новые
+                for (var k = scLastMsgCount; k < messages.length; k++) {
+                    var div = document.createElement('div');
+                    div.innerHTML = scRenderBubble(messages[k]);
+                    msgs.appendChild(div.firstChild);
+                }
             }
-            msgs.innerHTML = html;
             scLastMsgCount = messages.length;
+            scLastApiMsgId = messages.length > 0 ? messages[messages.length - 1].id : 0;
             msgs.scrollTop = msgs.scrollHeight;
         })
         .catch(function() {});
+    }
+
+    function scRenderBubble(m) {
+        var d = new Date(m.created_at);
+        var tm = d.getHours().toString().padStart(2,'0') + ':' + d.getMinutes().toString().padStart(2,'0');
+        var cls = m.is_staff ? 'support' : 'user';
+        var html = '<div class="sc-msg ' + cls + '">';
+        if (m.text) html += '<div class="sc-msg-text">' + m.text.replace(/</g,'&lt;').replace(/>/g,'&gt;') + '</div>';
+        html += '<div class="sc-msg-time">' + tm + '</div></div>';
+        return html;
     }
 
     // Поллинг ответов менеджера из API
@@ -8530,7 +8547,22 @@
         if (scPollTimer) return;
         scPollTimer = setInterval(function() {
             if (!scConvId) return;
-            scLoadMessages();
+            fetch(SC_API + '/api/tickets/' + scConvId + '/messages', { headers: scApiHeaders() })
+            .then(function(r) { return r.json(); })
+            .then(function(messages) {
+                var lastId = messages.length > 0 ? messages[messages.length - 1].id : 0;
+                if (lastId === scLastApiMsgId) return; // нет новых
+                var msgs = document.getElementById('scMessages');
+                for (var k = scLastMsgCount; k < messages.length; k++) {
+                    var div = document.createElement('div');
+                    div.innerHTML = scRenderBubble(messages[k]);
+                    msgs.appendChild(div.firstChild);
+                }
+                scLastMsgCount = messages.length;
+                scLastApiMsgId = lastId;
+                msgs.scrollTop = msgs.scrollHeight;
+            })
+            .catch(function() {});
         }, 3000);
     }
 

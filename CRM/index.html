@@ -3585,6 +3585,7 @@ function openConversation(id) {
                     time: m.created_at,
                     files: []
                 }));
+                dialogsLastMsgId = messages.length > 0 ? messages[messages.length - 1].id : 0;
                 renderChatBody(id);
             })
             .catch(() => renderChatBody(id));
@@ -3685,32 +3686,48 @@ function reopenConversation(id) {
     toast('Диалог переоткрыт');
 }
 
+let dialogsLastMsgId = 0;
+
+function appendChatMessages(convId, newMessages) {
+    const container = document.getElementById('chat-messages-' + convId);
+    if (!container) return;
+    newMessages.forEach(m => {
+        const div = document.createElement('div');
+        div.className = 'chat-msg ' + (m.author === 'manager' ? 'from-manager' : 'from-client');
+        div.innerHTML = `<div class="chat-msg-text">${esc(m.text||'')}</div><div class="chat-msg-time">${formatDateTime(m.time)}</div>`;
+        container.appendChild(div);
+    });
+    container.scrollTop = container.scrollHeight;
+}
+
 // Поллинг новых сообщений из API
 function startDialogsPoll() {
     if (dialogsPollTimer) clearInterval(dialogsPollTimer);
     dialogsPollTimer = setInterval(() => {
-        // Обновляем открытый диалог из API
         if (activeConvId) {
             const conv = conversations.find(c => c.id === activeConvId);
             if (conv && conv.apiId) {
                 fetch(API_BASE + '/api/tickets/' + conv.apiId + '/messages', { headers: apiHeaders() })
                     .then(r => r.json())
                     .then(messages => {
-                        const newMsgs = messages.map(m => ({
+                        const lastId = messages.length > 0 ? messages[messages.length - 1].id : 0;
+                        if (lastId === dialogsLastMsgId) return; // нет новых
+                        const currentCount = (conv.messages || []).length;
+                        const newOnly = messages.slice(currentCount).map(m => ({
                             author: m.is_staff ? 'manager' : 'client',
                             text: m.text,
                             time: m.created_at,
                             files: []
                         }));
-                        if (newMsgs.length !== (conv.messages||[]).length) {
-                            conv.messages = newMsgs;
-                            renderChatBody(activeConvId);
+                        if (newOnly.length > 0) {
+                            conv.messages = (conv.messages || []).concat(newOnly);
+                            appendChatMessages(activeConvId, newOnly);
+                            dialogsLastMsgId = lastId;
                         }
                     })
                     .catch(() => {});
             }
         }
-        // Также подгружаем новые диалоги
         fetchChatDialogsFromAPI();
     }, 3000);
 }
