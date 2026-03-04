@@ -1945,10 +1945,48 @@ function fetchApplicationsFromAPI() {
         .catch(() => {});
 }
 
+function fetchChatDialogsFromAPI() {
+    if (!crmToken) return;
+    fetch(API_BASE + '/api/tickets?type=chat', { headers: apiHeaders() })
+        .then(r => { if (!r.ok) throw r; return r.json(); })
+        .then(data => {
+            data.forEach(apiChat => {
+                const exists = conversations.find(c => c.apiId === apiChat.id.toString());
+                if (!exists) {
+                    conversations.push({
+                        id: 'api_' + apiChat.id,
+                        apiId: apiChat.id.toString(),
+                        clientId: apiChat.client_id ? apiChat.client_id.toString() : null,
+                        clientName: apiChat.client_name || 'Аноним',
+                        status: apiChat.status === 'closed' ? 'closed' : 'open',
+                        hasNewMessage: true,
+                        messages: [{
+                            author: 'client',
+                            text: apiChat.description || '',
+                            time: apiChat.created_at || now(),
+                            files: []
+                        }],
+                        created: apiChat.created_at || now(),
+                        updated: apiChat.updated_at || now()
+                    });
+                } else {
+                    exists.status = apiChat.status === 'closed' ? 'closed' : 'open';
+                    exists.clientId = apiChat.client_id ? apiChat.client_id.toString() : exists.clientId;
+                    exists.clientName = apiChat.client_name || exists.clientName;
+                }
+            });
+            persist();
+            renderDialogs();
+            updateBadges();
+        })
+        .catch(() => {});
+}
+
 function syncFromAPI() {
     fetchClientsFromAPI();
     fetchTicketsFromAPI();
     fetchApplicationsFromAPI();
+    fetchChatDialogsFromAPI();
 }
 
 // Автообновление каждые 30 секунд

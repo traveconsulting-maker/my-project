@@ -8577,16 +8577,16 @@
         // Сохраняем в CRM (localStorage)
         scSaveMessage('client', text, fileNames);
 
-        // Отправляем на сервер как тикет
-        var token = sessionStorage.getItem('jwt_token') || '';
+        // Отправляем на сервер как чат-тикет
+        var chatHeaders = { 'Content-Type': 'application/json' };
+        var chatToken = sessionStorage.getItem('jwt_token');
+        if (chatToken) chatHeaders['Authorization'] = 'Bearer ' + chatToken;
         fetch('https://api.easysale.tech/api/tickets', {
             method: 'POST',
-            headers: {
-                'Content-Type': 'application/json',
-                'Authorization': 'Bearer ' + token
-            },
+            headers: chatHeaders,
             body: JSON.stringify({
                 subject: 'Сообщение из чата поддержки',
+                type: 'chat',
                 priority: 'medium',
                 description: text
             })
