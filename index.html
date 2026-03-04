@@ -4037,11 +4037,11 @@
                 nameEl.textContent = displayName;
             }
 
-            sessionStorage.setItem('current_login', login);
+            localStorage.setItem('current_login', login);
         }
 
         function saveUserSession() {
-            const login = sessionStorage.getItem('current_login');
+            const login = localStorage.getItem('current_login');
             if (!login) return;
             const prefix = userKey(login);
             const onboarded = localStorage.getItem('onboarded');
@@ -4058,7 +4058,7 @@
             // Проверяем через API
             // Сохраняем fallback на тестовый аккаунт
             if (user.value === 'test' && pass.value === '1234') {
-                sessionStorage.setItem('sc_login', user.value);
+                localStorage.setItem('sc_login', user.value);
                 applyUserSession(user.value);
                 showAfterLogin();
                 return;
@@ -4073,7 +4073,7 @@
             .then(result => {
                 if (result.status === 200) {
                     localStorage.setItem('jwt_token', result.data.token);
-                    sessionStorage.setItem('sc_login', user.value);
+                    localStorage.setItem('sc_login', user.value);
                     applyUserSession(user.value);
                     showAfterLogin();
                 } else if (result.status === 403) {
@@ -4284,7 +4284,7 @@
         }
 
         function syncDialogsToCRM() {
-            var login = sessionStorage.getItem('current_login') || '';
+            var login = localStorage.getItem('current_login') || '';
             if (!login) return;
             var data = dialogs.map(function(d) {
                 return { id: d.id, serverId: d.serverId, name: d.name, active: d.active, createdAt: d.createdAt, updatedAt: d.updatedAt };
@@ -4374,9 +4374,10 @@
             dashboard.classList.remove('show');
             localStorage.removeItem('onboarded');
             localStorage.removeItem('jwt_token');
-            sessionStorage.removeItem('current_login');
-            sessionStorage.removeItem('sc_login');
-            sessionStorage.removeItem('sc_conv_id');
+            localStorage.removeItem('current_login');
+            localStorage.removeItem('sc_login');
+            localStorage.removeItem('sc_conv_id');
+            localStorage.removeItem('sc_ticket_id');
             setTimeout(() => {
                 landingPage.classList.remove('hidden');
                 document.getElementById('loginUser').value = '';
@@ -6504,7 +6505,7 @@
         (function() {
             var dlgName = 'Новый диалог';
             try {
-                var login = sessionStorage.getItem('current_login') || '';
+                var login = localStorage.getItem('current_login') || '';
                 if (login) {
                     var crmCl = JSON.parse(localStorage.getItem('crm_clients') || '[]');
                     for (var i = 0; i < crmCl.length; i++) {
@@ -7238,7 +7239,7 @@
         // ===== BALANCE & PRICING =====
         var userBalance = parseInt(localStorage.getItem('user_balance') || '0');
         function clGetPricePerLead() {
-            var login = sessionStorage.getItem('current_login') || '';
+            var login = localStorage.getItem('current_login') || '';
             try {
                 var crmClients = JSON.parse(localStorage.getItem('crm_clients') || '[]');
                 for (var i = 0; i < crmClients.length; i++) {
@@ -7675,7 +7676,7 @@
 
         // ===== Import parsed phones from CRM as call lists =====
         function clImportParsedPhones() {
-            var login = sessionStorage.getItem('current_login') || '';
+            var login = localStorage.getItem('current_login') || '';
             if (!login) return;
             var raw = localStorage.getItem('user_' + login + '_parsed_phones');
             if (!raw) return;
@@ -8003,7 +8004,7 @@
         }
 
         function taSyncAllToCRM() {
-            var login = sessionStorage.getItem('current_login') || '';
+            var login = localStorage.getItem('current_login') || '';
             if (!login) return;
             var clientName = login;
             try {
@@ -8355,6 +8356,30 @@
         qlSeedDemo();
         seedStatsDemo();
         stRenderAll();
+
+        // ===== AUTO-RESTORE SESSION =====
+        (function autoRestore() {
+            var token = localStorage.getItem('jwt_token');
+            var login = localStorage.getItem('current_login');
+            if (token && login) {
+                applyUserSession(login);
+                var onboarded = localStorage.getItem('onboarded');
+                if (onboarded) {
+                    landingPage.classList.add('hidden');
+                    setTimeout(function() {
+                        dashboard.classList.add('show');
+                        document.body.style.overflow = '';
+                    }, 100);
+                    // Load data from backend
+                    setTimeout(function() {
+                        taLoadFromAPI();
+                        dlgLoadFromAPI();
+                        clLoadFromAPI();
+                        qlLoadFromAPI();
+                    }, 500);
+                }
+            }
+        })();
     </script>
 
 <!-- ===== SUPPORT CHAT ===== -->
@@ -8398,7 +8423,7 @@
         // Ищем клиента по логину в CRM
         var loginUser = document.getElementById('loginUser');
         var login = loginUser ? loginUser.value : '';
-        if (!login) login = sessionStorage.getItem('sc_login') || '';
+        if (!login) login = localStorage.getItem('sc_login') || '';
         if (!login) return null;
         try {
             var crmClients = JSON.parse(localStorage.getItem('crm_clients') || '[]');
@@ -8419,7 +8444,7 @@
     }
 
     function scInitConversation() {
-        var ticketId = sessionStorage.getItem('sc_ticket_id');
+        var ticketId = localStorage.getItem('sc_ticket_id');
         if (ticketId) {
             scConvId = ticketId;
             scLoadMessages();
@@ -8445,7 +8470,7 @@
         .then(function(data) {
             if (data.id) {
                 scConvId = data.id.toString();
-                sessionStorage.setItem('sc_ticket_id', scConvId);
+                localStorage.setItem('sc_ticket_id', scConvId);
                 // Отправляем буферизованные сообщения (включая первое)
                 for (var i = 0; i < scPendingMessages.length; i++) {
                     scSaveMessage(scPendingMessages[i].author, scPendingMessages[i].text, scPendingMessages[i].files);
@@ -8575,7 +8600,7 @@
 
         // Сохраняем логин при отправке (для идентификации)
         var loginUser = document.getElementById('loginUser');
-        if (loginUser && loginUser.value) sessionStorage.setItem('sc_login', loginUser.value);
+        if (loginUser && loginUser.value) localStorage.setItem('sc_login', loginUser.value);
 
         var msgs = document.getElementById('scMessages');
         var now = new Date();
@@ -8647,7 +8672,7 @@
         if (loginForm) {
             loginForm.addEventListener('submit', function() {
                 var u = document.getElementById('loginUser');
-                if (u && u.value) sessionStorage.setItem('sc_login', u.value);
+                if (u && u.value) localStorage.setItem('sc_login', u.value);
             });
         }
     });
