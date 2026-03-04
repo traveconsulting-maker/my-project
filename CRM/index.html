@@ -3568,14 +3568,29 @@ function formatTime(iso) {
 
 function openConversation(id) {
     activeConvId = id;
-    // Убираем метку нового сообщения
     const conv = conversations.find(c => c.id === id);
     if (conv && conv.hasNewMessage) {
         conv.hasNewMessage = false;
-        saveData('conversations', conversations);
     }
     renderDialogsList();
-    renderChatBody(id);
+
+    // Загружаем сообщения из API если это API-диалог
+    if (conv && conv.apiId) {
+        fetch(API_BASE + '/api/tickets/' + conv.apiId + '/messages', { headers: apiHeaders() })
+            .then(r => r.json())
+            .then(messages => {
+                conv.messages = messages.map(m => ({
+                    author: m.is_staff ? 'manager' : 'client',
+                    text: m.text,
+                    time: m.created_at,
+                    files: []
+                }));
+                renderChatBody(id);
+            })
+            .catch(() => renderChatBody(id));
+    } else {
+        renderChatBody(id);
+    }
 }
 
 function renderChatBody(id) {
@@ -3620,19 +3635,34 @@ function sendChatReply(convId) {
     const text = input.value.trim();
     if (!text) return;
 
-    conversations = loadData('conversations');
     const conv = conversations.find(c => c.id === convId);
     if (!conv) return;
-    conv.messages = conv.messages || [];
-    conv.messages.push({ author:'manager', text, time: now(), files:[] });
-    conv.updated = now();
-    saveData('conversations', conversations);
 
-    addActivity('dialog', `Ответ в диалоге: ${conv.clientName||'Аноним'}`, conv.clientId);
-    persist();
-
-    renderChatBody(convId);
-    renderDialogsList();
+    // Отправляем через API
+    if (conv.apiId) {
+        fetch(API_BASE + '/api/tickets/' + conv.apiId + '/messages', {
+            method: 'POST',
+            headers: apiHeaders(),
+            body: JSON.stringify({ author: 'Менеджер', text: text, is_staff: true })
+        })
+        .then(r => r.json())
+        .then(() => {
+            addActivity('dialog', `Ответ в диалоге: ${conv.clientName||'Аноним'}`, conv.clientId);
+            // Перезагружаем сообщения из API
+            openConversation(convId);
+        })
+        .catch(() => {});
+    } else {
+        // Fallback на localStorage для старых диалогов
+        conv.messages = conv.messages || [];
+        conv.messages.push({ author:'manager', text, time: now(), files:[] });
+        conv.updated = now();
+        saveData('conversations', conversations);
+        addActivity('dialog', `Ответ в диалоге: ${conv.clientName||'Аноним'}`, conv.clientId);
+        persist();
+        renderChatBody(convId);
+        renderDialogsList();
+    }
 }
 
 function closeConversation(id) {
