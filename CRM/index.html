@@ -2703,6 +2703,14 @@ function toggleClientActive(id, el) {
     }
     addActivity('client', (isActive ? 'Активирован' : 'Деактивирован') + ' клиент: ' + clients[idx].name, id);
     toast(isActive ? 'Клиент активирован' : 'Клиент деактивирован');
+    // Синхронизируем с API
+    if (crmToken) {
+        fetch(API_BASE + '/api/clients/' + id, {
+            method: 'PATCH',
+            headers: apiHeaders(),
+            body: JSON.stringify({ active: isActive })
+        }).catch(() => {});
+    }
     // Re-render detail if open
     if (currentDetailClient === id) renderClientDetail();
 }
