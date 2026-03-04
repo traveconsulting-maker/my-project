@@ -8466,6 +8466,8 @@
         }
     }
 
+    var scPendingMessages = [];
+
     function scEnsureConversation(firstText) {
         if (scConvId) return;
         var user = scGetCurrentUser();
@@ -8484,13 +8486,25 @@
             if (data.id) {
                 scConvId = data.id.toString();
                 sessionStorage.setItem('sc_ticket_id', scConvId);
+                // Отправляем первое сообщение как message
+                scSaveMessage('client', firstText, []);
+                // Отправляем буферизованные сообщения
+                for (var i = 0; i < scPendingMessages.length; i++) {
+                    scSaveMessage(scPendingMessages[i].author, scPendingMessages[i].text, scPendingMessages[i].files);
+                }
+                scPendingMessages = [];
+                // Запускаем polling
+                scStartPoll();
             }
         })
         .catch(function() {});
     }
 
     function scSaveMessage(author, text, files) {
-        if (!scConvId) return;
+        if (!scConvId) {
+            scPendingMessages.push({ author: author, text: text, files: files });
+            return;
+        }
         fetch(SC_API + '/api/tickets/' + scConvId + '/messages', {
             method: 'POST',
             headers: scApiHeaders(),
@@ -8511,11 +8525,7 @@
         .then(function(r) { return r.json(); })
         .then(function(messages) {
             var msgs = document.getElementById('scMessages');
-            // Первая загрузка — welcome + все сообщения
-            if (Object.keys(scKnownMsgIds).length === 0 && scLastMsgCount === 0) {
-                msgs.innerHTML = '<div class="sc-msg support"><div class="sc-msg-text" data-i18n="scWelcome">' + t('scWelcome') + '</div><div class="sc-msg-time">·</div></div>';
-            }
-            // Добавляем только сообщения с новыми ID
+            // Добавляем только сообщения с новыми ID (без очистки DOM)
             for (var j = 0; j < messages.length; j++) {
                 var m = messages[j];
                 if (scKnownMsgIds[m.id]) continue;
@@ -8572,13 +8582,18 @@
         }, 3000);
     }
 
+    var scInitDone = false;
+
     function scToggle() {
         var win = document.getElementById('scWindow');
         var fab = document.getElementById('scFab');
         var isOpen = win.classList.toggle('open');
         fab.classList.toggle('open', isOpen);
         if (isOpen) {
-            scInitConversation();
+            if (!scInitDone) {
+                scInitConversation();
+                scInitDone = true;
+            }
             scStartPoll();
             var msgs = document.getElementById('scMessages');
             msgs.scrollTop = msgs.scrollHeight;
