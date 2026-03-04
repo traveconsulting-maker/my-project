@@ -3603,6 +3603,7 @@ function openConversation(id) {
 }
 
 function renderChatBody(id) {
+    console.log('renderChatBody called', id, new Error().stack);
     const conv = conversations.find(c => c.id === id);
     if (!conv) { document.getElementById('chat-body').innerHTML = '<div class="chat-empty">Диалог не найден</div>'; return; }
 
