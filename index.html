@@ -8513,6 +8513,7 @@
         })
         .then(function(r) { return r.json(); })
         .then(function(data) {
+            console.log('sent msg response:', JSON.stringify(data));
             if (data.id) {
                 scKnownMsgIds[data.id] = true;
                 scLastApiMsgId = data.id;
