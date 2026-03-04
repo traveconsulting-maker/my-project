@@ -4064,12 +4064,12 @@
                 applyUserSession(user.value);
                 showAfterLogin();
             } else if (pendingActivation) {
-                error.textContent = translations[currentLang]?.loginErrInactive || 'Ваш аккаунт требует активации. Это может занять до 15 минут';
+                error.textContent = i18n.loginErrInactive?.[currentLang] || 'Ваш аккаунт требует активации. Это может занять до 15 минут';
                 error.classList.add('show');
                 user.classList.add('error');
                 setTimeout(() => { user.classList.remove('error'); }, 1500);
             } else {
-                error.textContent = translations[currentLang]?.loginErr || 'Неверный логин или пароль';
+                error.textContent = i18n.loginErr?.[currentLang] || 'Неверный логин или пароль';
                 user.classList.add('error');
                 pass.classList.add('error');
                 error.classList.add('show');
