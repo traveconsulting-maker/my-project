@@ -1976,7 +1976,7 @@ function fetchChatDialogsFromAPI() {
                 }
             });
             persist();
-            renderDialogs();
+            renderDialogs(true);
             updateBadges();
         })
         .catch(() => {});
@@ -3515,12 +3515,14 @@ function switchDialogsTab(tab, el) {
     renderDialogs();
 }
 
-function renderDialogs() {
+function renderDialogs(skipChatBody) {
     // Перечитываем данные из localStorage (виджет пишет туда напрямую)
     conversations = loadData('conversations');
     renderDialogsList();
-    if (activeConvId) renderChatBody(activeConvId);
-    else document.getElementById('chat-body').innerHTML = '<div class="chat-empty">Выберите диалог</div>';
+    if (!skipChatBody) {
+        if (activeConvId) renderChatBody(activeConvId);
+        else document.getElementById('chat-body').innerHTML = '<div class="chat-empty">Выберите диалог</div>';
+    }
     updateBadges();
     startDialogsPoll();
 }

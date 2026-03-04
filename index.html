@@ -8486,14 +8486,11 @@
             if (data.id) {
                 scConvId = data.id.toString();
                 sessionStorage.setItem('sc_ticket_id', scConvId);
-                // Отправляем первое сообщение как message
-                scSaveMessage('client', firstText, []);
-                // Отправляем буферизованные сообщения
+                // Отправляем буферизованные сообщения (включая первое)
                 for (var i = 0; i < scPendingMessages.length; i++) {
                     scSaveMessage(scPendingMessages[i].author, scPendingMessages[i].text, scPendingMessages[i].files);
                 }
                 scPendingMessages = [];
-                // Запускаем polling
                 scStartPoll();
             }
         })
