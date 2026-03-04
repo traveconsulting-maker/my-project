@@ -8510,7 +8510,15 @@
                 text: text,
                 is_staff: author !== 'client'
             })
-        }).catch(function() {});
+        })
+        .then(function(r) { return r.json(); })
+        .then(function(data) {
+            if (data.id) {
+                scKnownMsgIds[data.id] = true;
+                scLastApiMsgId = data.id;
+            }
+        })
+        .catch(function() {});
     }
 
     var scLastApiMsgId = 0;
