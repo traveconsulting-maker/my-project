@@ -1976,7 +1976,7 @@ function fetchChatDialogsFromAPI() {
                 }
             });
             persist();
-            renderDialogs(true);
+            renderDialogsList();
             updateBadges();
         })
         .catch(() => {});
@@ -3515,14 +3515,12 @@ function switchDialogsTab(tab, el) {
     renderDialogs();
 }
 
-function renderDialogs(skipChatBody) {
+function renderDialogs() {
     // Перечитываем данные из localStorage (виджет пишет туда напрямую)
     conversations = loadData('conversations');
     renderDialogsList();
-    if (!skipChatBody) {
-        if (activeConvId) renderChatBody(activeConvId);
-        else document.getElementById('chat-body').innerHTML = '<div class="chat-empty">Выберите диалог</div>';
-    }
+    if (activeConvId) renderChatBody(activeConvId);
+    else document.getElementById('chat-body').innerHTML = '<div class="chat-empty">Выберите диалог</div>';
     updateBadges();
     startDialogsPoll();
 }
@@ -3603,7 +3601,6 @@ function openConversation(id) {
 }
 
 function renderChatBody(id) {
-    console.log('renderChatBody called', id, new Error().stack);
     const conv = conversations.find(c => c.id === id);
     if (!conv) { document.getElementById('chat-body').innerHTML = '<div class="chat-empty">Диалог не найден</div>'; return; }
 
@@ -3637,44 +3634,9 @@ function renderChatBody(id) {
     `;
     const msgEl = document.getElementById('chat-messages-'+conv.id);
     if (msgEl) msgEl.scrollTop = msgEl.scrollHeight;
-
-    // Debug: отслеживаем textarea
-    const _dbgTextarea = document.getElementById('chat-reply-input');
-    if (_dbgTextarea) {
-        _dbgTextarea.addEventListener('input', function() {
-            console.log('[DEBUG] textarea input event, value:', JSON.stringify(this.value));
-        });
-        new MutationObserver(function(mutations) {
-            mutations.forEach(function(m) {
-                console.log('[DEBUG] textarea mutation:', m.type, m.attributeName, m.target.value);
-            });
-        }).observe(_dbgTextarea, { attributes: true, childList: true, characterData: true });
-        // Отслеживаем замену/удаление textarea из DOM
-        new MutationObserver(function(mutations) {
-            mutations.forEach(function(m) {
-                for (var i = 0; i < m.removedNodes.length; i++) {
-                    if (m.removedNodes[i] === _dbgTextarea || (m.removedNodes[i].querySelector && m.removedNodes[i].querySelector('#chat-reply-input'))) {
-                        console.log('[DEBUG] textarea REMOVED from DOM', new Error().stack);
-                    }
-                }
-            });
-        }).observe(document.getElementById('chat-body'), { childList: true, subtree: true });
-        // Перехватываем установку value
-        var _origValue = Object.getOwnPropertyDescriptor(HTMLTextAreaElement.prototype, 'value');
-        Object.defineProperty(_dbgTextarea, 'value', {
-            get: function() { return _origValue.get.call(this); },
-            set: function(v) {
-                if (v === '' && _origValue.get.call(this) !== '') {
-                    console.log('[DEBUG] textarea.value set to empty!', new Error().stack);
-                }
-                return _origValue.set.call(this, v);
-            }
-        });
-    }
 }
 
 function sendChatReply(convId) {
-    console.log('[DEBUG] sendChatReply called', convId, new Error().stack);
     const input = document.getElementById('chat-reply-input');
     if (!input) return;
     const text = input.value.trim();
@@ -3703,8 +3665,8 @@ function sendChatReply(convId) {
         })
         .then(r => r.json())
         .then(data => {
-            // Обновляем lastMsgId чтобы polling не дублировал
-            if (data.id) dialogsLastMsgId = data.id;
+            // Обновляем lastMsgId и knownIds чтобы polling не дублировал
+            if (data.id) { dialogsLastMsgId = data.id; dialogsKnownMsgIds[data.id] = true; }
             conv.messages = (conv.messages || []);
             conv.messages.push({ author: 'manager', text, time: now(), files: [] });
             addActivity('dialog', `Ответ в диалоге: ${conv.clientName||'Аноним'}`, conv.clientId);
