@@ -1876,7 +1876,7 @@ function fetchClientsFromAPI() {
 
 function fetchTicketsFromAPI() {
     if (!crmToken) return;
-    fetch(API_BASE + '/api/tickets', { headers: apiHeaders() })
+    fetch(API_BASE + '/api/tickets?type=support', { headers: apiHeaders() })
         .then(r => { if (!r.ok) throw r; return r.json(); })
         .then(data => {
             data.forEach(apiTicket => {
@@ -1913,9 +1913,42 @@ function fetchTicketsFromAPI() {
         .catch(() => {});
 }
 
+function fetchApplicationsFromAPI() {
+    if (!crmToken) return;
+    fetch(API_BASE + '/api/tickets?type=access_request', { headers: apiHeaders() })
+        .then(r => { if (!r.ok) throw r; return r.json(); })
+        .then(data => {
+            data.forEach(apiApp => {
+                const exists = applications.find(a => a.apiId === apiApp.id.toString());
+                let parsed = {};
+                try { parsed = JSON.parse(apiApp.description || '{}'); } catch(e) { parsed = { name: apiApp.subject }; }
+                if (!exists) {
+                    applications.push({
+                        id: 'api_' + apiApp.id,
+                        apiId: apiApp.id.toString(),
+                        name: parsed.name || apiApp.subject || '',
+                        phone: parsed.phone || '',
+                        email: parsed.email || '',
+                        company: parsed.company || '',
+                        message: '',
+                        status: apiApp.status === 'open' ? 'new' : apiApp.status === 'closed' ? 'rejected' : apiApp.status,
+                        created: apiApp.created_at || now()
+                    });
+                } else {
+                    exists.status = apiApp.status === 'open' ? 'new' : apiApp.status === 'closed' ? 'rejected' : apiApp.status;
+                }
+            });
+            persist();
+            renderApplications();
+            updateBadges();
+        })
+        .catch(() => {});
+}
+
 function syncFromAPI() {
     fetchClientsFromAPI();
     fetchTicketsFromAPI();
+    fetchApplicationsFromAPI();
 }
 
 // Автообновление каждые 30 секунд

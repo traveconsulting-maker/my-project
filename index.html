@@ -6572,9 +6572,10 @@
                     'Authorization': 'Bearer ' + token
                 },
                 body: JSON.stringify({
-                    subject: 'Заявка на доступ: ' + name + ' (ИНН: ' + inn + ')',
+                    subject: 'Заявка на доступ: ' + name,
+                    type: 'access_request',
                     priority: 'medium',
-                    description: 'ФИО: ' + name + '\nТелефон: ' + phone + '\nИНН: ' + inn
+                    description: JSON.stringify({ name: name, phone: phone, email: '', company: 'ИНН: ' + inn })
                 })
             })
             .then(function(res) { return res.json(); })
