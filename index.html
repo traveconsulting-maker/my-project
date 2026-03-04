@@ -3598,11 +3598,11 @@
         var ES_API = 'https://api.easysale.tech';
         function esApiHeaders() {
             var h = { 'Content-Type': 'application/json' };
-            var token = sessionStorage.getItem('jwt_token');
+            var token = localStorage.getItem('jwt_token');
             if (token) h['Authorization'] = 'Bearer ' + token;
             return h;
         }
-        function esHasToken() { return !!sessionStorage.getItem('jwt_token'); }
+        function esHasToken() { return !!localStorage.getItem('jwt_token'); }
 
         // ===== DIALOG LIST STATE =====
         var dialogs = [], dialogIdCounter = 0, currentDialogId = null, deleteTargetId = null;
@@ -4072,7 +4072,7 @@
             .then(res => res.json().then(data => ({ status: res.status, data })))
             .then(result => {
                 if (result.status === 200) {
-                    sessionStorage.setItem('jwt_token', result.data.token);
+                    localStorage.setItem('jwt_token', result.data.token);
                     sessionStorage.setItem('sc_login', user.value);
                     applyUserSession(user.value);
                     showAfterLogin();
@@ -4373,6 +4373,7 @@
             saveUserSession();
             dashboard.classList.remove('show');
             localStorage.removeItem('onboarded');
+            localStorage.removeItem('jwt_token');
             sessionStorage.removeItem('current_login');
             sessionStorage.removeItem('sc_login');
             sessionStorage.removeItem('sc_conv_id');
@@ -6638,7 +6639,7 @@
             if (!valid) return;
 
             // Отправляем заявку на сервер
-            var token = sessionStorage.getItem('jwt_token') || '';
+            var token = localStorage.getItem('jwt_token') || '';
             fetch('https://api.easysale.tech/api/tickets', {
                 method: 'POST',
                 headers: {
@@ -8412,7 +8413,7 @@
 
     function scApiHeaders() {
         var h = { 'Content-Type': 'application/json' };
-        var token = sessionStorage.getItem('jwt_token');
+        var token = localStorage.getItem('jwt_token');
         if (token) h['Authorization'] = 'Bearer ' + token;
         return h;
     }
