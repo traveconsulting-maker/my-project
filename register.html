@@ -264,57 +264,43 @@
                 return;
             }
 
-            // Check unique login
-            var clients = [];
-            try { clients = JSON.parse(localStorage.getItem('crm_clients') || '[]'); } catch(ex) {}
-
-            var loginExists = false;
-            for (var i = 0; i < clients.length; i++) {
-                if (clients[i].login === login) {
-                    loginExists = true;
-                    break;
-                }
-            }
-            // Also check hardcoded test account
-            if (login === 'test') loginExists = true;
-
-            if (loginExists) {
-                loginHint.classList.add('show');
-                document.getElementById('regLogin').classList.add('error');
-                errorEl.textContent = 'Такой логин уже существует. Придумайте другой';
-                errorEl.classList.add('show');
-                return;
-            }
-
-            // Generate ID
-            var id = Date.now().toString(36) + Math.random().toString(36).substr(2, 5);
-
-            // Create client
-            var newClient = {
-                id: id,
-                name: company,
-                company: company,
-                phone: phone,
-                email: email,
-                login: login,
-                password: password,
-                notes: '',
-                active: false,
-                source: 'registration',
-                created: new Date().toISOString()
-            };
-
-            clients.push(newClient);
-            localStorage.setItem('crm_clients', JSON.stringify(clients));
-
-            // Show success
-            successEl.classList.add('show');
+            // Send to API
             document.getElementById('regSubmitBtn').disabled = true;
 
-            // Redirect to login after 2 seconds
-            setTimeout(function() {
-                window.location.href = 'index.html';
-            }, 2000);
+            fetch('https://api.easysale.tech/api/auth/register', {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({
+                    name: company,
+                    company: company,
+                    phone: phone,
+                    email: email,
+                    login: login,
+                    password: password
+                })
+            })
+            .then(function(res) { return res.json().then(function(data) { return { status: res.status, data: data }; }); })
+            .then(function(result) {
+                if (result.status === 201) {
+                    successEl.classList.add('show');
+                    setTimeout(function() { window.location.href = 'index.html'; }, 2000);
+                } else if (result.status === 409) {
+                    loginHint.classList.add('show');
+                    document.getElementById('regLogin').classList.add('error');
+                    errorEl.textContent = 'Такой логин уже существует. Придумайте другой';
+                    errorEl.classList.add('show');
+                    document.getElementById('regSubmitBtn').disabled = false;
+                } else {
+                    errorEl.textContent = result.data.error || 'Ошибка регистрации';
+                    errorEl.classList.add('show');
+                    document.getElementById('regSubmitBtn').disabled = false;
+                }
+            })
+            .catch(function() {
+                errorEl.textContent = 'Ошибка соединения с сервером';
+                errorEl.classList.add('show');
+                document.getElementById('regSubmitBtn').disabled = false;
+            });
         }
     </script>
 </body>

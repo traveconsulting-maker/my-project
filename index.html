@@ -4038,43 +4038,44 @@
             const pass = document.getElementById('loginPass');
             const error = document.getElementById('loginError');
 
-            // Проверяем через базу клиентов CRM
-            let authorized = false;
-            let pendingActivation = false;
+            // Проверяем через API
+            // Сохраняем fallback на тестовый аккаунт
             if (user.value === 'test' && pass.value === '1234') {
-                authorized = true;
-            } else {
-                try {
-                    const crmClients = JSON.parse(localStorage.getItem('crm_clients') || '[]');
-                    for (let i = 0; i < crmClients.length; i++) {
-                        if (crmClients[i].login === user.value && crmClients[i].password === pass.value) {
-                            if (crmClients[i].active === false) {
-                                pendingActivation = true;
-                            } else {
-                                authorized = true;
-                            }
-                            break;
-                        }
-                    }
-                } catch(ex) {}
-            }
-
-            if (authorized) {
                 sessionStorage.setItem('sc_login', user.value);
                 applyUserSession(user.value);
                 showAfterLogin();
-            } else if (pendingActivation) {
-                error.textContent = i18n.loginErrInactive?.[currentLang] || 'Ваш аккаунт требует активации. Это может занять до 15 минут';
-                error.classList.add('show');
-                user.classList.add('error');
-                setTimeout(() => { user.classList.remove('error'); }, 1500);
-            } else {
-                error.textContent = i18n.loginErr?.[currentLang] || 'Неверный логин или пароль';
-                user.classList.add('error');
-                pass.classList.add('error');
-                error.classList.add('show');
-                setTimeout(() => { user.classList.remove('error'); pass.classList.remove('error'); }, 1500);
+                return;
             }
+
+            fetch('https://api.easysale.tech/api/auth/login', {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({ login: user.value, password: pass.value })
+            })
+            .then(res => res.json().then(data => ({ status: res.status, data })))
+            .then(result => {
+                if (result.status === 200) {
+                    sessionStorage.setItem('jwt_token', result.data.token);
+                    sessionStorage.setItem('sc_login', user.value);
+                    applyUserSession(user.value);
+                    showAfterLogin();
+                } else if (result.status === 403) {
+                    error.textContent = i18n.loginErrInactive?.[currentLang] || 'Ваш аккаунт требует активации. Это может занять до 15 минут';
+                    error.classList.add('show');
+                    user.classList.add('error');
+                    setTimeout(() => { user.classList.remove('error'); }, 1500);
+                } else {
+                    error.textContent = i18n.loginErr?.[currentLang] || 'Неверный логин или пароль';
+                    user.classList.add('error');
+                    pass.classList.add('error');
+                    error.classList.add('show');
+                    setTimeout(() => { user.classList.remove('error'); pass.classList.remove('error'); }, 1500);
+                }
+            })
+            .catch(() => {
+                error.textContent = 'Ошибка соединения с сервером';
+                error.classList.add('show');
+            });
         }
 
         // Registration is now on register.html
@@ -6562,34 +6563,29 @@
 
             if (!valid) return;
 
-            // Отправляем заявку в CRM
-            try {
-                var crmApps = JSON.parse(localStorage.getItem('crm_applications') || '[]');
-                crmApps.push({
-                    id: Date.now().toString(36) + Math.random().toString(36).substr(2,5),
-                    name: name,
-                    phone: phone,
-                    email: '',
-                    company: 'ИНН: ' + inn,
-                    message: '',
-                    status: 'new',
-                    created: new Date().toISOString()
-                });
-                localStorage.setItem('crm_applications', JSON.stringify(crmApps));
-
-                var crmActs = JSON.parse(localStorage.getItem('crm_activities') || '[]');
-                crmActs.unshift({
-                    id: Date.now().toString(36) + Math.random().toString(36).substr(2,6),
-                    type: 'application',
-                    text: 'Новая заявка с сайта: ' + name + ' (ИНН: ' + inn + ')',
-                    clientId: null,
-                    time: new Date().toISOString()
-                });
-                localStorage.setItem('crm_activities', JSON.stringify(crmActs));
-            } catch(e) {}
-
-            accessForm.style.display = 'none';
-            accessSuccess.classList.add('show');
+            // Отправляем заявку на сервер
+            var token = sessionStorage.getItem('jwt_token') || '';
+            fetch('https://api.easysale.tech/api/tickets', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                    'Authorization': 'Bearer ' + token
+                },
+                body: JSON.stringify({
+                    subject: 'Заявка на доступ: ' + name + ' (ИНН: ' + inn + ')',
+                    priority: 'medium',
+                    description: 'ФИО: ' + name + '\nТелефон: ' + phone + '\nИНН: ' + inn
+                })
+            })
+            .then(function(res) { return res.json(); })
+            .then(function() {
+                accessForm.style.display = 'none';
+                accessSuccess.classList.add('show');
+            })
+            .catch(function() {
+                accessForm.style.display = 'none';
+                accessSuccess.classList.add('show');
+            });
         }
 
         document.addEventListener('keydown', (e) => {
@@ -8577,8 +8573,23 @@
         var fileNames = [];
         for (var i = 0; i < scFiles.length; i++) fileNames.push(scFiles[i].name);
 
-        // Сохраняем в CRM
+        // Сохраняем в CRM (localStorage)
         scSaveMessage('client', text, fileNames);
+
+        // Отправляем на сервер как тикет
+        var token = sessionStorage.getItem('jwt_token') || '';
+        fetch('https://api.easysale.tech/api/tickets', {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json',
+                'Authorization': 'Bearer ' + token
+            },
+            body: JSON.stringify({
+                subject: 'Сообщение из чата поддержки',
+                priority: 'medium',
+                description: text
+            })
+        }).catch(function() {});
 
         var bubble = document.createElement('div');
         bubble.className = 'sc-msg user';
