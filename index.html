@@ -8503,6 +8503,7 @@
     }
 
     var scLastApiMsgId = 0;
+    var scKnownMsgIds = {};
 
     function scLoadMessages() {
         if (!scConvId) return;
@@ -8510,20 +8511,18 @@
         .then(function(r) { return r.json(); })
         .then(function(messages) {
             var msgs = document.getElementById('scMessages');
-            // Первая загрузка — рендерим всё
-            if (scLastMsgCount === 0) {
-                var html = '<div class="sc-msg support"><div class="sc-msg-text" data-i18n="scWelcome">' + t('scWelcome') + '</div><div class="sc-msg-time">·</div></div>';
-                for (var j = 0; j < messages.length; j++) {
-                    html += scRenderBubble(messages[j]);
-                }
-                msgs.innerHTML = html;
-            } else {
-                // Добавляем только новые
-                for (var k = scLastMsgCount; k < messages.length; k++) {
-                    var div = document.createElement('div');
-                    div.innerHTML = scRenderBubble(messages[k]);
-                    msgs.appendChild(div.firstChild);
-                }
+            // Первая загрузка — welcome + все сообщения
+            if (Object.keys(scKnownMsgIds).length === 0 && scLastMsgCount === 0) {
+                msgs.innerHTML = '<div class="sc-msg support"><div class="sc-msg-text" data-i18n="scWelcome">' + t('scWelcome') + '</div><div class="sc-msg-time">·</div></div>';
+            }
+            // Добавляем только сообщения с новыми ID
+            for (var j = 0; j < messages.length; j++) {
+                var m = messages[j];
+                if (scKnownMsgIds[m.id]) continue;
+                scKnownMsgIds[m.id] = true;
+                var div = document.createElement('div');
+                div.innerHTML = scRenderBubble(m);
+                msgs.appendChild(div.firstChild);
             }
             scLastMsgCount = messages.length;
             scLastApiMsgId = messages.length > 0 ? messages[messages.length - 1].id : 0;
@@ -8553,9 +8552,16 @@
                 var lastId = messages.length > 0 ? messages[messages.length - 1].id : 0;
                 if (lastId === scLastApiMsgId) return; // нет новых
                 var msgs = document.getElementById('scMessages');
-                for (var k = scLastMsgCount; k < messages.length; k++) {
+                // Удаляем pending-bubble (уже подтверждены API)
+                var pendings = msgs.querySelectorAll('[data-pending]');
+                for (var p = 0; p < pendings.length; p++) pendings[p].removeAttribute('data-pending');
+                // Добавляем только новые по ID
+                for (var j = 0; j < messages.length; j++) {
+                    var m = messages[j];
+                    if (scKnownMsgIds[m.id]) continue;
+                    scKnownMsgIds[m.id] = true;
                     var div = document.createElement('div');
-                    div.innerHTML = scRenderBubble(messages[k]);
+                    div.innerHTML = scRenderBubble(m);
                     msgs.appendChild(div.firstChild);
                 }
                 scLastMsgCount = messages.length;
@@ -8601,8 +8607,10 @@
         // Отправляем сообщение на сервер
         scSaveMessage('client', text, fileNames);
 
+        // Оптимистичное добавление bubble (будет пропущен polling по ID)
         var bubble = document.createElement('div');
         bubble.className = 'sc-msg user';
+        bubble.setAttribute('data-pending', 'true');
         var html = '';
         if (text) html += '<div class="sc-msg-text">' + text.replace(/</g,'&lt;').replace(/>/g,'&gt;') + '</div>';
         for (var i = 0; i < scFiles.length; i++) {
@@ -8612,7 +8620,6 @@
         bubble.innerHTML = html;
         msgs.appendChild(bubble);
         msgs.scrollTop = msgs.scrollHeight;
-        scLastMsgCount++;
 
         input.value = '';
         scFiles = [];
