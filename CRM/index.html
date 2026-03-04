@@ -1828,6 +1828,101 @@ function addActivity(type, text, clientId) {
     if (activities.length > 100) activities = activities.slice(0,100);
 }
 
+// ==================== API SYNC ====================
+const API_BASE = 'https://api.easysale.tech';
+let crmToken = sessionStorage.getItem('crm_jwt_token') || '';
+
+function apiHeaders() {
+    return { 'Content-Type': 'application/json', 'Authorization': 'Bearer ' + crmToken };
+}
+
+function fetchClientsFromAPI() {
+    if (!crmToken) return;
+    fetch(API_BASE + '/api/clients', { headers: apiHeaders() })
+        .then(r => { if (!r.ok) throw r; return r.json(); })
+        .then(data => {
+            // Мержим: API-клиенты добавляются если их login ещё нет локально
+            data.forEach(apiClient => {
+                const exists = clients.find(c => c.login === apiClient.login);
+                if (!exists) {
+                    clients.push({
+                        id: apiClient.id.toString(),
+                        name: apiClient.name,
+                        company: apiClient.company || '',
+                        phone: apiClient.phone || '',
+                        email: apiClient.email || '',
+                        login: apiClient.login || '',
+                        password: '',
+                        notes: apiClient.notes || '',
+                        active: apiClient.active,
+                        source: apiClient.source || 'api',
+                        created: apiClient.created_at || now()
+                    });
+                } else {
+                    // Обновляем активность из API
+                    exists.active = apiClient.active;
+                    exists.name = apiClient.name;
+                    exists.phone = apiClient.phone || exists.phone;
+                    exists.email = apiClient.email || exists.email;
+                    exists.company = apiClient.company || exists.company;
+                }
+            });
+            persist();
+            renderClients();
+            updateBadges();
+        })
+        .catch(() => {});
+}
+
+function fetchTicketsFromAPI() {
+    if (!crmToken) return;
+    fetch(API_BASE + '/api/tickets', { headers: apiHeaders() })
+        .then(r => { if (!r.ok) throw r; return r.json(); })
+        .then(data => {
+            data.forEach(apiTicket => {
+                const existsIdx = tickets.findIndex(t => t.apiId === apiTicket.id.toString());
+                if (existsIdx === -1) {
+                    tickets.push({
+                        id: 'api_' + apiTicket.id,
+                        apiId: apiTicket.id.toString(),
+                        subject: apiTicket.subject,
+                        clientId: apiTicket.client_id ? apiTicket.client_id.toString() : null,
+                        clientName: apiTicket.client_name || '',
+                        priority: apiTicket.priority || 'medium',
+                        description: apiTicket.description || '',
+                        status: apiTicket.status || 'open',
+                        messages: [{
+                            author: apiTicket.client_name || 'Клиент',
+                            text: apiTicket.description || '',
+                            time: apiTicket.created_at || now(),
+                            staff: false
+                        }],
+                        created: apiTicket.created_at || now(),
+                        updated: apiTicket.updated_at || now()
+                    });
+                } else {
+                    tickets[existsIdx].status = apiTicket.status;
+                    tickets[existsIdx].priority = apiTicket.priority;
+                    tickets[existsIdx].updated = apiTicket.updated_at;
+                }
+            });
+            persist();
+            renderSupport();
+            updateBadges();
+        })
+        .catch(() => {});
+}
+
+function syncFromAPI() {
+    fetchClientsFromAPI();
+    fetchTicketsFromAPI();
+}
+
+// Автообновление каждые 30 секунд
+setInterval(syncFromAPI, 30000);
+// Первая загрузка при старте
+setTimeout(syncFromAPI, 500);
+
 function getClient(id) { return clients.find(c => c.id === id); }
 function getClientName(id) {
     const c = getClient(id);
@@ -4842,11 +4937,25 @@ function init() {
             okEl.style.display = 'block';
             sessionStorage.setItem('crm_authenticated', 'true');
             sessionStorage.setItem('crm_user', login);
+
+            // Получаем JWT-токен для API (регистрируем CRM-админа если нет)
+            fetch('https://api.easysale.tech/api/auth/login', {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({ login: 'crm_admin', password: 'CrmAdmin2026!' })
+            })
+            .then(function(r) { return r.json(); })
+            .then(function(data) {
+                if (data.token) { crmToken = data.token; sessionStorage.setItem('crm_jwt_token', data.token); }
+            })
+            .catch(function() {});
+
             setTimeout(function() {
                 overlay.classList.add('hidden');
                 if (sidebar) sidebar.style.display = '';
                 if (mainEl) mainEl.style.display = '';
                 init();
+                syncFromAPI();
                 setTimeout(function() { overlay.style.display = 'none'; }, 500);
             }, 600);
         } else {
