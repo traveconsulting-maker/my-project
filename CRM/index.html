@@ -3685,18 +3685,34 @@ function reopenConversation(id) {
     toast('Диалог переоткрыт');
 }
 
-// Поллинг новых сообщений из виджета
+// Поллинг новых сообщений из API
 function startDialogsPoll() {
     if (dialogsPollTimer) clearInterval(dialogsPollTimer);
     dialogsPollTimer = setInterval(() => {
-        const fresh = loadData('conversations');
-        if (JSON.stringify(fresh) !== JSON.stringify(conversations)) {
-            conversations = fresh;
-            renderDialogsList();
-            if (activeConvId) renderChatBody(activeConvId);
-            updateBadges();
+        // Обновляем открытый диалог из API
+        if (activeConvId) {
+            const conv = conversations.find(c => c.id === activeConvId);
+            if (conv && conv.apiId) {
+                fetch(API_BASE + '/api/tickets/' + conv.apiId + '/messages', { headers: apiHeaders() })
+                    .then(r => r.json())
+                    .then(messages => {
+                        const newMsgs = messages.map(m => ({
+                            author: m.is_staff ? 'manager' : 'client',
+                            text: m.text,
+                            time: m.created_at,
+                            files: []
+                        }));
+                        if (newMsgs.length !== (conv.messages||[]).length) {
+                            conv.messages = newMsgs;
+                            renderChatBody(activeConvId);
+                        }
+                    })
+                    .catch(() => {});
+            }
         }
-    }, 2000);
+        // Также подгружаем новые диалоги
+        fetchChatDialogsFromAPI();
+    }, 3000);
 }
 
 // Рендер сообщений клиента в его карточке
