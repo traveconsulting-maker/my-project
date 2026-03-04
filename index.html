@@ -3594,6 +3594,16 @@
         const landingPage = document.getElementById('landingPage');
         const dashboard = document.getElementById('dashboard');
 
+        // ===== API HELPERS =====
+        var ES_API = 'https://api.easysale.tech';
+        function esApiHeaders() {
+            var h = { 'Content-Type': 'application/json' };
+            var token = sessionStorage.getItem('jwt_token');
+            if (token) h['Authorization'] = 'Bearer ' + token;
+            return h;
+        }
+        function esHasToken() { return !!sessionStorage.getItem('jwt_token'); }
+
         // ===== DIALOG LIST STATE =====
         var dialogs = [], dialogIdCounter = 0, currentDialogId = null, deleteTargetId = null;
 
@@ -3988,6 +3998,13 @@
             } else {
                 setTimeout(() => { onboarding.classList.add('show'); document.body.style.overflow = ''; }, 400);
             }
+            // Load data from backend after login
+            setTimeout(function() {
+                taLoadFromAPI();
+                dlgLoadFromAPI();
+                clLoadFromAPI();
+                qlLoadFromAPI();
+            }, 500);
         }
 
         // Префикс для хранения данных конкретного пользователя
@@ -4270,9 +4287,36 @@
             var login = sessionStorage.getItem('current_login') || '';
             if (!login) return;
             var data = dialogs.map(function(d) {
-                return { id: d.id, name: d.name, active: d.active, createdAt: d.createdAt, updatedAt: d.updatedAt };
+                return { id: d.id, serverId: d.serverId, name: d.name, active: d.active, createdAt: d.createdAt, updatedAt: d.updatedAt };
             });
             localStorage.setItem('user_' + login + '_dialogs', JSON.stringify(data));
+        }
+
+        // Load skillbases from backend
+        function dlgLoadFromAPI() {
+            if (!esHasToken()) return;
+            fetch(ES_API + '/api/skillbases', { headers: esApiHeaders() })
+            .then(function(r) { return r.json(); })
+            .then(function(data) {
+                if (!Array.isArray(data)) return;
+                dialogs = data.map(function(sb) {
+                    var ctx = sb.context || {};
+                    return {
+                        id: 'dlg_srv_' + sb.id, serverId: sb.id, name: sb.name || '',
+                        createdAt: sb.created_at || '', updatedAt: sb.created_at || '',
+                        active: false,
+                        botRole: ctx.botRole || '', botStyle: ctx.botStyle || '',
+                        rules: ctx.rules || [], facts: ctx.facts || [],
+                        criteria: ctx.criteria || [], greetings: ctx.greetings || [],
+                        planItems: ctx.plan || [],
+                        schedule: { days: [1,2,3,4,5], timeFrom: '09:00', timeTo: '18:00' },
+                        useClientTz: false, contactLimit: 100, maxCallSec: 600
+                    };
+                });
+                dialogIdCounter = dialogs.length;
+                renderDialogTable();
+                syncDialogsToCRM();
+            }).catch(function(err) { console.error('API skillbases load error:', err); });
         }
 
         function syncAudienceToCRM() {
@@ -4657,6 +4701,17 @@
             closeCreateDialogModal();
             renderDialogTable();
             syncDialogsToCRM();
+
+            // Sync to backend
+            if (esHasToken()) {
+                var ctx = { rules: dlg.rules, facts: dlg.facts, criteria: dlg.criteria, greetings: dlg.greetings, plan: dlg.planItems, botRole: dlg.botRole, botStyle: dlg.botStyle };
+                fetch(ES_API + '/api/skillbases', {
+                    method: 'POST', headers: esApiHeaders(),
+                    body: JSON.stringify({ name: name, context: ctx })
+                }).then(function(r) { return r.json(); }).then(function(data) {
+                    if (data.id) { dlg.serverId = data.id; syncDialogsToCRM(); }
+                }).catch(function(err) { console.error('API skillbase create error:', err); });
+            }
         }
 
         var qsCurrentStep = 1;
@@ -4897,6 +4952,8 @@
 
         function confirmDeleteDialog() {
             if (!deleteTargetId) return;
+            var dlg = dialogs.find(function(d) { return d.id === deleteTargetId; });
+            var srvId = dlg && dlg.serverId;
             dialogs = dialogs.filter(function(d) { return d.id !== deleteTargetId; });
             // Clean up KB items for deleted dialog
             kbItems = kbItems.filter(function(it) { return it.dialogId !== deleteTargetId; });
@@ -4908,6 +4965,12 @@
             closeDeleteDialogModal();
             renderDialogTable();
             syncDialogsToCRM();
+
+            if (esHasToken() && srvId) {
+                fetch(ES_API + '/api/skillbases/' + srvId, {
+                    method: 'DELETE', headers: esApiHeaders()
+                }).catch(function(err) { console.error('API skillbase delete error:', err); });
+            }
         }
 
         // ===== MANAGEMENT MODAL =====
@@ -5267,6 +5330,17 @@
             dlg.planItems = JSON.parse(JSON.stringify(botPlanItems));
             dlg.updatedAt = new Date().toISOString();
             syncDialogsToCRM();
+
+            // Sync to backend
+            if (esHasToken()) {
+                var ctx = { rules: dlg.rules, facts: dlg.facts, criteria: dlg.criteria, greetings: dlg.greetings, plan: dlg.planItems, botRole: dlg.botRole, botStyle: dlg.botStyle };
+                fetch(ES_API + '/api/skillbases', {
+                    method: 'POST', headers: esApiHeaders(),
+                    body: JSON.stringify({ name: dlg.name, context: ctx })
+                }).then(function(r) { return r.json(); }).then(function(data) {
+                    if (data.id) { dlg.serverId = data.id; syncDialogsToCRM(); }
+                }).catch(function(err) { console.error('API skillbase save error:', err); });
+            }
         }
 
         function setActive(el) {
@@ -5284,11 +5358,11 @@
                 document.querySelectorAll('.page-section').forEach(function(p) { p.classList.remove('active'); });
                 var target = document.getElementById(pageId);
                 if (target) target.classList.add('active');
-                if (pageId === 'pageDialogs') { renderDialogTable(); }
+                if (pageId === 'pageDialogs') { dlgLoadFromAPI(); renderDialogTable(); }
                 if (pageId === 'pageKnowledge') kbRenderCentralList();
-                if (pageId === 'pageLaunches') { clImportParsedPhones(); clRenderLaunches(); }
-                if (pageId === 'pageAudience') { taRenderCards(); }
-                if (pageId === 'pageQualLeads') { qlPopulateFilters(); qlRender(); }
+                if (pageId === 'pageLaunches') { clLoadFromAPI(); clImportParsedPhones(); clRenderLaunches(); }
+                if (pageId === 'pageAudience') { taLoadFromAPI(); taRenderCards(); }
+                if (pageId === 'pageQualLeads') { qlLoadFromAPI(); qlPopulateFilters(); qlRender(); }
                 if (pageId === 'pageStats') { stRenderAll(); }
             }
         }
@@ -7395,6 +7469,32 @@
             var wasEditLaunch = !!clEditId;
             clPersist(); clCloseLaunchModal(); clRenderLaunches();
             clToast(wasEditLaunch ? 'Запуск обновлён' : 'Запуск «' + name + '» создан');
+
+            // Sync to backend
+            if (esHasToken()) {
+                var dlg = dialogs.find(function(x) { return x.id === dialogId; });
+                var ta = taAudiences.find(function(x) { return x.id === audienceId; });
+                var dayNames = ['sun','mon','tue','wed','thu','fri','sat'];
+                var workDays = days.map(function(d) { return dayNames[d]; });
+                var payload = {
+                    name: name,
+                    skillbase_id: dlg && dlg.serverId ? dlg.serverId : null,
+                    audience_id: ta && ta.serverId ? ta.serverId : null,
+                    leads_per_day: goalLeads,
+                    work_days: workDays,
+                    work_hours_start: timeFrom,
+                    work_hours_end: timeTo
+                };
+                fetch(ES_API + '/api/campaigns', {
+                    method: 'POST', headers: esApiHeaders(), body: JSON.stringify(payload)
+                }).then(function(r) { return r.json(); }).then(function(data) {
+                    if (data.id) {
+                        var launch = clLaunches.find(function(x) { return x.id === newId; });
+                        if (launch) { launch.serverId = data.id; clPersist(); }
+                    }
+                }).catch(function(err) { console.error('API campaign save error:', err); });
+            }
+
             return newId;
         }
 
@@ -7458,6 +7558,13 @@
             clPersist(); clRenderLaunches();
             clToast('Обзвон «' + l.name + '» запущен!');
             clStartSimulation(id);
+
+            // Launch on backend
+            if (esHasToken() && l.serverId) {
+                fetch(ES_API + '/api/campaigns/' + l.serverId + '/launch', {
+                    method: 'POST', headers: esApiHeaders()
+                }).catch(function(err) { console.error('API campaign launch error:', err); });
+            }
         }
 
         function clPauseLaunch(id) {
@@ -7535,6 +7642,34 @@
         function clSeedDemo() {
             // Demo data disabled — real data will come from API
             return;
+        }
+
+        // Load campaigns from backend
+        function clLoadFromAPI() {
+            if (!esHasToken()) return;
+            fetch(ES_API + '/api/campaigns', { headers: esApiHeaders() })
+            .then(function(r) { return r.json(); })
+            .then(function(data) {
+                if (!Array.isArray(data)) return;
+                clLaunches = data.map(function(c) {
+                    var dayNames = { sun:0, mon:1, tue:2, wed:3, thu:4, fri:5, sat:6 };
+                    var days = Array.isArray(c.work_days) ? c.work_days.map(function(d) { return dayNames[d] !== undefined ? dayNames[d] : 0; }) : [1,2,3,4,5];
+                    // Map audience and skillbase back to local IDs
+                    var audLocal = taAudiences.find(function(a) { return a.serverId === c.audience_id; });
+                    var dlgLocal = dialogs.find(function(d) { return d.serverId === c.skillbase_id; });
+                    return {
+                        id: 'cl_srv_' + c.id, serverId: c.id, name: c.name || '',
+                        dialogId: dlgLocal ? dlgLocal.id : '', audienceId: audLocal ? audLocal.id : '',
+                        audienceName: c.audience_name || '', skillbaseName: c.skillbase_name || '',
+                        callListId: '', goalLeads: c.leads_per_day || 50,
+                        timeFrom: c.work_hours_start || '09:00', timeTo: c.work_hours_end || '18:00',
+                        days: days, status: c.status === 'calling' ? 'active' : (c.status || 'idle'),
+                        called: 0, leads: 0, missed: 0, processedIdx: 0,
+                        created: c.created_at || '', updated: c.created_at || ''
+                    };
+                });
+                clPersist(); clRenderLaunches();
+            }).catch(function(err) { console.error('API campaigns load error:', err); });
         }
 
         // ===== Import parsed phones from CRM as call lists =====
@@ -7689,6 +7824,24 @@
             taCloseModal();
             taRenderCards();
             clToast(wasEdit ? 'ЦА обновлена' : 'ЦА создана');
+
+            // Sync to backend
+            if (esHasToken()) {
+                var payload = { name: name, niche: niche, description: client, competitor_sites: siteLines };
+                fetch(ES_API + '/api/audiences', {
+                    method: 'POST', headers: esApiHeaders(), body: JSON.stringify(payload)
+                }).then(function(r) { return r.json(); }).then(function(data) {
+                    if (data.id) {
+                        var ta = taAudiences[taAudiences.length - 1];
+                        if (!wasEdit && ta) ta.serverId = data.id;
+                        if (wasEdit) {
+                            var found = taAudiences.find(function(x) { return x.id === taEditId; });
+                            if (found) found.serverId = data.id;
+                        }
+                        taPersist();
+                    }
+                }).catch(function(err) { console.error('API audience save error:', err); });
+            }
         }
 
         function taEdit(id) {
@@ -7705,11 +7858,19 @@
 
         function taDelete(id) {
             if (!confirm('Удалить эту целевую аудиторию?')) return;
+            var ta = taAudiences.find(function(x) { return x.id === id; });
+            var srvId = ta && ta.serverId;
             taAudiences = taAudiences.filter(function(x) { return x.id !== id; });
             taPersist();
             taSyncAllToCRM();
             taRenderCards();
             clToast('ЦА удалена');
+
+            if (esHasToken() && srvId) {
+                fetch(ES_API + '/api/audiences/' + srvId, {
+                    method: 'DELETE', headers: esApiHeaders()
+                }).catch(function(err) { console.error('API audience delete error:', err); });
+            }
         }
 
         function taInsertTag(el) {
@@ -7880,6 +8041,26 @@
         function taSeedDemo() {
             // Demo data disabled — real data will come from API
             return;
+        }
+
+        // Load audiences from backend
+        function taLoadFromAPI() {
+            if (!esHasToken()) return;
+            fetch(ES_API + '/api/audiences', { headers: esApiHeaders() })
+            .then(function(r) { return r.json(); })
+            .then(function(data) {
+                if (!Array.isArray(data)) return;
+                taAudiences = data.map(function(a) {
+                    var sites = Array.isArray(a.competitor_sites) ? a.competitor_sites.join('\n') : '';
+                    return {
+                        id: 'ta_srv_' + a.id, serverId: a.id, name: a.name || '',
+                        niche: a.niche || '', client: a.description || '', sites: sites,
+                        created: a.created_at || '', updated: a.created_at || ''
+                    };
+                });
+                taPersist();
+                taRenderCards();
+            }).catch(function(err) { console.error('API audiences load error:', err); });
         }
 
         // ===== QUAL LEADS =====
@@ -8128,6 +8309,29 @@
 
         function qlIntegrationStub() {
             clToast('Модуль интеграций в разработке');
+        }
+
+        // Load qualified leads from backend
+        function qlLoadFromAPI() {
+            if (!esHasToken()) return;
+            fetch(ES_API + '/api/leads', { headers: esApiHeaders() })
+            .then(function(r) { return r.json(); })
+            .then(function(data) {
+                if (!Array.isArray(data)) return;
+                qlLeads = data.map(function(l) {
+                    var campaign = clLaunches.find(function(c) { return c.serverId === l.campaign_id; });
+                    return {
+                        id: 'ql_srv_' + l.id, name: l.name || '', phone: l.phone || '',
+                        email: '', city: '',
+                        launchName: campaign ? campaign.name : '', launchId: campaign ? campaign.id : '',
+                        dialogName: '', dialogId: '',
+                        audienceName: '', createdAt: l.created_at || '',
+                        status: l.qualified ? 'new' : 'downloaded',
+                        company: l.company || '', callDuration: l.call_duration || 0
+                    };
+                });
+                qlPersist(); qlPopulateFilters(); qlRender();
+            }).catch(function(err) { console.error('API leads load error:', err); });
         }
 
         // Seed demo qual leads
