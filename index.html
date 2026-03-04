@@ -2786,8 +2786,8 @@
                 <span data-i18n="dashboard">Панель управления</span>
             </div>
             <div class="dash-user">
-                <span class="dash-user-name">test</span>
-                <span class="dash-balance" id="dashBalance">10 000 ₽</span>
+                <span class="dash-user-name" id="dashUserName"></span>
+                <span class="dash-balance" id="dashBalance">0 ₽</span>
                 <button class="dash-logout" onclick="handleLogout()" data-i18n="logout">Выйти</button>
             </div>
         </div>
@@ -3428,7 +3428,7 @@
                 <div class="cl-cost-line" id="clCostLine" style="background:var(--input-bg);border-radius:10px;padding:14px;margin-top:16px;">
                     <div style="display:flex;justify-content:space-between;align-items:center;">
                         <span style="font-size:.85rem;color:var(--text-muted);">Списание в день:</span>
-                        <span style="font-size:1.1rem;font-weight:700;color:#00b894;" id="clCostValue">2 000 ₽</span>
+                        <span style="font-size:1.1rem;font-weight:700;color:#00b894;" id="clCostValue">0 ₽</span>
                     </div>
                     <div id="clCostWarning" style="display:none;font-size:.78rem;color:#e74c3c;margin-top:6px;">Недостаточно средств на балансе</div>
                 </div>
@@ -7161,7 +7161,7 @@
         })();
 
         // ===== BALANCE & PRICING =====
-        var userBalance = parseInt(localStorage.getItem('user_balance') || '10000');
+        var userBalance = parseInt(localStorage.getItem('user_balance') || '0');
         function clGetPricePerLead() {
             var login = sessionStorage.getItem('current_login') || '';
             try {
@@ -7202,7 +7202,7 @@
             }
         }
         // Init balance display
-        if (!localStorage.getItem('user_balance')) localStorage.setItem('user_balance', '10000');
+        if (!localStorage.getItem('user_balance')) localStorage.setItem('user_balance', '0');
         clUpdateBalance();
 
         // ===== LAUNCHES =====
@@ -7533,39 +7533,8 @@
 
         // Seed demo data
         function clSeedDemo() {
-            if (localStorage.getItem('cl_demo_seeded')) return;
-            // Demo call lists
-            if (clCallLists.length === 0) {
-                var demoList1 = { id: clGenId(), name: 'IT-компании Москва', description: 'Малый и средний бизнес, IT-сектор', contacts: [
-                    { phone: '+7 495 123-45-67', name: 'Иванов Алексей' },
-                    { phone: '+7 495 234-56-78', name: 'Петрова Мария' },
-                    { phone: '+7 495 345-67-89', name: 'Сидоров Дмитрий' },
-                    { phone: '+7 495 456-78-90', name: 'Козлова Анна' },
-                    { phone: '+7 495 567-89-01', name: 'Новиков Сергей' },
-                    { phone: '+7 495 678-90-12', name: 'Федорова Елена' },
-                    { phone: '+7 495 789-01-23', name: 'Морозов Андрей' },
-                    { phone: '+7 495 890-12-34', name: 'Волкова Ольга' }
-                ], created: clNow(), updated: clNow() };
-                var demoList2 = { id: clGenId(), name: 'Автосервисы СПб', description: 'Автосервисы и автомойки Санкт-Петербурга', contacts: [
-                    { phone: '+7 812 111-22-33', name: 'Кузнецов Игорь' },
-                    { phone: '+7 812 222-33-44', name: 'Соколова Татьяна' },
-                    { phone: '+7 812 333-44-55', name: 'Лебедев Виктор' },
-                    { phone: '+7 812 444-55-66', name: 'Попова Наталья' },
-                    { phone: '+7 812 555-66-77', name: 'Новиков Павел' }
-                ], created: clNow(), updated: clNow() };
-                clCallLists.push(demoList1, demoList2);
-            }
-            // Demo launch
-            if (clLaunches.length === 0 && clCallLists.length > 0 && typeof dialogs !== 'undefined' && dialogs.length > 0) {
-                clLaunches.push({
-                    id: clGenId(), name: 'Пилотный обзвон IT', dialogId: dialogs[0].id, callListId: clCallLists[0].id, audienceId: 'ta_demo1',
-                    goalLeads: 1, timeFrom: '09:00', timeTo: '18:00',
-                    days: [1, 2, 3, 4, 5], status: 'idle', called: 3, leads: 1, missed: 1,
-                    processedIdx: 5, created: clNow(), updated: clNow()
-                });
-            }
-            clPersist();
-            localStorage.setItem('cl_demo_seeded', '1');
+            // Demo data disabled — real data will come from API
+            return;
         }
 
         // ===== Import parsed phones from CRM as call lists =====
@@ -7625,34 +7594,8 @@
 
         // Seed demo parsed phones for yesterday (simulating supplier delivery)
         function clSeedParsedDemo() {
-            var login = sessionStorage.getItem('current_login') || '';
-            if (!login) return;
-            if (localStorage.getItem('cl_parsed_demo_seeded_' + login)) return;
-
-            // Generate 20 demo contacts for yesterday
-            var yesterday = new Date();
-            yesterday.setDate(yesterday.getDate() - 1);
-            var dateStr = yesterday.toISOString().substring(0, 10);
-
-            var firstNames = ['Алексей','Мария','Дмитрий','Анна','Сергей','Елена','Андрей','Ольга','Игорь','Татьяна','Виктор','Наталья','Павел','Светлана','Максим','Юлия','Роман','Екатерина','Николай','Валентина'];
-            var lastNames = ['Иванов','Петрова','Сидоров','Козлова','Новиков','Федорова','Морозов','Волкова','Кузнецов','Соколова','Лебедев','Попова','Егоров','Климова','Орлов','Белова','Жуков','Тихонова','Савельев','Данилова'];
-            var codes = ['495','812','383','343','846','831','863','843','351','347'];
-
-            var phones = [];
-            for (var i = 0; i < 20; i++) {
-                var code = codes[Math.floor(Math.random() * codes.length)];
-                var num1 = String(Math.floor(Math.random() * 900) + 100);
-                var num2 = String(Math.floor(Math.random() * 90) + 10);
-                var num3 = String(Math.floor(Math.random() * 90) + 10);
-                phones.push({
-                    phone: '+7 ' + code + ' ' + num1 + '-' + num2 + '-' + num3,
-                    name: lastNames[i] + ' ' + firstNames[i],
-                    date: dateStr
-                });
-            }
-
-            localStorage.setItem('user_' + login + '_parsed_phones', JSON.stringify(phones));
-            localStorage.setItem('cl_parsed_demo_seeded_' + login, '1');
+            // Demo data disabled — real data will come from API
+            return;
         }
 
         // ===== TARGET AUDIENCE =====
@@ -7935,47 +7878,8 @@
 
         // Seed demo ЦА
         function taSeedDemo() {
-            if (localStorage.getItem('ta_demo_seeded_v2')) return;
-            // Clean old demo
-            if (localStorage.getItem('ta_demo_seeded') && !localStorage.getItem('ta_demo_seeded_v2')) {
-                taAudiences = taAudiences.filter(function(a) { return a.id !== 'ta_demo1' && a.id !== 'ta_demo2'; });
-                localStorage.removeItem('ta_demo_seeded');
-            }
-
-            var yesterday = new Date();
-            yesterday.setDate(yesterday.getDate() - 1);
-            var yesterdayStr = yesterday.toISOString();
-
-            if (taAudiences.filter(function(a) { return a.id === 'ta_demo1' || a.id === 'ta_demo2'; }).length === 0) {
-                // Demo ЦА created "yesterday" with generation done
-                taAudiences.push(
-                    { id: 'ta_demo1', name: 'IT-компании малого бизнеса', niche: 'IT', client: 'Владелец бизнеса, 30-45 лет, ищет автоматизацию продаж', sites: 'competitor1.ru\ncompetitor2.com', created: yesterdayStr, updated: yesterdayStr, genStatus: 'done', genCount: 20, lastGenDate: clNow(), lastGenCount: 20 },
-                    { id: 'ta_demo2', name: 'Автосервисы Москва', niche: 'Авто', client: 'ЛПР, Малый бизнес, 35-50 лет', sites: 'autoservice1.ru\nautoservice2.ru\nautoservice3.ru', created: yesterdayStr, updated: yesterdayStr, genStatus: 'done', genCount: 15, lastGenDate: clNow(), lastGenCount: 15 }
-                );
-                taPersist();
-                taSyncAllToCRM();
-
-                // Generate demo call lists from these ЦА
-                var demoContacts1 = [];
-                for (var i = 0; i < 20; i++) demoContacts1.push(taGenContact());
-                clCallLists.push({
-                    id: 'cll_ta_demo1', name: 'IT-компании малого бизнеса — ' + taFormatDate(clNow()),
-                    description: 'Сформирован из ЦА «IT-компании малого бизнеса»',
-                    contacts: demoContacts1, audienceId: 'ta_demo1', audienceName: 'IT-компании малого бизнеса',
-                    formationDate: clNow(), source: 'audience', created: clNow(), updated: clNow()
-                });
-
-                var demoContacts2 = [];
-                for (var j = 0; j < 15; j++) demoContacts2.push(taGenContact());
-                clCallLists.push({
-                    id: 'cll_ta_demo2', name: 'Автосервисы Москва — ' + taFormatDate(clNow()),
-                    description: 'Сформирован из ЦА «Автосервисы Москва»',
-                    contacts: demoContacts2, audienceId: 'ta_demo2', audienceName: 'Автосервисы Москва',
-                    formationDate: clNow(), source: 'audience', created: clNow(), updated: clNow()
-                });
-                clPersist();
-            }
-            localStorage.setItem('ta_demo_seeded_v2', '1');
+            // Demo data disabled — real data will come from API
+            return;
         }
 
         // ===== QUAL LEADS =====
@@ -8228,163 +8132,14 @@
 
         // Seed demo qual leads
         function qlSeedDemo() {
-            if (localStorage.getItem('ql_demo_seeded')) return;
-
-            var names = ['Иванов Алексей', 'Петрова Мария', 'Сидоров Дмитрий', 'Козлова Анна', 'Новиков Сергей',
-                         'Федорова Елена', 'Морозов Андрей', 'Волкова Ольга', 'Кузнецов Игорь', 'Соколова Татьяна'];
-            var phones = ['+7 495 123-45-67', '+7 495 234-56-78', '+7 495 345-67-89', '+7 495 456-78-90', '+7 495 567-89-01',
-                          '+7 812 111-22-33', '+7 812 222-33-44', '+7 812 333-44-55', '+7 812 444-55-66', '+7 812 555-66-77'];
-            var emails = ['ivanov@mail.ru', '', 'sidorov@gmail.com', 'kozlova@yandex.ru', '', 'fedorova@inbox.ru', '', 'volkova@bk.ru', 'kuznetsov@mail.ru', ''];
-            var cities = ['Москва', 'Москва', 'Москва', 'Санкт-Петербург', 'Москва', 'Казань', 'Москва', 'Новосибирск', 'Санкт-Петербург', 'Екатеринбург'];
-            var statuses = ['new', 'new', 'new', 'downloaded', 'new', 'transferred', 'new', 'new', 'downloaded', 'new'];
-
-            var launchName1 = 'Пилотный обзвон IT';
-            var launchName2 = 'Автосервисы обзвон';
-            var dialogName1 = (typeof dialogs !== 'undefined' && dialogs.length > 0) ? dialogs[0].name : 'Продажа услуг';
-            var dialogName2 = (typeof dialogs !== 'undefined' && dialogs.length > 1) ? dialogs[1].name : 'Консультация';
-            var dialogId1 = (typeof dialogs !== 'undefined' && dialogs.length > 0) ? dialogs[0].id : 'dlg_1';
-            var dialogId2 = (typeof dialogs !== 'undefined' && dialogs.length > 1) ? dialogs[1].id : 'dlg_2';
-
-            for (var i = 0; i < 10; i++) {
-                var daysAgo = Math.floor(Math.random() * 5);
-                var d = new Date();
-                d.setDate(d.getDate() - daysAgo);
-                d.setHours(9 + Math.floor(Math.random() * 9), Math.floor(Math.random() * 60));
-
-                var isFirst = i < 6;
-                qlLeads.push({
-                    id: 'ql_demo_' + i,
-                    name: names[i],
-                    phone: phones[i],
-                    email: emails[i],
-                    city: cities[i],
-                    launchId: isFirst ? 'launch_demo1' : 'launch_demo2',
-                    launchName: isFirst ? launchName1 : launchName2,
-                    dialogId: isFirst ? dialogId1 : dialogId2,
-                    dialogName: isFirst ? dialogName1 : dialogName2,
-                    audienceId: isFirst ? 'ta_demo1' : 'ta_demo2',
-                    audienceName: isFirst ? 'IT-компании малого бизнеса' : 'Автосервисы Москва',
-                    status: statuses[i],
-                    createdAt: d.toISOString()
-                });
-            }
-            // Sort by date descending
-            qlLeads.sort(function(a, b) { return new Date(b.createdAt) - new Date(a.createdAt); });
-            qlPersist();
-            localStorage.setItem('ql_demo_seeded', '1');
+            // Demo data disabled — real data will come from API
+            return;
         }
 
         // ===== EXTENDED STATS DEMO DATA =====
         function seedStatsDemo() {
-            if (localStorage.getItem('stats_demo_seeded')) return;
-
-            // Extra dialogs (use existing if available)
-            var demoDialogs = [
-                { id: 'dlg_demo1', name: 'Продажа CRM-систем' },
-                { id: 'dlg_demo2', name: 'Консультация по автоматизации' },
-                { id: 'dlg_demo3', name: 'Холодные продажи B2B' },
-                { id: 'dlg_demo4', name: 'Запись на аудит' }
-            ];
-            if (typeof dialogs !== 'undefined' && dialogs.length > 0) {
-                demoDialogs[0] = { id: dialogs[0].id, name: dialogs[0].name };
-                if (dialogs.length > 1) demoDialogs[1] = { id: dialogs[1].id, name: dialogs[1].name };
-            }
-
-            // Extra audiences
-            var demoAudiences = [
-                { id: 'ta_demo1', name: 'IT-компании малого бизнеса' },
-                { id: 'ta_demo2', name: 'Автосервисы Москва' },
-                { id: 'ta_demo3', name: 'Стоматологии СПб' },
-                { id: 'ta_demo4', name: 'Рестораны и кафе' }
-            ];
-            // Add missing audiences
-            ['ta_demo3', 'ta_demo4'].forEach(function(aid, idx) {
-                if (!taAudiences.find(function(a) { return a.id === aid; })) {
-                    var d = new Date(); d.setDate(d.getDate() - 10 - idx * 5);
-                    var info = idx === 0
-                        ? { name: 'Стоматологии СПб', niche: 'Медицина', client: 'Владелец клиники, 35-55 лет', sites: 'dentist1.ru\ndentist2.ru\ndentist3.ru\ndentist4.ru\ndentist5.ru' }
-                        : { name: 'Рестораны и кафе', niche: 'HoReCa', client: 'Управляющий заведением, 28-45 лет', sites: 'rest1.ru\nrest2.ru\ncafe1.ru\ncafe2.ru\ncafe3.ru' };
-                    taAudiences.push({
-                        id: aid, name: info.name, niche: info.niche, client: info.client, sites: info.sites,
-                        created: d.toISOString(), updated: d.toISOString(),
-                        genStatus: 'done', genCount: 18 + idx * 5, lastGenDate: d.toISOString(), lastGenCount: 18 + idx * 5
-                    });
-                }
-            });
-            taPersist();
-
-            // Extra launches
-            var demoLaunches = [
-                { id: 'launch_demo1', name: 'Пилотный обзвон IT',       dialogIdx: 0, audienceIdx: 0, called: 48, leads: 6,  status: 'idle' },
-                { id: 'launch_demo2', name: 'Автосервисы обзвон',       dialogIdx: 1, audienceIdx: 1, called: 32, leads: 4,  status: 'active' },
-                { id: 'launch_demo3', name: 'Стоматологии холодные',    dialogIdx: 2, audienceIdx: 2, called: 55, leads: 8,  status: 'active' },
-                { id: 'launch_demo4', name: 'Рестораны B2B',            dialogIdx: 3, audienceIdx: 3, called: 22, leads: 3,  status: 'idle' },
-                { id: 'launch_demo5', name: 'IT повторный обзвон',      dialogIdx: 0, audienceIdx: 0, called: 38, leads: 5,  status: 'paused' },
-                { id: 'launch_demo6', name: 'Стомат повторный',         dialogIdx: 2, audienceIdx: 2, called: 28, leads: 4,  status: 'active' }
-            ];
-            demoLaunches.forEach(function(dl) {
-                if (!clLaunches.find(function(l) { return l.id === dl.id; })) {
-                    var d = new Date(); d.setDate(d.getDate() - 25 + demoLaunches.indexOf(dl) * 4);
-                    clLaunches.push({
-                        id: dl.id, name: dl.name,
-                        dialogId: demoDialogs[dl.dialogIdx].id,
-                        audienceId: demoAudiences[dl.audienceIdx].id,
-                        callListId: '', goalLeads: 1, timeFrom: '09:00', timeTo: '18:00',
-                        days: [1,2,3,4,5], status: dl.status,
-                        called: dl.called, leads: dl.leads, missed: Math.floor(dl.called * 0.15),
-                        processedIdx: dl.called, created: d.toISOString(), updated: clNow()
-                    });
-                }
-            });
-            clPersist();
-
-            // Rich qual leads — 30 leads spread over 30 days
-            var demoNames = [
-                'Громов Павел', 'Белова Ксения', 'Жуков Тимур', 'Орлова Дарья', 'Калинин Роман',
-                'Ершова Виктория', 'Тихонов Максим', 'Зайцева Полина', 'Щербаков Денис', 'Миронова Юлия',
-                'Панов Артём', 'Крылова Светлана', 'Богданов Олег', 'Суворова Ирина', 'Шестаков Никита',
-                'Фролова Алина', 'Гусев Кирилл', 'Данилова Вера', 'Чернов Руслан', 'Макарова Екатерина',
-                'Баранов Илья', 'Логинова Анастасия', 'Степанов Григорий', 'Комарова Марина', 'Рыбаков Владислав',
-                'Голубева Лидия', 'Корнеев Антон', 'Воронова Жанна', 'Трофимов Евгений', 'Абрамова Диана'
-            ];
-            var demoCities = ['Москва', 'Санкт-Петербург', 'Казань', 'Новосибирск', 'Екатеринбург', 'Краснодар', 'Нижний Новгород', 'Самара'];
-            var demoStatuses = ['new', 'new', 'new', 'downloaded', 'downloaded', 'transferred', 'new', 'new'];
-            var launchDistrib = [0, 0, 1, 2, 2, 2, 3, 4, 4, 5]; // indices into demoLaunches
-
-            for (var i = 0; i < 30; i++) {
-                var leadId = 'ql_stats_' + i;
-                if (qlLeads.find(function(l) { return l.id === leadId; })) continue;
-
-                var daysAgo = Math.floor(Math.random() * 30);
-                var d = new Date();
-                d.setDate(d.getDate() - daysAgo);
-                d.setHours(9 + Math.floor(Math.random() * 9), Math.floor(Math.random() * 60), Math.floor(Math.random() * 60));
-
-                var li = launchDistrib[i % launchDistrib.length];
-                var dl = demoLaunches[li];
-                var phoneCode = 900 + Math.floor(Math.random() * 99);
-                var phoneNum = String(1000000 + Math.floor(Math.random() * 8999999));
-
-                qlLeads.push({
-                    id: leadId,
-                    name: demoNames[i],
-                    phone: '+7 ' + phoneCode + ' ' + phoneNum.substring(0, 3) + '-' + phoneNum.substring(3, 5) + '-' + phoneNum.substring(5),
-                    email: i % 3 === 0 ? '' : demoNames[i].split(' ')[0].toLowerCase() + '@mail.ru',
-                    city: demoCities[Math.floor(Math.random() * demoCities.length)],
-                    launchId: dl.id,
-                    launchName: dl.name,
-                    dialogId: demoDialogs[dl.dialogIdx].id,
-                    dialogName: demoDialogs[dl.dialogIdx].name,
-                    audienceId: demoAudiences[dl.audienceIdx].id,
-                    audienceName: demoAudiences[dl.audienceIdx].name,
-                    status: demoStatuses[Math.floor(Math.random() * demoStatuses.length)],
-                    createdAt: d.toISOString()
-                });
-            }
-
-            qlLeads.sort(function(a, b) { return new Date(b.createdAt) - new Date(a.createdAt); });
-            qlPersist();
-            localStorage.setItem('stats_demo_seeded', '1');
+            // Demo data disabled — real data will come from API
+            return;
         }
 
         // Init
