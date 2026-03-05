@@ -7584,7 +7584,7 @@
         }
 
         function clStatusLabel(s) {
-            var m = { idle:'Не запущен', active:'Активен', paused:'Приостановлен', stopped:'Остановлен', done:'Завершён' };
+            var m = { idle:'Не запущен', draft:'Черновик', active:'Активен', paused:'Приостановлен', pending_contacts:'Подготовка', calling:'Активен', stopped:'Остановлен', done:'Завершён' };
             return m[s] || s;
         }
 
@@ -7611,24 +7611,23 @@
             }
 
             var btns = '';
-            if (l.status === 'idle' || l.status === 'stopped') {
-                btns = '<button class="cl-btn cl-btn-start" onclick="clStartLaunch(\'' + l.id + '\')">&#9654; Запустить</button>';
-            } else if (l.status === 'active') {
-                btns = '<button class="cl-btn cl-btn-pause" onclick="clPauseLaunch(\'' + l.id + '\')">&#9208; Пауза</button>' +
-                       '<button class="cl-btn cl-btn-stop" onclick="clStopLaunch(\'' + l.id + '\')">&#9209; Стоп</button>';
+            if (l.status === 'draft' || l.status === 'idle' || l.status === 'stopped') {
+                btns = '<button class="cl-btn cl-btn-start" onclick="clLaunchDraft(\'' + l.id + '\')" style="background:#27ae60;color:#fff;">&#9654; Запустить</button>';
+            } else if (l.status === 'active' || l.status === 'calling') {
+                btns = '<button class="cl-btn cl-btn-pause" onclick="clPauseLaunch(\'' + l.id + '\')" style="background:#f39c12;color:#fff;">&#9208; Пауза</button>';
             } else if (l.status === 'paused') {
-                btns = '<button class="cl-btn cl-btn-start" onclick="clResumeLaunch(\'' + l.id + '\')">&#9654; Продолжить</button>' +
-                       '<button class="cl-btn cl-btn-stop" onclick="clStopLaunch(\'' + l.id + '\')">&#9209; Стоп</button>';
+                btns = '<button class="cl-btn cl-btn-start" onclick="clResumeLaunch(\'' + l.id + '\')" style="background:#27ae60;color:#fff;">&#9654; Возобновить</button>';
             }
-            if (l.status !== 'active') {
-                btns += '<button class="cl-btn cl-btn-edit" onclick="clEditLaunch(\'' + l.id + '\')">&#9998; Изменить</button>';
-            }
+            btns += '<button class="cl-btn cl-btn-edit" onclick="clEditLaunch(\'' + l.id + '\')">&#9998; Изменить</button>';
             btns += '<button class="cl-btn cl-btn-delete" onclick="clDeleteLaunch(\'' + l.id + '\')">Удалить</button>';
+
+            var statusHtml = (l.status !== 'draft' && l.status !== 'idle') ?
+                '<div class="cl-status cl-status-' + l.status + '"><span class="cl-status-dot"></span>' + clStatusLabel(l.status) + '</div>' : '';
 
             return '<div class="cl-card">' +
                 '<div class="cl-card-header">' +
                     '<div><div class="cl-card-title">' + clEsc(l.name) + '</div><div class="cl-card-subtitle">Диалог: ' + clEsc(dialogName) + '</div></div>' +
-                    '<div class="cl-status cl-status-' + l.status + '"><span class="cl-status-dot"></span>' + clStatusLabel(l.status) + '</div>' +
+                    statusHtml +
                 '</div>' +
                 '<div class="cl-stats">' +
                     '<div class="cl-stat"><div class="cl-stat-num">' + totalContacts + '</div><div class="cl-stat-label">Всего</div></div>' +
@@ -7874,6 +7873,23 @@
             }
         }
 
+        function clLaunchDraft(id) {
+            var l = clLaunches.find(function(x) { return x.id === id; });
+            if (!l) return;
+            if (esHasToken() && l.serverId) {
+                fetch(ES_API + '/api/campaigns/' + l.serverId + '/launch', {
+                    method: 'POST', headers: esApiHeaders()
+                }).then(function(r) { return r.json(); })
+                .then(function(data) {
+                    if (data.error) { clToast(data.error); return; }
+                    clToast('Обзвон запущен!');
+                    clLoadFromAPI();
+                }).catch(function() { clToast('Ошибка запуска'); });
+            } else {
+                clStartLaunch(id);
+            }
+        }
+
         function clPauseLaunch(id) {
             var l = clLaunches.find(function(x) { return x.id === id; });
             if (!l) return;
@@ -7882,10 +7898,8 @@
                     method: 'POST', headers: esApiHeaders()
                 }).then(function(r) { if (!r.ok) throw r; return r.json(); })
                 .then(function() {
-                    l.status = 'paused'; l.updated = clNow();
-                    if (clSimTimers[id]) { clearInterval(clSimTimers[id]); delete clSimTimers[id]; }
-                    clPersist(); clRenderLaunches();
                     clToast('Обзвон приостановлен');
+                    clLoadFromAPI();
                 }).catch(function() { clToast('Ошибка паузы обзвона'); });
             } else {
                 l.status = 'paused'; l.updated = clNow();
@@ -7912,8 +7926,7 @@
                     method: 'POST', headers: esApiHeaders()
                 }).then(function(r) { if (!r.ok) throw r; return r.json(); })
                 .then(function() {
-                    l.status = 'active'; l.updated = clNow();
-                    clPersist(); clRenderLaunches();
+                    clLoadFromAPI();
                     clToast('Обзвон возобновлён');
                 }).catch(function() { clToast('Ошибка возобновления обзвона'); });
             } else {
