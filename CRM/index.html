@@ -2287,66 +2287,112 @@ let ppFilterRegion = 'all';
 let ppFilterDateFrom = '';
 let ppFilterDateTo = '';
 let ppSelectedIds = new Set();
+let ppApiContacts = [];
+let ppApiAudiences = [];
+
+function ppRerender() {
+    renderParsedPhones(document.getElementById('client-detail-content'), getClient(currentDetailClient));
+}
 
 function renderParsedPhones(el, client) {
-    const cId = client ? client.id : '';
-    let all = ppGetAllPhones(cId);
+    if (!client) { el.innerHTML = '<div class="empty-state"><p>Клиент не найден</p></div>'; return; }
+    const cId = client.id;
 
-    // Collect unique sources & regions for filters
-    const allSources = new Set();
-    const allRegions = new Set();
-    all.forEach(p => {
-        p.sources.forEach(s => allSources.add(s));
-        allRegions.add(p.region);
-    });
+    // Load audiences for filter dropdown (once)
+    if (ppApiAudiences.length === 0 && crmToken) {
+        fetch(API_BASE + '/api/admin/clients/' + cId + '/campaigns', { headers: apiHeaders() })
+            .then(r => r.ok ? r.json() : [])
+            .then(camps => {
+                const seen = new Set();
+                camps.forEach(c => { if (c.audience_name && !seen.has(c.audience_name)) { seen.add(c.audience_name); ppApiAudiences.push({ id: c.audience_id, name: c.audience_name }); }});
+            }).catch(() => {});
+    }
 
-    // Apply filters
-    if (ppFilterSource !== 'all') all = all.filter(p => p.sources.includes(ppFilterSource));
-    if (ppFilterRegion !== 'all') all = all.filter(p => p.region === ppFilterRegion);
-    if (ppFilterDateFrom) all = all.filter(p => p.created >= ppFilterDateFrom);
-    if (ppFilterDateTo) all = all.filter(p => p.created <= ppFilterDateTo + 'T23:59:59');
+    // Build query params for API
+    let url = API_BASE + '/api/admin/clients/' + cId + '/contacts?';
+    if (ppFilterSource !== 'all') url += 'audience_id=' + encodeURIComponent(ppFilterSource) + '&';
+    if (ppFilterDateFrom) url += 'from=' + encodeURIComponent(ppFilterDateFrom) + '&';
+    if (ppFilterDateTo) url += 'to=' + encodeURIComponent(ppFilterDateTo) + '&';
 
-    // Sort by date desc
-    all.sort((a, b) => new Date(b.created) - new Date(a.created));
+    el.innerHTML = '<div style="text-align:center;padding:40px;color:var(--text-muted);font-size:.85rem;">Загрузка...</div>';
 
-    const sourcesOpts = [...allSources].sort().map(s => `<option value="${esc(s)}" ${ppFilterSource===s?'selected':''}>${esc(s)}</option>`).join('');
-    const regionsOpts = [...allRegions].sort().map(r => `<option value="${esc(r)}" ${ppFilterRegion===r?'selected':''}>${esc(r)}</option>`).join('');
+    fetch(url, { headers: apiHeaders() })
+        .then(r => { if (!r.ok) throw r; return r.json(); })
+        .then(contacts => {
+            ppApiContacts = contacts;
 
-    el.innerHTML = `
-        <div class="pp-filters">
-            <select onchange="ppFilterSource=this.value;renderParsedPhones(document.getElementById('client-detail-content'),getClient(currentDetailClient))">
-                <option value="all">Все источники</option>${sourcesOpts}
-            </select>
-            <select onchange="ppFilterRegion=this.value;renderParsedPhones(document.getElementById('client-detail-content'),getClient(currentDetailClient))">
-                <option value="all">Все регионы</option>${regionsOpts}
-            </select>
-            <input type="date" value="${ppFilterDateFrom}" onchange="ppFilterDateFrom=this.value;renderParsedPhones(document.getElementById('client-detail-content'),getClient(currentDetailClient))" title="Дата от">
-            <input type="date" value="${ppFilterDateTo}" onchange="ppFilterDateTo=this.value;renderParsedPhones(document.getElementById('client-detail-content'),getClient(currentDetailClient))" title="Дата до">
-        </div>
-        <div class="pp-actions">
-            <button class="btn btn-sm" onclick="ppSelectAll()"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="9 11 12 14 22 4"/><path d="M21 12v7a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h11"/></svg> Выбрать все</button>
-            <button class="btn btn-sm" onclick="ppExportSelected()"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="7 10 12 15 17 10"/><line x1="12" y1="15" x2="12" y2="3"/></svg> Экспорт</button>
-            <button class="btn btn-sm" onclick="ppSendToTelemarketing()"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M22 16.92v3a2 2 0 0 1-2.18 2 19.79 19.79 0 0 1-8.63-3.07 19.5 19.5 0 0 1-6-6 19.79 19.79 0 0 1-3.07-8.67A2 2 0 0 1 4.11 2h3a2 2 0 0 1 2 1.72c.127.96.361 1.903.7 2.81a2 2 0 0 1-.45 2.11L8.09 9.91a16 16 0 0 0 6 6l1.27-1.27a2 2 0 0 1 2.11-.45c.907.339 1.85.573 2.81.7A2 2 0 0 1 22 16.92z"/></svg> В телемаркетинг</button>
-            <button class="btn btn-sm" onclick="ppSendToAiProcess()" style="background:linear-gradient(135deg,#6c5ce7,#a855f7);color:#fff;"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><path d="M12 6v6l4 2"/></svg> В AI Процессы</button>
-            <button class="btn btn-sm btn-danger" onclick="ppDeleteSelected()"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="3 6 5 6 21 6"/><path d="M19 6l-2 14H7L5 6"/><path d="M10 11v6"/><path d="M14 11v6"/></svg> Удалить</button>
-        </div>
-        <div style="font-size:.8rem;color:var(--text-muted);margin-bottom:8px;">Всего: ${all.length} номеров</div>
-        <div class="pp-scroll">
-            <table>
-                <thead><tr><th style="width:30px;"><input type="checkbox" class="pp-check" onchange="ppToggleAll(this.checked)"></th><th>Телефон</th><th>Контакт</th><th>Регион</th><th>Источник</th><th>Дата</th></tr></thead>
-                <tbody>${all.length === 0 ? '<tr><td colspan="6" style="text-align:center;color:var(--text-muted);padding:30px;">Нет спарсенных номеров</td></tr>' :
-                    all.map(p => `<tr>
-                        <td><input type="checkbox" class="pp-check" data-phone="${esc(p.phoneClean)}" ${ppSelectedIds.has(p.phoneClean)?'checked':''} onchange="ppTogglePhone('${esc(p.phoneClean)}',this.checked)"></td>
-                        <td style="font-family:'JetBrains Mono',monospace;font-size:.85rem;">${esc(p.phone)}</td>
-                        <td>${p.contactName ? '<strong style="font-size:.85rem;">'+esc(p.contactName)+'</strong>' : '<span style="color:var(--text-muted);font-size:.8rem;">—</span>'}</td>
-                        <td><span class="pp-region">${esc(p.region)}</span></td>
-                        <td>${p.sources.map(s => '<span class="pp-source" title="'+esc(s)+'">'+esc(s)+'</span>').join(' ')}</td>
-                        <td>${formatDate(p.created)}</td>
-                    </tr>`).join('')}
-                </tbody>
-            </table>
-        </div>
-    `;
+            // Detect regions client-side from phone
+            contacts.forEach(c => { c._region = ppDetectRegion(c.phone); });
+
+            // Collect unique regions
+            const allRegions = new Set();
+            contacts.forEach(c => allRegions.add(c._region));
+
+            // Apply region filter client-side
+            let filtered = contacts;
+            if (ppFilterRegion !== 'all') filtered = filtered.filter(c => c._region === ppFilterRegion);
+
+            // Audience filter options
+            const audienceOpts = ppApiAudiences.map(a => `<option value="${a.id}" ${ppFilterSource==a.id?'selected':''}>${esc(a.name)}</option>`).join('');
+            const regionsOpts = [...allRegions].sort().map(r => `<option value="${esc(r)}" ${ppFilterRegion===r?'selected':''}>${esc(r)}</option>`).join('');
+
+            const hasSelected = ppSelectedIds.size > 0;
+
+            el.innerHTML = `
+                <div class="pp-filters">
+                    <select onchange="ppFilterSource=this.value;ppRerender()">
+                        <option value="all">Все источники</option>${audienceOpts}
+                    </select>
+                    <select onchange="ppFilterRegion=this.value;ppRerender()">
+                        <option value="all">Все регионы</option>${regionsOpts}
+                    </select>
+                    <input type="date" value="${ppFilterDateFrom}" onchange="ppFilterDateFrom=this.value;ppRerender()" title="Дата от">
+                    <input type="date" value="${ppFilterDateTo}" onchange="ppFilterDateTo=this.value;ppRerender()" title="Дата до">
+                </div>
+                <div class="pp-actions">
+                    <button class="btn btn-sm" onclick="ppSelectAllAPI()"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="9 11 12 14 22 4"/><path d="M21 12v7a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h11"/></svg> Выбрать все</button>
+                    <button class="btn btn-sm" onclick="ppExportSelected()"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="7 10 12 15 17 10"/><line x1="12" y1="15" x2="12" y2="3"/></svg> Экспорт</button>
+                    <button class="btn btn-sm ${hasSelected?'':'disabled'}" ${hasSelected?'':'disabled'} onclick="ppSendToAiProcessAPI()" style="background:linear-gradient(135deg,#6c5ce7,#a855f7);color:#fff;${hasSelected?'':'opacity:0.5;cursor:not-allowed;'}"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><path d="M12 6v6l4 2"/></svg> В AI Процессы</button>
+                </div>
+                <div style="font-size:.8rem;color:var(--text-muted);margin-bottom:8px;">Всего: ${filtered.length} номеров${ppSelectedIds.size > 0 ? ', выбрано: ' + ppSelectedIds.size : ''}</div>
+                <div class="pp-scroll">
+                    <table>
+                        <thead><tr><th style="width:30px;"><input type="checkbox" class="pp-check" onchange="ppToggleAllAPI(this.checked)"></th><th>Телефон</th><th>Контакт</th><th>Регион</th><th>Источник</th><th>Дата</th></tr></thead>
+                        <tbody>${filtered.length === 0 ? '<tr><td colspan="6" style="text-align:center;color:var(--text-muted);padding:30px;">Нет спарсенных номеров</td></tr>' :
+                            filtered.map(c => `<tr>
+                                <td><input type="checkbox" class="pp-check" data-id="${c.id}" ${ppSelectedIds.has(c.id)?'checked':''} onchange="ppToggleId(${c.id},this.checked)"></td>
+                                <td style="font-family:'JetBrains Mono',monospace;font-size:.85rem;">${esc(c.phone || '')}</td>
+                                <td>${c.name ? '<strong style="font-size:.85rem;">'+esc(c.name)+'</strong>' : '<span style="color:var(--text-muted);font-size:.8rem;">—</span>'}</td>
+                                <td><span class="pp-region">${esc(c._region)}</span></td>
+                                <td>${c.audience_name ? '<span class="pp-source" title="'+esc(c.audience_name)+'">'+esc(c.audience_name)+'</span>' : '<span style="color:var(--text-muted);font-size:.8rem;">—</span>'}</td>
+                                <td>${formatDate(c.created_at)}</td>
+                            </tr>`).join('')}
+                        </tbody>
+                    </table>
+                </div>
+            `;
+        })
+        .catch(() => {
+            el.innerHTML = '<div class="empty-state"><p>Ошибка загрузки контактов</p></div>';
+        });
+}
+
+function ppToggleId(id, checked) {
+    if (checked) ppSelectedIds.add(id);
+    else ppSelectedIds.delete(id);
+    ppRerender();
+}
+
+function ppToggleAllAPI(checked) {
+    ppSelectedIds.clear();
+    if (checked) ppApiContacts.forEach(c => ppSelectedIds.add(c.id));
+    ppRerender();
+}
+
+function ppSelectAllAPI() {
+    ppApiContacts.forEach(c => ppSelectedIds.add(c.id));
+    ppRerender();
+    toast('Выбрано ' + ppSelectedIds.size + ' номеров');
 }
 
 function ppTogglePhone(phoneClean, checked) {
@@ -2455,6 +2501,24 @@ function ppSendToAiProcess() {
     persist();
     ppSelectedIds.clear();
     toast(added > 0 ? 'Добавлено ' + added + ' номеров в AI Процессы' : 'Все номера уже в AI Процессах');
+}
+
+function ppSendToAiProcessAPI() {
+    if (ppSelectedIds.size === 0) { toast('Выберите номера'); return; }
+    const c = getClient(currentDetailClient);
+    if (!c) return;
+    const ids = [...ppSelectedIds];
+    fetch(API_BASE + '/api/admin/clients/' + c.id + '/send-to-sasha', {
+        method: 'POST', headers: apiHeaders(),
+        body: JSON.stringify({ contact_ids: ids })
+    })
+    .then(r => { if (!r.ok) throw r; return r.json(); })
+    .then(data => {
+        toast('Отправлено ' + data.updated + ' контактов в AI Процессы');
+        ppSelectedIds.clear();
+        ppRerender();
+    })
+    .catch(() => { toast('Ошибка отправки в AI Процессы'); });
 }
 
 // ===== AI Processes =====
