@@ -1823,6 +1823,10 @@
         .cl-status-stopped { background:rgba(231,76,60,0.12); color:#e74c3c; }
         .cl-status-done .cl-status-dot { background:#6c5ce7; }
         .cl-status-done { background:rgba(108,92,231,0.12); color:#6c5ce7; }
+        .cl-status-calling .cl-status-dot { background:#00b894; animation:clPulse 1.5s infinite; }
+        .cl-status-calling { background:rgba(0,184,148,0.12); color:#00b894; }
+        .cl-status-pending_contacts .cl-status-dot { background:#74b9ff; animation:clPulse 1.5s infinite; }
+        .cl-status-pending_contacts { background:rgba(116,185,255,0.12); color:#74b9ff; }
         @keyframes clPulse { 0%,100%{opacity:1} 50%{opacity:.4} }
 
         /* Stats row */
@@ -8008,7 +8012,7 @@
                         audienceName: c.audience_name || '', skillbaseName: c.skillbase_name || '',
                         callListId: '', goalLeads: c.leads_per_day || 50,
                         timeFrom: c.work_hours_start || '09:00', timeTo: c.work_hours_end || '18:00',
-                        days: days, status: c.status === 'calling' ? 'active' : c.status === 'paused' ? 'paused' : (c.status || 'idle'),
+                        days: days, status: c.status || 'draft',
                         called: 0, leads: 0, missed: 0, processedIdx: 0,
                         created: c.created_at || '', updated: c.created_at || ''
                     };
