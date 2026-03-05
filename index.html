@@ -2893,7 +2893,7 @@
             <!-- PAGE: Главное -->
             <div class="page-section active" id="pageMain">
                 <!-- State 1: Onboarding -->
-                <div id="onbState1" style="display:none;">
+                <div id="onbState1">
                     <div style="max-width:900px;margin:0 auto;padding:20px 0;">
                         <h1 style="font-size:1.6rem;font-weight:700;margin-bottom:4px;">&#128640; 3 шага до первых лидов</h1>
                         <p style="color:var(--text-secondary);font-size:.92rem;margin-bottom:28px;">Следуйте инструкции и получите первые квалифицированные лиды</p>
@@ -5579,51 +5579,43 @@
         function onbCheckSteps() {
             if (!esHasToken()) return;
 
-            // State 3: has qualified leads → go to Stats
-            fetch(ES_API + '/api/leads', { headers: esApiHeaders() })
-                .then(function(r) { return r.ok ? r.json() : []; })
-                .then(function(leads) {
-                    var qualCount = Array.isArray(leads) ? leads.length : 0;
-                    if (qualCount > 0) {
-                        // State 3: redirect to Stats
-                        document.getElementById('onbState1').style.display = 'none';
-                        document.getElementById('onbState2').style.display = 'none';
-                        var link = document.querySelector('.sidebar-nav a[data-page="pageStats"]');
-                        if (link) setActive(link);
-                        return;
-                    }
+            // If onboarding complete — show state 2 immediately
+            if (localStorage.getItem('onboarding_complete') === 'true') {
+                document.getElementById('onbState1').style.display = 'none';
+                document.getElementById('onbState2').style.display = 'block';
+            }
 
-                    // State 2: onboarding complete but no leads
-                    if (localStorage.getItem('onboarding_complete') === 'true') {
-                        document.getElementById('onbState1').style.display = 'none';
-                        document.getElementById('onbState2').style.display = 'block';
-                        onbLoadMetrics();
-                        return;
-                    }
-
-                    // State 1: onboarding
-                    document.getElementById('onbState1').style.display = 'block';
-                    document.getElementById('onbState2').style.display = 'none';
-                    onbCheckStepsDetail();
-                }).catch(function() {
-                    // Fallback to state 1
-                    document.getElementById('onbState1').style.display = 'block';
-                    document.getElementById('onbState2').style.display = 'none';
-                    onbCheckStepsDetail();
-                });
-        }
-
-        function onbCheckStepsDetail() {
-            onbStepsDone = [false, false, false];
-
+            // All 4 requests in parallel: leads + 3 step checks
             Promise.all([
+                fetch(ES_API + '/api/leads', { headers: esApiHeaders() }).then(function(r) { return r.ok ? r.json() : []; }).catch(function() { return []; }),
                 fetch(ES_API + '/api/skillbases', { headers: esApiHeaders() }).then(function(r) { return r.ok ? r.json() : []; }).catch(function() { return []; }),
                 fetch(ES_API + '/api/audiences', { headers: esApiHeaders() }).then(function(r) { return r.ok ? r.json() : []; }).catch(function() { return []; }),
                 fetch(ES_API + '/api/campaigns', { headers: esApiHeaders() }).then(function(r) { return r.ok ? r.json() : []; }).catch(function() { return []; })
             ]).then(function(results) {
-                onbStepsDone[0] = Array.isArray(results[0]) && results[0].length > 0;
-                onbStepsDone[1] = Array.isArray(results[1]) && results[1].length > 0;
-                onbStepsDone[2] = Array.isArray(results[2]) && results[2].length > 0;
+                var leads = results[0];
+                var qualCount = Array.isArray(leads) ? leads.length : 0;
+
+                // State 3: has leads → redirect to Stats
+                if (qualCount > 0) {
+                    document.getElementById('onbState1').style.display = 'none';
+                    document.getElementById('onbState2').style.display = 'none';
+                    var link = document.querySelector('.sidebar-nav a[data-page="pageStats"]');
+                    if (link) setActive(link);
+                    return;
+                }
+
+                // State 2: onboarding complete but no leads
+                if (localStorage.getItem('onboarding_complete') === 'true') {
+                    document.getElementById('onbState1').style.display = 'none';
+                    document.getElementById('onbState2').style.display = 'block';
+                    onbLoadMetrics();
+                    return;
+                }
+
+                // State 1: update step checkmarks
+                onbStepsDone[0] = Array.isArray(results[1]) && results[1].length > 0;
+                onbStepsDone[1] = Array.isArray(results[2]) && results[2].length > 0;
+                onbStepsDone[2] = Array.isArray(results[3]) && results[3].length > 0;
                 onbUpdateStep(1, onbStepsDone[0]);
                 onbUpdateStep(2, onbStepsDone[1]);
                 onbUpdateStep(3, onbStepsDone[2]);
