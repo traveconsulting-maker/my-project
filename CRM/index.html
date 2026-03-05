@@ -1484,6 +1484,7 @@
                 <div class="tab" onclick="switchClientTab('calls',this)">Звонки</div>
                 <div class="tab" onclick="switchClientTab('tasks',this)">Задачи</div>
                 <div class="tab" onclick="switchClientTab('tickets',this)">Тикеты</div>
+                <div class="tab" onclick="switchClientTab('launches',this)">Запуски</div>
                 <div class="tab" onclick="switchClientTab('messages',this)">Сообщения</div>
                 <div class="tab" onclick="switchClientTab('history',this)">История</div>
             </div>
@@ -2879,6 +2880,8 @@ function renderClientDetail() {
                 cTickets.map(t => `<tr class="clickable-row" onclick="closeModal(\'client-detail-modal\');openTicketDetail(\'${t.id}\')"><td>${esc(t.subject)}</td><td>${priorityTag(t.priority)}</td><td>${ticketStatusTag(t.status)}</td><td>${formatDate(t.created)}</td></tr>`).join('') +
                 '</tbody></table>';
         }
+    } else if (currentDetailTab === 'launches') {
+        renderLaunches(el, c);
     } else if (currentDetailTab === 'history') {
         const cActs = activities.filter(a => a.clientId === c.id);
         if (cActs.length === 0) {
@@ -2892,6 +2895,47 @@ function renderClientDetail() {
             `).join('') + '</div>';
         }
     }
+}
+
+function launchStatusBadge(status) {
+    const map = {
+        draft: '<span class="tag" style="background:#6b7280;color:#fff;">Черновик</span>',
+        pending_contacts: '<span class="tag" style="background:#f59e0b;color:#fff;">Ждём контакты</span>',
+        calling: '<span class="tag" style="background:#3b82f6;color:#fff;">Идут звонки</span>',
+        done: '<span class="tag" style="background:#10b981;color:#fff;">Завершён</span>',
+        paused: '<span class="tag" style="background:#f97316;color:#fff;">На паузе</span>'
+    };
+    return map[status] || `<span class="tag">${esc(status)}</span>`;
+}
+
+function renderLaunches(el, client) {
+    el.innerHTML = '<div style="text-align:center;padding:40px;color:var(--text-muted);font-size:.85rem;">Загрузка...</div>';
+    fetch(API_BASE + '/api/admin/clients/' + client.id + '/campaigns', { headers: apiHeaders() })
+        .then(r => { if (!r.ok) throw r; return r.json(); })
+        .then(campaigns => {
+            if (campaigns.length === 0) {
+                el.innerHTML = '<div class="empty-state"><p>Нет запусков</p></div>';
+                return;
+            }
+            el.innerHTML = '<div style="overflow-x:auto;"><table><thead><tr>' +
+                '<th>Название</th><th>Целевая аудитория</th><th>Диалог</th><th>Лидов/день</th>' +
+                '<th>Контактов нужно</th><th>Статус</th><th>Создан</th><th>Квал. лидов</th>' +
+                '</tr></thead><tbody>' +
+                campaigns.map(c => `<tr>
+                    <td>${esc(c.name)}</td>
+                    <td>${esc(c.audience_name || '—')}</td>
+                    <td>${esc(c.skillbase_name || '—')}</td>
+                    <td>${c.leads_per_day ?? '—'}</td>
+                    <td>${c.contacts_needed ?? '—'}</td>
+                    <td>${launchStatusBadge(c.status)}</td>
+                    <td>${formatDate(c.created_at)}</td>
+                    <td><strong>${c.qualified_leads}</strong></td>
+                </tr>`).join('') +
+                '</tbody></table></div>';
+        })
+        .catch(() => {
+            el.innerHTML = '<div class="empty-state"><p>Ошибка загрузки запусков</p></div>';
+        });
 }
 
 function deleteClient(id) {
