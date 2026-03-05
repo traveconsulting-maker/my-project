@@ -7595,9 +7595,23 @@
         function clDeleteLaunch(id) {
             if (!confirm('Удалить этот запуск?')) return;
             if (clSimTimers[id]) { clearInterval(clSimTimers[id]); delete clSimTimers[id]; }
-            clLaunches = clLaunches.filter(function(x) { return x.id !== id; });
-            clPersist(); clRenderLaunches();
-            clToast('Запуск удалён');
+            var l = clLaunches.find(function(x) { return x.id === id; });
+            if (l && l.serverId && esHasToken()) {
+                fetch(ES_API + '/api/campaigns/' + l.serverId, {
+                    method: 'DELETE', headers: esApiHeaders()
+                }).then(function(r) {
+                    if (r.ok) {
+                        clToast('Запуск удалён');
+                        clLoadFromAPI();
+                    } else {
+                        r.json().then(function(d) { clToast(d.error || 'Ошибка удаления'); }).catch(function() { clToast('Ошибка удаления'); });
+                    }
+                }).catch(function() { clToast('Ошибка сети'); });
+            } else {
+                clLaunches = clLaunches.filter(function(x) { return x.id !== id; });
+                clPersist(); clRenderLaunches();
+                clToast('Запуск удалён');
+            }
         }
 
         // Start / Pause / Stop / Resume
