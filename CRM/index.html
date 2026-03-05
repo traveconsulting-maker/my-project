@@ -116,35 +116,28 @@
         }
         .notif-dropdown {
             display:none;position:absolute;top:100%;right:0;
-            width:480px;max-height:480px;overflow-y:auto;
+            width:380px;max-height:480px;overflow-y:auto;
             background:var(--card-bg);border:1px solid var(--card-border);
             border-radius:12px;box-shadow:0 12px 32px rgba(0,0,0,0.2);
             z-index:9999;margin-top:8px;
         }
         .notif-dropdown.open { display:block; }
-        .notif-dropdown-title {
-            padding:14px 18px 10px;font-size:.88rem;font-weight:700;color:var(--text);
-            border-bottom:1px solid var(--card-border);
-        }
         .notif-item {
-            padding:14px 18px;border-bottom:1px solid var(--card-border);
-            font-size:.84rem;line-height:1.6;transition:background .15s;
-            display:flex;align-items:flex-start;gap:12px;
+            padding:12px 14px;border-bottom:1px solid var(--card-border);
+            transition:background .15s;display:flex;align-items:flex-start;gap:10px;
         }
         .notif-item:hover { background:var(--bg-secondary); }
         .notif-item:last-child { border-bottom:none; }
         .notif-item.unread { background:rgba(108,92,231,0.06); }
         .notif-item-body { flex:1;min-width:0; }
-        .notif-item-header { display:flex;justify-content:space-between;align-items:center;margin-bottom:4px; }
-        .notif-item-time { font-size:.72rem;color:var(--text-muted);white-space:nowrap;margin-left:12px; }
-        .notif-item-msg { color:var(--text-secondary);word-break:break-word; }
-        .notif-item-client { font-weight:700;color:var(--text);font-size:.82rem; }
-        .notif-read-btn {
-            font-size:.7rem;color:#6c5ce7;cursor:pointer;border:none;background:none;
-            padding:2px 8px;border-radius:4px;margin-top:6px;white-space:nowrap;flex-shrink:0;
+        .notif-item-meta { font-size:.7rem;color:var(--text-muted);margin-bottom:4px; }
+        .notif-item-msg { font-size:.82rem;color:var(--text-secondary);word-break:break-word;line-height:1.5; }
+        .notif-check-btn {
+            width:28px;height:28px;border-radius:6px;border:1px solid var(--card-border);
+            background:none;color:var(--text-muted);cursor:pointer;flex-shrink:0;
+            display:flex;align-items:center;justify-content:center;font-size:14px;margin-top:2px;
         }
-        .notif-read-btn:hover { background:rgba(108,92,231,0.1); }
-        .notif-read-btn:hover { background:rgba(108,92,231,0.1); }
+        .notif-check-btn:hover { background:rgba(108,92,231,0.1);color:#6c5ce7;border-color:#6c5ce7; }
         .notif-empty { padding:24px;text-align:center;color:var(--text-muted);font-size:.85rem; }
         .sidebar-section {
             padding:0 12px;
@@ -3283,6 +3276,7 @@ function renderTasksList() {
                     '</div>' +
                     '<div style="font-size:.78rem;color:var(--text-muted);margin-top:2px;">' +
                         (t.client_name ? '<strong>' + esc(t.client_name) + '</strong> · ' : '') + time +
+                        (t.due_date ? ' · Срок: ' + new Date(t.due_date).toLocaleDateString('ru-RU') : '') +
                     '</div>' +
                     descHtml +
                 '</div>' +
@@ -5301,22 +5295,20 @@ function notifToggle(e) {
 
 function notifRender() {
     var dd = document.getElementById('notifDropdown');
-    if (notifItems.length === 0) {
-        dd.innerHTML = '<div class="notif-empty" style="padding:24px;text-align:center;color:var(--text-muted);">Нет уведомлений</div>';
+    var unread = notifItems.filter(function(n) { return !n.read; });
+    if (unread.length === 0) {
+        dd.innerHTML = '<div style="padding:24px;text-align:center;color:var(--text-muted);font-size:.85rem;">Нет новых уведомлений</div>';
         return;
     }
-    dd.innerHTML = '<div class="notif-dropdown-title">Уведомления</div>' +
-    notifItems.map(function(n) {
+    dd.innerHTML = unread.map(function(n) {
         var time = n.created_at ? new Date(n.created_at).toLocaleString('ru-RU', { day:'2-digit', month:'2-digit', hour:'2-digit', minute:'2-digit' }) : '';
-        return '<div class="notif-item ' + (n.read ? '' : 'unread') + '" data-nid="' + n.id + '">' +
+        var typeLabel = n.type === 'new_campaign' ? 'Кампания' : n.type === 'campaign_launch' ? 'Запуск' : n.type === 'new_audience' ? 'ЦА' : (n.type || '');
+        return '<div class="notif-item unread" data-nid="' + n.id + '">' +
             '<div class="notif-item-body">' +
-                '<div class="notif-item-header">' +
-                    '<span class="notif-item-client">' + esc(n.client_name || '') + '</span>' +
-                    '<span class="notif-item-time">' + time + '</span>' +
-                '</div>' +
+                '<div class="notif-item-meta">' + esc(typeLabel) + ' · ' + time + '</div>' +
                 '<div class="notif-item-msg">' + esc(n.message || '') + '</div>' +
             '</div>' +
-            (n.read ? '' : '<button class="notif-read-btn" onclick="notifMarkRead(' + n.id + ',event)">Прочитано</button>') +
+            '<button class="notif-check-btn" onclick="notifMarkRead(' + n.id + ',event)" title="Прочитано">&#10003;</button>' +
         '</div>';
     }).join('');
 }
@@ -5326,10 +5318,10 @@ function notifMarkRead(id, e) {
     fetch(API_BASE + '/api/admin/notifications/' + id + '/read', {
         method: 'PATCH', headers: apiHeaders()
     }).then(function() {
-        var n = notifItems.find(function(x) { return x.id === id; });
-        if (n) n.read = true;
+        notifItems = notifItems.filter(function(x) { return x.id !== id; });
         notifUpdateBadge();
         notifRender();
+        renderDashboardNotifications();
     }).catch(function() {});
 }
 
