@@ -7635,10 +7635,22 @@
         function clPauseLaunch(id) {
             var l = clLaunches.find(function(x) { return x.id === id; });
             if (!l) return;
-            l.status = 'paused'; l.updated = clNow();
-            if (clSimTimers[id]) { clearInterval(clSimTimers[id]); delete clSimTimers[id]; }
-            clPersist(); clRenderLaunches();
-            clToast('Обзвон приостановлен');
+            if (esHasToken() && l.serverId) {
+                fetch(ES_API + '/api/campaigns/' + l.serverId + '/pause', {
+                    method: 'POST', headers: esApiHeaders()
+                }).then(function(r) { if (!r.ok) throw r; return r.json(); })
+                .then(function() {
+                    l.status = 'paused'; l.updated = clNow();
+                    if (clSimTimers[id]) { clearInterval(clSimTimers[id]); delete clSimTimers[id]; }
+                    clPersist(); clRenderLaunches();
+                    clToast('Обзвон приостановлен');
+                }).catch(function() { clToast('Ошибка паузы обзвона'); });
+            } else {
+                l.status = 'paused'; l.updated = clNow();
+                if (clSimTimers[id]) { clearInterval(clSimTimers[id]); delete clSimTimers[id]; }
+                clPersist(); clRenderLaunches();
+                clToast('Обзвон приостановлен');
+            }
         }
 
         function clStopLaunch(id) {
@@ -7651,7 +7663,20 @@
         }
 
         function clResumeLaunch(id) {
-            clStartLaunch(id);
+            var l = clLaunches.find(function(x) { return x.id === id; });
+            if (!l) return;
+            if (esHasToken() && l.serverId) {
+                fetch(ES_API + '/api/campaigns/' + l.serverId + '/resume', {
+                    method: 'POST', headers: esApiHeaders()
+                }).then(function(r) { if (!r.ok) throw r; return r.json(); })
+                .then(function() {
+                    l.status = 'active'; l.updated = clNow();
+                    clPersist(); clRenderLaunches();
+                    clToast('Обзвон возобновлён');
+                }).catch(function() { clToast('Ошибка возобновления обзвона'); });
+            } else {
+                clStartLaunch(id);
+            }
         }
 
         // Simulation
@@ -7728,7 +7753,7 @@
                         audienceName: c.audience_name || '', skillbaseName: c.skillbase_name || '',
                         callListId: '', goalLeads: c.leads_per_day || 50,
                         timeFrom: c.work_hours_start || '09:00', timeTo: c.work_hours_end || '18:00',
-                        days: days, status: c.status === 'calling' ? 'active' : (c.status || 'idle'),
+                        days: days, status: c.status === 'calling' ? 'active' : c.status === 'paused' ? 'paused' : (c.status || 'idle'),
                         called: 0, leads: 0, missed: 0, processedIdx: 0,
                         created: c.created_at || '', updated: c.created_at || ''
                     };
