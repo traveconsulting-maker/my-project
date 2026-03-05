@@ -4577,14 +4577,29 @@
             }
 
             dialogs.push(dlg);
-            renderDialogTable();
+            syncDialogsToCRM();
 
-            // Switch to Dialogs page
-            var mainLink = document.querySelector('a[data-page="pageDialogs"]');
-            if (mainLink) setActive(mainLink);
-
-            // Open created dialog in edit mode
-            openDialogDetail(dlg.id);
+            // Create on backend, then navigate
+            var ctx = { rules: dlg.rules, facts: dlg.facts, criteria: dlg.criteria, greetings: dlg.greetings, plan: dlg.planItems, botRole: dlg.botRole, botStyle: dlg.botStyle };
+            if (esHasToken()) {
+                fetch(ES_API + '/api/skillbases', {
+                    method: 'POST', headers: esApiHeaders(),
+                    body: JSON.stringify({ name: dlg.name, context: ctx })
+                }).then(function(r) { return r.json(); }).then(function(data) {
+                    if (data.id) { dlg.serverId = data.id; syncDialogsToCRM(); }
+                }).catch(function(err) { console.error('API skillbase create error:', err); })
+                .finally(function() {
+                    renderDialogTable();
+                    var mainLink = document.querySelector('a[data-page="pageDialogs"]');
+                    if (mainLink) setActive(mainLink);
+                    openDialogDetail(dlg.id);
+                });
+            } else {
+                renderDialogTable();
+                var mainLink = document.querySelector('a[data-page="pageDialogs"]');
+                if (mainLink) setActive(mainLink);
+                openDialogDetail(dlg.id);
+            }
         }
 
         // ===== CUSTOM TEMPLATES =====
@@ -4690,11 +4705,28 @@
             });
 
             dialogs.push(dlg);
-            renderDialogTable();
+            syncDialogsToCRM();
 
-            var mainLink = document.querySelector('a[data-page="pageDialogs"]');
-            if (mainLink) setActive(mainLink);
-            openDialogDetail(dlg.id);
+            var ctx = { rules: dlg.rules, facts: dlg.facts, criteria: dlg.criteria, greetings: dlg.greetings, plan: dlg.planItems, botRole: dlg.botRole, botStyle: dlg.botStyle };
+            if (esHasToken()) {
+                fetch(ES_API + '/api/skillbases', {
+                    method: 'POST', headers: esApiHeaders(),
+                    body: JSON.stringify({ name: dlg.name, context: ctx })
+                }).then(function(r) { return r.json(); }).then(function(data) {
+                    if (data.id) { dlg.serverId = data.id; syncDialogsToCRM(); }
+                }).catch(function(err) { console.error('API skillbase create error:', err); })
+                .finally(function() {
+                    renderDialogTable();
+                    var mainLink = document.querySelector('a[data-page="pageDialogs"]');
+                    if (mainLink) setActive(mainLink);
+                    openDialogDetail(dlg.id);
+                });
+            } else {
+                renderDialogTable();
+                var mainLink = document.querySelector('a[data-page="pageDialogs"]');
+                if (mainLink) setActive(mainLink);
+                openDialogDetail(dlg.id);
+            }
         }
 
         function renderCustomTplCards() {
