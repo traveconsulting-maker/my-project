@@ -7267,14 +7267,14 @@
             var saveBtn = document.getElementById('clSaveBtn');
             var saveRunBtn = document.getElementById('clSaveRunBtn');
             if (costEl) costEl.textContent = clFormatMoney(cost);
+            // "Сохранить" always enabled (saves as draft)
+            if (saveBtn) { saveBtn.disabled = false; saveBtn.style.opacity = '1'; }
             if (userBalance < cost) {
                 if (warnEl) { warnEl.style.display = ''; warnEl.textContent = 'Недостаточно средств (баланс: ' + clFormatMoney(userBalance) + ')'; }
-                if (saveBtn) { saveBtn.disabled = true; saveBtn.style.opacity = '0.5'; }
-                if (saveRunBtn) { saveRunBtn.disabled = true; saveRunBtn.style.opacity = '0.5'; }
+                if (saveRunBtn) { saveRunBtn.disabled = true; saveRunBtn.style.opacity = '0.5'; saveRunBtn.title = 'Недостаточно средств'; }
             } else {
                 if (warnEl) warnEl.style.display = 'none';
-                if (saveBtn) { saveBtn.disabled = false; saveBtn.style.opacity = '1'; }
-                if (saveRunBtn) { saveRunBtn.disabled = false; saveRunBtn.style.opacity = '1'; }
+                if (saveRunBtn) { saveRunBtn.disabled = false; saveRunBtn.style.opacity = '1'; saveRunBtn.title = ''; }
             }
         }
         // Init balance display
@@ -7446,8 +7446,6 @@
                 return x.dialogId === dialogId && x.audienceId === audienceId && x.id !== clEditId;
             });
             if (duplicate) { clToast('Запуск с таким диалогом и целевой аудиторией уже создан. Измените параметры.'); return; }
-            var dailyCost = goalLeads * clGetPricePerLead();
-            if (userBalance < dailyCost) { clToast('Недостаточно средств на балансе'); return; }
             // Find latest call list for this audience
             var audienceCallLists = clCallLists.filter(function(c) { return c.audienceId === audienceId; });
             var callListId = audienceCallLists.length > 0 ? audienceCallLists[audienceCallLists.length - 1].id : '';
