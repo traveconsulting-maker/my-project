@@ -5142,58 +5142,46 @@ function dmpProcessSyncQueue() {
 // Poll for new sync data every 3 seconds
 setInterval(dmpProcessSyncQueue, 3000);
 
-function ppSeedDemoData() {
-    if (localStorage.getItem('crm_pp_demo_seeded')) return;
-    // Ensure demo client exists
-    let demoClient = clients.find(c => c.id === 'demo_client');
-    if (!demoClient) {
-        demoClient = { id:'demo_client', name:'ООО Тест', company:'ООО Тест', phone:'+7 495 000-00-00', email:'test@oootest.ru', login:'oootest', password:'test123', notes:'', active:true, created:now() };
-        clients.push(demoClient);
+function cleanupDemoData() {
+    // Remove demo_client from clients array if present
+    const demoIdx = clients.findIndex(c => c.id === 'demo_client');
+    if (demoIdx >= 0) clients.splice(demoIdx, 1);
+    // Remove demo DMP project
+    const demoProjIdx = dmpProjects.findIndex(p => p.id === 'demo_pp');
+    if (demoProjIdx >= 0) dmpProjects.splice(demoProjIdx, 1);
+    // Remove demo DMP results linked to demo_pp
+    for (let i = dmpResults.length - 1; i >= 0; i--) {
+        if (dmpResults[i].projectId === 'demo_pp') dmpResults.splice(i, 1);
     }
-    // Ensure demo DMP project exists linked to demo client
-    let demoProject = dmpProjects.find(p => p.id === 'demo_pp');
-    if (!demoProject) {
-        demoProject = { id:'demo_pp', clientId:'demo_client', name:'Демо парсинг', sites:['avito.ru','2gis.ru','yandex.ru/maps'], dailyLimit:50, totalLimit:500, audience:'Малый бизнес', status:'stopped', parsed:5, created:now(), updated:now() };
-        dmpProjects.push(demoProject);
+    // Remove demo AI process items
+    for (let i = aiProcessItems.length - 1; i >= 0; i--) {
+        if (aiProcessItems[i].clientId === 'demo_client') aiProcessItems.splice(i, 1);
     }
-    const demoPhones = [
-        { phone:'+7 495 123-45-67', contactName:'Иванов Алексей', callInfo:'Директор, заинтересован', projectId:'demo_pp', created:'2026-02-28T14:30:00.000Z' },
-        { phone:'+7 812 987-65-43', contactName:'Петрова Мария', callInfo:'Менеджер по закупкам', projectId:'demo_pp', created:'2026-02-28T15:10:00.000Z' },
-        { phone:'+7 383 555-22-11', contactName:'', callInfo:'Не представился, перезвонить', projectId:'demo_pp', created:'2026-03-01T09:45:00.000Z' },
-        { phone:'+7 863 333-44-55', contactName:'Сидоров Дмитрий', callInfo:'Владелец автосервиса', projectId:'demo_pp', created:'2026-03-01T11:20:00.000Z' },
-        { phone:'+7 925 777-88-99', contactName:'Козлова Анна', callInfo:'Интернет-магазин, нужна CRM', projectId:'demo_pp', created:'2026-03-02T08:00:00.000Z' }
-    ];
-    demoPhones.forEach(d => {
-        dmpResults.push({ id:genId(), projectId:d.projectId, phone:d.phone, contactName:d.contactName||'', callInfo:d.callInfo, audioUrl:'', created:d.created });
-    });
+    localStorage.removeItem('crm_pp_demo_seeded');
+    localStorage.removeItem('crm_aip_demo_seeded');
     persist();
-    localStorage.setItem('crm_pp_demo_seeded', '1');
-}
-
-function aipSeedDemoData() {
-    if (localStorage.getItem('crm_aip_demo_seeded')) return;
-    const demoItems = [
-        { phone:'+7 925 777-88-99', phoneClean:'79257778899', contactName:'Козлова Анна', region:'Мобильный', source:'avito.ru', dialogId:'demo_dlg1', dialogName:'Дружелюбный — встреча', status:'lead', attempts:1, recordUrl:'', created:'2026-03-01T10:00:00.000Z', lastCallAt:'2026-03-01T10:05:00.000Z' },
-        { phone:'+7 495 123-45-67', phoneClean:'74951234567', contactName:'Иванов Алексей', region:'Москва', source:'2gis.ru', dialogId:'demo_dlg1', dialogName:'Дружелюбный — встреча', status:'called', attempts:1, recordUrl:'', created:'2026-03-01T10:10:00.000Z', lastCallAt:'2026-03-01T10:15:00.000Z' },
-        { phone:'+7 812 987-65-43', phoneClean:'78129876543', contactName:'Петрова Мария', region:'Санкт-Петербург', source:'avito.ru', dialogId:'demo_dlg2', dialogName:'Продажа — презентация', status:'missed', attempts:2, recordUrl:'', created:'2026-03-01T10:20:00.000Z', lastCallAt:'2026-03-01T14:30:00.000Z' },
-        { phone:'+7 863 333-44-55', phoneClean:'78633334455', contactName:'Сидоров Дмитрий', region:'Ростов-на-Дону', source:'yandex.ru/maps', dialogId:'demo_dlg2', dialogName:'Продажа — презентация', status:'waiting', attempts:0, recordUrl:'', created:'2026-03-01T10:30:00.000Z', lastCallAt:'' },
-        { phone:'+7 383 555-22-11', phoneClean:'73835552211', contactName:'', region:'Новосибирск', source:'2gis.ru', dialogId:'', dialogName:'', status:'waiting', attempts:0, recordUrl:'', created:'2026-03-01T10:40:00.000Z', lastCallAt:'' }
-    ];
-    demoItems.forEach(d => {
-        aiProcessItems.push({ id:genId(), clientId:'demo_client', phone:d.phone, phoneClean:d.phoneClean, contactName:d.contactName, region:d.region, source:d.source, dialogId:d.dialogId, dialogName:d.dialogName, status:d.status, attempts:d.attempts, maxAttempts:3, lastCallAt:d.lastCallAt, recordUrl:d.recordUrl, created:d.created });
-    });
-    persist();
-    localStorage.setItem('crm_aip_demo_seeded', '1');
 }
 
 function init() {
-    ppSeedDemoData();
-    aipSeedDemoData();
+    cleanupDemoData();
     syncParsedPhonesToClients();
     updateBadges();
     populateClientSelects();
     renderDashboard();
     dmpProcessSyncQueue();
+}
+
+function fetchCrmToken() {
+    return fetch(API_BASE + '/api/auth/login', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ login: 'crm_admin', password: 'CrmAdmin2026!' })
+    })
+    .then(function(r) { return r.json(); })
+    .then(function(data) {
+        if (data.token) { crmToken = data.token; sessionStorage.setItem('crm_jwt_token', data.token); }
+    })
+    .catch(function() {});
 }
 
 // ===== AUTH SYSTEM =====
@@ -5209,6 +5197,10 @@ function init() {
     if (sessionStorage.getItem('crm_authenticated') === 'true') {
         overlay.style.display = 'none';
         init();
+        // Re-fetch token if missing (e.g. expired or cleared)
+        if (!crmToken) {
+            fetchCrmToken().then(function() { syncFromAPI(); });
+        }
         return;
     }
 
@@ -5237,26 +5229,15 @@ function init() {
             sessionStorage.setItem('crm_authenticated', 'true');
             sessionStorage.setItem('crm_user', login);
 
-            // Получаем JWT-токен для API (регистрируем CRM-админа если нет)
-            fetch('https://api.easysale.tech/api/auth/login', {
-                method: 'POST',
-                headers: { 'Content-Type': 'application/json' },
-                body: JSON.stringify({ login: 'crm_admin', password: 'CrmAdmin2026!' })
-            })
-            .then(function(r) { return r.json(); })
-            .then(function(data) {
-                if (data.token) { crmToken = data.token; sessionStorage.setItem('crm_jwt_token', data.token); }
-            })
-            .catch(function() {});
-
-            setTimeout(function() {
+            // Получаем JWT-токен для API, затем инициализируем
+            fetchCrmToken().then(function() {
                 overlay.classList.add('hidden');
                 if (sidebar) sidebar.style.display = '';
                 if (mainEl) mainEl.style.display = '';
                 init();
                 syncFromAPI();
                 setTimeout(function() { overlay.style.display = 'none'; }, 500);
-            }, 600);
+            });
         } else {
             errEl.textContent = 'Неверный логин или пароль';
             errEl.style.display = 'block';
