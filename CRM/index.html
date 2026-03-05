@@ -2045,8 +2045,6 @@ function syncFromAPI() {
 
 // Автообновление каждые 30 секунд
 setInterval(syncFromAPI, 30000);
-// Первая загрузка при старте
-setTimeout(syncFromAPI, 500);
 
 function getClient(id) { return clients.find(c => c.id === id); }
 function getClientName(id) {
@@ -5400,9 +5398,10 @@ function fetchCrmToken() {
     if (sessionStorage.getItem('crm_authenticated') === 'true') {
         overlay.style.display = 'none';
         init();
-        // Re-fetch token if missing (e.g. expired or cleared)
         if (!crmToken) {
             fetchCrmToken().then(function() { syncFromAPI(); });
+        } else {
+            syncFromAPI();
         }
         return;
     }
