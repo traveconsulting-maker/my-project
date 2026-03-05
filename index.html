@@ -2389,6 +2389,26 @@
         </div>
     </div>
 
+    <!-- ===== CHANGE PASSWORD MODAL ===== -->
+    <div class="modal-overlay" id="changePasswordModal">
+        <div class="modal">
+            <div class="modal-title">Смените пароль</div>
+            <div class="modal-subtitle">Для безопасности необходимо сменить временный пароль</div>
+            <form onsubmit="handleChangePassword(event)">
+                <div class="form-group">
+                    <label>Новый пароль</label>
+                    <input type="password" id="cpNewPass" placeholder="Минимум 6 символов" required minlength="6" autocomplete="new-password">
+                </div>
+                <div class="form-group">
+                    <label>Подтверждение пароля</label>
+                    <input type="password" id="cpConfirmPass" placeholder="Повторите пароль" required minlength="6" autocomplete="new-password">
+                </div>
+                <div class="error-msg" id="cpError"></div>
+                <button type="submit" class="submit-btn">Сменить пароль</button>
+            </form>
+        </div>
+    </div>
+
     <!-- ===== CREATE DIALOG MODAL ===== -->
     <div class="modal-overlay" id="createDialogModal" onclick="if(event.target===this)closeCreateDialogModal()">
         <div class="modal" style="max-width:420px;">
@@ -4202,13 +4222,15 @@
             else localStorage.removeItem(prefix + 'onboarded');
         }
 
+        // Stores old password temporarily for change-password flow
+        var _cpOldPassword = '';
+
         function handleLogin(e) {
             e.preventDefault();
             const user = document.getElementById('loginUser');
             const pass = document.getElementById('loginPass');
             const error = document.getElementById('loginError');
 
-            // Проверяем через API
             // Сохраняем fallback на тестовый аккаунт
             if (user.value === 'test' && pass.value === '1234') {
                 localStorage.setItem('sc_login', user.value);
@@ -4228,7 +4250,16 @@
                     localStorage.setItem('jwt_token', result.data.token);
                     localStorage.setItem('sc_login', user.value);
                     applyUserSession(user.value);
-                    showAfterLogin();
+
+                    // Check if password change is required
+                    if (result.data.user && result.data.user.must_change_password) {
+                        _cpOldPassword = pass.value;
+                        closeModal();
+                        document.getElementById('changePasswordModal').classList.add('active');
+                        document.body.style.overflow = 'hidden';
+                    } else {
+                        showAfterLogin();
+                    }
                 } else if (result.status === 403) {
                     error.textContent = i18n.loginErrInactive?.[currentLang] || 'Ваш аккаунт требует активации. Это может занять до 15 минут';
                     error.classList.add('show');
@@ -4249,6 +4280,51 @@
         }
 
         // Registration is now on register.html
+
+        function handleChangePassword(e) {
+            e.preventDefault();
+            var newPass = document.getElementById('cpNewPass').value;
+            var confirmPass = document.getElementById('cpConfirmPass').value;
+            var cpError = document.getElementById('cpError');
+
+            if (newPass.length < 6) {
+                cpError.textContent = 'Пароль должен быть не менее 6 символов';
+                cpError.classList.add('show');
+                return;
+            }
+            if (newPass !== confirmPass) {
+                cpError.textContent = 'Пароли не совпадают';
+                cpError.classList.add('show');
+                return;
+            }
+
+            var token = localStorage.getItem('jwt_token') || '';
+            fetch('https://api.easysale.tech/api/auth/change-password', {
+                method: 'PATCH',
+                headers: {
+                    'Content-Type': 'application/json',
+                    'Authorization': 'Bearer ' + token
+                },
+                body: JSON.stringify({ old_password: _cpOldPassword, new_password: newPass })
+            })
+            .then(function(res) { return res.json().then(function(data) { return { status: res.status, data: data }; }); })
+            .then(function(result) {
+                if (result.status === 200 && result.data.token) {
+                    localStorage.setItem('jwt_token', result.data.token);
+                    _cpOldPassword = '';
+                    document.getElementById('changePasswordModal').classList.remove('active');
+                    document.body.style.overflow = '';
+                    showAfterLogin();
+                } else {
+                    cpError.textContent = result.data.error || 'Ошибка смены пароля';
+                    cpError.classList.add('show');
+                }
+            })
+            .catch(function() {
+                cpError.textContent = 'Ошибка соединения с сервером';
+                cpError.classList.add('show');
+            });
+        }
 
         // Onboarding
         let selectedNiche = null;

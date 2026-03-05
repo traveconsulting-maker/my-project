@@ -3447,7 +3447,7 @@ function filterApps(filter, el) {
     renderApplications();
 }
 
-function deleteRelatedTask(app) {
+function deleteRelatedTask(app, callback) {
     // Delete related task from local tasks by matching name/email in title
     const nameLC = (app.name || '').toLowerCase();
     const emailLC = (app.email || '').toLowerCase();
@@ -3457,13 +3457,18 @@ function deleteRelatedTask(app) {
         if (emailLC && titleLC.includes(emailLC)) return false;
         return true;
     });
-    // Sync with backend: update ticket status and let backend delete crm_tasks
+    // Sync with backend: update ticket status and let backend delete crm_tasks + create account
     if (app.apiId && crmToken) {
         fetch(API_BASE + '/api/tickets/' + app.apiId, {
             method: 'PATCH',
             headers: { ...apiHeaders(), 'Content-Type': 'application/json' },
             body: JSON.stringify({ status: app.status })
-        }).catch(() => {});
+        })
+        .then(r => r.ok ? r.json() : null)
+        .then(data => { if (callback) callback(data); })
+        .catch(() => { if (callback) callback(null); });
+    } else {
+        if (callback) callback(null);
     }
 }
 
@@ -3486,7 +3491,13 @@ function convertApp(id) {
     a.clientId = newClient.id;
     a.updated = now();
     addActivity('client', `Клиент "${a.name}" создан из заявки`, newClient.id);
-    deleteRelatedTask(a);
+    deleteRelatedTask(a, function(data) {
+        if (data && data.created_account) {
+            const acc = data.created_account;
+            toast(`Аккаунт создан — Логин: ${acc.login} / Пароль: ${acc.password}`, 15000);
+            prompt('Данные аккаунта для клиента (скопируйте):', `Логин: ${acc.login}\nПароль: ${acc.password}`);
+        }
+    });
     persist();
     renderApplications();
     updateBadges();
