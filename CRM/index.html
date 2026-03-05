@@ -1186,11 +1186,9 @@
                 <div><div class="page-title">Заявки</div><div class="page-subtitle">Входящие заявки на подключение</div></div>
             </div>
             <div class="filter-pills" style="margin-bottom:16px;">
-                <span class="filter-pill active" onclick="filterApps('all',this)">Все</span>
-                <span class="filter-pill" onclick="filterApps('new',this)">Новые</span>
-                <span class="filter-pill" onclick="filterApps('in_progress',this)">В работе</span>
-                <span class="filter-pill" onclick="filterApps('converted',this)">Конвертированы</span>
-                <span class="filter-pill" onclick="filterApps('rejected',this)">Отклонены</span>
+                <span class="filter-pill active" onclick="filterApps('new',this)">Новые</span>
+                <span class="filter-pill" onclick="filterApps('converted',this)">Конвертированные</span>
+                <span class="filter-pill" onclick="filterApps('rejected',this)">Отклонённые</span>
             </div>
             <div class="card" style="padding:0;overflow:hidden;">
                 <table>
@@ -3417,11 +3415,10 @@ function saveCall(e) {
 }
 
 // ==================== APPLICATIONS ====================
-let appFilter = 'all';
+let appFilter = 'new';
 
 function renderApplications() {
-    let filtered = [...applications];
-    if (appFilter !== 'all') filtered = filtered.filter(a => a.status === appFilter);
+    let filtered = applications.filter(a => a.status === appFilter);
 
     const tbody = document.getElementById('apps-table');
     if (filtered.length === 0) {
@@ -3437,8 +3434,7 @@ function renderApplications() {
             <td>${esc(a.company||'—')}</td>
             <td>${appStatusTag(a.status)}</td>
             <td>
-                ${a.status === 'new' ? `<button class="btn btn-sm" onclick="takeApp('${a.id}')">Взять</button>` : ''}
-                ${a.status === 'in_progress' ? `<button class="btn btn-sm btn-primary" onclick="convertApp('${a.id}')">В клиента</button> <button class="btn btn-sm btn-danger" onclick="rejectApp('${a.id}')">Отклонить</button>` : ''}
+                ${a.status === 'new' ? `<button class="btn btn-sm btn-primary" onclick="convertApp('${a.id}')">В клиенты</button> <button class="btn btn-sm btn-danger" onclick="rejectApp('${a.id}')">Отклонить</button>` : ''}
                 ${a.status === 'converted' && a.clientId ? `<button class="btn btn-sm" onclick="openClientDetail('${a.clientId}')">Карточка</button>` : ''}
             </td>
         </tr>
@@ -3452,9 +3448,24 @@ function filterApps(filter, el) {
     renderApplications();
 }
 
-function takeApp(id) {
-    const a = applications.find(x => x.id === id);
-    if (a) { a.status = 'in_progress'; a.updated = now(); persist(); renderApplications(); updateBadges(); toast('Заявка взята в работу'); }
+function deleteRelatedTask(app) {
+    // Delete related task from local tasks by matching name/email in title
+    const nameLC = (app.name || '').toLowerCase();
+    const emailLC = (app.email || '').toLowerCase();
+    tasks = tasks.filter(t => {
+        const titleLC = (t.title || t.subject || '').toLowerCase();
+        if (nameLC && titleLC.includes(nameLC)) return false;
+        if (emailLC && titleLC.includes(emailLC)) return false;
+        return true;
+    });
+    // Sync with backend: update ticket status and let backend delete crm_tasks
+    if (app.apiId && crmToken) {
+        fetch(API_BASE + '/api/tickets/' + app.apiId, {
+            method: 'PATCH',
+            headers: { ...apiHeaders(), 'Content-Type': 'application/json' },
+            body: JSON.stringify({ status: app.status })
+        }).catch(() => {});
+    }
 }
 
 function convertApp(id) {
@@ -3476,6 +3487,7 @@ function convertApp(id) {
     a.clientId = newClient.id;
     a.updated = now();
     addActivity('client', `Клиент "${a.name}" создан из заявки`, newClient.id);
+    deleteRelatedTask(a);
     persist();
     renderApplications();
     updateBadges();
@@ -3485,7 +3497,14 @@ function convertApp(id) {
 
 function rejectApp(id) {
     const a = applications.find(x => x.id === id);
-    if (a) { a.status = 'rejected'; a.updated = now(); persist(); renderApplications(); updateBadges(); toast('Заявка отклонена'); }
+    if (!a) return;
+    a.status = 'rejected';
+    a.updated = now();
+    deleteRelatedTask(a);
+    persist();
+    renderApplications();
+    updateBadges();
+    toast('Заявка отклонена');
 }
 
 // External API: receive application from landing page
@@ -4056,7 +4075,7 @@ function ticketStatusTag(s) {
 }
 
 function appStatusTag(s) {
-    const map = { new:['Новая','tag-info'], in_progress:['В работе','tag-warning'], converted:['Конвертирована','tag-success'], rejected:['Отклонена','tag-danger'] };
+    const map = { new:['Новая','tag-info'], converted:['Конвертированная','tag-success'], rejected:['Отклонённая','tag-danger'] };
     const v = map[s] || [s,'tag-muted'];
     return `<span class="tag ${v[1]}">${v[0]}</span>`;
 }
