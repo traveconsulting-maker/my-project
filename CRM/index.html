@@ -2767,7 +2767,7 @@ function updateClientPricePerLead(clientId, value) {
 function renderClientDetail() {
     const c = getClient(currentDetailClient);
     if (!c) return;
-    document.getElementById('client-detail-title').textContent = c.name;
+    document.getElementById('client-detail-title').innerHTML = esc(c.name) + ' <span style="font-size:.75rem;color:var(--text-muted);font-weight:400;">ID: ' + esc(c.id) + '</span>';
     const el = document.getElementById('client-detail-content');
 
     if (currentDetailTab === 'info') {
