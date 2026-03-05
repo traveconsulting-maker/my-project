@@ -115,30 +115,29 @@
             font-family:'Inter',sans-serif;
         }
         .notif-dropdown {
-            display:none;position:absolute;top:100%;right:0;
-            width:380px;max-height:480px;overflow-y:auto;
+            display:none;position:fixed;top:auto;right:auto;
+            width:400px;max-height:480px;overflow-y:auto;
             background:var(--card-bg);border:1px solid var(--card-border);
-            border-radius:12px;box-shadow:0 12px 32px rgba(0,0,0,0.2);
-            z-index:9999;margin-top:8px;
+            border-radius:12px;box-shadow:0 12px 32px rgba(0,0,0,0.3);
+            z-index:99999;
         }
         .notif-dropdown.open { display:block; }
         .notif-item {
-            padding:12px 14px;border-bottom:1px solid var(--card-border);
-            transition:background .15s;display:flex;align-items:flex-start;gap:10px;
+            padding:12px;margin:8px;border-radius:8px;
+            background:var(--bg-secondary);border:1px solid var(--card-border);
+            display:flex;align-items:flex-start;gap:10px;
         }
-        .notif-item:hover { background:var(--bg-secondary); }
-        .notif-item:last-child { border-bottom:none; }
-        .notif-item.unread { background:rgba(108,92,231,0.06); }
+        .notif-item:hover { border-color:rgba(108,92,231,0.3); }
+        .notif-item-icon { font-size:16px;flex-shrink:0;margin-top:1px; }
         .notif-item-body { flex:1;min-width:0; }
-        .notif-item-meta { font-size:.7rem;color:var(--text-muted);margin-bottom:4px; }
-        .notif-item-msg { font-size:.82rem;color:var(--text-secondary);word-break:break-word;line-height:1.5; }
+        .notif-item-time { font-size:.68rem;color:var(--text-muted);margin-bottom:4px;display:block; }
+        .notif-item-msg { font-size:.82rem;color:var(--text);word-break:break-word;line-height:1.5;white-space:normal; }
         .notif-check-btn {
-            width:28px;height:28px;border-radius:6px;border:1px solid var(--card-border);
+            width:26px;height:26px;border-radius:6px;border:1px solid var(--card-border);
             background:none;color:var(--text-muted);cursor:pointer;flex-shrink:0;
-            display:flex;align-items:center;justify-content:center;font-size:14px;margin-top:2px;
+            display:flex;align-items:center;justify-content:center;font-size:13px;margin-top:1px;
         }
-        .notif-check-btn:hover { background:rgba(108,92,231,0.1);color:#6c5ce7;border-color:#6c5ce7; }
-        .notif-empty { padding:24px;text-align:center;color:var(--text-muted);font-size:.85rem; }
+        .notif-check-btn:hover { background:rgba(108,92,231,0.15);color:#6c5ce7;border-color:#6c5ce7; }
         .sidebar-section {
             padding:0 12px;
             margin-bottom:8px;
@@ -5289,6 +5288,10 @@ function notifToggle(e) {
     e.stopPropagation();
     var dd = document.getElementById('notifDropdown');
     if (dd.classList.contains('open')) { dd.classList.remove('open'); return; }
+    var bell = document.getElementById('notifBell');
+    var rect = bell.getBoundingClientRect();
+    dd.style.top = (rect.bottom + 6) + 'px';
+    dd.style.left = Math.max(8, rect.right - 400) + 'px';
     notifRender();
     dd.classList.add('open');
 }
@@ -5302,10 +5305,10 @@ function notifRender() {
     }
     dd.innerHTML = unread.map(function(n) {
         var time = n.created_at ? new Date(n.created_at).toLocaleString('ru-RU', { day:'2-digit', month:'2-digit', hour:'2-digit', minute:'2-digit' }) : '';
-        var typeLabel = n.type === 'new_campaign' ? 'Кампания' : n.type === 'campaign_launch' ? 'Запуск' : n.type === 'new_audience' ? 'ЦА' : (n.type || '');
-        return '<div class="notif-item unread" data-nid="' + n.id + '">' +
+        return '<div class="notif-item" data-nid="' + n.id + '">' +
+            '<span class="notif-item-icon">\uD83D\uDD14</span>' +
             '<div class="notif-item-body">' +
-                '<div class="notif-item-meta">' + esc(typeLabel) + ' · ' + time + '</div>' +
+                '<span class="notif-item-time">' + time + '</span>' +
                 '<div class="notif-item-msg">' + esc(n.message || '') + '</div>' +
             '</div>' +
             '<button class="notif-check-btn" onclick="notifMarkRead(' + n.id + ',event)" title="Прочитано">&#10003;</button>' +
