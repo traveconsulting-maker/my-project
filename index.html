@@ -2331,19 +2331,19 @@
                 <div class="modal-subtitle" data-i18n="accessSub">Заполните данные и мы свяжемся с вами</div>
 
                 <div class="form-group">
-                    <label data-i18n="innLabel">ИНН компании</label>
-                    <input type="text" id="accInn" placeholder="10 или 12 цифр" data-i18n-ph="phInn" oninput="checkAccessForm()" maxlength="12">
-                    <div class="field-hint" id="hintInn"></div>
-                </div>
-                <div class="form-group">
-                    <label data-i18n="fioLabel">ФИО</label>
+                    <label data-i18n="fioLabel">Имя</label>
                     <input type="text" id="accName" placeholder="Иванов Иван Иванович" data-i18n-ph="phFio" oninput="checkAccessForm()">
                     <div class="field-hint" id="hintName"></div>
                 </div>
                 <div class="form-group">
                     <label data-i18n="phoneLabel">Номер телефона</label>
-                    <input type="tel" id="accPhone" placeholder="+7 (999) 123-45-67" data-i18n-ph="phPhone" oninput="checkAccessForm()" maxlength="18">
+                    <input type="tel" id="accPhone" placeholder="+7 (999) 123-45-67" data-i18n-ph="phPhone" oninput="formatAccPhone()" onblur="validatePhoneOnBlur()" maxlength="18">
                     <div class="field-hint" id="hintPhone"></div>
+                </div>
+                <div class="form-group">
+                    <label data-i18n="emailTgLabel">Email / Telegram</label>
+                    <input type="text" id="accEmailTg" placeholder="Email или @telegram" data-i18n-ph="phEmailTg" oninput="checkAccessForm()">
+                    <div class="field-hint" id="hintEmailTg"></div>
                 </div>
 
                 <button class="access-submit" id="accessSubmitBtn" onclick="submitAccess()" data-i18n="getAccess">
@@ -6371,9 +6371,9 @@
             // Access modal
             accessTitle: { ru:'Запросить доступ', en:'Request Access' },
             accessSub: { ru:'Заполните данные и мы свяжемся с вами', en:'Fill in the details and we\'ll contact you' },
-            innLabel: { ru:'ИНН компании', en:'Company TIN' },
-            fioLabel: { ru:'ФИО', en:'Full Name' },
+            fioLabel: { ru:'Имя', en:'Name' },
             phoneLabel: { ru:'Номер телефона', en:'Phone Number' },
+            emailTgLabel: { ru:'Email / Telegram', en:'Email / Telegram' },
             getAccess: { ru:'Получить доступ', en:'Get Access' },
             accessOk: { ru:'Заявка отправлена!', en:'Application Submitted!' },
             accessOkDesc: { ru:'Мы свяжемся с вами<br>в течение 15 минут', en:'We\'ll contact you<br>within 15 minutes' },
@@ -6526,9 +6526,9 @@
             phRole: { ru:'Роль продавца', en:'Seller Role' },
             phStyle: { ru:'Стиль речи', en:'Speech Style' },
             phNiche: { ru:'Введите название вашей ниши...', en:'Enter your niche name...' },
-            phInn: { ru:'10 или 12 цифр', en:'10 or 12 digits' },
             phFio: { ru:'Иванов Иван Иванович', en:'John Smith' },
             phPhone: { ru:'+7 (999) 123-45-67', en:'+1 (555) 123-4567' },
+            phEmailTg: { ru:'Email или @telegram', en:'Email or @telegram' },
             phLogin: { ru:'Введите логин', en:'Enter username' },
             phPass: { ru:'Введите пароль', en:'Enter password' },
             phSites: { ru:'Например:\ncompetitor1.ru\ncompetitor2.com\nsimilar-company.ru', en:'Example:\ncompetitor1.com\ncompetitor2.com\nsimilar-company.com' },
@@ -6544,9 +6544,8 @@
             ttsPlayFail: { ru:'Не удалось воспроизвести аудио', en:'Failed to play audio' },
             ttsNoSupport: { ru:'Браузер не поддерживает озвучку', en:'Browser does not support text-to-speech' },
             // Validation
-            valInn: { ru:'ИНН должен содержать 10 или 12 цифр', en:'TIN must contain 10 or 12 digits' },
             valName: { ru:'Укажите имя (только буквы)', en:'Enter name (letters only)' },
-            valPhone: { ru:'Введите корректный номер телефона', en:'Enter a valid phone number' },
+            valPhone: { ru:'Введите корректный номер (минимум 10 цифр)', en:'Enter a valid phone number (at least 10 digits)' },
             // Dialog list
             dlgListTitle: { ru:'Диалоги', en:'Dialogs' },
             dlgCreate: { ru:'Создать диалог', en:'Create Dialog' },
@@ -6846,9 +6845,9 @@
             document.body.style.overflow = 'hidden';
             accessForm.style.display = '';
             accessSuccess.classList.remove('show');
-            document.getElementById('accInn').value = '';
             document.getElementById('accName').value = '';
             document.getElementById('accPhone').value = '';
+            document.getElementById('accEmailTg').value = '';
             accessSubmitBtn.classList.remove('active');
             document.querySelectorAll('.field-hint').forEach(h => h.classList.remove('show'));
             document.querySelectorAll('#accessForm input').forEach(i => i.classList.remove('error'));
@@ -6863,18 +6862,13 @@
             if (e.target === accessModal) closeAccessModal();
         }
 
-        function validateInn(v) {
-            const digits = v.replace(/\D/g, '');
-            return digits.length === 10 || digits.length === 12;
-        }
-
         function validateName(v) {
             return v.trim().length >= 2 && /^[а-яёА-ЯЁa-zA-Z\s-]+$/.test(v.trim());
         }
 
         function validatePhone(v) {
             const digits = v.replace(/\D/g, '');
-            return digits.length >= 10 && digits.length <= 12;
+            return digits.length >= 10;
         }
 
         function showHint(id, msg) {
@@ -6887,31 +6881,44 @@
             document.getElementById(id).classList.remove('show');
         }
 
+        // Phone: format during input, no error highlighting while typing
+        function formatAccPhone() {
+            const phoneEl = document.getElementById('accPhone');
+            const digits = phoneEl.value.replace(/\D/g, '');
+            // Clear phone error while user is still typing
+            phoneEl.classList.remove('error');
+            hideHint('hintPhone');
+            checkAccessForm();
+        }
+
+        // Phone: validate only on blur
+        function validatePhoneOnBlur() {
+            const phone = document.getElementById('accPhone').value.trim();
+            if (phone && !validatePhone(phone)) {
+                showHint('hintPhone', t('valPhone'));
+                document.getElementById('accPhone').classList.add('error');
+            } else {
+                hideHint('hintPhone');
+                document.getElementById('accPhone').classList.remove('error');
+            }
+        }
+
         function checkAccessForm() {
-            const inn = document.getElementById('accInn').value.trim();
             const name = document.getElementById('accName').value.trim();
             const phone = document.getElementById('accPhone').value.trim();
+            const emailTg = document.getElementById('accEmailTg').value.trim();
 
-            const innOk = validateInn(inn);
             const nameOk = validateName(name);
             const phoneOk = validatePhone(phone);
+            const emailTgOk = emailTg.length >= 2;
 
-            // Live hints
-            if (inn && !innOk) { showHint('hintInn', t('valInn')); }
-            else { hideHint('hintInn'); }
-
+            // Live hints for name only (phone validates on blur)
             if (name && !nameOk) { showHint('hintName', t('valName')); }
             else { hideHint('hintName'); }
 
-            if (phone && !phoneOk) { showHint('hintPhone', t('valPhone')); }
-            else { hideHint('hintPhone'); }
-
-            // Inputs error styling
-            document.getElementById('accInn').classList.toggle('error', inn !== '' && !innOk);
             document.getElementById('accName').classList.toggle('error', name !== '' && !nameOk);
-            document.getElementById('accPhone').classList.toggle('error', phone !== '' && !phoneOk);
 
-            if (innOk && nameOk && phoneOk) {
+            if (nameOk && phoneOk && emailTgOk) {
                 accessSubmitBtn.classList.add('active');
             } else {
                 accessSubmitBtn.classList.remove('active');
@@ -6919,22 +6926,28 @@
         }
 
         function submitAccess() {
-            const inn = document.getElementById('accInn').value.trim();
             const name = document.getElementById('accName').value.trim();
             const phone = document.getElementById('accPhone').value.trim();
+            const emailTg = document.getElementById('accEmailTg').value.trim();
 
             let valid = true;
 
-            if (!inn) { showHint('hintInn', 'Заполните ИНН компании'); valid = false; }
-            else if (!validateInn(inn)) { showHint('hintInn', 'ИНН должен содержать 10 или 12 цифр'); valid = false; }
-
-            if (!name) { showHint('hintName', 'Укажите ваше ФИО'); valid = false; }
+            if (!name) { showHint('hintName', 'Укажите ваше имя'); valid = false; }
             else if (!validateName(name)) { showHint('hintName', 'Укажите имя (только буквы)'); valid = false; }
 
             if (!phone) { showHint('hintPhone', 'Укажите номер телефона'); valid = false; }
-            else if (!validatePhone(phone)) { showHint('hintPhone', 'Введите корректный номер телефона'); valid = false; }
+            else if (!validatePhone(phone)) { showHint('hintPhone', 'Введите корректный номер (минимум 10 цифр)'); valid = false; }
 
-            if (!valid) return;
+            if (!emailTg) { showHint('hintEmailTg', 'Укажите Email или Telegram'); valid = false; }
+
+            if (!valid) {
+                // Show phone error on submit attempt
+                if (phone && !validatePhone(phone)) {
+                    document.getElementById('accPhone').classList.add('error');
+                }
+                document.getElementById('accName').classList.toggle('error', name !== '' && !validateName(name));
+                return;
+            }
 
             // Отправляем заявку на сервер
             var token = localStorage.getItem('jwt_token') || '';
@@ -6948,7 +6961,7 @@
                     subject: 'Заявка на доступ: ' + name,
                     type: 'access_request',
                     priority: 'medium',
-                    description: JSON.stringify({ name: name, phone: phone, email: '', company: 'ИНН: ' + inn })
+                    description: JSON.stringify({ name: name, phone: phone, email: emailTg, company: '' })
                 })
             })
             .then(function(res) { return res.json(); })

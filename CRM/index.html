@@ -1192,7 +1192,7 @@
             </div>
             <div class="card" style="padding:0;overflow:hidden;">
                 <table>
-                    <thead><tr><th>Дата</th><th>Имя</th><th>Телефон</th><th>Email</th><th>Компания</th><th>Статус</th><th>Действия</th></tr></thead>
+                    <thead><tr><th>Дата</th><th>Имя</th><th>Телефон</th><th>Email / Telegram</th><th>Статус</th><th>Действия</th></tr></thead>
                     <tbody id="apps-table"></tbody>
                 </table>
             </div>
@@ -3422,7 +3422,7 @@ function renderApplications() {
 
     const tbody = document.getElementById('apps-table');
     if (filtered.length === 0) {
-        tbody.innerHTML = '<tr><td colspan="7" style="text-align:center;color:var(--text-muted);padding:40px;">Нет заявок</td></tr>';
+        tbody.innerHTML = '<tr><td colspan="6" style="text-align:center;color:var(--text-muted);padding:40px;">Нет заявок</td></tr>';
         return;
     }
     tbody.innerHTML = [...filtered].reverse().map(a => `
@@ -3431,7 +3431,6 @@ function renderApplications() {
             <td>${esc(a.name)}</td>
             <td>${esc(a.phone||'—')}</td>
             <td>${esc(a.email||'—')}</td>
-            <td>${esc(a.company||'—')}</td>
             <td>${appStatusTag(a.status)}</td>
             <td>
                 ${a.status === 'new' ? `<button class="btn btn-sm btn-primary" onclick="convertApp('${a.id}')">В клиенты</button> <button class="btn btn-sm btn-danger" onclick="rejectApp('${a.id}')">Отклонить</button>` : ''}
