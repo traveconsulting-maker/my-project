@@ -116,27 +116,34 @@
         }
         .notif-dropdown {
             display:none;position:absolute;top:100%;right:0;
-            width:360px;max-height:420px;overflow-y:auto;
+            width:480px;max-height:480px;overflow-y:auto;
             background:var(--card-bg);border:1px solid var(--card-border);
             border-radius:12px;box-shadow:0 12px 32px rgba(0,0,0,0.2);
             z-index:9999;margin-top:8px;
         }
         .notif-dropdown.open { display:block; }
+        .notif-dropdown-title {
+            padding:14px 18px 10px;font-size:.88rem;font-weight:700;color:var(--text);
+            border-bottom:1px solid var(--card-border);
+        }
         .notif-item {
-            padding:12px 16px;border-bottom:1px solid var(--card-border);
-            font-size:.82rem;line-height:1.5;transition:background .15s;
+            padding:14px 18px;border-bottom:1px solid var(--card-border);
+            font-size:.84rem;line-height:1.6;transition:background .15s;
+            display:flex;align-items:flex-start;gap:12px;
         }
         .notif-item:hover { background:var(--bg-secondary); }
         .notif-item:last-child { border-bottom:none; }
         .notif-item.unread { background:rgba(108,92,231,0.06); }
+        .notif-item-body { flex:1;min-width:0; }
         .notif-item-header { display:flex;justify-content:space-between;align-items:center;margin-bottom:4px; }
-        .notif-item-time { font-size:.72rem;color:var(--text-muted);white-space:nowrap; }
-        .notif-item-msg { color:var(--text-secondary); }
-        .notif-item-client { font-weight:600;color:var(--text);font-size:.78rem; }
+        .notif-item-time { font-size:.72rem;color:var(--text-muted);white-space:nowrap;margin-left:12px; }
+        .notif-item-msg { color:var(--text-secondary);word-break:break-word; }
+        .notif-item-client { font-weight:700;color:var(--text);font-size:.82rem; }
         .notif-read-btn {
             font-size:.7rem;color:#6c5ce7;cursor:pointer;border:none;background:none;
-            padding:2px 6px;border-radius:4px;margin-top:4px;
+            padding:2px 8px;border-radius:4px;margin-top:6px;white-space:nowrap;flex-shrink:0;
         }
+        .notif-read-btn:hover { background:rgba(108,92,231,0.1); }
         .notif-read-btn:hover { background:rgba(108,92,231,0.1); }
         .notif-empty { padding:24px;text-align:center;color:var(--text-muted);font-size:.85rem; }
         .sidebar-section {
@@ -1076,9 +1083,15 @@
                 <div><div class="page-title">Дашборд</div><div class="page-subtitle">Обзор системы</div></div>
             </div>
             <div class="stats-grid" id="dashboard-stats"></div>
-            <div class="card">
-                <h3 style="font-size:.95rem;font-weight:600;margin-bottom:16px;">Последние действия</h3>
-                <div id="dashboard-activity" class="timeline"></div>
+            <div style="display:grid;grid-template-columns:1fr 1fr;gap:20px;margin-top:20px;">
+                <div class="card">
+                    <h3 style="font-size:.95rem;font-weight:600;margin-bottom:16px;">Последние действия</h3>
+                    <div id="dashboard-activity" class="timeline"></div>
+                </div>
+                <div class="card">
+                    <h3 style="font-size:.95rem;font-weight:600;margin-bottom:16px;">Новые уведомления</h3>
+                    <div id="dashboard-notifications"></div>
+                </div>
             </div>
         </div>
 
@@ -1153,7 +1166,6 @@
                 <span class="filter-pill active" onclick="filterTasks('all',this)">Все</span>
                 <span class="filter-pill" onclick="filterTasks('active',this)">Активные</span>
                 <span class="filter-pill" onclick="filterTasks('completed',this)">Завершённые</span>
-                <span class="filter-pill" onclick="filterTasks('overdue',this)">Просроченные</span>
             </div>
             <div id="tasks-list"></div>
         </div>
@@ -2166,15 +2178,40 @@ function renderDashboard() {
     const el = document.getElementById('dashboard-activity');
     if (activities.length === 0) {
         el.innerHTML = '<div class="empty-state"><p>Нет активности</p></div>';
+    } else {
+        el.innerHTML = activities.slice(0,15).map(a => `
+            <div class="timeline-item">
+                <div class="timeline-item-time">${formatDateTime(a.time)}</div>
+                <div class="timeline-item-type tag ${a.type==='client'?'tag-accent':a.type==='deal'?'tag-success':a.type==='call'?'tag-info':a.type==='ticket'?'tag-warning':'tag-muted'}" style="margin-bottom:4px;">${a.type}</div>
+                <div class="timeline-item-text">${a.text}</div>
+            </div>
+        `).join('');
+    }
+
+    renderDashboardNotifications();
+}
+
+function renderDashboardNotifications() {
+    var el = document.getElementById('dashboard-notifications');
+    if (!el) return;
+    var unread = notifItems.filter(function(n) { return !n.read; }).slice(0, 5);
+    if (unread.length === 0) {
+        el.innerHTML = '<div style="text-align:center;color:var(--text-muted);padding:20px;">Нет новых уведомлений</div>';
         return;
     }
-    el.innerHTML = activities.slice(0,15).map(a => `
-        <div class="timeline-item">
-            <div class="timeline-item-time">${formatDateTime(a.time)}</div>
-            <div class="timeline-item-type tag ${a.type==='client'?'tag-accent':a.type==='deal'?'tag-success':a.type==='call'?'tag-info':a.type==='ticket'?'tag-warning':'tag-muted'}" style="margin-bottom:4px;">${a.type}</div>
-            <div class="timeline-item-text">${a.text}</div>
-        </div>
-    `).join('');
+    el.innerHTML = unread.map(function(n) {
+        var time = n.created_at ? new Date(n.created_at).toLocaleString('ru-RU', { day:'2-digit', month:'2-digit', hour:'2-digit', minute:'2-digit' }) : '';
+        return '<div style="display:flex;align-items:flex-start;gap:10px;padding:10px 0;border-bottom:1px solid var(--card-border);">' +
+            '<div style="width:32px;height:32px;border-radius:8px;background:rgba(108,92,231,0.1);display:flex;align-items:center;justify-content:center;flex-shrink:0;">' +
+                '<svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="#6c5ce7" stroke-width="2"><path d="M18 8A6 6 0 0 0 6 8c0 7-3 9-3 9h18s-3-2-3-9"/><path d="M13.73 21a2 2 0 0 1-3.46 0"/></svg>' +
+            '</div>' +
+            '<div style="flex:1;min-width:0;">' +
+                '<div style="font-size:.82rem;font-weight:600;color:var(--text);">' + esc(n.client_name || '') + '</div>' +
+                '<div style="font-size:.8rem;color:var(--text-secondary);line-height:1.5;margin-top:2px;">' + esc(n.message || '') + '</div>' +
+                '<div style="font-size:.7rem;color:var(--text-muted);margin-top:4px;">' + time + '</div>' +
+            '</div>' +
+        '</div>';
+    }).join('');
 }
 
 // ==================== CLIENTS ====================
@@ -3194,59 +3231,80 @@ function resetDealForm() {
     document.getElementById('deal-stage').value = 'lead';
 }
 
-// ==================== TASKS ====================
+// ==================== TASKS (API-backed) ====================
 let taskFilter = 'all';
+var crmTasks = [];
 
 function renderTasks() {
-    let filtered = [...tasks];
-    const today = new Date(); today.setHours(0,0,0,0);
-    if (taskFilter === 'active') filtered = filtered.filter(t => !t.completed);
-    else if (taskFilter === 'completed') filtered = filtered.filter(t => t.completed);
-    else if (taskFilter === 'overdue') filtered = filtered.filter(t => !t.completed && t.dueDate && new Date(t.dueDate) < today);
+    if (!crmToken) return;
+    var statusParam = '';
+    if (taskFilter === 'active') statusParam = '?status=pending';
+    else if (taskFilter === 'completed') statusParam = '?status=done';
 
-    const el = document.getElementById('tasks-list');
-    if (filtered.length === 0) {
+    fetch(API_BASE + '/api/admin/tasks' + statusParam, { headers: apiHeaders() })
+        .then(function(r) { return r.ok ? r.json() : []; })
+        .then(function(data) {
+            crmTasks = Array.isArray(data) ? data : [];
+            renderTasksList();
+        }).catch(function() { renderTasksList(); });
+}
+
+function renderTasksList() {
+    var el = document.getElementById('tasks-list');
+    if (crmTasks.length === 0) {
         el.innerHTML = '<div class="empty-state"><p>Нет задач</p></div>';
         return;
     }
-    el.innerHTML = filtered.map(t => `
-        <div class="task-item ${t.completed?'completed':''}" style="position:relative;">
-            <div class="checkbox ${t.completed?'checked':''}" onclick="event.stopPropagation();toggleTask('${t.id}')"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3"><polyline points="20 6 9 17 4 12"/></svg></div>
-            <div style="flex:1;" onclick="editTaskInline('${t.id}')">
-                <div class="task-title"><span class="priority-dot priority-${t.priority}"></span>${esc(t.title)}</div>
-                <div class="task-meta">
-                    ${t.clientId ? getClientName(t.clientId) + ' · ' : ''}
-                    ${t.dueDate ? 'Срок: '+formatDate(t.dueDate) : 'Без срока'}
-                    ${t.description ? ' · '+esc(t.description.substring(0,50)) : ''}
-                </div>
-            </div>
-            <button class="btn btn-sm btn-danger" onclick="event.stopPropagation();deleteTask('${t.id}')" style="position:absolute;right:10px;top:12px;opacity:0.5;" title="Удалить">✕</button>
-        </div>
-    `).join('');
+    el.innerHTML = crmTasks.map(function(t) {
+        var isDone = t.status === 'done';
+        var priorityClass = t.priority === 'high' ? 'priority-high' : t.priority === 'low' ? 'priority-low' : 'priority-medium';
+        var priorityLabel = t.priority === 'high' ? 'Высокий' : t.priority === 'low' ? 'Низкий' : 'Средний';
+        var time = t.created_at ? new Date(t.created_at).toLocaleString('ru-RU', { day:'2-digit', month:'2-digit', hour:'2-digit', minute:'2-digit' }) : '';
+        var descHtml = '';
+        if (t.description) {
+            var lines = t.description.split('\\n');
+            if (lines.length <= 1) lines = t.description.split('\n');
+            descHtml = '<div style="margin-top:8px;font-size:.82rem;color:var(--text-secondary);line-height:1.7;">' +
+                lines.map(function(line) {
+                    var trimmed = line.replace(/^\d+\.\s*/, '');
+                    return '<div style="display:flex;align-items:flex-start;gap:6px;">' +
+                        '<span style="color:var(--text-muted);margin-top:1px;">•</span>' +
+                        '<span>' + esc(trimmed) + '</span></div>';
+                }).join('') + '</div>';
+        }
+        return '<div class="card" style="margin-bottom:12px;padding:16px 20px;' + (isDone ? 'opacity:0.5;' : '') + '">' +
+            '<div style="display:flex;align-items:center;gap:12px;">' +
+                '<div class="checkbox ' + (isDone ? 'checked' : '') + '" onclick="toggleCrmTask(' + t.id + ',\'' + t.status + '\')"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3"><polyline points="20 6 9 17 4 12"/></svg></div>' +
+                '<div style="flex:1;">' +
+                    '<div style="display:flex;align-items:center;gap:8px;flex-wrap:wrap;">' +
+                        '<span style="font-weight:600;font-size:.9rem;' + (isDone ? 'text-decoration:line-through;' : '') + '">' + esc(t.title) + '</span>' +
+                        '<span class="tag" style="font-size:.68rem;">' + priorityLabel + '</span>' +
+                        '<span class="tag tag-muted" style="font-size:.68rem;">' + esc(t.status || 'pending') + '</span>' +
+                    '</div>' +
+                    '<div style="font-size:.78rem;color:var(--text-muted);margin-top:2px;">' +
+                        (t.client_name ? '<strong>' + esc(t.client_name) + '</strong> · ' : '') + time +
+                    '</div>' +
+                    descHtml +
+                '</div>' +
+            '</div>' +
+        '</div>';
+    }).join('');
 }
 
-function toggleTask(id) {
-    const t = tasks.find(x => x.id === id);
-    if (t) {
-        t.completed = !t.completed;
-        t.updated = now();
-        addActivity('task', `Задача "${t.title}" ${t.completed?'завершена':'возобновлена'}`, t.clientId);
-        persist();
-        renderTasks();
-        updateBadges();
-        if (currentDetailClient) renderClientDetail();
-    }
-}
-
-function deleteTask(id) {
-    tasks = tasks.filter(t => t.id !== id);
-    persist(); renderTasks(); updateBadges();
-    toast('Задача удалена');
+function toggleCrmTask(id, currentStatus) {
+    var newStatus = currentStatus === 'done' ? 'pending' : 'done';
+    fetch(API_BASE + '/api/admin/tasks/' + id, {
+        method: 'PATCH',
+        headers: apiHeaders(),
+        body: JSON.stringify({ status: newStatus })
+    }).then(function(r) {
+        if (r.ok) { renderTasks(); toast(newStatus === 'done' ? 'Задача завершена' : 'Задача возобновлена'); }
+    }).catch(function() {});
 }
 
 function filterTasks(filter, el) {
     taskFilter = filter;
-    document.querySelectorAll('#section-tasks .filter-pill').forEach(p => p.classList.remove('active'));
+    document.querySelectorAll('#section-tasks .filter-pill').forEach(function(p) { p.classList.remove('active'); });
     el.classList.add('active');
     renderTasks();
 }
@@ -3255,7 +3313,7 @@ function openTaskModal(taskId) {
     resetTaskForm();
     populateClientSelects();
     if (taskId) {
-        const t = tasks.find(x => x.id === taskId);
+        var t = tasks.find(function(x) { return x.id === taskId; });
         if (t) {
             document.getElementById('task-id').value = t.id;
             document.getElementById('task-modal-title').textContent = 'Редактировать задачу';
@@ -3273,8 +3331,8 @@ function editTaskInline(id) { openTaskModal(id); }
 
 function saveTask(e) {
     e.preventDefault();
-    const id = document.getElementById('task-id').value;
-    const data = {
+    var id = document.getElementById('task-id').value;
+    var data = {
         title: document.getElementById('task-title').value.trim(),
         clientId: document.getElementById('task-client').value || null,
         priority: document.getElementById('task-priority').value,
@@ -3282,13 +3340,13 @@ function saveTask(e) {
         description: document.getElementById('task-description').value.trim()
     };
     if (id) {
-        const idx = tasks.findIndex(t => t.id === id);
+        var idx = tasks.findIndex(function(t) { return t.id === id; });
         if (idx >= 0) { Object.assign(tasks[idx], data); tasks[idx].updated = now(); }
-        addActivity('task', `Обновлена задача: ${data.title}`, data.clientId);
+        addActivity('task', 'Обновлена задача: ' + data.title, data.clientId);
         toast('Задача обновлена');
     } else {
-        tasks.push({ id: genId(), ...data, completed: false, created: now() });
-        addActivity('task', `Создана задача: ${data.title}`, data.clientId);
+        tasks.push({ id: genId(), title: data.title, clientId: data.clientId, priority: data.priority, dueDate: data.dueDate, description: data.description, completed: false, created: now() });
+        addActivity('task', 'Создана задача: ' + data.title, data.clientId);
         toast('Задача создана');
     }
     persist();
@@ -3300,7 +3358,7 @@ function saveTask(e) {
 function resetTaskForm() {
     document.getElementById('task-id').value = '';
     document.getElementById('task-modal-title').textContent = 'Новая задача';
-    ['task-title','task-due','task-description'].forEach(id => document.getElementById(id).value = '');
+    ['task-title','task-due','task-description'].forEach(function(id) { document.getElementById(id).value = ''; });
     document.getElementById('task-priority').value = 'medium';
 }
 
@@ -5220,6 +5278,7 @@ function notifFetch() {
         .then(function(data) {
             notifItems = Array.isArray(data) ? data : [];
             notifUpdateBadge();
+            renderDashboardNotifications();
         }).catch(function() {});
 }
 
@@ -5243,17 +5302,20 @@ function notifToggle(e) {
 function notifRender() {
     var dd = document.getElementById('notifDropdown');
     if (notifItems.length === 0) {
-        dd.innerHTML = '<div class="notif-empty">Нет уведомлений</div>';
+        dd.innerHTML = '<div class="notif-empty" style="padding:24px;text-align:center;color:var(--text-muted);">Нет уведомлений</div>';
         return;
     }
-    dd.innerHTML = notifItems.map(function(n) {
+    dd.innerHTML = '<div class="notif-dropdown-title">Уведомления</div>' +
+    notifItems.map(function(n) {
         var time = n.created_at ? new Date(n.created_at).toLocaleString('ru-RU', { day:'2-digit', month:'2-digit', hour:'2-digit', minute:'2-digit' }) : '';
         return '<div class="notif-item ' + (n.read ? '' : 'unread') + '" data-nid="' + n.id + '">' +
-            '<div class="notif-item-header">' +
-                '<span class="notif-item-client">' + esc(n.client_name || '') + '</span>' +
-                '<span class="notif-item-time">' + time + '</span>' +
+            '<div class="notif-item-body">' +
+                '<div class="notif-item-header">' +
+                    '<span class="notif-item-client">' + esc(n.client_name || '') + '</span>' +
+                    '<span class="notif-item-time">' + time + '</span>' +
+                '</div>' +
+                '<div class="notif-item-msg">' + esc(n.message || '') + '</div>' +
             '</div>' +
-            '<div class="notif-item-msg">' + esc(n.message || '') + '</div>' +
             (n.read ? '' : '<button class="notif-read-btn" onclick="notifMarkRead(' + n.id + ',event)">Прочитано</button>') +
         '</div>';
     }).join('');
