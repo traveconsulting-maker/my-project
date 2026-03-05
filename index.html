@@ -7871,7 +7871,7 @@
 
             // Launch on backend
             if (esHasToken() && l.serverId) {
-                fetch(ES_API + '/api/campaigns/' + l.serverId + '/launch', {
+                fetch(ES_API + '/api/campaigns/' + l.serverId + '/resume', {
                     method: 'POST', headers: esApiHeaders()
                 }).catch(function(err) { console.error('API campaign launch error:', err); });
             }
@@ -7881,7 +7881,7 @@
             var l = clLaunches.find(function(x) { return x.id === id; });
             if (!l) return;
             if (esHasToken() && l.serverId) {
-                fetch(ES_API + '/api/campaigns/' + l.serverId + '/launch', {
+                fetch(ES_API + '/api/campaigns/' + l.serverId + '/resume', {
                     method: 'POST', headers: esApiHeaders()
                 }).then(function(r) { return r.json(); })
                 .then(function(data) {
