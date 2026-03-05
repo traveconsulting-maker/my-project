@@ -948,15 +948,21 @@
             color: var(--text-muted); font-size: 16px;
         }
         .onb-step-card {
-            background:var(--card);border:1px solid var(--border);border-radius:14px;
-            padding:24px 20px;display:flex;flex-direction:column;align-items:center;text-align:center;
+            background:var(--card);border:1px solid var(--border);border-radius:16px;
+            padding:24px;display:flex;flex-direction:column;align-items:center;text-align:center;
             transition:border-color .2s;
         }
         .onb-step-card:hover { border-color:var(--accent); }
         .onb-step-card.done { border-color:#27ae60; }
         .onb-step-header { display:flex;align-items:center;justify-content:space-between;width:100%;margin-bottom:12px; }
         .onb-check { color:#27ae60;font-size:20px;font-weight:700; }
-        .onb-step-num { font-size:.72rem;text-transform:uppercase;letter-spacing:.06em;color:var(--text-muted);font-weight:600;margin-bottom:4px; }
+        .onb-step-num-circle {
+            width:28px;height:28px;border-radius:50%;
+            display:flex;align-items:center;justify-content:center;
+            font-size:.78rem;font-weight:700;
+        }
+        .onb-step-num-circle.pending { background:var(--bg);border:2px solid var(--border);color:var(--text-muted); }
+        .onb-step-num-circle.done { background:#27ae60;border:2px solid #27ae60;color:#fff; }
         .onb-step-title { font-size:1rem;font-weight:700;margin-bottom:6px; }
         .onb-step-desc { font-size:.82rem;color:var(--text-secondary);line-height:1.5;margin-bottom:16px;min-height:40px; }
         .onb-step-btn {
@@ -2893,22 +2899,28 @@
                         <p style="color:var(--text-secondary);font-size:.92rem;margin-bottom:28px;">Следуйте инструкции и получите первые квалифицированные лиды</p>
                         <div style="display:grid;grid-template-columns:repeat(3,1fr);gap:16px;margin-bottom:28px;">
                             <div class="onb-step-card" id="onbStep1">
-                                <div class="onb-step-header"><span style="font-size:28px;">&#128172;</span><span class="onb-check" id="onbCheck1" style="display:none;">&#10004;</span></div>
-                                <div class="onb-step-num">Шаг 1</div>
+                                <div class="onb-step-header">
+                                    <span style="font-size:28px;">&#128172;</span>
+                                    <span class="onb-step-num-circle pending" id="onbCircle1">1</span>
+                                </div>
                                 <div class="onb-step-title">Создайте диалог</div>
                                 <div class="onb-step-desc">Настройте сценарий разговора AI с вашими клиентами</div>
                                 <button class="onb-step-btn" onclick="onbGoTo('pageDialogs')">Создать диалог</button>
                             </div>
                             <div class="onb-step-card" id="onbStep2">
-                                <div class="onb-step-header"><span style="font-size:28px;">&#127919;</span><span class="onb-check" id="onbCheck2" style="display:none;">&#10004;</span></div>
-                                <div class="onb-step-num">Шаг 2</div>
+                                <div class="onb-step-header">
+                                    <span style="font-size:28px;">&#127919;</span>
+                                    <span class="onb-step-num-circle pending" id="onbCircle2">2</span>
+                                </div>
                                 <div class="onb-step-title">Настройте аудиторию</div>
                                 <div class="onb-step-desc">Укажите сайты конкурентов для поиска потенциальных клиентов</div>
                                 <button class="onb-step-btn" onclick="onbGoTo('pageAudience')">Настроить ЦА</button>
                             </div>
                             <div class="onb-step-card" id="onbStep3">
-                                <div class="onb-step-header"><span style="font-size:28px;">&#128222;</span><span class="onb-check" id="onbCheck3" style="display:none;">&#10004;</span></div>
-                                <div class="onb-step-num">Шаг 3</div>
+                                <div class="onb-step-header">
+                                    <span style="font-size:28px;">&#128222;</span>
+                                    <span class="onb-step-num-circle pending" id="onbCircle3">3</span>
+                                </div>
                                 <div class="onb-step-title">Запустите звонки</div>
                                 <div class="onb-step-desc">Запустите AI обзвон и получайте квалифицированные лиды</div>
                                 <button class="onb-step-btn" onclick="onbGoTo('pageLaunches')">Запустить</button>
@@ -2916,6 +2928,14 @@
                         </div>
                         <div id="onbDoneWrap" style="text-align:center;margin-bottom:28px;display:none;">
                             <button class="onb-step-btn" style="padding:12px 32px;font-size:.95rem;" onclick="onbComplete()">&#10004; Готово! Жду первых лидов</button>
+                        </div>
+                        <div style="background:var(--card);border:1px solid var(--border);border-radius:16px;padding:24px;">
+                            <h3 style="font-size:1rem;font-weight:700;margin-bottom:16px;">&#128249; Видео инструкция</h3>
+                            <div style="width:560px;height:315px;background:#0d0d1a;border-radius:12px;display:flex;flex-direction:column;align-items:center;justify-content:center;margin:0 auto 16px;">
+                                <svg width="64" height="64" viewBox="0 0 24 24" fill="none" style="margin-bottom:12px;"><path d="M8 5v14l11-7z" fill="var(--accent)"/></svg>
+                                <span style="color:var(--text-muted);font-size:.88rem;">Видео инструкция появится здесь</span>
+                            </div>
+                            <p style="color:var(--text-secondary);font-size:.86rem;text-align:center;margin:0;">Узнайте как за 10 минут настроить первый обзвон и получить квалифицированные лиды</p>
                         </div>
                     </div>
                 </div>
@@ -5625,9 +5645,17 @@
         }
 
         function onbUpdateStep(n, done) {
-            var check = document.getElementById('onbCheck' + n);
+            var circle = document.getElementById('onbCircle' + n);
             var card = document.getElementById('onbStep' + n);
-            if (check) check.style.display = done ? 'inline' : 'none';
+            if (circle) {
+                if (done) {
+                    circle.className = 'onb-step-num-circle done';
+                    circle.innerHTML = '&#10004;';
+                } else {
+                    circle.className = 'onb-step-num-circle pending';
+                    circle.textContent = n;
+                }
+            }
             if (card) { if (done) card.classList.add('done'); else card.classList.remove('done'); }
         }
 
