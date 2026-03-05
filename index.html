@@ -964,6 +964,21 @@
             padding:8px 20px;font-size:.82rem;font-weight:600;cursor:pointer;transition:opacity .2s;
         }
         .onb-step-btn:hover { opacity:.85; }
+        .onb-pulse { font-size:48px;animation:onbPulse 2s ease-in-out infinite; }
+        @keyframes onbPulse { 0%,100%{opacity:1;transform:scale(1);} 50%{opacity:.6;transform:scale(1.1);} }
+        .onb-metric-card {
+            background:var(--card);border:1px solid var(--border);border-radius:12px;
+            padding:18px 14px;text-align:center;
+        }
+        .onb-metric-val { font-size:1.6rem;font-weight:800;margin-bottom:4px; }
+        .onb-metric-label { font-size:.82rem;font-weight:600;margin-bottom:4px; }
+        .onb-metric-hint { font-size:.72rem;color:var(--text-muted);line-height:1.4; }
+        .onb-progress-bar { background:linear-gradient(90deg,var(--accent),#a29bfe);animation:onbProgress 3s ease-in-out infinite; }
+        @keyframes onbProgress { 0%{width:10%;} 50%{width:35%;} 100%{width:10%;} }
+        .onb-tip {
+            background:var(--card);border:1px solid var(--border);border-radius:10px;
+            padding:12px 16px;font-size:.84rem;color:var(--text-secondary);
+        }
 
         .important-badge {
             display: flex; align-items: center; gap: 6px;
@@ -2869,52 +2884,88 @@
         </div>
 
         <div class="dash-content">
-            <!-- PAGE: Главное — Онбординг -->
+            <!-- PAGE: Главное -->
             <div class="page-section active" id="pageMain">
-                <div style="max-width:900px;margin:0 auto;padding:20px 0;">
-                    <h1 style="font-size:1.6rem;font-weight:700;margin-bottom:4px;">&#128640; 3 шага до первых лидов</h1>
-                    <p style="color:var(--text-secondary);font-size:.92rem;margin-bottom:28px;">Следуйте инструкции и получите первые квалифицированные лиды</p>
-
-                    <div style="display:grid;grid-template-columns:repeat(3,1fr);gap:16px;margin-bottom:28px;" id="onboardingSteps">
-                        <!-- Step 1 -->
-                        <div class="onb-step-card" id="onbStep1">
-                            <div class="onb-step-header">
-                                <span style="font-size:28px;">&#128172;</span>
-                                <span class="onb-check" id="onbCheck1" style="display:none;">&#10004;</span>
+                <!-- State 1: Onboarding -->
+                <div id="onbState1" style="display:none;">
+                    <div style="max-width:900px;margin:0 auto;padding:20px 0;">
+                        <h1 style="font-size:1.6rem;font-weight:700;margin-bottom:4px;">&#128640; 3 шага до первых лидов</h1>
+                        <p style="color:var(--text-secondary);font-size:.92rem;margin-bottom:28px;">Следуйте инструкции и получите первые квалифицированные лиды</p>
+                        <div style="display:grid;grid-template-columns:repeat(3,1fr);gap:16px;margin-bottom:28px;">
+                            <div class="onb-step-card" id="onbStep1">
+                                <div class="onb-step-header"><span style="font-size:28px;">&#128172;</span><span class="onb-check" id="onbCheck1" style="display:none;">&#10004;</span></div>
+                                <div class="onb-step-num">Шаг 1</div>
+                                <div class="onb-step-title">Создайте диалог</div>
+                                <div class="onb-step-desc">Настройте сценарий разговора AI с вашими клиентами</div>
+                                <button class="onb-step-btn" onclick="onbGoTo('pageDialogs')">Создать диалог</button>
                             </div>
-                            <div class="onb-step-num">Шаг 1</div>
-                            <div class="onb-step-title">Создайте диалог</div>
-                            <div class="onb-step-desc">Настройте сценарий разговора AI с вашими клиентами</div>
-                            <button class="onb-step-btn" onclick="onbGoTo('pageDialogs')">Создать диалог</button>
+                            <div class="onb-step-card" id="onbStep2">
+                                <div class="onb-step-header"><span style="font-size:28px;">&#127919;</span><span class="onb-check" id="onbCheck2" style="display:none;">&#10004;</span></div>
+                                <div class="onb-step-num">Шаг 2</div>
+                                <div class="onb-step-title">Настройте аудиторию</div>
+                                <div class="onb-step-desc">Укажите сайты конкурентов для поиска потенциальных клиентов</div>
+                                <button class="onb-step-btn" onclick="onbGoTo('pageAudience')">Настроить ЦА</button>
+                            </div>
+                            <div class="onb-step-card" id="onbStep3">
+                                <div class="onb-step-header"><span style="font-size:28px;">&#128222;</span><span class="onb-check" id="onbCheck3" style="display:none;">&#10004;</span></div>
+                                <div class="onb-step-num">Шаг 3</div>
+                                <div class="onb-step-title">Запустите звонки</div>
+                                <div class="onb-step-desc">Запустите AI обзвон и получайте квалифицированные лиды</div>
+                                <button class="onb-step-btn" onclick="onbGoTo('pageLaunches')">Запустить</button>
+                            </div>
                         </div>
-                        <!-- Step 2 -->
-                        <div class="onb-step-card" id="onbStep2">
-                            <div class="onb-step-header">
-                                <span style="font-size:28px;">&#127919;</span>
-                                <span class="onb-check" id="onbCheck2" style="display:none;">&#10004;</span>
-                            </div>
-                            <div class="onb-step-num">Шаг 2</div>
-                            <div class="onb-step-title">Настройте аудиторию</div>
-                            <div class="onb-step-desc">Укажите сайты конкурентов для поиска потенциальных клиентов</div>
-                            <button class="onb-step-btn" onclick="onbGoTo('pageAudience')">Настроить ЦА</button>
-                        </div>
-                        <!-- Step 3 -->
-                        <div class="onb-step-card" id="onbStep3">
-                            <div class="onb-step-header">
-                                <span style="font-size:28px;">&#128222;</span>
-                                <span class="onb-check" id="onbCheck3" style="display:none;">&#10004;</span>
-                            </div>
-                            <div class="onb-step-num">Шаг 3</div>
-                            <div class="onb-step-title">Запустите звонки</div>
-                            <div class="onb-step-desc">Запустите AI обзвон и получайте квалифицированные лиды</div>
-                            <button class="onb-step-btn" onclick="onbGoTo('pageLaunches')">Запустить</button>
+                        <div id="onbDoneWrap" style="text-align:center;margin-bottom:28px;display:none;">
+                            <button class="onb-step-btn" style="padding:12px 32px;font-size:.95rem;" onclick="onbComplete()">&#10004; Готово! Жду первых лидов</button>
                         </div>
                     </div>
+                </div>
 
-                    <!-- Video block -->
-                    <div style="width:560px;height:315px;background:#1a1a2e;border:1px solid var(--border);border-radius:14px;display:flex;flex-direction:column;align-items:center;justify-content:center;margin:0 auto;">
-                        <span style="font-size:48px;margin-bottom:12px;">&#9654;&#65039;</span>
-                        <span style="color:var(--text-secondary);font-size:.9rem;">Видео инструкция — скоро</span>
+                <!-- State 2: Waiting -->
+                <div id="onbState2" style="display:none;">
+                    <div style="max-width:900px;margin:0 auto;padding:20px 0;">
+                        <div style="text-align:center;margin-bottom:32px;">
+                            <div class="onb-pulse">&#9203;</div>
+                            <h2 style="font-size:1.3rem;font-weight:700;margin:12px 0 4px;">Парсинг запущен — ждём данные</h2>
+                            <p style="color:var(--text-secondary);font-size:.88rem;">Система собирает контакты и запускает обзвон</p>
+                        </div>
+                        <div style="display:grid;grid-template-columns:repeat(4,1fr);gap:14px;margin-bottom:28px;">
+                            <div class="onb-metric-card">
+                                <div class="onb-metric-val" id="onbMetricLeads">0</div>
+                                <div class="onb-metric-label">Квал. лидов</div>
+                                <div class="onb-metric-hint">Клиенты готовые к сделке</div>
+                            </div>
+                            <div class="onb-metric-card">
+                                <div class="onb-metric-val" id="onbMetricCalls">0</div>
+                                <div class="onb-metric-label">Звонков</div>
+                                <div class="onb-metric-hint">Всего совершено звонков</div>
+                            </div>
+                            <div class="onb-metric-card">
+                                <div class="onb-metric-val" id="onbMetricConv">0%</div>
+                                <div class="onb-metric-label">Конверсия</div>
+                                <div class="onb-metric-hint">Процент квалификации</div>
+                            </div>
+                            <div class="onb-metric-card">
+                                <div class="onb-metric-val" id="onbMetricActive">0</div>
+                                <div class="onb-metric-label">Активных запусков</div>
+                                <div class="onb-metric-hint">Кампании в работе</div>
+                            </div>
+                        </div>
+                        <div style="background:var(--card);border:1px solid var(--border);border-radius:12px;padding:20px;margin-bottom:20px;">
+                            <div style="font-size:.88rem;color:var(--text-secondary);margin-bottom:12px;">Обычно первые лиды появляются в течение 24-48 часов</div>
+                            <div style="background:var(--bg);border-radius:6px;height:8px;overflow:hidden;">
+                                <div class="onb-progress-bar" style="width:15%;height:100%;border-radius:6px;"></div>
+                            </div>
+                        </div>
+                        <div style="display:grid;grid-template-columns:1fr 1fr;gap:12px;margin-bottom:28px;">
+                            <div class="onb-tip">&#128172; Проверьте сценарий диалога</div>
+                            <div class="onb-tip">&#127919; Добавьте больше конкурентов в ЦА</div>
+                            <div class="onb-tip">&#128222; Убедитесь что запуск активен</div>
+                            <div class="onb-tip">&#9200; Настройте рабочие часы звонков</div>
+                        </div>
+                        <div style="width:560px;height:315px;background:#1a1a2e;border:1px solid var(--border);border-radius:14px;display:flex;flex-direction:column;align-items:center;justify-content:center;margin:0 auto;">
+                            <span style="font-size:48px;margin-bottom:12px;">&#9654;&#65039;</span>
+                            <span style="color:var(--text-secondary);font-size:.9rem;">Видео инструкция — скоро</span>
+                        </div>
                     </div>
                 </div>
             </div>
@@ -5496,38 +5547,111 @@
         }
 
         // ===== ONBOARDING =====
+        var onbStepsDone = [false, false, false];
+
         function onbGoTo(pageId) {
             var link = document.querySelector('.sidebar-nav a[data-page="' + pageId + '"]');
             if (link) setActive(link);
         }
 
+        function onbComplete() {
+            localStorage.setItem('onboarding_complete', 'true');
+            onbCheckSteps();
+        }
+
         function onbCheckSteps() {
             if (!esHasToken()) return;
+
+            // State 3: has qualified leads → go to Stats
+            fetch(ES_API + '/api/leads', { headers: esApiHeaders() })
+                .then(function(r) { return r.ok ? r.json() : []; })
+                .then(function(leads) {
+                    var qualCount = Array.isArray(leads) ? leads.length : 0;
+                    if (qualCount > 0) {
+                        // State 3: redirect to Stats
+                        document.getElementById('onbState1').style.display = 'none';
+                        document.getElementById('onbState2').style.display = 'none';
+                        var link = document.querySelector('.sidebar-nav a[data-page="pageStats"]');
+                        if (link) setActive(link);
+                        return;
+                    }
+
+                    // State 2: onboarding complete but no leads
+                    if (localStorage.getItem('onboarding_complete') === 'true') {
+                        document.getElementById('onbState1').style.display = 'none';
+                        document.getElementById('onbState2').style.display = 'block';
+                        onbLoadMetrics();
+                        return;
+                    }
+
+                    // State 1: onboarding
+                    document.getElementById('onbState1').style.display = 'block';
+                    document.getElementById('onbState2').style.display = 'none';
+                    onbCheckStepsDetail();
+                }).catch(function() {
+                    // Fallback to state 1
+                    document.getElementById('onbState1').style.display = 'block';
+                    document.getElementById('onbState2').style.display = 'none';
+                    onbCheckStepsDetail();
+                });
+        }
+
+        function onbCheckStepsDetail() {
+            onbStepsDone = [false, false, false];
+
             fetch(ES_API + '/api/skillbases', { headers: esApiHeaders() })
                 .then(function(r) { return r.ok ? r.json() : []; })
                 .then(function(data) {
-                    var has = Array.isArray(data) && data.length > 0;
-                    document.getElementById('onbCheck1').style.display = has ? 'inline' : 'none';
-                    if (has) document.getElementById('onbStep1').classList.add('done');
-                    else document.getElementById('onbStep1').classList.remove('done');
+                    onbStepsDone[0] = Array.isArray(data) && data.length > 0;
+                    onbUpdateStep(1, onbStepsDone[0]);
+                    onbCheckAllDone();
                 }).catch(function() {});
 
             fetch(ES_API + '/api/audiences', { headers: esApiHeaders() })
                 .then(function(r) { return r.ok ? r.json() : []; })
                 .then(function(data) {
-                    var has = Array.isArray(data) && data.length > 0;
-                    document.getElementById('onbCheck2').style.display = has ? 'inline' : 'none';
-                    if (has) document.getElementById('onbStep2').classList.add('done');
-                    else document.getElementById('onbStep2').classList.remove('done');
+                    onbStepsDone[1] = Array.isArray(data) && data.length > 0;
+                    onbUpdateStep(2, onbStepsDone[1]);
+                    onbCheckAllDone();
                 }).catch(function() {});
 
             fetch(ES_API + '/api/campaigns', { headers: esApiHeaders() })
                 .then(function(r) { return r.ok ? r.json() : []; })
                 .then(function(data) {
-                    var has = Array.isArray(data) && data.some(function(c) { return c.status === 'calling' || c.status === 'active'; });
-                    document.getElementById('onbCheck3').style.display = has ? 'inline' : 'none';
-                    if (has) document.getElementById('onbStep3').classList.add('done');
-                    else document.getElementById('onbStep3').classList.remove('done');
+                    onbStepsDone[2] = Array.isArray(data) && data.length > 0;
+                    onbUpdateStep(3, onbStepsDone[2]);
+                    onbCheckAllDone();
+                }).catch(function() {});
+        }
+
+        function onbUpdateStep(n, done) {
+            var check = document.getElementById('onbCheck' + n);
+            var card = document.getElementById('onbStep' + n);
+            if (check) check.style.display = done ? 'inline' : 'none';
+            if (card) { if (done) card.classList.add('done'); else card.classList.remove('done'); }
+        }
+
+        function onbCheckAllDone() {
+            var allDone = onbStepsDone[0] && onbStepsDone[1] && onbStepsDone[2];
+            var wrap = document.getElementById('onbDoneWrap');
+            if (wrap) wrap.style.display = allDone ? 'block' : 'none';
+        }
+
+        function onbLoadMetrics() {
+            fetch(ES_API + '/api/leads', { headers: esApiHeaders() })
+                .then(function(r) { return r.ok ? r.json() : []; })
+                .then(function(data) {
+                    var el = document.getElementById('onbMetricLeads');
+                    if (el) el.textContent = Array.isArray(data) ? data.length : 0;
+                }).catch(function() {});
+
+            fetch(ES_API + '/api/campaigns', { headers: esApiHeaders() })
+                .then(function(r) { return r.ok ? r.json() : []; })
+                .then(function(data) {
+                    if (!Array.isArray(data)) return;
+                    var active = data.filter(function(c) { return c.status === 'calling' || c.status === 'active'; });
+                    var el = document.getElementById('onbMetricActive');
+                    if (el) el.textContent = active.length;
                 }).catch(function() {});
         }
 
