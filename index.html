@@ -3173,10 +3173,6 @@
                         <h1 style="margin:0;">Квал лиды <span class="ql-count" id="qlCount"></span></h1>
                         <p class="subtitle" style="margin-top:4px;">Квалифицированные лиды из запусков звонков</p>
                     </div>
-                    <button class="ql-integration-btn" onclick="qlIntegrationStub()">
-                        <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" style="vertical-align:-2px;margin-right:4px;"><path d="M10 13a5 5 0 007.54.54l3-3a5 5 0 00-7.07-7.07l-1.72 1.71"/><path d="M14 11a5 5 0 00-7.54-.54l-3 3a5 5 0 007.07 7.07l1.71-1.71"/></svg>
-                        Создать интеграцию
-                    </button>
                 </div>
 
                 <!-- Filters -->
@@ -3222,13 +3218,13 @@
                         <thead>
                             <tr>
                                 <th style="width:36px;"><input type="checkbox" id="qlSelectAll" onchange="qlToggleAll(this.checked)" style="cursor:pointer;"></th>
-                                <th>Имя</th>
                                 <th>Телефон</th>
-                                <th>Email</th>
-                                <th>Город</th>
-                                <th>Запуск / Диалог</th>
+                                <th>Имя</th>
+                                <th>Компания</th>
+                                <th>Диалог</th>
+                                <th>Длительность</th>
+                                <th>Запись</th>
                                 <th>Дата</th>
-                                <th>Статус</th>
                             </tr>
                         </thead>
                         <tbody id="qlTableBody"></tbody>
@@ -8162,38 +8158,22 @@
 
             tbody.innerHTML = filtered.map(function(l) {
                 var date = l.createdAt ? l.createdAt.substring(0, 16).replace('T', ' ') : '';
-                var badgeClass = qlStatusClass[l.status] || 'ql-badge-new';
-                var statusLabel = qlStatusLabels[l.status] || l.status;
-
                 var checked = qlSelected.indexOf(l.id) !== -1 ? ' checked' : '';
+                var hasAudio = !!(l.recordingUrl);
+                var audioBtn = hasAudio
+                    ? '<span class="ql-name-link" onclick="qlToggleAudio(\'' + l.id + '\')" style="cursor:pointer;color:#6c5ce7;" title="Прослушать запись"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" style="vertical-align:-3px;"><polygon points="5 3 19 12 5 21 5 3"/></svg></span>'
+                    : '<span style="color:var(--text-muted);">—</span>';
                 return '<tr>' +
                     '<td><input type="checkbox" class="ql-cb" data-id="' + l.id + '"' + checked + ' onchange="qlToggleSelect(\'' + l.id + '\',this.checked)"></td>' +
-                    '<td><span class="ql-name-link" onclick="qlToggleAudio(\'' + l.id + '\')">' +
-                    '<svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" style="vertical-align:-2px;margin-right:5px;opacity:0.5;"><polygon points="5 3 19 12 5 21 5 3"/></svg>' +
-                    clEsc(l.name || '—') + '</span></td>' +
-                    '<td>' + clEsc(l.phone || '') + '</td>' +
-                    '<td>' + clEsc(l.email || '—') + '</td>' +
-                    '<td>' + clEsc(l.city || '—') + '</td>' +
-                    '<td><span class="ql-source"><b>' + clEsc(l.launchName || '—') + '</b><br>' + clEsc(l.dialogName || '') + '</span></td>' +
+                    '<td style="font-family:monospace;font-size:.85rem;">' + clEsc(l.phone || '') + '</td>' +
+                    '<td>' + clEsc(l.name || '—') + '</td>' +
+                    '<td>' + clEsc(l.company || '—') + '</td>' +
+                    '<td>' + clEsc(l.dialogName || '—') + '</td>' +
+                    '<td>' + (l.callDuration || 0) + ' сек</td>' +
+                    '<td>' + audioBtn + '</td>' +
                     '<td style="white-space:nowrap;">' + date + '</td>' +
-                    '<td><select class="ql-filter" style="min-width:auto;padding:4px 8px;font-size:.78rem;border-radius:8px;" onchange="qlSetStatus(\'' + l.id + '\',this.value)">' +
-                    '<option value="new"' + (l.status === 'new' ? ' selected' : '') + '>Новый</option>' +
-                    '<option value="downloaded"' + (l.status === 'downloaded' ? ' selected' : '') + '>Скачанный</option>' +
-                    '<option value="transferred"' + (l.status === 'transferred' ? ' selected' : '') + '>Переданный</option>' +
-                    '</select></td>' +
                     '</tr>' +
-                    '<tr class="ql-audio-row" id="qlAudio_' + l.id + '">' +
-                    '<td colspan="8">' +
-                    '<div style="display:flex;align-items:center;gap:12px;">' +
-                    '<svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="#6c5ce7" stroke-width="2"><polygon points="5 3 19 12 5 21 5 3"/></svg>' +
-                    '<span style="font-size:.8rem;color:var(--text-muted);">Запись разговора</span>' +
-                    '<audio class="ql-audio-player" controls preload="none"><source src="data:audio/wav;base64,UklGRiQAAABXQVZFZm10IBAAAAABAAEAQB8AAIA+AAACABAAZGF0YQAAAAA=" type="audio/wav"></audio>' +
-                    '</div>' +
-                    '<div style="display:flex;gap:8px;margin-top:10px;">' +
-                    '<button class="ql-export-btn" onclick="qlSetStatus(\'' + l.id + '\',\'downloaded\')">Сохранить</button>' +
-                    '<button class="ql-export-btn" onclick="qlSetStatus(\'' + l.id + '\',\'transferred\')">Передан</button>' +
-                    '</div>' +
-                    '</td></tr>';
+                    (hasAudio ? '<tr class="ql-audio-row" id="qlAudio_' + l.id + '"><td colspan="8"><div style="display:flex;align-items:center;gap:12px;"><audio class="ql-audio-player" controls preload="none"><source src="' + clEsc(l.recordingUrl) + '" type="audio/mpeg"></audio></div></td></tr>' : '');
             }).join('');
         }
 
@@ -8292,13 +8272,12 @@
         }
 
         function qlDoExport(data, format) {
-            var headers = ['Имя', 'Телефон', 'Email', 'Город', 'Запуск', 'Диалог', 'Целевая аудитория', 'Дата', 'Статус'];
+            var headers = ['Телефон', 'Имя', 'Компания', 'Диалог', 'Длительность (сек)', 'Дата'];
             var rows = data.map(function(l) {
                 return [
-                    l.name || '', l.phone || '', l.email || '', l.city || '',
-                    l.launchName || '', l.dialogName || '', l.audienceName || '',
-                    l.createdAt ? l.createdAt.substring(0, 16).replace('T', ' ') : '',
-                    qlStatusLabels[l.status] || l.status
+                    l.phone || '', l.name || '', l.company || '',
+                    l.dialogName || '', l.callDuration || 0,
+                    l.createdAt ? l.createdAt.substring(0, 16).replace('T', ' ') : ''
                 ];
             });
             if (format === 'csv') {
@@ -8344,10 +8323,6 @@
             qlDoExport(data, format);
         }
 
-        function qlIntegrationStub() {
-            clToast('Модуль интеграций в разработке');
-        }
-
         // Load qualified leads from backend
         function qlLoadFromAPI() {
             if (!esHasToken()) return;
@@ -8356,15 +8331,19 @@
             .then(function(data) {
                 if (!Array.isArray(data)) return;
                 qlLeads = data.map(function(l) {
+                    var cd = l.call_data || {};
+                    if (typeof cd === 'string') { try { cd = JSON.parse(cd); } catch(e) { cd = {}; } }
+                    var recUrl = cd.recordingUrl || cd.audioUrl || cd.recording_url || cd.audio_url || '';
                     var campaign = clLaunches.find(function(c) { return c.serverId === l.campaign_id; });
                     return {
                         id: 'ql_srv_' + l.id, name: l.name || '', phone: l.phone || '',
-                        email: '', city: '',
+                        company: l.company || '',
                         launchName: campaign ? campaign.name : '', launchId: campaign ? campaign.id : '',
-                        dialogName: '', dialogId: '',
-                        audienceName: '', createdAt: l.created_at || '',
+                        dialogName: cd.skillbaseName || cd.dialogName || '', dialogId: '',
+                        createdAt: l.created_at || '',
                         status: l.qualified ? 'new' : 'downloaded',
-                        company: l.company || '', callDuration: l.call_duration || 0
+                        callDuration: l.call_duration || 0,
+                        recordingUrl: recUrl
                     };
                 });
                 qlPersist(); qlPopulateFilters(); qlRender();
