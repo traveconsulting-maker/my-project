@@ -2523,9 +2523,6 @@ function ppSendToAiProcessAPI() {
 }
 
 // ===== AI Processes =====
-let aipFilterStatus = 'all';
-let aipFilterDialog = 'all';
-
 function aipStatusName(s) {
     const m = { waiting:'Ожидает звонка', calling:'Звонок...', called:'Позвонил', missed:'Недозвон', lead:'Квал. лид' };
     return m[s] || s;
