@@ -7615,9 +7615,9 @@
             }
 
             var btns = '';
-            if (l.status === 'draft' || l.status === 'idle' || l.status === 'stopped') {
+            if (l.status === 'draft' || l.status === 'pending_contacts' || l.status === 'idle' || l.status === 'stopped') {
                 btns = '<button class="cl-btn cl-btn-start" onclick="clLaunchDraft(\'' + l.id + '\')" style="background:#27ae60;color:#fff;">&#9654; Запустить</button>';
-            } else if (l.status === 'active' || l.status === 'calling') {
+            } else if (l.status === 'calling') {
                 btns = '<button class="cl-btn cl-btn-pause" onclick="clPauseLaunch(\'' + l.id + '\')" style="background:#f39c12;color:#fff;">&#9208; Пауза</button>';
             } else if (l.status === 'paused') {
                 btns = '<button class="cl-btn cl-btn-start" onclick="clResumeLaunch(\'' + l.id + '\')" style="background:#27ae60;color:#fff;">&#9654; Возобновить</button>';
