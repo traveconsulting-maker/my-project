@@ -2918,10 +2918,11 @@ function renderLaunches(el, client) {
                 return;
             }
             el.innerHTML = '<div style="overflow-x:auto;"><table><thead><tr>' +
-                '<th>Название</th><th>Целевая аудитория</th><th>Диалог</th><th>Лидов/день</th>' +
+                '<th>ID</th><th>Название</th><th>Целевая аудитория</th><th>Диалог</th><th>Лидов/день</th>' +
                 '<th>Контактов нужно</th><th>Статус</th><th>Создан</th><th>Квал. лидов</th>' +
                 '</tr></thead><tbody>' +
                 campaigns.map(c => `<tr>
+                    <td>${c.id}</td>
                     <td>${esc(c.name)}</td>
                     <td>${esc(c.audience_name || '—')}</td>
                     <td>${esc(c.skillbase_name || '—')}</td>
