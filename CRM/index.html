@@ -2549,6 +2549,12 @@ function aipCountActiveDialogs() {
 
 let aipApiContacts = [];
 let aipApiSkillbases = [];
+let aipApiAudiences = [];
+let aipFilterStatus = 'all';
+let aipFilterSkillbase = 'all';
+let aipFilterAudience = 'all';
+let aipFilterDateFrom = '';
+let aipFilterDateTo = '';
 
 function aipRerender() {
     renderAiProcesses(document.getElementById('client-detail-content'), getClient(currentDetailClient));
@@ -2560,10 +2566,27 @@ function renderAiProcesses(el, client) {
 
     el.innerHTML = '<div style="text-align:center;padding:40px;color:var(--text-muted);font-size:.85rem;">Загрузка...</div>';
 
+    // Load audiences for filter (once)
+    if (aipApiAudiences.length === 0 && crmToken) {
+        fetch(API_BASE + '/api/admin/clients/' + cId + '/campaigns', { headers: apiHeaders() })
+            .then(r => r.ok ? r.json() : [])
+            .then(camps => {
+                const seen = new Set();
+                camps.forEach(c => { if (c.audience_name && !seen.has(c.audience_name)) { seen.add(c.audience_name); aipApiAudiences.push({ id: c.audience_id, name: c.audience_name }); }});
+            }).catch(() => {});
+    }
+
+    // Build query params
+    let url = API_BASE + '/api/admin/clients/' + cId + '/contacts?status=ai_processing';
+    if (aipFilterSkillbase !== 'all') url += '&skillbase_id=' + encodeURIComponent(aipFilterSkillbase);
+    if (aipFilterAudience !== 'all') url += '&audience_id=' + encodeURIComponent(aipFilterAudience);
+    if (aipFilterDateFrom) url += '&from=' + encodeURIComponent(aipFilterDateFrom);
+    if (aipFilterDateTo) url += '&to=' + encodeURIComponent(aipFilterDateTo);
+
     // Load skillbases and contacts in parallel
     const sbPromise = fetch(API_BASE + '/api/admin/clients/' + cId + '/skillbases', { headers: apiHeaders() })
         .then(r => r.ok ? r.json() : []).catch(() => []);
-    const ctPromise = fetch(API_BASE + '/api/admin/clients/' + cId + '/contacts?status=ai_processing', { headers: apiHeaders() })
+    const ctPromise = fetch(url, { headers: apiHeaders() })
         .then(r => r.ok ? r.json() : []).catch(() => []);
 
     Promise.all([sbPromise, ctPromise]).then(([skillbases, contacts]) => {
@@ -2578,9 +2601,23 @@ function renderAiProcesses(el, client) {
         const selectedContacts = contacts.filter(c => aipSelectedIds.has(c.id));
         const allHaveDialog = hasSelected && selectedContacts.every(c => c.skillbase_name);
 
+        // Filter options
+        const skillbaseFilterOpts = skillbases.map(s => `<option value="${s.id}" ${aipFilterSkillbase==s.id?'selected':''}>${esc(s.name)}</option>`).join('');
+        const audienceFilterOpts = aipApiAudiences.map(a => `<option value="${a.id}" ${aipFilterAudience==a.id?'selected':''}>${esc(a.name)}</option>`).join('');
+
         el.innerHTML = `
             <div class="aip-stats">
                 <div class="aip-stat"><div class="aip-stat-num">${total}</div><div class="aip-stat-label">Всего в обзвоне</div></div>
+            </div>
+            <div class="pp-filters" style="margin-bottom:12px;">
+                <select onchange="aipFilterSkillbase=this.value;aipRerender()">
+                    <option value="all">Все диалоги</option>${skillbaseFilterOpts}
+                </select>
+                <select onchange="aipFilterAudience=this.value;aipRerender()">
+                    <option value="all">Все ЦА</option>${audienceFilterOpts}
+                </select>
+                <input type="date" value="${aipFilterDateFrom}" onchange="aipFilterDateFrom=this.value;aipRerender()" title="Дата от">
+                <input type="date" value="${aipFilterDateTo}" onchange="aipFilterDateTo=this.value;aipRerender()" title="Дата до">
             </div>
             <div class="aip-launch">
                 <div>
@@ -2630,10 +2667,22 @@ function aipAssignDialogAPI() {
     if (aipSelectedIds.size === 0) { toast('Выберите контакты'); return; }
     const selDlg = document.getElementById('aip-dialog-select');
     if (!selDlg || !selDlg.value) { toast('Выберите диалог'); return; }
+    const c = getClient(currentDetailClient);
+    if (!c) return;
+    const skillbase_id = parseInt(selDlg.value);
     const dialogName = selDlg.options[selDlg.selectedIndex].text;
-    toast('Диалог «' + dialogName + '» назначен для ' + aipSelectedIds.size + ' контактов');
-    // In real implementation, this would call a backend endpoint to assign skillbase to contacts
-    aipRerender();
+    const ids = [...aipSelectedIds];
+    fetch(API_BASE + '/api/admin/clients/' + c.id + '/contacts/assign-skillbase', {
+        method: 'PATCH', headers: apiHeaders(),
+        body: JSON.stringify({ contact_ids: ids, skillbase_id: skillbase_id })
+    })
+    .then(r => { if (!r.ok) throw r; return r.json(); })
+    .then(data => {
+        toast('Диалог «' + dialogName + '» назначен для ' + data.updated + ' контактов');
+        aipSelectedIds.clear();
+        aipRerender();
+    })
+    .catch(() => { toast('Ошибка назначения диалога'); });
 }
 
 function aipStartCallingAPI() {
@@ -2643,8 +2692,30 @@ function aipStartCallingAPI() {
     const selDlg = document.getElementById('aip-dialog-select');
     const skillbase_id = selDlg ? parseInt(selDlg.value) : null;
     if (!skillbase_id) { toast('Выберите диалог'); return; }
+    const selectedDialogName = selDlg.options[selDlg.selectedIndex].text;
     const ids = [...aipSelectedIds];
-    fetch(API_BASE + '/api/admin/clients/' + c.id + '/send-to-sasha', {
+
+    // Check for dialog mismatch
+    const selectedContacts = aipApiContacts.filter(ct => aipSelectedIds.has(ct.id));
+    const mismatched = selectedContacts.filter(ct => ct.skillbase_id && ct.skillbase_id !== skillbase_id);
+
+    if (mismatched.length > 0) {
+        const mismatchList = mismatched.map(ct => esc(ct.phone) + ' — текущий: ' + esc(ct.skillbase_name || 'Не назначен')).join('<br>');
+        showConfirmModal(
+            'Несовпадение диалогов',
+            '<p>У ' + mismatched.length + ' из ' + ids.length + ' контактов назначен другой диалог. Выбранный диалог: <strong>' + esc(selectedDialogName) + '</strong></p>' +
+            '<div style="max-height:150px;overflow-y:auto;font-size:.8rem;background:var(--bg-secondary);padding:8px;border-radius:6px;margin:8px 0;">' + mismatchList + '</div>' +
+            '<p>Продолжить обзвон с выбранным диалогом?</p>',
+            function() { aipDoStartCalling(c.id, ids, skillbase_id); }
+        );
+        return;
+    }
+
+    aipDoStartCalling(c.id, ids, skillbase_id);
+}
+
+function aipDoStartCalling(clientId, ids, skillbase_id) {
+    fetch(API_BASE + '/api/admin/clients/' + clientId + '/send-to-sasha', {
         method: 'POST', headers: apiHeaders(),
         body: JSON.stringify({ contact_ids: ids, skillbase_id: skillbase_id })
     })
@@ -2655,6 +2726,23 @@ function aipStartCallingAPI() {
         aipRerender();
     })
     .catch(() => { toast('Ошибка запуска обзвона'); });
+}
+
+function showConfirmModal(title, bodyHtml, onConfirm) {
+    const overlay = document.createElement('div');
+    overlay.style.cssText = 'position:fixed;top:0;left:0;right:0;bottom:0;background:rgba(0,0,0,0.5);z-index:10000;display:flex;align-items:center;justify-content:center;';
+    overlay.innerHTML = `
+        <div style="background:var(--bg-primary);border-radius:12px;padding:24px;max-width:500px;width:90%;box-shadow:0 20px 40px rgba(0,0,0,0.3);">
+            <h3 style="margin:0 0 12px;font-size:1.1rem;">${title}</h3>
+            <div style="font-size:.9rem;color:var(--text-secondary);margin-bottom:20px;">${bodyHtml}</div>
+            <div style="display:flex;gap:8px;justify-content:flex-end;">
+                <button class="btn btn-sm" style="padding:8px 20px;" onclick="this.closest('div[style*=fixed]').remove()">Отмена</button>
+                <button class="btn btn-sm" id="aip-confirm-btn" style="background:linear-gradient(135deg,#f59e0b,#ef4444);color:#fff;padding:8px 20px;">Продолжить</button>
+            </div>
+        </div>`;
+    document.body.appendChild(overlay);
+    overlay.querySelector('#aip-confirm-btn').onclick = function() { overlay.remove(); onConfirm(); };
+    overlay.addEventListener('click', function(e) { if (e.target === overlay) overlay.remove(); });
 }
 
 function aipToggleItem(id, checked) {
