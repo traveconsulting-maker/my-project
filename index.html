@@ -3992,11 +3992,36 @@
         function showAfterLogin() {
             closeModal();
             landingPage.classList.add('hidden');
-            const onboarded = localStorage.getItem('onboarded');
-            if (onboarded) {
-                setTimeout(() => { dashboard.classList.add('show'); document.body.style.overflow = ''; }, 400);
+            // Load client profile to check if onboarding is needed
+            if (esHasToken()) {
+                fetch(ES_API + '/api/clients/me', { headers: esApiHeaders() })
+                .then(function(r) { return r.ok ? r.json() : null; })
+                .then(function(me) {
+                    if (me && me.company) {
+                        localStorage.setItem('onboarded', '1');
+                    }
+                    var onboarded = localStorage.getItem('onboarded');
+                    if (onboarded) {
+                        setTimeout(() => { dashboard.classList.add('show'); document.body.style.overflow = ''; }, 400);
+                    } else {
+                        setTimeout(() => { onboarding.classList.add('show'); document.body.style.overflow = ''; }, 400);
+                    }
+                })
+                .catch(function() {
+                    var onboarded = localStorage.getItem('onboarded');
+                    if (onboarded) {
+                        setTimeout(() => { dashboard.classList.add('show'); document.body.style.overflow = ''; }, 400);
+                    } else {
+                        setTimeout(() => { onboarding.classList.add('show'); document.body.style.overflow = ''; }, 400);
+                    }
+                });
             } else {
-                setTimeout(() => { onboarding.classList.add('show'); document.body.style.overflow = ''; }, 400);
+                var onboarded = localStorage.getItem('onboarded');
+                if (onboarded) {
+                    setTimeout(() => { dashboard.classList.add('show'); document.body.style.overflow = ''; }, 400);
+                } else {
+                    setTimeout(() => { onboarding.classList.add('show'); document.body.style.overflow = ''; }, 400);
+                }
             }
             // Load data from backend after login
             setTimeout(function() {
@@ -4184,6 +4209,20 @@
             settingsCompanyData.info = document.getElementById('onbCompanyInfo').value || '';
             localStorage.setItem('onboarded', '1');
             saveUserSession();
+            // Save onboarding data to backend
+            if (esHasToken()) {
+                var patchData = {};
+                if (settingsCompanyData.name) patchData.company = settingsCompanyData.name;
+                if (selectedNiche) patchData.niche = selectedNiche;
+                var desc = [settingsCompanyData.product, settingsCompanyData.utp, settingsCompanyData.info].filter(Boolean).join('. ');
+                if (desc) patchData.description = desc;
+                if (Object.keys(patchData).length > 0) {
+                    fetch(ES_API + '/api/clients/me', {
+                        method: 'PATCH', headers: esApiHeaders(),
+                        body: JSON.stringify(patchData)
+                    }).catch(function(err) { console.error('API client update error:', err); });
+                }
+            }
             // Create ЦА from onboarding data if audience info provided
             if (typeof taAudiences !== 'undefined' && (settingsAudienceData.niche || settingsAudienceData.client || settingsAudienceData.sites)) {
                 var taName = settingsAudienceData.niche || 'Основная ЦА';
@@ -5333,15 +5372,13 @@
             dlg.updatedAt = new Date().toISOString();
             syncDialogsToCRM();
 
-            // Sync to backend
-            if (esHasToken()) {
+            // Sync to backend (PATCH if exists, skip POST — creation handled in createDialog)
+            if (esHasToken() && dlg.serverId) {
                 var ctx = { rules: dlg.rules, facts: dlg.facts, criteria: dlg.criteria, greetings: dlg.greetings, plan: dlg.planItems, botRole: dlg.botRole, botStyle: dlg.botStyle };
-                fetch(ES_API + '/api/skillbases', {
-                    method: 'POST', headers: esApiHeaders(),
+                fetch(ES_API + '/api/skillbases/' + dlg.serverId, {
+                    method: 'PATCH', headers: esApiHeaders(),
                     body: JSON.stringify({ name: dlg.name, context: ctx })
-                }).then(function(r) { return r.json(); }).then(function(data) {
-                    if (data.id) { dlg.serverId = data.id; syncDialogsToCRM(); }
-                }).catch(function(err) { console.error('API skillbase save error:', err); });
+                }).catch(function(err) { console.error('API skillbase update error:', err); });
             }
         }
 
