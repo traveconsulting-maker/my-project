@@ -2547,109 +2547,115 @@ function aipCountActiveDialogs() {
     return activeIds.size;
 }
 
+let aipApiContacts = [];
+let aipApiSkillbases = [];
+
+function aipRerender() {
+    renderAiProcesses(document.getElementById('client-detail-content'), getClient(currentDetailClient));
+}
+
 function renderAiProcesses(el, client) {
-    const cId = client ? client.id : '';
-    const items = aiProcessItems.filter(i => i.clientId === cId);
-    const login = client ? client.login : '';
-    const dialogs = aipGetDialogs(login);
+    if (!client) { el.innerHTML = '<div class="empty-state"><p>Клиент не найден</p></div>'; return; }
+    const cId = client.id;
 
-    // Stats
-    const total = items.length;
-    const waiting = items.filter(i => i.status === 'waiting').length;
-    const called = items.filter(i => i.status === 'called').length;
-    const missed = items.filter(i => i.status === 'missed').length;
-    const leads = items.filter(i => i.status === 'lead').length;
-    const processed = called + missed + leads;
-    const pct = total > 0 ? Math.round(processed / total * 100) : 0;
+    el.innerHTML = '<div style="text-align:center;padding:40px;color:var(--text-muted);font-size:.85rem;">Загрузка...</div>';
 
-    // Active dialogs count
-    const activeDialogIds = new Set();
-    items.forEach(i => { if ((i.status === 'waiting' || i.status === 'calling') && i.dialogId) activeDialogIds.add(i.dialogId); });
-    const activeCount = activeDialogIds.size;
+    // Load skillbases and contacts in parallel
+    const sbPromise = fetch(API_BASE + '/api/admin/clients/' + cId + '/skillbases', { headers: apiHeaders() })
+        .then(r => r.ok ? r.json() : []).catch(() => []);
+    const ctPromise = fetch(API_BASE + '/api/admin/clients/' + cId + '/contacts?status=ai_processing', { headers: apiHeaders() })
+        .then(r => r.ok ? r.json() : []).catch(() => []);
 
-    // Unique dialog names for filter
-    const dialogNames = new Set();
-    items.forEach(i => { if (i.dialogName) dialogNames.add(i.dialogName); });
+    Promise.all([sbPromise, ctPromise]).then(([skillbases, contacts]) => {
+        aipApiSkillbases = skillbases;
+        aipApiContacts = contacts;
 
-    // Apply filters
-    let filtered = [...items];
-    if (aipFilterStatus !== 'all') filtered = filtered.filter(i => i.status === aipFilterStatus);
-    if (aipFilterDialog !== 'all') filtered = filtered.filter(i => i.dialogName === aipFilterDialog);
+        const total = contacts.length;
+        const dialogOpts = skillbases.map(s => `<option value="${s.id}">${esc(s.name)}</option>`).join('');
+        const hasSelected = aipSelectedIds.size > 0;
 
-    const dialogOpts = dialogs.map(d => `<option value="${esc(d.id)}">${esc(d.name)}</option>`).join('');
-    const activeWarn = activeCount >= 3 ? '<div class="aip-active-warn">Достигнут лимит: одновременно активно 3 диалога. Завершите обзвон по одному диалогу, чтобы запустить новый.</div>' : '';
+        // Check if all selected contacts have a skillbase assigned
+        const selectedContacts = contacts.filter(c => aipSelectedIds.has(c.id));
+        const allHaveDialog = hasSelected && selectedContacts.every(c => c.skillbase_name);
 
-    el.innerHTML = `
-        <div class="aip-progress">
-            <div style="display:flex;justify-content:space-between;margin-bottom:6px;">
-                <span style="font-size:.85rem;font-weight:600;color:var(--text);">Прогресс обзвона</span>
-                <span style="font-size:.85rem;color:var(--text-muted);">${processed}/${total} (${pct}%)</span>
+        el.innerHTML = `
+            <div class="aip-stats">
+                <div class="aip-stat"><div class="aip-stat-num">${total}</div><div class="aip-stat-label">Всего в обзвоне</div></div>
             </div>
-            <div class="aip-progress-bar">
-                <div class="aip-progress-fill" style="width:${pct}%"></div>
-                <div class="aip-progress-text">${pct}%</div>
+            <div class="aip-launch">
+                <div>
+                    <label>Диалог для обзвона</label>
+                    <select id="aip-dialog-select">${dialogOpts.length ? dialogOpts : '<option value="">Нет диалогов</option>'}</select>
+                </div>
+                <button class="btn btn-sm ${hasSelected?'':'disabled'}" ${hasSelected?'':'disabled'} style="background:linear-gradient(135deg,#6c5ce7,#a855f7);color:#fff;padding:8px 20px;${hasSelected?'':'opacity:0.5;cursor:not-allowed;'}" onclick="aipAssignDialogAPI()">Назначить диалог</button>
+                <button class="btn btn-sm ${allHaveDialog?'':'disabled'}" ${allHaveDialog?'':'disabled'} style="background:linear-gradient(135deg,#34d399,#10b981);color:#fff;padding:8px 20px;${allHaveDialog?'':'opacity:0.5;cursor:not-allowed;'}" onclick="aipStartCallingAPI()" ${allHaveDialog?'':'title="Назначьте диалог всем выбранным контактам"'}>Запустить обзвон</button>
             </div>
-        </div>
-        <div class="aip-stats">
-            <div class="aip-stat"><div class="aip-stat-num">${total}</div><div class="aip-stat-label">Всего</div></div>
-            <div class="aip-stat"><div class="aip-stat-num" style="color:var(--text-muted);">${waiting}</div><div class="aip-stat-label">Ожидают</div></div>
-            <div class="aip-stat"><div class="aip-stat-num" style="color:var(--info);">${called}</div><div class="aip-stat-label">Позвонил</div></div>
-            <div class="aip-stat"><div class="aip-stat-num" style="color:var(--danger);">${missed}</div><div class="aip-stat-label">Недозвон</div></div>
-            <div class="aip-stat"><div class="aip-stat-num" style="color:var(--success);">${leads}</div><div class="aip-stat-label">Квал. лиды</div></div>
-            <div class="aip-stat"><div class="aip-stat-num" style="color:var(--accent-light);">${activeCount}/3</div><div class="aip-stat-label">Активных диалогов</div></div>
-        </div>
-        ${activeWarn}
-        <div class="aip-launch">
-            <div>
-                <label>Диалог для обзвона</label>
-                <select id="aip-dialog-select">${dialogOpts.length ? dialogOpts : '<option value="">Нет диалогов</option>'}</select>
+            <div style="font-size:.8rem;color:var(--text-muted);margin-bottom:8px;">Всего: ${total} контактов${aipSelectedIds.size > 0 ? ', выбрано: ' + aipSelectedIds.size : ''}</div>
+            <div class="aip-scroll">
+                <table>
+                    <thead><tr><th style="width:30px;"><input type="checkbox" class="pp-check" onchange="aipToggleAllAPI(this.checked)"></th><th>Телефон</th><th>Контакт</th><th>ЦА</th><th>Диалог</th><th>Статус</th><th>Попытки</th><th>Запись</th></tr></thead>
+                    <tbody>${contacts.length === 0 ? '<tr><td colspan="8" style="text-align:center;color:var(--text-muted);padding:30px;">Нет контактов в AI Процессах</td></tr>' :
+                        contacts.map(c => `<tr>
+                            <td><input type="checkbox" class="pp-check" data-aip="${c.id}" ${aipSelectedIds.has(c.id)?'checked':''} onchange="aipToggleItemAPI(${c.id},this.checked)"></td>
+                            <td style="font-family:'JetBrains Mono',monospace;font-size:.85rem;">${esc(c.phone || '')}</td>
+                            <td>${c.name ? '<strong style="font-size:.85rem;">'+esc(c.name)+'</strong>' : '<span style="color:var(--text-muted);">—</span>'}</td>
+                            <td>${c.audience_name ? '<span class="pp-source">'+esc(c.audience_name)+'</span>' : '<span style="color:var(--text-muted);font-size:.8rem;">—</span>'}</td>
+                            <td>${c.skillbase_name ? '<span class="aip-dialog-tag">'+esc(c.skillbase_name)+'</span>' : '<span style="color:var(--text-muted);font-size:.8rem;">Не назначен</span>'}</td>
+                            <td><span class="aip-status ${aipStatusClass(c.status)}">${aipStatusName(c.status)}</span></td>
+                            <td class="aip-attempts">—</td>
+                            <td><span style="color:var(--text-muted);font-size:.8rem;">—</span></td>
+                        </tr>`).join('')}
+                    </tbody>
+                </table>
             </div>
-            <div>
-                <label>Назначить для</label>
-                <select id="aip-assign-target">
-                    <option value="unassigned">Без диалога (${items.filter(i=>!i.dialogId).length})</option>
-                    <option value="waiting">Ожидающих звонка (${waiting})</option>
-                    <option value="missed">Недозвон — повтор (${missed})</option>
-                    <option value="selected">Выбранных</option>
-                </select>
-            </div>
-            <button class="btn btn-sm" style="background:linear-gradient(135deg,#6c5ce7,#a855f7);color:#fff;padding:8px 20px;" onclick="aipAssignDialog()">Назначить диалог</button>
-            <button class="btn btn-sm" style="background:linear-gradient(135deg,#34d399,#10b981);color:#fff;padding:8px 20px;" onclick="aipStartCalling()">Запустить обзвон</button>
-        </div>
-        <div class="aip-filters">
-            <select onchange="aipFilterStatus=this.value;renderAiProcesses(document.getElementById('client-detail-content'),getClient(currentDetailClient))">
-                <option value="all" ${aipFilterStatus==='all'?'selected':''}>Все статусы</option>
-                <option value="waiting" ${aipFilterStatus==='waiting'?'selected':''}>Ожидает звонка</option>
-                <option value="calling" ${aipFilterStatus==='calling'?'selected':''}>Звонок...</option>
-                <option value="called" ${aipFilterStatus==='called'?'selected':''}>Позвонил</option>
-                <option value="missed" ${aipFilterStatus==='missed'?'selected':''}>Недозвон</option>
-                <option value="lead" ${aipFilterStatus==='lead'?'selected':''}>Квал. лид</option>
-            </select>
-            <select onchange="aipFilterDialog=this.value;renderAiProcesses(document.getElementById('client-detail-content'),getClient(currentDetailClient))">
-                <option value="all" ${aipFilterDialog==='all'?'selected':''}>Все диалоги</option>
-                ${[...dialogNames].sort().map(n => `<option value="${esc(n)}" ${aipFilterDialog===n?'selected':''}>${esc(n)}</option>`).join('')}
-            </select>
-        </div>
-        <div class="aip-scroll">
-            <table>
-                <thead><tr><th style="width:30px;"><input type="checkbox" class="pp-check" onchange="aipToggleAll(this.checked)"></th><th>Телефон</th><th>Контакт</th><th>Диалог</th><th>Статус</th><th>Попытки</th><th>Запись</th></tr></thead>
-                <tbody>${filtered.length === 0 ? '<tr><td colspan="7" style="text-align:center;color:var(--text-muted);padding:30px;">Нет номеров в AI Процессах</td></tr>' :
-                    filtered.map(i => `<tr>
-                        <td><input type="checkbox" class="pp-check" data-aip="${esc(i.id)}" onchange="aipToggleItem('${esc(i.id)}',this.checked)"></td>
-                        <td style="font-family:'JetBrains Mono',monospace;font-size:.85rem;">${esc(i.phone)}</td>
-                        <td>${i.contactName ? '<strong style="font-size:.85rem;">'+esc(i.contactName)+'</strong>' : '<span style="color:var(--text-muted);">—</span>'}</td>
-                        <td>${i.dialogName ? '<span class="aip-dialog-tag">'+esc(i.dialogName)+'</span>' : '<span style="color:var(--text-muted);font-size:.8rem;">Не назначен</span>'}</td>
-                        <td><span class="aip-status ${aipStatusClass(i.status)}">${aipStatusName(i.status)}</span></td>
-                        <td class="aip-attempts">${i.attempts}/${i.maxAttempts}</td>
-                        <td>${i.recordUrl ? '<audio controls src="'+esc(i.recordUrl)+'" preload="none" style="height:28px;max-width:140px;"></audio>' : '<span style="color:var(--text-muted);font-size:.8rem;">—</span>'}</td>
-                    </tr>`).join('')}
-                </tbody>
-            </table>
-        </div>
-    `;
+        `;
+    });
 }
 
 let aipSelectedIds = new Set();
+
+function aipToggleItemAPI(id, checked) {
+    if (checked) aipSelectedIds.add(id);
+    else aipSelectedIds.delete(id);
+    aipRerender();
+}
+
+function aipToggleAllAPI(checked) {
+    aipSelectedIds.clear();
+    if (checked) aipApiContacts.forEach(c => aipSelectedIds.add(c.id));
+    aipRerender();
+}
+
+function aipAssignDialogAPI() {
+    if (aipSelectedIds.size === 0) { toast('Выберите контакты'); return; }
+    const selDlg = document.getElementById('aip-dialog-select');
+    if (!selDlg || !selDlg.value) { toast('Выберите диалог'); return; }
+    const dialogName = selDlg.options[selDlg.selectedIndex].text;
+    toast('Диалог «' + dialogName + '» назначен для ' + aipSelectedIds.size + ' контактов');
+    // In real implementation, this would call a backend endpoint to assign skillbase to contacts
+    aipRerender();
+}
+
+function aipStartCallingAPI() {
+    if (aipSelectedIds.size === 0) { toast('Выберите контакты'); return; }
+    const c = getClient(currentDetailClient);
+    if (!c) return;
+    const selDlg = document.getElementById('aip-dialog-select');
+    const skillbase_id = selDlg ? parseInt(selDlg.value) : null;
+    if (!skillbase_id) { toast('Выберите диалог'); return; }
+    const ids = [...aipSelectedIds];
+    fetch(API_BASE + '/api/admin/clients/' + c.id + '/send-to-sasha', {
+        method: 'POST', headers: apiHeaders(),
+        body: JSON.stringify({ contact_ids: ids, skillbase_id: skillbase_id })
+    })
+    .then(r => { if (!r.ok) throw r; return r.json(); })
+    .then(data => {
+        toast('Обзвон запущен для ' + data.updated + ' контактов');
+        aipSelectedIds.clear();
+        aipRerender();
+    })
+    .catch(() => { toast('Ошибка запуска обзвона'); });
+}
 
 function aipToggleItem(id, checked) {
     if (checked) aipSelectedIds.add(id);
@@ -2660,79 +2666,6 @@ function aipToggleAll(checked) {
     aipSelectedIds.clear();
     if (checked) aiProcessItems.forEach(i => aipSelectedIds.add(i.id));
     document.querySelectorAll('.pp-check[data-aip]').forEach(cb => cb.checked = checked);
-}
-
-function aipAssignDialog() {
-    const c = getClient(currentDetailClient);
-    const cId = c ? c.id : '';
-    const selDlg = document.getElementById('aip-dialog-select');
-    const target = document.getElementById('aip-assign-target');
-    if (!selDlg || !selDlg.value) { toast('Выберите диалог'); return; }
-    const dialogId = selDlg.value;
-    const dialogName = selDlg.options[selDlg.selectedIndex].text;
-
-    // Check active dialogs limit (for this client)
-    const clientItems = aiProcessItems.filter(i => i.clientId === cId);
-    const activeDialogIds = new Set();
-    clientItems.forEach(i => { if ((i.status === 'waiting' || i.status === 'calling') && i.dialogId && i.dialogId !== dialogId) activeDialogIds.add(i.dialogId); });
-    if (activeDialogIds.size >= 3) {
-        toast('Максимум 3 активных диалога одновременно!');
-        return;
-    }
-
-    let count = 0;
-    const tv = target.value;
-    aiProcessItems.forEach(i => {
-        if (i.clientId !== cId) return;
-        let match = false;
-        if (tv === 'unassigned' && !i.dialogId) match = true;
-        else if (tv === 'waiting' && i.status === 'waiting') match = true;
-        else if (tv === 'missed' && i.status === 'missed') match = true;
-        else if (tv === 'selected' && aipSelectedIds.has(i.id)) match = true;
-        if (match) {
-            i.dialogId = dialogId;
-            i.dialogName = dialogName;
-            if (i.status === 'missed') { i.status = 'waiting'; }
-            count++;
-        }
-    });
-    persist();
-    toast('Диалог «' + dialogName + '» назначен для ' + count + ' номеров');
-    renderAiProcesses(document.getElementById('client-detail-content'), c);
-}
-
-function aipStartCalling() {
-    const c = getClient(currentDetailClient);
-    const cId = c ? c.id : '';
-    const clientItems = aiProcessItems.filter(i => i.clientId === cId);
-    const activeDialogIds = new Set();
-    clientItems.forEach(i => { if ((i.status === 'waiting' || i.status === 'calling') && i.dialogId) activeDialogIds.add(i.dialogId); });
-    if (activeDialogIds.size > 3) {
-        toast('Одновременно можно запустить не больше 3 диалогов!');
-        return;
-    }
-    const waitingWithDialog = clientItems.filter(i => i.status === 'waiting' && i.dialogId);
-    if (waitingWithDialog.length === 0) { toast('Нет номеров с назначенным диалогом для обзвона'); return; }
-    waitingWithDialog.forEach(i => { i.status = 'calling'; });
-    persist();
-    toast('Обзвон запущен для ' + waitingWithDialog.length + ' номеров');
-    renderAiProcesses(document.getElementById('client-detail-content'), getClient(currentDetailClient));
-
-    // Simulate calls completing after a short delay (in real app, Sasha AI webhook would update these)
-    setTimeout(() => {
-        aiProcessItems.forEach(i => {
-            if (i.status !== 'calling') return;
-            i.attempts++;
-            i.lastCallAt = now();
-            // Simulate outcomes
-            const rand = Math.random();
-            if (rand < 0.25) { i.status = 'lead'; i.recordUrl = ''; }
-            else if (rand < 0.55) { i.status = 'called'; i.recordUrl = ''; }
-            else { i.status = i.attempts >= i.maxAttempts ? 'missed' : 'waiting'; }
-        });
-        persist();
-        if (currentDetailTab === 'aiprocess') renderAiProcesses(document.getElementById('client-detail-content'), getClient(currentDetailClient));
-    }, 2000);
 }
 
 function toggleDialogActive(login, dialogId, el) {
