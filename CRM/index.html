@@ -2357,14 +2357,15 @@ function renderParsedPhones(el, client) {
                 <div style="font-size:.8rem;color:var(--text-muted);margin-bottom:8px;">Всего: ${filtered.length} номеров${ppSelectedIds.size > 0 ? ', выбрано: ' + ppSelectedIds.size : ''}</div>
                 <div class="pp-scroll">
                     <table>
-                        <thead><tr><th style="width:30px;"><input type="checkbox" class="pp-check" onchange="ppToggleAllAPI(this.checked)"></th><th>Телефон</th><th>Контакт</th><th>Регион</th><th>Источник</th><th>Дата</th></tr></thead>
-                        <tbody>${filtered.length === 0 ? '<tr><td colspan="6" style="text-align:center;color:var(--text-muted);padding:30px;">Нет спарсенных номеров</td></tr>' :
+                        <thead><tr><th style="width:30px;"><input type="checkbox" class="pp-check" onchange="ppToggleAllAPI(this.checked)"></th><th>Телефон</th><th>Контакт</th><th>Регион</th><th>Источник</th><th>Статус</th><th>Дата</th></tr></thead>
+                        <tbody>${filtered.length === 0 ? '<tr><td colspan="7" style="text-align:center;color:var(--text-muted);padding:30px;">Нет спарсенных номеров</td></tr>' :
                             filtered.map(c => `<tr>
                                 <td><input type="checkbox" class="pp-check" data-id="${c.id}" ${ppSelectedIds.has(c.id)?'checked':''} onchange="ppToggleId(${c.id},this.checked)"></td>
                                 <td style="font-family:'JetBrains Mono',monospace;font-size:.85rem;">${esc(c.phone || '')}</td>
                                 <td>${c.name ? '<strong style="font-size:.85rem;">'+esc(c.name)+'</strong>' : '<span style="color:var(--text-muted);font-size:.8rem;">—</span>'}</td>
                                 <td><span class="pp-region">${esc(c._region)}</span></td>
                                 <td>${c.audience_name ? '<span class="pp-source" title="'+esc(c.audience_name)+'">'+esc(c.audience_name)+'</span>' : '<span style="color:var(--text-muted);font-size:.8rem;">—</span>'}</td>
+                                <td>${c.status === 'ai_processing' ? '<span class="tag" style="background:#3b82f6;color:#fff;">В обзвоне</span>' : '<span class="tag" style="background:#6b7280;color:#fff;">Новый</span>'}</td>
                                 <td>${formatDate(c.created_at)}</td>
                             </tr>`).join('')}
                         </tbody>
