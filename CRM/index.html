@@ -2428,6 +2428,8 @@ function renderParsedPhones(el, client) {
                 <div class="pp-actions">
                     <button class="btn btn-sm" onclick="ppSelectAllAPI()"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="9 11 12 14 22 4"/><path d="M21 12v7a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h11"/></svg> Выбрать все</button>
                     <button class="btn btn-sm" onclick="ppExportSelected()"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="7 10 12 15 17 10"/><line x1="12" y1="15" x2="12" y2="3"/></svg> Экспорт</button>
+                    <button class="btn btn-sm" onclick="ppUploadCSVClick()" style="background:linear-gradient(135deg,#f59e0b,#d97706);color:#fff;">📁 Загрузить CSV от DMP</button>
+                    <input type="file" id="pp-csv-upload" accept=".csv" style="display:none" onchange="ppHandleCSVUpload(this)">
                     <button class="btn btn-sm ${hasSelected?'':'disabled'}" ${hasSelected?'':'disabled'} onclick="ppSendToAiProcessAPI()" style="background:linear-gradient(135deg,#6c5ce7,#a855f7);color:#fff;${hasSelected?'':'opacity:0.5;cursor:not-allowed;'}"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><path d="M12 6v6l4 2"/></svg> В AI Процессы</button>
                 </div>
                 <div style="font-size:.8rem;color:var(--text-muted);margin-bottom:8px;">Всего: ${filtered.length} номеров${ppSelectedIds.size > 0 ? ', выбрано: ' + ppSelectedIds.size : ''}</div>
@@ -2507,6 +2509,58 @@ function ppExportSelected() {
     a.href = url; a.download = 'parsed_phones_' + new Date().toISOString().slice(0,10) + '.csv';
     a.click(); URL.revokeObjectURL(url);
     toast('Экспортировано ' + selected.length + ' номеров');
+}
+
+function ppUploadCSVClick() {
+    document.getElementById('pp-csv-upload').value = '';
+    document.getElementById('pp-csv-upload').click();
+}
+
+function ppHandleCSVUpload(input) {
+    const file = input.files[0];
+    if (!file) return;
+    const c = getClient(currentDetailClient);
+    if (!c) { toast('Клиент не найден'); return; }
+    const reader = new FileReader();
+    reader.onload = function(e) {
+        const text = e.target.result;
+        const lines = text.split('\n').map(l => l.replace(/\r$/, ''));
+        if (lines.length < 2) { toast('CSV файл пуст'); return; }
+        const headers = lines[0].split(';').map(h => h.trim());
+        const idx = (name) => headers.indexOf(name);
+        if (idx('Phone') < 0) { toast('В CSV не найден столбец Phone'); return; }
+        const contacts = [];
+        for (let i = 1; i < lines.length; i++) {
+            if (!lines[i].trim()) continue;
+            const cols = lines[i].split(';');
+            const phone = (cols[idx('Phone')] || '').trim();
+            if (!phone) continue;
+            const raw = (cols[idx('Date')] || '').trim();
+            let visit_date = null;
+            if (raw) {
+                const m = raw.match(/^(\d{2})\.(\d{2})\.(\d{4})\s+(\d{2}):(\d{2}):(\d{2})$/);
+                visit_date = m ? m[3]+'-'+m[2]+'-'+m[1]+'T'+m[4]+':'+m[5]+':'+m[6] : raw;
+            }
+            contacts.push({
+                phone,
+                company: (cols[idx('Sitename')] || '').trim() || null,
+                visit_date
+            });
+        }
+        if (contacts.length === 0) { toast('Нет контактов с телефонами в CSV'); return; }
+        fetch(API_BASE + '/api/admin/clients/' + c.id + '/import-contacts', {
+            method: 'POST',
+            headers: { ...apiHeaders(), 'Content-Type': 'application/json' },
+            body: JSON.stringify({ contacts })
+        })
+        .then(r => { if (!r.ok) throw r; return r.json(); })
+        .then(data => {
+            toast('Импортировано: ' + data.imported + ', пропущено (дубли): ' + data.skipped);
+            ppRerender();
+        })
+        .catch(() => toast('Ошибка импорта контактов'));
+    };
+    reader.readAsText(file);
 }
 
 function ppSendToTelemarketing() {
