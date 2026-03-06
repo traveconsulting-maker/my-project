@@ -2512,15 +2512,56 @@ function ppExportSelected() {
 }
 
 function ppUploadCSVClick() {
-    document.getElementById('pp-csv-upload').value = '';
-    document.getElementById('pp-csv-upload').click();
-}
-
-function ppHandleCSVUpload(input) {
-    const file = input.files[0];
-    if (!file) return;
     const c = getClient(currentDetailClient);
     if (!c) { toast('Клиент не найден'); return; }
+
+    // Fetch campaigns then show modal
+    fetch(API_BASE + '/api/admin/clients/' + c.id + '/campaigns', { headers: apiHeaders() })
+        .then(r => r.ok ? r.json() : [])
+        .then(campaigns => {
+            const opts = campaigns.map(camp =>
+                '<option value="' + camp.id + '">' + esc(camp.name || ('Запуск #' + camp.id)) +
+                (camp.audience_name ? ' — ' + esc(camp.audience_name) : '') +
+                ' (' + (camp.status || '?') + ')</option>'
+            ).join('');
+
+            const overlay = document.createElement('div');
+            overlay.style.cssText = 'position:fixed;top:0;left:0;right:0;bottom:0;background:rgba(0,0,0,0.5);z-index:10000;display:flex;align-items:center;justify-content:center;';
+            overlay.innerHTML = `
+                <div style="background:var(--bg-primary);border-radius:12px;padding:24px;max-width:450px;width:90%;box-shadow:0 20px 40px rgba(0,0,0,0.3);">
+                    <h3 style="margin:0 0 16px;font-size:1.1rem;">📁 Загрузить CSV от DMP</h3>
+                    <div style="margin-bottom:16px;">
+                        <label style="font-size:.85rem;color:var(--text-secondary);display:block;margin-bottom:6px;">Привязать к запуску</label>
+                        <select id="pp-csv-campaign-select" style="width:100%;padding:8px;border-radius:6px;border:1px solid var(--border);background:var(--bg-secondary);color:var(--text-primary);">
+                            <option value="">— Без запуска —</option>
+                            ${opts}
+                        </select>
+                    </div>
+                    <div style="margin-bottom:20px;">
+                        <label style="font-size:.85rem;color:var(--text-secondary);display:block;margin-bottom:6px;">Выберите CSV файл</label>
+                        <input type="file" id="pp-csv-modal-file" accept=".csv" style="width:100%;">
+                    </div>
+                    <div style="display:flex;gap:8px;justify-content:flex-end;">
+                        <button class="btn btn-sm" style="padding:8px 20px;" onclick="this.closest('div[style*=fixed]').remove()">Отмена</button>
+                        <button class="btn btn-sm" id="pp-csv-import-btn" style="background:linear-gradient(135deg,#f59e0b,#d97706);color:#fff;padding:8px 20px;">Импортировать</button>
+                    </div>
+                </div>`;
+            document.body.appendChild(overlay);
+            overlay.addEventListener('click', function(e) { if (e.target === overlay) overlay.remove(); });
+            overlay.querySelector('#pp-csv-import-btn').onclick = function() {
+                const fileInput = document.getElementById('pp-csv-modal-file');
+                const campaignSel = document.getElementById('pp-csv-campaign-select');
+                const campaignId = campaignSel.value ? parseInt(campaignSel.value) : null;
+                const file = fileInput.files[0];
+                if (!file) { toast('Выберите CSV файл'); return; }
+                overlay.remove();
+                ppParseAndImportCSV(file, c.id, campaignId);
+            };
+        })
+        .catch(() => toast('Ошибка загрузки списка запусков'));
+}
+
+function ppParseAndImportCSV(file, clientId, campaignId) {
     const reader = new FileReader();
     reader.onload = function(e) {
         const text = e.target.result;
@@ -2548,10 +2589,12 @@ function ppHandleCSVUpload(input) {
             });
         }
         if (contacts.length === 0) { toast('Нет контактов с телефонами в CSV'); return; }
-        fetch(API_BASE + '/api/admin/clients/' + c.id + '/import-contacts', {
+        const body = { contacts };
+        if (campaignId) body.campaign_id = campaignId;
+        fetch(API_BASE + '/api/admin/clients/' + clientId + '/import-contacts', {
             method: 'POST',
             headers: { ...apiHeaders(), 'Content-Type': 'application/json' },
-            body: JSON.stringify({ contacts })
+            body: JSON.stringify(body)
         })
         .then(r => { if (!r.ok) throw r; return r.json(); })
         .then(data => {
@@ -2561,6 +2604,11 @@ function ppHandleCSVUpload(input) {
         .catch(() => toast('Ошибка импорта контактов'));
     };
     reader.readAsText(file);
+}
+
+function ppHandleCSVUpload(input) {
+    // Legacy handler — redirect to modal flow
+    ppUploadCSVClick();
 }
 
 function ppSendToTelemarketing() {
@@ -2752,7 +2800,7 @@ function renderAiProcesses(el, client) {
                     <select id="aip-dialog-select">${dialogOpts.length ? dialogOpts : '<option value="">Нет диалогов</option>'}</select>
                 </div>
                 <button class="btn btn-sm ${hasSelected?'':'disabled'}" ${hasSelected?'':'disabled'} style="background:linear-gradient(135deg,#6c5ce7,#a855f7);color:#fff;padding:8px 20px;${hasSelected?'':'opacity:0.5;cursor:not-allowed;'}" onclick="aipAssignDialogAPI()">Назначить диалог</button>
-                <button class="btn btn-sm ${allHaveDialog?'':'disabled'}" ${allHaveDialog?'':'disabled'} style="background:linear-gradient(135deg,#34d399,#10b981);color:#fff;padding:8px 20px;${allHaveDialog?'':'opacity:0.5;cursor:not-allowed;'}" onclick="aipStartCallingAPI()" ${allHaveDialog?'':'title="Назначьте диалог всем выбранным контактам"'}>Запустить обзвон</button>
+                <button class="btn btn-sm ${allHaveDialog?'':'disabled'}" ${allHaveDialog?'':'disabled'} style="background:linear-gradient(135deg,#34d399,#10b981);color:#fff;padding:8px 20px;${allHaveDialog?'':'opacity:0.5;cursor:not-allowed;'}" onclick="aipStartCallingAPI()" ${allHaveDialog?'':'title="У всех контактов должен быть диалог (через запуск или назначенный вручную)"'}>Запустить обзвон</button>
             </div>
             <div style="font-size:.8rem;color:var(--text-muted);margin-bottom:8px;">Всего: ${total} контактов${aipSelectedIds.size > 0 ? ', выбрано: ' + aipSelectedIds.size : ''}</div>
             <div class="aip-scroll">
@@ -2816,35 +2864,25 @@ function aipStartCallingAPI() {
     if (aipSelectedIds.size === 0) { toast('Выберите контакты'); return; }
     const c = getClient(currentDetailClient);
     if (!c) return;
-    const selDlg = document.getElementById('aip-dialog-select');
-    const skillbase_id = selDlg ? parseInt(selDlg.value) : null;
-    if (!skillbase_id) { toast('Выберите диалог'); return; }
-    const selectedDialogName = selDlg.options[selDlg.selectedIndex].text;
     const ids = [...aipSelectedIds];
 
-    // Check for dialog mismatch
+    // Check that all selected contacts have a skillbase (from campaign or manually assigned)
     const selectedContacts = aipApiContacts.filter(ct => aipSelectedIds.has(ct.id));
-    const mismatched = selectedContacts.filter(ct => ct.skillbase_id && ct.skillbase_id !== skillbase_id);
+    const noSkillbase = selectedContacts.filter(ct => !ct.skillbase_id);
 
-    if (mismatched.length > 0) {
-        const mismatchList = mismatched.map(ct => esc(ct.phone) + ' — текущий: ' + esc(ct.skillbase_name || 'Не назначен')).join('<br>');
-        showConfirmModal(
-            'Несовпадение диалогов',
-            '<p>У ' + mismatched.length + ' из ' + ids.length + ' контактов назначен другой диалог. Выбранный диалог: <strong>' + esc(selectedDialogName) + '</strong></p>' +
-            '<div style="max-height:150px;overflow-y:auto;font-size:.8rem;background:var(--bg-secondary);padding:8px;border-radius:6px;margin:8px 0;">' + mismatchList + '</div>' +
-            '<p>Продолжить обзвон с выбранным диалогом?</p>',
-            function() { aipDoStartCalling(c.id, ids, skillbase_id); }
-        );
+    if (noSkillbase.length > 0) {
+        const list = noSkillbase.slice(0, 5).map(ct => esc(ct.phone)).join(', ');
+        toast('У ' + noSkillbase.length + ' контактов не назначен диалог (через запуск или вручную): ' + list + (noSkillbase.length > 5 ? '...' : ''));
         return;
     }
 
-    aipDoStartCalling(c.id, ids, skillbase_id);
+    aipDoStartCalling(c.id, ids);
 }
 
-function aipDoStartCalling(clientId, ids, skillbase_id) {
+function aipDoStartCalling(clientId, ids) {
     fetch(API_BASE + '/api/admin/clients/' + clientId + '/send-to-sasha', {
         method: 'POST', headers: apiHeaders(),
-        body: JSON.stringify({ contact_ids: ids, skillbase_id: skillbase_id })
+        body: JSON.stringify({ contact_ids: ids })
     })
     .then(r => { if (!r.ok) throw r; return r.json(); })
     .then(data => {
