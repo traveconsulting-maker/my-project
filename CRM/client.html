@@ -725,6 +725,69 @@
         .catch(() => { toast('Ошибка обновления баланса'); });
     }
 
+    // ==================== SKILLBASES (DIALOGS TAB) ====================
+    function loadSkillbases(clientId, container) {
+        if (!crmToken) { container.innerHTML = '<div class="empty-state"><p>Нет авторизации</p></div>'; return; }
+        fetch(API_BASE + '/api/admin/clients/' + clientId + '/skillbases', { headers: apiHeaders() })
+        .then(r => r.ok ? r.json() : [])
+        .then(data => {
+            if (!Array.isArray(data) || data.length === 0) {
+                container.innerHTML = '<div class="empty-state"><p>Нет диалогов</p></div>';
+                return;
+            }
+            container.innerHTML = data.map((sb, i) => renderSkillbaseCard(sb, i)).join('');
+        })
+        .catch(() => { container.innerHTML = '<div class="empty-state"><p>Ошибка загрузки</p></div>'; });
+    }
+
+    function renderSkillbaseCard(sb, idx) {
+        const ctx = sb.context || {};
+        const sections = [];
+
+        if (ctx.botRole) sections.push({label: 'Роль', text: ctx.botRole});
+        if (ctx.botStyle) sections.push({label: 'Стиль речи', text: ctx.botStyle});
+        if (ctx.greetings && ctx.greetings.length) sections.push({label: 'Приветствие', items: ctx.greetings});
+        if (ctx.plan && ctx.plan.length) sections.push({label: 'План разговора', items: ctx.plan});
+        if (ctx.facts && ctx.facts.length) sections.push({label: 'Факты', items: ctx.facts});
+        if (ctx.rules && ctx.rules.length) sections.push({label: 'Правила', items: ctx.rules});
+        if (ctx.criteria && ctx.criteria.length) sections.push({label: 'Критерии квалификации', items: ctx.criteria});
+
+        const bodyHtml = sections.map(s => {
+            if (s.text) return '<div style="margin-bottom:12px;"><strong style="color:var(--text-muted);font-size:.78rem;text-transform:uppercase;letter-spacing:.5px;">' + esc(s.label) + '</strong><div style="margin-top:4px;color:var(--text-secondary);font-size:.88rem;">' + esc(s.text) + '</div></div>';
+            if (s.items) {
+                const list = s.items.map(it => {
+                    const txt = typeof it === 'string' ? it : (it.text || '');
+                    return txt ? '<div style="display:flex;gap:6px;align-items:flex-start;margin-top:3px;"><span style="color:var(--text-muted);">•</span><span style="color:var(--text-secondary);font-size:.85rem;">' + esc(txt) + '</span></div>' : '';
+                }).join('');
+                return list ? '<div style="margin-bottom:12px;"><strong style="color:var(--text-muted);font-size:.78rem;text-transform:uppercase;letter-spacing:.5px;">' + esc(s.label) + '</strong>' + list + '</div>' : '';
+            }
+            return '';
+        }).join('');
+
+        const date = sb.created_at ? new Date(sb.created_at).toLocaleDateString('ru-RU') : '';
+
+        return '<div class="card" style="margin-bottom:12px;padding:0;overflow:hidden;">' +
+            '<div style="padding:14px 20px;cursor:pointer;display:flex;align-items:center;justify-content:space-between;" onclick="toggleSkillbaseCard(' + idx + ')">' +
+                '<div><strong style="font-size:.95rem;">' + esc(sb.name) + '</strong>' +
+                (date ? '<span style="margin-left:12px;font-size:.78rem;color:var(--text-muted);">' + date + '</span>' : '') +
+                '</div>' +
+                '<span id="sb-arrow-' + idx + '" style="transition:transform .2s;font-size:.8rem;color:var(--text-muted);">&#9660;</span>' +
+            '</div>' +
+            '<div id="sb-body-' + idx + '" style="display:none;padding:0 20px 16px;border-top:1px solid var(--border-color);">' +
+                (bodyHtml || '<div style="padding-top:12px;color:var(--text-muted);font-size:.85rem;">Контекст не заполнен</div>') +
+            '</div>' +
+        '</div>';
+    }
+
+    function toggleSkillbaseCard(idx) {
+        const body = document.getElementById('sb-body-' + idx);
+        const arrow = document.getElementById('sb-arrow-' + idx);
+        if (!body) return;
+        const open = body.style.display !== 'none';
+        body.style.display = open ? 'none' : '';
+        if (arrow) arrow.style.transform = open ? '' : 'rotate(180deg)';
+    }
+
     function updateClientPricePerLead(clientId, value) {
         const c = getClient(clientId);
         if (!c) return;
@@ -808,23 +871,8 @@
             `;
             loadClientBalance();
         } else if (currentDetailTab === 'dialogs') {
-            let cDialogs = [];
-            try { cDialogs = JSON.parse(localStorage.getItem('user_' + (c.login || '') + '_dialogs') || '[]'); } catch(e) {}
-            if (cDialogs.length === 0) {
-                el.innerHTML = '<div class="empty-state"><p>Нет диалогов</p></div>';
-            } else {
-                el.innerHTML = '<table><thead><tr><th>Название</th><th>Статус</th><th>Создан</th><th>Обновлён</th></tr></thead><tbody>' +
-                    cDialogs.map(d => {
-                        const isAct = !!d.active;
-                        return `<tr>
-                            <td><strong>${esc(d.name)}</strong></td>
-                            <td><label class="status-toggle"><div class="status-toggle-track ${isAct?'active':''}" onclick="toggleDialogActive('${esc(c.login||'')}','${esc(d.id)}',this)"><div class="status-toggle-thumb"></div></div><span class="status-toggle-label ${isAct?'active':'inactive'}">${isAct?'Активен':'Неактивен'}</span></label></td>
-                            <td>${formatDate(d.createdAt)}</td>
-                            <td>${formatDate(d.updatedAt)}</td>
-                        </tr>`;
-                    }).join('') +
-                    '</tbody></table>';
-            }
+            el.innerHTML = '<div class="empty-state"><p>Загрузка...</p></div>';
+            loadSkillbases(c.id, el);
         } else if (currentDetailTab === 'phones') {
             renderParsedPhones(el, c);
         } else if (currentDetailTab === 'aiprocess') {
