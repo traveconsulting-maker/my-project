@@ -1318,6 +1318,7 @@
         .dlg-context-item:hover { background: var(--hover-bg); }
         .dlg-context-item.danger { color: #ef4444; }
         .dlg-context-item.danger:hover { background: rgba(239,68,68,0.1); }
+        .dlg-context-item.disabled, .dlg-context-item.disabled:hover { opacity: 0.4; pointer-events: none; cursor: default; }
 
         .dlg-back-btn {
             display: inline-flex; align-items: center; gap: 6px;
@@ -1864,6 +1865,7 @@
         .cl-btn-stop:hover { box-shadow:0 4px 16px rgba(231,76,60,.35); }
         .cl-btn-edit { background:var(--input-bg); color:var(--text); border:1px solid var(--input-border); }
         .cl-btn-delete { background:rgba(231,76,60,0.1); color:#e74c3c; border:1px solid rgba(231,76,60,0.2); }
+        .cl-btn.disabled, .cl-btn[disabled] { opacity:0.4; pointer-events:none; cursor:default; }
 
         /* Create launch button */
         .cl-create-btn { padding:12px 24px; border-radius:14px; border:none; font-size:.9rem; font-weight:700; cursor:pointer; background:linear-gradient(135deg,#6c5ce7,#a855f7); color:#fff; display:inline-flex; align-items:center; gap:8px; transition:all .2s; }
@@ -3015,6 +3017,7 @@
             <div class="page-section" id="pageDialogs">
                 <!-- DIALOG LIST VIEW -->
                 <div id="dialogListView">
+                    <div id="dlgLockWarning" style="display:none;background:#fef3c7;border:1px solid #f59e0b;border-radius:8px;padding:12px 16px;margin-bottom:16px;color:#92400e;font-size:14px;">&#128274; Некоторые диалоги участвуют в активном обзвоне. Редактирование и удаление заблокировано. Чтобы изменить, сначала остановите звонки.</div>
                     <div class="dlg-list-header">
                         <h1 data-i18n="dlgListTitle">Диалоги</h1>
                         <div class="dlg-list-actions">
@@ -3432,6 +3435,7 @@
                         Создать ЦА
                     </button>
                 </div>
+                <div id="taLockWarning" style="display:none;background:#fef3c7;border:1px solid #f59e0b;border-radius:8px;padding:12px 16px;margin-bottom:16px;color:#92400e;font-size:14px;">&#128274; Некоторые ЦА участвуют в активном обзвоне. Редактирование и удаление заблокировано. Чтобы изменить, сначала остановите звонки.</div>
                 <div class="ta-cards" id="taCards"></div>
                 <div id="taEmpty" style="display:none;">
                     <div class="ta-empty">
@@ -3751,6 +3755,24 @@
             return h;
         }
         function esHasToken() { return !!localStorage.getItem('jwt_token'); }
+
+        // ===== ACTIVE LOCKS (campaigns with status=calling) =====
+        var activeLocks = { locked_skillbase_ids: [], locked_audience_ids: [] };
+        function loadActiveLocks(cb) {
+            if (!esHasToken()) { if (cb) cb(); return; }
+            fetch(ES_API + '/api/campaigns/active-locks', { headers: esApiHeaders() })
+            .then(function(r) { return r.json(); })
+            .then(function(data) {
+                if (data && data.locked_skillbase_ids) activeLocks = data;
+                if (cb) cb();
+            }).catch(function() { if (cb) cb(); });
+        }
+        function isSkillbaseLocked(serverId) {
+            return activeLocks.locked_skillbase_ids.indexOf(serverId) !== -1;
+        }
+        function isAudienceLocked(serverId) {
+            return activeLocks.locked_audience_ids.indexOf(serverId) !== -1;
+        }
 
         // ===== DIALOG LIST STATE =====
         var dialogs = [], dialogIdCounter = 0, currentDialogId = null, deleteTargetId = null;
@@ -5223,6 +5245,8 @@
         }
 
         function openDeleteDialogModal(id) {
+            var dlg = dialogs.find(function(d) { return d.id === id; });
+            if (dlg && dlg.serverId && isSkillbaseLocked(dlg.serverId)) { clToast('Диалог используется в активном запуске. Остановите звонки для редактирования.'); closeAllContextMenus(); return; }
             deleteTargetId = id;
             document.getElementById('deleteDialogModal').classList.add('active');
             document.body.style.overflow = 'hidden';
@@ -5343,11 +5367,13 @@
                 return;
             }
             menu.setAttribute('data-dlg-id', id);
+            var dlg = dialogs.find(function(d) { return d.id === id; });
+            var locked = dlg && dlg.serverId && isSkillbaseLocked(dlg.serverId);
             menu.innerHTML =
                 '<button class="dlg-context-item" onclick="event.stopPropagation();closeAllContextMenus();openMgmtModal(\'' + id + '\')">' + t('dlgMenuTitle') + '</button>' +
-                '<button class="dlg-context-item" onclick="event.stopPropagation();startRename(\'' + id + '\')">' + t('dlgRename') + '</button>' +
+                '<button class="dlg-context-item' + (locked ? ' disabled' : '') + '" onclick="event.stopPropagation();startRename(\'' + id + '\')"' + (locked ? ' title="Диалог используется в активном запуске" disabled' : '') + '>' + t('dlgRename') + '</button>' +
                 '<button class="dlg-context-item" onclick="event.stopPropagation();cloneDialog(\'' + id + '\')">' + t('dlgClone') + '</button>' +
-                '<button class="dlg-context-item danger" onclick="event.stopPropagation();openDeleteDialogModal(\'' + id + '\')">' + t('dlgDelete') + '</button>';
+                '<button class="dlg-context-item danger' + (locked ? ' disabled' : '') + '" onclick="event.stopPropagation();openDeleteDialogModal(\'' + id + '\')"' + (locked ? ' title="Диалог используется в активном запуске" disabled' : '') + '>' + t('dlgDelete') + '</button>';
             var btn = event.currentTarget;
             var rect = btn.getBoundingClientRect();
             menu.style.top = (rect.bottom + 4) + 'px';
@@ -5363,10 +5389,11 @@
 
         function startRename(id) {
             closeAllContextMenus();
-            var cell = document.getElementById('namecell_' + id);
-            if (!cell) return;
             var dlg = dialogs.find(function(d) { return d.id === id; });
             if (!dlg) return;
+            if (dlg.serverId && isSkillbaseLocked(dlg.serverId)) { clToast('Диалог используется в активном запуске. Остановите звонки для редактирования.'); return; }
+            var cell = document.getElementById('namecell_' + id);
+            if (!cell) return;
             cell.innerHTML = '<input class="dlg-name-input" id="renameinp_' + id + '" value="' + escapeHtml(dlg.name) + '" maxlength="100" onclick="event.stopPropagation()" onkeydown="if(event.key===\'Enter\'){finishRename(\'' + id + '\',this.value);event.preventDefault();}if(event.key===\'Escape\'){renderDialogTable();}" onblur="finishRename(\'' + id + '\',this.value)">';
             var inp = document.getElementById('renameinp_' + id);
             if (inp) { inp.focus(); inp.select(); }
@@ -5463,7 +5490,10 @@
         function renderDialogTable() {
             var tbody = document.getElementById('dialogTableBody');
             var emptyEl = document.getElementById('dlgEmpty');
+            var lockWarn = document.getElementById('dlgLockWarning');
             tbody.innerHTML = '';
+            var hasLockedDlg = dialogs.some(function(d) { return d.serverId && isSkillbaseLocked(d.serverId); });
+            if (lockWarn) lockWarn.style.display = hasLockedDlg ? '' : 'none';
             if (dialogs.length === 0) {
                 emptyEl.style.display = '';
                 return;
@@ -5471,6 +5501,7 @@
             emptyEl.style.display = 'none';
             dialogs.forEach(function(dlg) {
                 var tr = document.createElement('tr');
+                var locked = dlg.serverId && isSkillbaseLocked(dlg.serverId);
                 tr.onclick = function() { openDialogDetail(dlg.id); };
                 var pct = dlgCompleteness(dlg);
                 var st = dlgStatusText(pct);
@@ -5481,8 +5512,8 @@
                         '<div class="dlg-name-wrap">' +
                             dlgRingHTML(pct) +
                             '<div>' +
-                                '<div>' + escapeHtml(dlg.name) + '</div>' +
-                                '<div class="dlg-status-hint ' + st.cls + '">' + st.text + '</div>' +
+                                '<div>' + (locked ? '&#128274; ' : '') + escapeHtml(dlg.name) + '</div>' +
+                                '<div class="dlg-status-hint ' + st.cls + '">' + (locked ? '<span style="color:#f59e0b;">Используется в активном обзвоне</span>' : st.text) + '</div>' +
                             '</div>' +
                         '</div>' +
                     '</td>' +
@@ -5640,10 +5671,10 @@
                 document.querySelectorAll('.page-section').forEach(function(p) { p.classList.remove('active'); });
                 var target = document.getElementById(pageId);
                 if (target) target.classList.add('active');
-                if (pageId === 'pageDialogs') { dlgLoadFromAPI(); renderDialogTable(); }
+                if (pageId === 'pageDialogs') { dlgLoadFromAPI(); loadActiveLocks(function() { renderDialogTable(); }); }
                 if (pageId === 'pageKnowledge') kbRenderCentralList();
                 if (pageId === 'pageLaunches') { clLoadFromAPI(); clImportParsedPhones(); clRenderLaunches(); }
-                if (pageId === 'pageAudience') { taLoadFromAPI(); taRenderCards(); }
+                if (pageId === 'pageAudience') { taLoadFromAPI(); loadActiveLocks(function() { taRenderCards(); }); }
                 if (pageId === 'pageQualLeads') { qlLoadFromAPI(); qlPopulateFilters(); qlRender(); }
                 if (pageId === 'pageStats') { stRenderAll(); }
                 if (pageId === 'pageMain') { onbCheckSteps(); }
@@ -8187,12 +8218,16 @@
         function taRenderCards() {
             var container = document.getElementById('taCards');
             var empty = document.getElementById('taEmpty');
+            var lockWarn = document.getElementById('taLockWarning');
+            var hasLockedTa = taAudiences.some(function(a) { return a.serverId && isAudienceLocked(a.serverId); });
+            if (lockWarn) lockWarn.style.display = hasLockedTa ? '' : 'none';
             if (taAudiences.length === 0) { container.innerHTML = ''; empty.style.display = ''; return; }
             empty.style.display = 'none';
             container.innerHTML = taAudiences.map(function(ta) {
                 var sites = (ta.sites || '').split('\n').filter(Boolean);
                 var sitesHtml = sites.slice(0, 5).map(function(s) { return '<span class="ta-card-site">' + clEsc(s) + '</span>'; }).join('');
                 if (sites.length > 5) sitesHtml += '<span class="ta-card-site">+' + (sites.length - 5) + '</span>';
+                var locked = ta.serverId && isAudienceLocked(ta.serverId);
 
                 // Generation section (progress only)
                 var genHtml = '';
@@ -8213,8 +8248,10 @@
                         '</div></div>';
                 }
 
+                var lockBadge = locked ? '<span style="color:#f59e0b;font-size:13px;margin-left:8px;" title="ЦА используется в активном запуске">&#128274; В обзвоне</span>' : '';
+
                 return '<div class="ta-card">' +
-                    '<div class="ta-card-header"><div><div class="ta-card-title">' + clEsc(ta.name) + '</div>' +
+                    '<div class="ta-card-header"><div><div class="ta-card-title">' + clEsc(ta.name) + lockBadge + '</div>' +
                     (ta.niche ? '<span class="ta-card-niche">' + clEsc(ta.niche) + '</span>' : '') +
                     '</div></div>' +
                     (ta.client ? '<div class="ta-card-desc">' + clEsc(ta.client) + '</div>' : '') +
@@ -8222,8 +8259,8 @@
                     genHtml +
                     '<div class="ta-card-meta">Создана: ' + (ta.created ? ta.created.substring(0, 10) : '') + '</div>' +
                     '<div class="ta-card-actions">' +
-                    '<button class="cl-btn cl-btn-edit" onclick="taEdit(\'' + ta.id + '\')">Изменить</button>' +
-                    '<button class="cl-btn cl-btn-delete" onclick="taDelete(\'' + ta.id + '\')">Удалить</button>' +
+                    '<button class="cl-btn cl-btn-edit' + (locked ? ' disabled' : '') + '" onclick="taEdit(\'' + ta.id + '\')"' + (locked ? ' disabled title="ЦА используется в активном запуске"' : '') + '>Изменить</button>' +
+                    '<button class="cl-btn cl-btn-delete' + (locked ? ' disabled' : '') + '" onclick="taDelete(\'' + ta.id + '\')"' + (locked ? ' disabled title="ЦА используется в активном запуске"' : '') + '>Удалить</button>' +
                     '</div></div>';
             }).join('');
         }
@@ -8292,6 +8329,7 @@
         function taEdit(id) {
             var ta = taAudiences.find(function(x) { return x.id === id; });
             if (!ta) return;
+            if (ta.serverId && isAudienceLocked(ta.serverId)) { clToast('ЦА используется в активном запуске. Остановите звонки для редактирования.'); return; }
             taEditId = id;
             document.getElementById('taModalTitle').textContent = 'Редактировать ЦА';
             document.getElementById('taName').value = ta.name || '';
@@ -8302,8 +8340,9 @@
         }
 
         function taDelete(id) {
-            if (!confirm('Удалить эту целевую аудиторию?')) return;
             var ta = taAudiences.find(function(x) { return x.id === id; });
+            if (ta && ta.serverId && isAudienceLocked(ta.serverId)) { clToast('ЦА используется в активном запуске. Остановите звонки для редактирования.'); return; }
+            if (!confirm('Удалить эту целевую аудиторию?')) return;
             var srvId = ta && ta.serverId;
             taAudiences = taAudiences.filter(function(x) { return x.id !== id; });
             taPersist();
