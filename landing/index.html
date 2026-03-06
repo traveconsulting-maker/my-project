@@ -570,6 +570,89 @@
             .steps { grid-template-columns: 1fr; }
             .land-topbar { padding: 12px 16px; }
         }
+
+        /* Support Chat */
+        .sc-fab {
+            position: fixed; bottom: 24px; right: 24px; z-index: 9998;
+            width: 56px; height: 56px; border-radius: 50%; border: none; cursor: pointer;
+            background: linear-gradient(135deg, #6c5ce7, #a855f7);
+            box-shadow: 0 4px 20px rgba(108, 92, 231, 0.4);
+            display: flex; align-items: center; justify-content: center;
+            transition: transform 0.3s, box-shadow 0.3s;
+        }
+        .sc-fab:hover { transform: scale(1.1); box-shadow: 0 6px 28px rgba(108, 92, 231, 0.55); }
+        .sc-fab.open svg { display: none; }
+        .sc-fab.open::after { content: '\00d7'; color: #fff; font-size: 28px; line-height: 1; }
+        .sc-window {
+            position: fixed; bottom: 92px; right: 24px; z-index: 9998;
+            width: 380px; height: 500px; border-radius: 16px;
+            background: var(--modal-bg); border: 1px solid var(--card-border);
+            box-shadow: 0 12px 40px rgba(0,0,0,0.35);
+            display: flex; flex-direction: column; overflow: hidden;
+            opacity: 0; visibility: hidden; transform: scale(0.9) translateY(20px);
+            transition: opacity 0.3s, transform 0.3s, visibility 0.3s;
+        }
+        .sc-window.open { opacity: 1; visibility: visible; transform: scale(1) translateY(0); }
+        .sc-header {
+            display: flex; align-items: center; justify-content: space-between;
+            padding: 16px 18px; background: linear-gradient(135deg, #6c5ce7, #a855f7);
+        }
+        .sc-header-title { color: #fff; font-size: 15px; font-weight: 600; }
+        .sc-header-status { color: rgba(255,255,255,0.8); font-size: 12px; margin-top: 2px; }
+        .sc-close {
+            background: none; border: none; color: #fff; font-size: 22px; cursor: pointer;
+            width: 32px; height: 32px; display: flex; align-items: center; justify-content: center;
+            border-radius: 50%; transition: background 0.2s;
+        }
+        .sc-close:hover { background: rgba(255,255,255,0.2); }
+        .sc-messages {
+            flex: 1; overflow-y: auto; padding: 16px; display: flex;
+            flex-direction: column; gap: 12px;
+        }
+        .sc-msg { max-width: 80%; padding: 10px 14px; border-radius: 14px; font-size: 13px; line-height: 1.45; }
+        .sc-msg.support {
+            align-self: flex-start; background: var(--input-bg); color: var(--text);
+            border-bottom-left-radius: 4px;
+        }
+        .sc-msg.user {
+            align-self: flex-end; background: linear-gradient(135deg, #6c5ce7, #a855f7); color: #fff;
+            border-bottom-right-radius: 4px;
+        }
+        .sc-msg-time { font-size: 10px; opacity: 0.6; margin-top: 4px; }
+        .sc-msg-file { font-size: 12px; opacity: 0.85; margin-top: 4px; }
+        .sc-msg-file::before { content: '\1f4ce '; }
+        .sc-file-preview {
+            padding: 6px 14px; border-top: 1px solid var(--border-color);
+            display: flex; flex-wrap: wrap; gap: 6px; align-items: center;
+        }
+        .sc-file-tag {
+            display: inline-flex; align-items: center; gap: 4px;
+            background: var(--input-bg); border-radius: 8px; padding: 4px 10px;
+            font-size: 12px; color: var(--text-secondary);
+        }
+        .sc-file-tag button {
+            background: none; border: none; cursor: pointer; color: var(--text-muted);
+            font-size: 14px; line-height: 1; padding: 0 0 0 2px;
+        }
+        .sc-input-area {
+            display: flex; align-items: center; gap: 8px;
+            padding: 10px 14px; border-top: 1px solid var(--border-color);
+        }
+        .sc-attach-btn, .sc-send-btn {
+            background: none; border: none; cursor: pointer; font-size: 18px; padding: 4px;
+            color: var(--text-muted); transition: color 0.2s;
+        }
+        .sc-attach-btn:hover, .sc-send-btn:hover { color: #a855f7; }
+        .sc-input {
+            flex: 1; background: var(--input-bg); border: 1px solid var(--input-border);
+            border-radius: 10px; padding: 9px 14px; font-size: 13px;
+            color: var(--text); outline: none; font-family: inherit;
+        }
+        .sc-input::placeholder { color: var(--text-muted); }
+        @media (max-width: 480px) {
+            .sc-window { width: calc(100vw - 24px); right: 12px; bottom: 80px; height: 60vh; }
+            .sc-fab { bottom: 16px; right: 16px; }
+        }
     </style>
 </head>
 <body>
@@ -1069,5 +1152,214 @@
             });
         }
     </script>
+
+<!-- ===== SUPPORT CHAT ===== -->
+<div class="sc-window" id="scWindow">
+    <div class="sc-header">
+        <div class="sc-header-info">
+            <div class="sc-header-title">Техподдержка</div>
+            <div class="sc-header-status">● онлайн</div>
+        </div>
+        <button class="sc-close" onclick="scToggle()">×</button>
+    </div>
+    <div class="sc-messages" id="scMessages">
+        <div class="sc-msg support">
+            <div class="sc-msg-text">Здравствуйте! Чем можем помочь?</div>
+            <div class="sc-msg-time">сейчас</div>
+        </div>
+    </div>
+    <div class="sc-file-preview" id="scFilePreview" style="display:none"></div>
+    <div class="sc-input-area">
+        <button class="sc-attach-btn" onclick="document.getElementById('scFileInput').click()">📎</button>
+        <input type="file" id="scFileInput" multiple style="display:none" onchange="scAttachFiles(this.files)">
+        <input type="text" class="sc-input" id="scInput" placeholder="Напишите сообщение..." onkeydown="if(event.key==='Enter')scSend()">
+        <button class="sc-send-btn" onclick="scSend()">➤</button>
+    </div>
+</div>
+<button class="sc-fab" id="scFab" onclick="scToggle()">
+    <svg width="24" height="24" viewBox="0 0 24 24" fill="white"><path d="M20 2H4c-1.1 0-2 .9-2 2v18l4-4h14c1.1 0 2-.9 2-2V4c0-1.1-.9-2-2-2z"/></svg>
+</button>
+
+<script>
+    var scFiles = [];
+    var scConvId = null;
+    var scPollTimer = null;
+    var scLastMsgCount = 0;
+    var scLastApiMsgId = 0;
+    var scKnownMsgIds = {};
+    var scPendingMessages = [];
+    var scInitDone = false;
+    var SC_API = 'https://api.easysale.tech';
+
+    function scToggle() {
+        var win = document.getElementById('scWindow');
+        var fab = document.getElementById('scFab');
+        var isOpen = win.classList.toggle('open');
+        fab.classList.toggle('open', isOpen);
+        if (isOpen) {
+            if (!scInitDone) { scInitConversation(); scInitDone = true; }
+            scStartPoll();
+            var msgs = document.getElementById('scMessages');
+            msgs.scrollTop = msgs.scrollHeight;
+        }
+    }
+
+    function scInitConversation() {
+        var ticketId = localStorage.getItem('sc_ticket_id');
+        if (ticketId) { scConvId = ticketId; scLoadMessages(); }
+    }
+
+    function scEnsureConversation(firstText) {
+        if (scConvId) return;
+        fetch(SC_API + '/api/tickets', {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({
+                subject: 'Чат: Посетитель лендинга',
+                type: 'chat',
+                priority: 'medium',
+                description: firstText || ''
+            })
+        })
+        .then(function(r) { return r.json(); })
+        .then(function(data) {
+            if (data.id) {
+                scConvId = data.id.toString();
+                localStorage.setItem('sc_ticket_id', scConvId);
+                for (var i = 0; i < scPendingMessages.length; i++) {
+                    scSaveMessage(scPendingMessages[i].author, scPendingMessages[i].text);
+                }
+                scPendingMessages = [];
+                scStartPoll();
+            }
+        })
+        .catch(function() {});
+    }
+
+    function scSaveMessage(author, text) {
+        if (!scConvId) { scPendingMessages.push({ author: author, text: text }); return; }
+        fetch(SC_API + '/api/tickets/' + scConvId + '/messages', {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({
+                author: author === 'client' ? 'Посетитель' : 'Менеджер',
+                text: text,
+                is_staff: author !== 'client'
+            })
+        })
+        .then(function(r) { return r.json(); })
+        .then(function(data) {
+            if (data.id) { scKnownMsgIds[data.id] = true; scLastApiMsgId = data.id; }
+        })
+        .catch(function() {});
+    }
+
+    function scLoadMessages() {
+        if (!scConvId) return;
+        fetch(SC_API + '/api/tickets/' + scConvId + '/messages', { headers: { 'Content-Type': 'application/json' } })
+        .then(function(r) { return r.json(); })
+        .then(function(messages) {
+            var msgs = document.getElementById('scMessages');
+            for (var j = 0; j < messages.length; j++) {
+                var m = messages[j];
+                if (scKnownMsgIds[m.id]) continue;
+                scKnownMsgIds[m.id] = true;
+                var div = document.createElement('div');
+                div.innerHTML = scRenderBubble(m);
+                msgs.appendChild(div.firstChild);
+            }
+            scLastMsgCount = messages.length;
+            scLastApiMsgId = messages.length > 0 ? messages[messages.length - 1].id : 0;
+            msgs.scrollTop = msgs.scrollHeight;
+        })
+        .catch(function() {});
+    }
+
+    function scRenderBubble(m) {
+        var d = new Date(m.created_at);
+        var tm = d.getHours().toString().padStart(2,'0') + ':' + d.getMinutes().toString().padStart(2,'0');
+        var cls = m.is_staff ? 'support' : 'user';
+        var html = '<div class="sc-msg ' + cls + '">';
+        if (m.text) html += '<div class="sc-msg-text">' + m.text.replace(/</g,'&lt;').replace(/>/g,'&gt;') + '</div>';
+        html += '<div class="sc-msg-time">' + tm + '</div></div>';
+        return html;
+    }
+
+    function scStartPoll() {
+        if (scPollTimer) return;
+        scPollTimer = setInterval(function() {
+            if (!scConvId) return;
+            fetch(SC_API + '/api/tickets/' + scConvId + '/messages', { headers: { 'Content-Type': 'application/json' } })
+            .then(function(r) { return r.json(); })
+            .then(function(messages) {
+                var lastId = messages.length > 0 ? messages[messages.length - 1].id : 0;
+                if (lastId === scLastApiMsgId) return;
+                var msgs = document.getElementById('scMessages');
+                for (var j = 0; j < messages.length; j++) {
+                    var m = messages[j];
+                    if (scKnownMsgIds[m.id]) continue;
+                    scKnownMsgIds[m.id] = true;
+                    var div = document.createElement('div');
+                    div.innerHTML = scRenderBubble(m);
+                    msgs.appendChild(div.firstChild);
+                }
+                scLastMsgCount = messages.length;
+                scLastApiMsgId = lastId;
+                msgs.scrollTop = msgs.scrollHeight;
+            })
+            .catch(function() {});
+        }, 3000);
+    }
+
+    function scSend() {
+        var input = document.getElementById('scInput');
+        var text = input.value.trim();
+        if (!text && scFiles.length === 0) return;
+        scEnsureConversation(text);
+        var msgs = document.getElementById('scMessages');
+        var now = new Date();
+        var time = now.getHours().toString().padStart(2,'0') + ':' + now.getMinutes().toString().padStart(2,'0');
+        var fileNames = [];
+        for (var i = 0; i < scFiles.length; i++) fileNames.push(scFiles[i].name);
+        scSaveMessage('client', text);
+        var bubble = document.createElement('div');
+        bubble.className = 'sc-msg user';
+        var html = '';
+        if (text) html += '<div class="sc-msg-text">' + text.replace(/</g,'&lt;').replace(/>/g,'&gt;') + '</div>';
+        for (var i = 0; i < scFiles.length; i++) html += '<div class="sc-msg-file">' + scFiles[i].name + '</div>';
+        html += '<div class="sc-msg-time">' + time + '</div>';
+        bubble.innerHTML = html;
+        msgs.appendChild(bubble);
+        msgs.scrollTop = msgs.scrollHeight;
+        input.value = '';
+        scFiles = [];
+        document.getElementById('scFilePreview').style.display = 'none';
+        document.getElementById('scFilePreview').innerHTML = '';
+        document.getElementById('scFileInput').value = '';
+        scStartPoll();
+    }
+
+    function scAttachFiles(fileList) {
+        for (var i = 0; i < fileList.length; i++) {
+            if (fileList[i].size > 10 * 1024 * 1024) { alert('Файл слишком большой (макс. 10 МБ)'); continue; }
+            scFiles.push(fileList[i]);
+        }
+        scRenderPreview();
+        document.getElementById('scFileInput').value = '';
+    }
+
+    function scRenderPreview() {
+        var preview = document.getElementById('scFilePreview');
+        if (scFiles.length === 0) { preview.style.display = 'none'; preview.innerHTML = ''; return; }
+        preview.style.display = 'flex';
+        var html = '';
+        for (var i = 0; i < scFiles.length; i++) {
+            html += '<span class="sc-file-tag">' + scFiles[i].name + '<button onclick="scRemoveFile(' + i + ')">×</button></span>';
+        }
+        preview.innerHTML = html;
+    }
+
+    function scRemoveFile(idx) { scFiles.splice(idx, 1); scRenderPreview(); }
+</script>
 </body>
 </html>

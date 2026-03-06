@@ -4167,6 +4167,10 @@
         }
 
         function closeModal() {
+            if (isAppDomain && modal.classList.contains('active') && !dashboard.classList.contains('show')) {
+                window.location.href = 'https://easysale.tech';
+                return;
+            }
             modal.classList.remove('active');
             document.body.style.overflow = '';
         }
@@ -6990,6 +6994,10 @@
         }
 
         function closeAccessModal() {
+            if (isAppDomain && accessModal.classList.contains('active') && !dashboard.classList.contains('show')) {
+                window.location.href = 'https://easysale.tech';
+                return;
+            }
             accessModal.classList.remove('active');
             document.body.style.overflow = '';
         }
