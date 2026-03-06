@@ -3609,6 +3609,24 @@
         </div>
     </div>
 
+    <!-- MODAL: Launch Confirm (24h warning) -->
+    <div class="modal-overlay" id="clLaunchConfirmModal" onclick="if(event.target===this)document.getElementById('clLaunchConfirmModal').classList.remove('active')">
+        <div class="modal" style="max-width:440px;text-align:left;">
+            <button class="modal-close" onclick="document.getElementById('clLaunchConfirmModal').classList.remove('active')">&times;</button>
+            <div style="text-align:center;margin-bottom:16px;">
+                <span style="font-size:2.5rem;">⚠️</span>
+            </div>
+            <h2 style="text-align:center;margin-bottom:12px;color:var(--text);">Подтверждение запуска</h2>
+            <div style="font-size:.9rem;color:var(--text-secondary);line-height:1.6;margin-bottom:16px;padding:12px 14px;background:rgba(245,158,11,0.08);border-radius:10px;border-left:3px solid #f59e0b;">
+                <strong style="color:#f59e0b;">Внимание!</strong> После запуска обзвон <strong>нельзя будет остановить в течение 24 часов</strong>. Убедитесь, что диалог и целевая аудитория настроены правильно.
+            </div>
+            <div style="display:flex;gap:12px;justify-content:flex-end;">
+                <button class="cl-btn cl-btn-edit" onclick="document.getElementById('clLaunchConfirmModal').classList.remove('active')">Отмена</button>
+                <button class="cl-create-btn" style="padding:10px 28px;background:linear-gradient(135deg,#27ae60,#00b894);" onclick="clConfirmLaunch()">Запустить</button>
+            </div>
+        </div>
+    </div>
+
     <!-- MODAL: Balance Confirm -->
     <div class="modal-overlay" id="clBalanceConfirmModal" onclick="if(event.target===this)document.getElementById('clBalanceConfirmModal').classList.remove('active')">
         <div class="modal" style="max-width:440px;text-align:left;">
@@ -7923,6 +7941,25 @@
 
         var clPendingRunId = null;
         var clPendingSaveAndRun = false;
+        var clPendingLaunchId = null;
+        var clPendingLaunchAction = null; // 'launch' or 'resume'
+
+        function clShowLaunchConfirm(id, action) {
+            clPendingLaunchId = id;
+            clPendingLaunchAction = action;
+            document.getElementById('clLaunchConfirmModal').classList.add('active');
+        }
+
+        function clConfirmLaunch() {
+            document.getElementById('clLaunchConfirmModal').classList.remove('active');
+            var id = clPendingLaunchId;
+            var action = clPendingLaunchAction;
+            clPendingLaunchId = null;
+            clPendingLaunchAction = null;
+            if (!id) return;
+            if (action === 'resume') clDoResumeLaunch(id);
+            else clDoLaunchDraft(id);
+        }
 
         function clSaveAndRun() {
             clPendingSaveAndRun = true;
@@ -8008,17 +8045,23 @@
             var l = clLaunches.find(function(x) { return x.id === id; });
             if (!l) return;
             if (esHasToken() && l.serverId) {
-                fetch(ES_API + '/api/campaigns/' + l.serverId + '/resume', {
-                    method: 'POST', headers: esApiHeaders()
-                }).then(function(r) { return r.json(); })
-                .then(function(data) {
-                    if (data.error) { clToast(data.error); return; }
-                    clToast('Обзвон запущен!');
-                    clLoadFromAPI();
-                }).catch(function() { clToast('Ошибка запуска'); });
+                clShowLaunchConfirm(id, 'launch');
             } else {
                 clStartLaunch(id);
             }
+        }
+
+        function clDoLaunchDraft(id) {
+            var l = clLaunches.find(function(x) { return x.id === id; });
+            if (!l) return;
+            fetch(ES_API + '/api/campaigns/' + l.serverId + '/resume', {
+                method: 'POST', headers: esApiHeaders()
+            }).then(function(r) { return r.json(); })
+            .then(function(data) {
+                if (data.error) { clToast(data.error); return; }
+                clToast('Обзвон запущен!');
+                clLoadFromAPI();
+            }).catch(function() { clToast('Ошибка запуска'); });
         }
 
         function clPauseLaunch(id) {
@@ -8056,16 +8099,22 @@
             var l = clLaunches.find(function(x) { return x.id === id; });
             if (!l) return;
             if (esHasToken() && l.serverId) {
-                fetch(ES_API + '/api/campaigns/' + l.serverId + '/resume', {
-                    method: 'POST', headers: esApiHeaders()
-                }).then(function(r) { if (!r.ok) throw r; return r.json(); })
-                .then(function() {
-                    clLoadFromAPI();
-                    clToast('Обзвон возобновлён');
-                }).catch(function() { clToast('Ошибка возобновления обзвона'); });
+                clShowLaunchConfirm(id, 'resume');
             } else {
                 clStartLaunch(id);
             }
+        }
+
+        function clDoResumeLaunch(id) {
+            var l = clLaunches.find(function(x) { return x.id === id; });
+            if (!l) return;
+            fetch(ES_API + '/api/campaigns/' + l.serverId + '/resume', {
+                method: 'POST', headers: esApiHeaders()
+            }).then(function(r) { if (!r.ok) throw r; return r.json(); })
+            .then(function() {
+                clLoadFromAPI();
+                clToast('Обзвон возобновлён');
+            }).catch(function() { clToast('Ошибка возобновления обзвона'); });
         }
 
         // Simulation
