@@ -1,0 +1,1655 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Клиент — CRM</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800;900&family=Onest:wght@300;400;500;600;700&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --bg: #0a0a1a;
+            --sidebar-bg: rgba(255,255,255,0.03);
+            --card-bg: rgba(255,255,255,0.04);
+            --card-bg-hover: rgba(255,255,255,0.07);
+            --card-border: rgba(255,255,255,0.08);
+            --card-shadow: 0 4px 24px rgba(0,0,0,0.3);
+            --text: #fff;
+            --text-muted: rgba(255,255,255,0.45);
+            --text-secondary: rgba(255,255,255,0.7);
+            --border-color: rgba(255,255,255,0.06);
+            --accent: #6c5ce7;
+            --accent-light: #a29bfe;
+            --accent-bg: rgba(108,92,231,0.12);
+            --danger: #e74c3c;
+            --danger-bg: rgba(231,76,60,0.12);
+            --success: #00b894;
+            --success-bg: rgba(0,184,148,0.12);
+            --warning: #fdcb6e;
+            --warning-bg: rgba(253,203,110,0.12);
+            --info: #0984e3;
+            --info-bg: rgba(9,132,227,0.12);
+            --input-bg: rgba(255,255,255,0.06);
+            --input-border: rgba(255,255,255,0.1);
+            --modal-bg: rgba(0,0,0,0.7);
+            --scrollbar-bg: rgba(255,255,255,0.05);
+            --scrollbar-thumb: rgba(255,255,255,0.15);
+        }
+        body.light {
+            --bg: #f0f2f5;
+            --sidebar-bg: rgba(255,255,255,0.7);
+            --card-bg: rgba(255,255,255,0.85);
+            --card-bg-hover: rgba(255,255,255,1);
+            --card-border: rgba(0,0,0,0.08);
+            --card-shadow: 0 4px 24px rgba(0,0,0,0.06);
+            --text: #1a1a2e;
+            --text-muted: rgba(0,0,0,0.4);
+            --text-secondary: rgba(0,0,0,0.65);
+            --border-color: rgba(0,0,0,0.08);
+            --accent-bg: rgba(108,92,231,0.08);
+            --danger-bg: rgba(231,76,60,0.08);
+            --success-bg: rgba(0,184,148,0.08);
+            --warning-bg: rgba(253,203,110,0.15);
+            --info-bg: rgba(9,132,227,0.08);
+            --input-bg: rgba(0,0,0,0.04);
+            --input-border: rgba(0,0,0,0.12);
+            --modal-bg: rgba(0,0,0,0.4);
+            --scrollbar-bg: rgba(0,0,0,0.05);
+            --scrollbar-thumb: rgba(0,0,0,0.15);
+        }
+        * { margin:0; padding:0; box-sizing:border-box; }
+        body {
+            font-family:'Inter',-apple-system,BlinkMacSystemFont,sans-serif;
+            min-height:100vh;
+            background:var(--bg);
+            color:var(--text);
+            transition:background .3s,color .3s;
+            font-size:14px;
+        }
+        ::-webkit-scrollbar { width:6px; }
+        ::-webkit-scrollbar-track { background:var(--scrollbar-bg); }
+        ::-webkit-scrollbar-thumb { background:var(--scrollbar-thumb); border-radius:3px; }
+
+        /* Buttons */
+        .btn {
+            display:inline-flex;
+            align-items:center;
+            gap:6px;
+            padding:8px 16px;
+            border-radius:10px;
+            font-family:inherit;
+            font-size:.85rem;
+            font-weight:500;
+            border:1px solid var(--border-color);
+            background:var(--card-bg);
+            color:var(--text);
+            cursor:pointer;
+            transition:all .15s;
+            white-space:nowrap;
+        }
+        .btn:hover { background:var(--card-bg-hover); }
+        .btn-primary { background:var(--accent); border-color:var(--accent); color:#fff; }
+        .btn-primary:hover { opacity:.85; background:var(--accent); }
+        .btn-danger { background:var(--danger); border-color:var(--danger); color:#fff; }
+        .btn-danger:hover { opacity:.85; background:var(--danger); }
+        .btn-sm { padding:5px 10px; font-size:.8rem; border-radius:8px; }
+        .btn svg { width:16px; height:16px; }
+
+        /* Cards */
+        .card {
+            background:var(--card-bg);
+            border:1px solid var(--card-border);
+            border-radius:14px;
+            padding:20px;
+            margin-bottom:16px;
+        }
+
+        /* Tables */
+        table {
+            width:100%;
+            border-collapse:separate;
+            border-spacing:0;
+        }
+        th {
+            text-align:left;
+            font-size:.75rem;
+            text-transform:uppercase;
+            letter-spacing:.04em;
+            color:var(--text-muted);
+            padding:10px 14px;
+            font-weight:600;
+            border-bottom:1px solid var(--border-color);
+        }
+        td {
+            padding:12px 14px;
+            border-bottom:1px solid var(--border-color);
+            font-size:.875rem;
+        }
+        tr:hover td { background:var(--card-bg-hover); }
+        tr:last-child td { border-bottom:none; }
+        .clickable-row { cursor:pointer; }
+
+        /* Tags / Badges */
+        .tag {
+            display:inline-flex;
+            align-items:center;
+            padding:3px 10px;
+            border-radius:6px;
+            font-size:.75rem;
+            font-weight:600;
+        }
+        .tag-accent { background:var(--accent-bg); color:var(--accent-light); }
+        .tag-success { background:var(--success-bg); color:var(--success); }
+        .tag-danger { background:var(--danger-bg); color:var(--danger); }
+        .tag-warning { background:var(--warning-bg); color:var(--warning); }
+        .tag-info { background:var(--info-bg); color:var(--info); }
+        .tag-muted { background:var(--input-bg); color:var(--text-muted); }
+
+        /* Inputs */
+        input,textarea,select {
+            font-family:inherit;
+            font-size:.875rem;
+            padding:9px 14px;
+            border-radius:10px;
+            border:1px solid var(--input-border);
+            background:var(--input-bg);
+            color:var(--text);
+            width:100%;
+            outline:none;
+            transition:border-color .15s;
+        }
+        input:focus,textarea:focus,select:focus { border-color:var(--accent); }
+        textarea { resize:vertical; min-height:80px; }
+        select { cursor:pointer; }
+
+        /* Modal (for DMP instruction) */
+        .modal-overlay {
+            position:fixed;
+            inset:0;
+            background:var(--modal-bg);
+            display:flex;
+            align-items:center;
+            justify-content:center;
+            z-index:1000;
+            opacity:0;
+            pointer-events:none;
+            transition:opacity .2s;
+            backdrop-filter:blur(4px);
+        }
+        .modal-overlay.open { opacity:1; pointer-events:auto; }
+        .modal {
+            background:var(--bg);
+            border:1px solid var(--card-border);
+            border-radius:18px;
+            width:90%;
+            max-width:640px;
+            max-height:85vh;
+            overflow-y:auto;
+            padding:28px;
+            box-shadow:0 30px 80px rgba(0,0,0,.4);
+            transform:translateY(20px);
+            transition:transform .2s;
+        }
+        .modal-overlay.open .modal { transform:translateY(0); }
+        .modal-header {
+            display:flex;
+            align-items:center;
+            justify-content:space-between;
+            margin-bottom:20px;
+        }
+        .modal-title { font-family:'Onest',sans-serif; font-size:1.2rem; font-weight:700; }
+        .modal-close {
+            width:32px; height:32px; border-radius:8px;
+            display:flex; align-items:center; justify-content:center;
+            cursor:pointer; border:none; background:var(--card-bg);
+            color:var(--text-muted); font-size:1.2rem; transition:all .15s;
+        }
+        .modal-close:hover { background:var(--card-bg-hover); color:var(--text); }
+        .modal-footer {
+            display:flex;
+            justify-content:flex-end;
+            gap:10px;
+            margin-top:20px;
+            padding-top:16px;
+            border-top:1px solid var(--border-color);
+        }
+
+        /* Tabs */
+        .tabs {
+            display:flex;
+            gap:4px;
+            margin-bottom:20px;
+            border-bottom:1px solid var(--border-color);
+            padding-bottom:-1px;
+            flex-wrap:wrap;
+        }
+        .tab {
+            padding:10px 16px;
+            font-size:.85rem;
+            font-weight:500;
+            color:var(--text-muted);
+            cursor:pointer;
+            border-bottom:2px solid transparent;
+            transition:all .15s;
+            user-select:none;
+        }
+        .tab:hover { color:var(--text); }
+        .tab.active { color:var(--accent-light); border-bottom-color:var(--accent); }
+
+        /* Timeline */
+        .timeline { padding-left:20px; border-left:2px solid var(--border-color); }
+        .timeline-item { position:relative; padding:0 0 20px 16px; }
+        .timeline-item::before {
+            content:'';
+            position:absolute;
+            left:-7px;
+            top:4px;
+            width:12px;
+            height:12px;
+            border-radius:50%;
+            background:var(--accent);
+            border:2px solid var(--bg);
+        }
+        .timeline-item-time { font-size:.75rem; color:var(--text-muted); margin-bottom:2px; }
+        .timeline-item-text { font-size:.85rem; }
+
+        /* Priority dots */
+        .priority-dot {
+            width:8px; height:8px; border-radius:50%; display:inline-block; margin-right:6px;
+        }
+        .priority-high { background:var(--danger); }
+        .priority-medium { background:var(--warning); }
+        .priority-low { background:var(--success); }
+
+        /* Empty state */
+        .empty-state {
+            text-align:center;
+            padding:60px 20px;
+            color:var(--text-muted);
+        }
+        .empty-state svg { width:48px; height:48px; margin-bottom:12px; opacity:.3; }
+        .empty-state p { font-size:.95rem; }
+
+        /* Checkbox */
+        .checkbox {
+            width:18px; height:18px; border-radius:5px;
+            border:2px solid var(--input-border);
+            display:flex; align-items:center; justify-content:center;
+            cursor:pointer; flex-shrink:0; transition:all .15s;
+        }
+        .checkbox.checked { background:var(--accent); border-color:var(--accent); }
+        .checkbox svg { width:12px; height:12px; color:#fff; }
+
+        /* Task item */
+        .task-item {
+            display:flex;
+            align-items:flex-start;
+            gap:12px;
+            padding:14px;
+            border-radius:10px;
+            border:1px solid var(--card-border);
+            background:var(--card-bg);
+            margin-bottom:8px;
+            cursor:pointer;
+            transition:all .15s;
+        }
+        .task-item:hover { background:var(--card-bg-hover); }
+        .task-item.completed .task-title { text-decoration:line-through; opacity:.5; }
+        .task-title { font-weight:600; font-size:.85rem; }
+        .task-meta { font-size:.75rem; color:var(--text-muted); margin-top:3px; }
+
+        /* Toast */
+        .toast-container {
+            position:fixed; bottom:20px; right:20px; z-index:2000;
+            display:flex; flex-direction:column; gap:8px;
+        }
+        .toast {
+            padding:12px 20px; border-radius:10px;
+            background:var(--card-bg); border:1px solid var(--card-border);
+            box-shadow:0 10px 40px rgba(0,0,0,.3);
+            font-size:.85rem; animation:toast-in .3s ease;
+            backdrop-filter:blur(10px);
+        }
+        @keyframes toast-in { from { opacity:0; transform:translateY(10px); } to { opacity:1; transform:translateY(0); } }
+
+        /* Client card detail */
+        .client-detail-grid { display:grid; grid-template-columns:1fr 1fr; gap:20px; }
+        .client-detail-section { margin-bottom:24px; }
+        .client-detail-section h3 {
+            font-size:.85rem; font-weight:600; color:var(--text-muted);
+            text-transform:uppercase; letter-spacing:.04em; margin-bottom:12px;
+        }
+        .client-info-row {
+            display:flex; justify-content:space-between;
+            padding:8px 0; border-bottom:1px solid var(--border-color);
+            font-size:.85rem;
+        }
+        .client-info-label { color:var(--text-muted); }
+
+        /* Active/Inactive toggle */
+        .status-toggle { display:inline-flex; align-items:center; gap:8px; cursor:pointer; }
+        .status-toggle-track {
+            width:36px; height:20px; border-radius:10px; position:relative;
+            background:var(--danger-bg); border:1px solid rgba(239,68,68,0.3);
+            transition:all 0.3s;
+        }
+        .status-toggle-track.active {
+            background:var(--success-bg); border-color:rgba(52,211,153,0.3);
+        }
+        .status-toggle-thumb {
+            width:16px; height:16px; border-radius:50%; position:absolute; top:1px; left:1px;
+            background:var(--danger); transition:all 0.3s cubic-bezier(0.16,1,0.3,1);
+        }
+        .status-toggle-track.active .status-toggle-thumb {
+            transform:translateX(16px); background:var(--success);
+        }
+        .status-toggle-label { font-size:.8rem; font-weight:600; }
+        .status-toggle-label.active { color:var(--success); }
+        .status-toggle-label.inactive { color:var(--danger); }
+        .status-badge { padding:3px 10px; border-radius:6px; font-size:.75rem; font-weight:600; }
+        .status-badge.active { background:var(--success-bg); color:var(--success); }
+        .status-badge.inactive { background:var(--danger-bg); color:var(--danger); }
+
+        /* Parsed phones tab */
+        .pp-filters { display:flex; gap:10px; flex-wrap:wrap; margin-bottom:16px; }
+        .pp-filters select, .pp-filters input {
+            padding:8px 12px; border-radius:8px; border:1px solid var(--border-color);
+            background:var(--input-bg); color:var(--text); font-family:inherit; font-size:.85rem;
+        }
+        .pp-filters input[type="date"] { min-width:140px; }
+        .pp-actions { display:flex; gap:8px; margin-bottom:12px; flex-wrap:wrap; }
+        .pp-scroll { max-height:420px; overflow-y:auto; border-radius:8px; }
+        .pp-scroll::-webkit-scrollbar { width:6px; }
+        .pp-scroll::-webkit-scrollbar-thumb { background:var(--border-color); border-radius:3px; }
+        .pp-check { width:16px; height:16px; accent-color:var(--accent); cursor:pointer; }
+        .pp-region { padding:2px 8px; border-radius:5px; font-size:.72rem; font-weight:600; background:var(--info-bg); color:var(--info); white-space:nowrap; }
+        .pp-source { padding:2px 8px; border-radius:5px; font-size:.72rem; font-weight:600; background:var(--accent-bg); color:var(--accent-light); white-space:nowrap; max-width:180px; overflow:hidden; text-overflow:ellipsis; }
+
+        /* AI Processes */
+        .aip-progress { margin-bottom:20px; }
+        .aip-progress-bar { height:20px; border-radius:10px; background:var(--input-bg); overflow:hidden; position:relative; }
+        .aip-progress-fill { height:100%; border-radius:10px; background:linear-gradient(90deg,#6c5ce7,#a855f7); transition:width 0.5s; }
+        .aip-progress-text { position:absolute; top:0; left:0; right:0; text-align:center; font-size:.72rem; font-weight:700; color:#fff; line-height:20px; }
+        .aip-stats { display:flex; gap:16px; flex-wrap:wrap; margin-bottom:16px; }
+        .aip-stat { padding:12px 16px; border-radius:10px; background:var(--card-bg); border:1px solid var(--border-color); text-align:center; min-width:100px; }
+        .aip-stat-num { font-size:1.4rem; font-weight:800; color:var(--text); }
+        .aip-stat-label { font-size:.72rem; color:var(--text-muted); margin-top:2px; }
+        .aip-filters { display:flex; gap:10px; flex-wrap:wrap; margin-bottom:12px; }
+        .aip-filters select { padding:8px 12px; border-radius:8px; border:1px solid var(--border-color); background:var(--input-bg); color:var(--text); font-family:inherit; font-size:.85rem; }
+        .aip-scroll { max-height:380px; overflow-y:auto; border-radius:8px; }
+        .aip-scroll::-webkit-scrollbar { width:6px; }
+        .aip-scroll::-webkit-scrollbar-thumb { background:var(--border-color); border-radius:3px; }
+        .aip-status { padding:3px 10px; border-radius:6px; font-size:.72rem; font-weight:600; white-space:nowrap; }
+        .aip-status-waiting { background:var(--input-bg); color:var(--text-muted); }
+        .aip-status-calling { background:var(--warning-bg); color:var(--warning); }
+        .aip-status-called { background:var(--info-bg); color:var(--info); }
+        .aip-status-missed { background:var(--danger-bg); color:var(--danger); }
+        .aip-status-lead { background:var(--success-bg); color:var(--success); }
+        .aip-dialog-tag { padding:2px 8px; border-radius:5px; font-size:.72rem; font-weight:600; background:var(--accent-bg); color:var(--accent-light); }
+        .aip-attempts { font-family:'JetBrains Mono',monospace; font-size:.8rem; color:var(--text-muted); }
+        .aip-launch { display:flex; gap:12px; align-items:flex-end; flex-wrap:wrap; margin-bottom:16px; padding:16px; border-radius:12px; background:var(--card-bg); border:1px solid var(--border-color); }
+        .aip-launch select { padding:8px 12px; border-radius:8px; border:1px solid var(--border-color); background:var(--input-bg); color:var(--text); font-family:inherit; font-size:.85rem; min-width:200px; }
+        .aip-launch label { font-size:.8rem; font-weight:600; color:var(--text-muted); margin-bottom:4px; display:block; }
+        .aip-active-warn { padding:8px 12px; border-radius:8px; background:var(--warning-bg); color:var(--warning); font-size:.8rem; font-weight:600; }
+
+        /* Page layout */
+        .page-wrapper {
+            max-width:1200px;
+            margin:0 auto;
+            padding:28px 32px;
+        }
+        .page-header {
+            display:flex;
+            align-items:center;
+            gap:16px;
+            margin-bottom:24px;
+        }
+        .page-title {
+            font-family:'Onest',sans-serif;
+            font-size:1.3rem;
+            font-weight:700;
+            flex:1;
+        }
+        .back-btn {
+            display:inline-flex;
+            align-items:center;
+            gap:6px;
+            padding:8px 16px;
+            border-radius:10px;
+            font-family:inherit;
+            font-size:.85rem;
+            font-weight:500;
+            border:1px solid var(--border-color);
+            background:var(--card-bg);
+            color:var(--text);
+            cursor:pointer;
+            transition:all .15s;
+            text-decoration:none;
+        }
+        .back-btn:hover { background:var(--card-bg-hover); }
+
+        @media (max-width: 768px) {
+            .client-detail-grid { grid-template-columns:1fr; }
+            .page-wrapper { padding:16px; }
+            .tabs { overflow-x:auto; flex-wrap:nowrap; }
+            .tab { white-space:nowrap; font-size:.8rem; padding:8px 12px; }
+        }
+    </style>
+</head>
+<body>
+    <div class="page-wrapper">
+        <!-- Page Header -->
+        <div class="page-header">
+            <a href="index.html" class="back-btn">&larr; Назад</a>
+            <div class="page-title" id="client-detail-title">Клиент</div>
+            <button class="btn btn-sm" onclick="editClientFromDetail()">Редактировать</button>
+        </div>
+
+        <!-- Tabs -->
+        <div class="tabs" id="client-detail-tabs">
+            <div class="tab active" onclick="switchClientTab('info',this)">Информация</div>
+            <div class="tab" onclick="switchClientTab('dialogs',this)">Диалоги</div>
+            <div class="tab" onclick="switchClientTab('phones',this)">Спарсенные номера</div>
+            <div class="tab" onclick="switchClientTab('aiprocess',this)">AI Процессы</div>
+            <div class="tab" onclick="switchClientTab('deals',this)">Сделки</div>
+            <div class="tab" onclick="switchClientTab('calls',this)">Звонки</div>
+            <div class="tab" onclick="switchClientTab('tasks',this)">Задачи</div>
+            <div class="tab" onclick="switchClientTab('tickets',this)">Тикеты</div>
+            <div class="tab" onclick="switchClientTab('launches',this)">Запуски</div>
+            <div class="tab" onclick="switchClientTab('messages',this)">Сообщения</div>
+            <div class="tab" onclick="switchClientTab('history',this)">История</div>
+        </div>
+
+        <!-- Content -->
+        <div id="client-detail-content"></div>
+    </div>
+
+    <!-- Toast container -->
+    <div class="toast-container" id="toast-container"></div>
+
+    <!-- DMP Instruction Modal -->
+    <div class="modal-overlay" id="dmp-instruction-modal">
+        <div class="modal" style="max-width:600px;">
+            <div class="modal-header">
+                <div class="modal-title" id="dmp-instruction-title">Настройка парсинга в DMP.one</div>
+                <button class="modal-close" onclick="closeModal('dmp-instruction-modal')">&times;</button>
+            </div>
+            <div id="dmp-instruction-body" style="padding:20px;max-height:70vh;overflow-y:auto;"></div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-primary" onclick="closeDmpInstruction()">Всё готово</button>
+            </div>
+        </div>
+    </div>
+
+    <script>
+    // ==================== THEME ====================
+    if (localStorage.getItem('crm_theme') === 'light') document.body.classList.add('light');
+
+    // ==================== CONSTANTS ====================
+    const STAGES = [
+        { id:'lead', name:'Новый лид', color:'var(--info)' },
+        { id:'qualification', name:'Квалификация', color:'var(--warning)' },
+        { id:'negotiation', name:'Переговоры', color:'var(--accent)' },
+        { id:'closed', name:'Закрытие', color:'var(--success)' },
+        { id:'rejected', name:'Отказ', color:'var(--danger)' }
+    ];
+
+    // ==================== CORE UTILITIES ====================
+    function loadData(key) {
+        try { return JSON.parse(localStorage.getItem('crm_'+key)) || []; }
+        catch { return []; }
+    }
+    function saveData(key, data) {
+        localStorage.setItem('crm_'+key, JSON.stringify(data));
+    }
+    function genId() { return Date.now().toString(36) + Math.random().toString(36).substr(2,5); }
+    function now() { return new Date().toISOString(); }
+
+    // ==================== DATA ====================
+    let clients = loadData('clients');
+    let deals = loadData('deals');
+    let tasks = loadData('tasks');
+    let calls = loadData('calls');
+    let applications = loadData('applications');
+    let tickets = loadData('tickets');
+    let portations = loadData('portations');
+    let activities = loadData('activities');
+    let conversations = loadData('conversations');
+    let dmpProjects = loadData('dmp_projects');
+    let dmpResults = loadData('dmp_results');
+    let telLines = loadData('tel_lines');
+    let telCalls = loadData('tel_calls');
+    let tmCallLists = loadData('tm_calllists');
+    let tmCallResults = loadData('tm_results');
+    let tmAgreements = loadData('tm_agreements');
+    let aiProcesses = loadData('ai_processes');
+    let aiProcessItems = loadData('ai_process_items');
+
+    function persist() {
+        saveData('clients', clients);
+        saveData('deals', deals);
+        saveData('tasks', tasks);
+        saveData('calls', calls);
+        saveData('applications', applications);
+        saveData('tickets', tickets);
+        saveData('conversations', conversations);
+        saveData('portations', portations);
+        saveData('activities', activities);
+        saveData('dmp_projects', dmpProjects);
+        saveData('dmp_results', dmpResults);
+        saveData('tel_lines', telLines);
+        saveData('tel_calls', telCalls);
+        saveData('tm_calllists', tmCallLists);
+        saveData('tm_results', tmCallResults);
+        saveData('tm_agreements', tmAgreements);
+        saveData('ai_processes', aiProcesses);
+        saveData('ai_process_items', aiProcessItems);
+    }
+
+    function addActivity(type, text, clientId) {
+        activities.unshift({ id: genId(), type, text, clientId: clientId||null, time: now() });
+        if (activities.length > 100) activities = activities.slice(0,100);
+    }
+
+    // ==================== API ====================
+    const API_BASE = 'https://api.easysale.tech';
+    let crmToken = sessionStorage.getItem('crm_jwt_token') || '';
+
+    function apiHeaders() {
+        return { 'Content-Type': 'application/json', 'Authorization': 'Bearer ' + crmToken };
+    }
+
+    // ==================== HELPERS ====================
+    function getClient(id) { return clients.find(c => c.id === id); }
+    function getClientName(id) {
+        const c = getClient(id);
+        return c ? c.name : 'Не указан';
+    }
+
+    function esc(str) {
+        const div = document.createElement('div');
+        div.textContent = str;
+        return div.innerHTML;
+    }
+
+    function toast(msg) {
+        const c = document.getElementById('toast-container');
+        const t = document.createElement('div');
+        t.className = 'toast';
+        t.textContent = msg;
+        c.appendChild(t);
+        setTimeout(() => { t.style.opacity='0'; t.style.transition='opacity .3s'; setTimeout(()=>t.remove(),300); }, 3000);
+    }
+
+    function openModal(id) { document.getElementById(id).classList.add('open'); }
+    function closeModal(id) { document.getElementById(id).classList.remove('open'); }
+
+    document.querySelectorAll('.modal-overlay').forEach(ov => {
+        ov.addEventListener('click', e => { if (e.target === ov) ov.classList.remove('open'); });
+    });
+
+    // ==================== FORMATTERS ====================
+    function formatDate(iso) {
+        if (!iso) return '—';
+        const d = new Date(iso);
+        return d.toLocaleDateString('ru-RU', { day:'2-digit', month:'2-digit', year:'numeric' });
+    }
+    function formatDateTime(iso) {
+        if (!iso) return '—';
+        const d = new Date(iso);
+        return d.toLocaleDateString('ru-RU', { day:'2-digit', month:'2-digit', year:'numeric', hour:'2-digit', minute:'2-digit' });
+    }
+    function formatDuration(sec) {
+        if (!sec || sec <= 0) return '—';
+        const m = Math.floor(sec/60), s = sec%60;
+        return m > 0 ? `${m}м ${s}с` : `${s}с`;
+    }
+    function formatMoney(v) {
+        if (!v) return '—';
+        return Number(v).toLocaleString('ru-RU') + ' ₽';
+    }
+
+    // ==================== TAG HELPERS ====================
+    function stageName(id) { return (STAGES.find(s=>s.id===id)||{}).name || id; }
+    function stageTag(id) {
+        const map = { lead:'tag-info', qualification:'tag-warning', negotiation:'tag-accent', closed:'tag-success', rejected:'tag-danger' };
+        return map[id] || 'tag-muted';
+    }
+
+    function callStatusTag(s) {
+        const map = { answered:['Принят','tag-success'], missed:['Пропущен','tag-danger'], outgoing:['Исходящий','tag-info'] };
+        const v = map[s] || [s,'tag-muted'];
+        return `<span class="tag ${v[1]}">${v[0]}</span>`;
+    }
+
+    function qualTag(q) {
+        if (!q) return '<span style="color:var(--text-muted)">—</span>';
+        const map = { hot:['Горячий','tag-danger'], warm:['Тёплый','tag-warning'], cold:['Холодный','tag-info'], spam:['Спам','tag-muted'] };
+        const v = map[q] || [q,'tag-muted'];
+        return `<span class="tag ${v[1]}">${v[0]}</span>`;
+    }
+
+    function priorityTag(p) {
+        const map = { low:['Низкий','tag-info'], medium:['Средний','tag-warning'], high:['Высокий','tag-danger'], critical:['Критический','tag-danger'] };
+        const v = map[p] || [p,'tag-muted'];
+        return `<span class="tag ${v[1]}">${v[0]}</span>`;
+    }
+
+    function ticketStatusTag(s) {
+        const map = { open:['Открыт','tag-info'], in_progress:['В работе','tag-warning'], closed:['Закрыт','tag-success'] };
+        const v = map[s] || [s,'tag-muted'];
+        return `<span class="tag ${v[1]}">${v[0]}</span>`;
+    }
+
+    function launchStatusBadge(status) {
+        const map = {
+            draft: '<span class="tag" style="background:#6b7280;color:#fff;">Черновик</span>',
+            pending_contacts: '<span class="tag" style="background:#f59e0b;color:#fff;">Ждём контакты</span>',
+            calling: '<span class="tag" style="background:#3b82f6;color:#fff;">Идут звонки</span>',
+            done: '<span class="tag" style="background:#10b981;color:#fff;">Завершён</span>',
+            paused: '<span class="tag" style="background:#f97316;color:#fff;">На паузе</span>'
+        };
+        return map[status] || `<span class="tag">${esc(status)}</span>`;
+    }
+
+    // ==================== CLIENT DETAIL ====================
+    let currentDetailClient = null;
+    let currentDetailTab = 'info';
+
+    function switchClientTab(tab, el) {
+        currentDetailTab = tab;
+        document.querySelectorAll('#client-detail-tabs .tab').forEach(t => t.classList.remove('active'));
+        el.classList.add('active');
+        renderClientDetail();
+    }
+
+    function editClientFromDetail() {
+        window.location.href = 'index.html';
+    }
+
+    function updateClientPricePerLead(clientId, value) {
+        const c = getClient(clientId);
+        if (!c) return;
+        c.pricePerLead = parseInt(value) || 2000;
+        c.updated = now();
+        persist();
+        toast('Цена за лид обновлена: ' + c.pricePerLead + ' ₽');
+    }
+
+    function toggleTask(id) {
+        const t = tasks.find(t => t.id === id);
+        if (!t) return;
+        t.completed = !t.completed;
+        t.updated = now();
+        persist();
+        renderClientDetail();
+    }
+
+    function renderClientDetail() {
+        const c = getClient(currentDetailClient);
+        if (!c) {
+            document.getElementById('client-detail-content').innerHTML = '<div class="empty-state"><p>Клиент не найден</p></div>';
+            return;
+        }
+        document.getElementById('client-detail-title').innerHTML = esc(c.name) + ' <span style="font-size:.75rem;color:var(--text-muted);font-weight:400;">ID: ' + esc(c.id) + '</span>';
+        const el = document.getElementById('client-detail-content');
+
+        if (currentDetailTab === 'info') {
+            const isActive = c.active !== false;
+            el.innerHTML = `
+                <div style="margin-bottom:16px;display:flex;align-items:center;gap:16px;">
+                    <label class="status-toggle">
+                        <div class="status-toggle-track ${isActive?'active':''}" onclick="toggleClientActive('${c.id}',this)">
+                            <div class="status-toggle-thumb"></div>
+                        </div>
+                        <span class="status-toggle-label ${isActive?'active':'inactive'}">${isActive?'Активен':'Неактивен'}</span>
+                    </label>
+                    ${c.source === 'registration' ? '<span class="status-badge" style="background:var(--accent-bg);color:var(--accent-light);">Самостоятельная регистрация</span>' : ''}
+                </div>
+                <div class="client-detail-grid">
+                    <div>
+                        <div class="client-detail-section">
+                            <h3>Контакты</h3>
+                            <div class="client-info-row"><span class="client-info-label">Телефон</span><span>${esc(c.phone||'—')}</span></div>
+                            <div class="client-info-row"><span class="client-info-label">Email</span><span>${esc(c.email||'—')}</span></div>
+                            <div class="client-info-row"><span class="client-info-label">Компания</span><span>${esc(c.company||'—')}</span></div>
+                        </div>
+                        <div class="client-detail-section">
+                            <h3>Доступ</h3>
+                            <div class="client-info-row"><span class="client-info-label">Логин</span><span style="font-family:'JetBrains Mono',monospace;">${esc(c.login||'—')}</span></div>
+                            <div class="client-info-row"><span class="client-info-label">Пароль</span><span style="font-family:'JetBrains Mono',monospace;">${esc(c.password||'—')}</span></div>
+                        </div>
+                    </div>
+                    <div>
+                        <div class="client-detail-section">
+                            <h3>Статистика</h3>
+                            <div class="client-info-row"><span class="client-info-label">Сделок</span><span>${deals.filter(d=>d.clientId===c.id).length}</span></div>
+                            <div class="client-info-row"><span class="client-info-label">Звонков</span><span>${calls.filter(cl=>cl.clientId===c.id).length}</span></div>
+                            <div class="client-info-row"><span class="client-info-label">Задач</span><span>${tasks.filter(t=>t.clientId===c.id).length}</span></div>
+                            <div class="client-info-row"><span class="client-info-label">Тикетов</span><span>${tickets.filter(t=>t.clientId===c.id).length}</span></div>
+                            <div class="client-info-row"><span class="client-info-label">Создан</span><span>${formatDate(c.created)}</span></div>
+                            <div class="client-info-row"><span class="client-info-label">Цена за лид</span><span><input type="number" min="0" value="${c.pricePerLead||2000}" style="width:90px;padding:4px 8px;border-radius:6px;border:1px solid var(--border);background:var(--bg);color:var(--text);font-size:.85rem;text-align:right;" onchange="updateClientPricePerLead('${c.id}',this.value)"> ₽</span></div>
+                        </div>
+                        ${c.notes ? `<div class="client-detail-section"><h3>Заметки</h3><p style="font-size:.85rem;color:var(--text-secondary);white-space:pre-wrap;">${esc(c.notes)}</p></div>` : ''}
+                    </div>
+                </div>
+                <div style="margin-top:16px;">
+                    <button class="btn btn-danger btn-sm" onclick="deleteClient('${c.id}')">Удалить клиента</button>
+                </div>
+            `;
+        } else if (currentDetailTab === 'dialogs') {
+            let cDialogs = [];
+            try { cDialogs = JSON.parse(localStorage.getItem('user_' + (c.login || '') + '_dialogs') || '[]'); } catch(e) {}
+            if (cDialogs.length === 0) {
+                el.innerHTML = '<div class="empty-state"><p>Нет диалогов</p></div>';
+            } else {
+                el.innerHTML = '<table><thead><tr><th>Название</th><th>Статус</th><th>Создан</th><th>Обновлён</th></tr></thead><tbody>' +
+                    cDialogs.map(d => {
+                        const isAct = !!d.active;
+                        return `<tr>
+                            <td><strong>${esc(d.name)}</strong></td>
+                            <td><label class="status-toggle"><div class="status-toggle-track ${isAct?'active':''}" onclick="toggleDialogActive('${esc(c.login||'')}','${esc(d.id)}',this)"><div class="status-toggle-thumb"></div></div><span class="status-toggle-label ${isAct?'active':'inactive'}">${isAct?'Активен':'Неактивен'}</span></label></td>
+                            <td>${formatDate(d.createdAt)}</td>
+                            <td>${formatDate(d.updatedAt)}</td>
+                        </tr>`;
+                    }).join('') +
+                    '</tbody></table>';
+            }
+        } else if (currentDetailTab === 'phones') {
+            renderParsedPhones(el, c);
+        } else if (currentDetailTab === 'aiprocess') {
+            renderAiProcesses(el, c);
+        } else if (currentDetailTab === 'deals') {
+            const cDeals = deals.filter(d => d.clientId === c.id);
+            if (cDeals.length === 0) {
+                el.innerHTML = '<div class="empty-state"><p>Нет сделок</p></div>';
+            } else {
+                el.innerHTML = '<table><thead><tr><th>Название</th><th>Сумма</th><th>Этап</th><th>Дата</th></tr></thead><tbody>' +
+                    cDeals.map(d => `<tr><td>${esc(d.title)}</td><td>${formatMoney(d.amount)}</td><td><span class="tag ${stageTag(d.stage)}">${stageName(d.stage)}</span></td><td>${formatDate(d.created)}</td></tr>`).join('') +
+                    '</tbody></table>';
+            }
+        } else if (currentDetailTab === 'calls') {
+            const cCalls = calls.filter(cl => cl.clientId === c.id);
+            if (cCalls.length === 0) {
+                el.innerHTML = '<div class="empty-state"><p>Нет звонков</p></div>';
+            } else {
+                el.innerHTML = '<table><thead><tr><th>Дата</th><th>Телефон</th><th>Статус</th><th>Длительность</th><th>Квалификация</th></tr></thead><tbody>' +
+                    cCalls.map(cl => `<tr><td>${formatDateTime(cl.time)}</td><td>${esc(cl.phone)}</td><td>${callStatusTag(cl.status)}</td><td>${formatDuration(cl.duration)}</td><td>${qualTag(cl.qualification)}</td></tr>`).join('') +
+                    '</tbody></table>';
+            }
+        } else if (currentDetailTab === 'tasks') {
+            const cTasks = tasks.filter(t => t.clientId === c.id);
+            if (cTasks.length === 0) {
+                el.innerHTML = '<div class="empty-state"><p>Нет задач</p></div>';
+            } else {
+                el.innerHTML = cTasks.map(t => `
+                    <div class="task-item ${t.completed?'completed':''}" onclick="toggleTask('${t.id}')">
+                        <div class="checkbox ${t.completed?'checked':''}"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3"><polyline points="20 6 9 17 4 12"/></svg></div>
+                        <div>
+                            <div class="task-title"><span class="priority-dot priority-${t.priority}"></span>${esc(t.title)}</div>
+                            <div class="task-meta">${t.dueDate ? 'Срок: '+formatDate(t.dueDate) : 'Без срока'}</div>
+                        </div>
+                    </div>
+                `).join('');
+            }
+        } else if (currentDetailTab === 'messages') {
+            conversations = loadData('conversations');
+            el.innerHTML = renderClientMessages(c.id);
+        } else if (currentDetailTab === 'tickets') {
+            const cTickets = tickets.filter(t => t.clientId === c.id);
+            if (cTickets.length === 0) {
+                el.innerHTML = '<div class="empty-state"><p>Нет тикетов</p></div>';
+            } else {
+                el.innerHTML = '<table><thead><tr><th>Тема</th><th>Приоритет</th><th>Статус</th><th>Создан</th></tr></thead><tbody>' +
+                    cTickets.map(t => `<tr class="clickable-row" onclick="window.location.href='index.html'"><td>${esc(t.subject)}</td><td>${priorityTag(t.priority)}</td><td>${ticketStatusTag(t.status)}</td><td>${formatDate(t.created)}</td></tr>`).join('') +
+                    '</tbody></table>';
+            }
+        } else if (currentDetailTab === 'launches') {
+            renderLaunches(el, c);
+        } else if (currentDetailTab === 'history') {
+            const cActs = activities.filter(a => a.clientId === c.id);
+            if (cActs.length === 0) {
+                el.innerHTML = '<div class="empty-state"><p>Нет истории</p></div>';
+            } else {
+                el.innerHTML = '<div class="timeline">' + cActs.map(a => `
+                    <div class="timeline-item">
+                        <div class="timeline-item-time">${formatDateTime(a.time)}</div>
+                        <div class="timeline-item-text">${a.text}</div>
+                    </div>
+                `).join('') + '</div>';
+            }
+        }
+    }
+
+    // ==================== CLIENT ACTIONS ====================
+    function toggleClientActive(id, el) {
+        const idx = clients.findIndex(c => c.id === id);
+        if (idx < 0) return;
+        clients[idx].active = clients[idx].active === false ? true : false;
+        clients[idx].updated = now();
+        persist();
+        const isActive = clients[idx].active !== false;
+        el.classList.toggle('active', isActive);
+        const label = el.parentElement.querySelector('.status-toggle-label');
+        if (label) {
+            label.textContent = isActive ? 'Активен' : 'Неактивен';
+            label.className = 'status-toggle-label ' + (isActive ? 'active' : 'inactive');
+        }
+        addActivity('client', (isActive ? 'Активирован' : 'Деактивирован') + ' клиент: ' + clients[idx].name, id);
+        toast(isActive ? 'Клиент активирован' : 'Клиент деактивирован');
+        if (crmToken) {
+            fetch(API_BASE + '/api/clients/' + id, {
+                method: 'PATCH',
+                headers: apiHeaders(),
+                body: JSON.stringify({ active: isActive })
+            }).catch(() => {});
+        }
+        if (currentDetailClient === id) renderClientDetail();
+    }
+
+    function toggleDialogActive(login, dialogId, el) {
+        if (!login) return;
+        let dlgs = [];
+        try { dlgs = JSON.parse(localStorage.getItem('user_' + login + '_dialogs') || '[]'); } catch(e) {}
+        const idx = dlgs.findIndex(d => d.id === dialogId);
+        if (idx < 0) return;
+        dlgs[idx].active = !dlgs[idx].active;
+        dlgs[idx].updatedAt = new Date().toISOString();
+        localStorage.setItem('user_' + login + '_dialogs', JSON.stringify(dlgs));
+        const isAct = !!dlgs[idx].active;
+        el.classList.toggle('active', isAct);
+        const label = el.parentElement.querySelector('.status-toggle-label');
+        if (label) {
+            label.textContent = isAct ? 'Активен' : 'Неактивен';
+            label.className = 'status-toggle-label ' + (isAct ? 'active' : 'inactive');
+        }
+        toast(isAct ? 'Диалог активирован' : 'Диалог деактивирован');
+    }
+
+    function deleteClient(id) {
+        if (!confirm('Удалить клиента и все связанные данные?')) return;
+        clients = clients.filter(c => c.id !== id);
+        deals = deals.filter(d => d.clientId !== id);
+        tasks = tasks.filter(t => t.clientId !== id);
+        calls = calls.filter(c => c.clientId !== id);
+        tickets = tickets.filter(t => t.clientId !== id);
+        persist();
+        toast('Клиент удалён');
+        window.location.href = 'index.html';
+    }
+
+    // ==================== PARSED PHONES ====================
+    function ppDetectRegion(phone) {
+        const clean = (phone || '').replace(/\D/g, '');
+        if (clean.length < 4) return 'Неизвестно';
+        let code = '';
+        if (clean.startsWith('7') || clean.startsWith('8')) code = clean.substring(1, 4);
+        else if (clean.startsWith('3') || clean.startsWith('4') || clean.startsWith('9')) code = clean.substring(0, 3);
+        else return 'Неизвестно';
+        const map = {
+            '495':'Москва','499':'Москва','498':'Московская обл.','496':'Московская обл.','497':'Московская обл.',
+            '812':'Санкт-Петербург','813':'Ленинградская обл.',
+            '383':'Новосибирск','384':'Кемеровская обл.',
+            '343':'Екатеринбург','345':'Тюменская обл.','346':'ХМАО',
+            '846':'Самара','848':'Пензенская обл.',
+            '831':'Нижний Новгород',
+            '863':'Ростов-на-Дону','861':'Краснодар','862':'Сочи',
+            '843':'Казань','842':'Ульяновск',
+            '351':'Челябинск','347':'Уфа','342':'Пермь',
+            '381':'Омск','391':'Красноярск','395':'Иркутск',
+            '473':'Воронеж','471':'Курск','472':'Белгород',
+            '341':'Ижевск','362':'Крым','378':'Крым',
+            '421':'Хабаровск','423':'Владивосток',
+            '401':'Калининград','482':'Тверь','481':'Смоленск','483':'Великий Новгород',
+            '411':'Якутск','301':'Улан-Удэ','302':'Чита',
+            '844':'Волгоград','845':'Саратов','855':'Набережные Челны',
+            '900':'Мобильный','901':'Мобильный','902':'Мобильный','903':'Мобильный',
+            '904':'Мобильный','905':'Мобильный','906':'Мобильный','908':'Мобильный',
+            '909':'Мобильный','910':'Мобильный','911':'Мобильный','912':'Мобильный',
+            '913':'Мобильный','914':'Мобильный','915':'Мобильный','916':'Мобильный',
+            '917':'Мобильный','918':'Мобильный','919':'Мобильный','920':'Мобильный',
+            '921':'Мобильный','922':'Мобильный','923':'Мобильный','924':'Мобильный',
+            '925':'Мобильный','926':'Мобильный','927':'Мобильный','928':'Мобильный',
+            '929':'Мобильный','930':'Мобильный','931':'Мобильный','932':'Мобильный',
+            '933':'Мобильный','934':'Мобильный','936':'Мобильный','937':'Мобильный',
+            '938':'Мобильный','939':'Мобильный','950':'Мобильный','951':'Мобильный',
+            '952':'Мобильный','953':'Мобильный','958':'Мобильный','960':'Мобильный',
+            '961':'Мобильный','962':'Мобильный','963':'Мобильный','964':'Мобильный',
+            '965':'Мобильный','966':'Мобильный','967':'Мобильный','968':'Мобильный',
+            '969':'Мобильный','977':'Мобильный','978':'Мобильный','980':'Мобильный',
+            '981':'Мобильный','982':'Мобильный','983':'Мобильный','984':'Мобильный',
+            '985':'Мобильный','986':'Мобильный','987':'Мобильный','988':'Мобильный',
+            '989':'Мобильный','991':'Мобильный','992':'Мобильный','993':'Мобильный',
+            '994':'Мобильный','995':'Мобильный','996':'Мобильный','997':'Мобильный',
+            '999':'Мобильный'
+        };
+        return map[code] || 'Регион ' + code;
+    }
+
+    function ppGetAllPhones(clientId) {
+        let projectIds = null;
+        if (clientId) {
+            projectIds = new Set(dmpProjects.filter(p => p.clientId === clientId).map(p => p.id));
+        }
+        const phoneMap = {};
+        dmpResults.forEach(r => {
+            if (projectIds && !projectIds.has(r.projectId)) return;
+            const clean = (r.phone || '').replace(/\s+/g, '').replace(/-/g, '');
+            if (!clean) return;
+            if (!phoneMap[clean]) {
+                const project = dmpProjects.find(p => p.id === r.projectId);
+                phoneMap[clean] = {
+                    phone: r.phone,
+                    phoneClean: clean,
+                    contactName: r.contactName || '',
+                    clientId: clientId || '',
+                    sources: [],
+                    region: ppDetectRegion(r.phone),
+                    created: r.created,
+                    ids: [r.id]
+                };
+                if (project && project.sites) {
+                    project.sites.forEach(s => { if (!phoneMap[clean].sources.includes(s)) phoneMap[clean].sources.push(s); });
+                }
+            } else {
+                const existing = phoneMap[clean];
+                if (!existing.contactName && r.contactName) existing.contactName = r.contactName;
+                if (new Date(r.created) < new Date(existing.created)) existing.created = r.created;
+                existing.ids.push(r.id);
+                const project = dmpProjects.find(p => p.id === r.projectId);
+                if (project && project.sites) {
+                    project.sites.forEach(s => { if (!existing.sources.includes(s)) existing.sources.push(s); });
+                }
+            }
+        });
+        return Object.values(phoneMap);
+    }
+
+    let ppFilterSource = 'all';
+    let ppFilterRegion = 'all';
+    let ppFilterDateFrom = '';
+    let ppFilterDateTo = '';
+    let ppSelectedIds = new Set();
+    let ppApiContacts = [];
+    let ppApiAudiences = [];
+
+    function ppRerender() {
+        renderParsedPhones(document.getElementById('client-detail-content'), getClient(currentDetailClient));
+    }
+
+    function renderParsedPhones(el, client) {
+        if (!client) { el.innerHTML = '<div class="empty-state"><p>Клиент не найден</p></div>'; return; }
+        const cId = client.id;
+
+        if (ppApiAudiences.length === 0 && crmToken) {
+            fetch(API_BASE + '/api/admin/clients/' + cId + '/campaigns', { headers: apiHeaders() })
+                .then(r => r.ok ? r.json() : [])
+                .then(camps => {
+                    const seen = new Set();
+                    camps.forEach(c => { if (c.audience_name && !seen.has(c.audience_name)) { seen.add(c.audience_name); ppApiAudiences.push({ id: c.audience_id, name: c.audience_name }); }});
+                }).catch(() => {});
+        }
+
+        let url = API_BASE + '/api/admin/clients/' + cId + '/contacts?';
+        if (ppFilterSource !== 'all') url += 'audience_id=' + encodeURIComponent(ppFilterSource) + '&';
+        if (ppFilterDateFrom) url += 'from=' + encodeURIComponent(ppFilterDateFrom) + '&';
+        if (ppFilterDateTo) url += 'to=' + encodeURIComponent(ppFilterDateTo) + '&';
+
+        el.innerHTML = '<div style="text-align:center;padding:40px;color:var(--text-muted);font-size:.85rem;">Загрузка...</div>';
+
+        fetch(url, { headers: apiHeaders() })
+            .then(r => { if (!r.ok) throw r; return r.json(); })
+            .then(contacts => {
+                ppApiContacts = contacts;
+
+                contacts.forEach(c => { c._region = ppDetectRegion(c.phone); });
+
+                const allRegions = new Set();
+                contacts.forEach(c => allRegions.add(c._region));
+
+                let filtered = contacts;
+                if (ppFilterRegion !== 'all') filtered = filtered.filter(c => c._region === ppFilterRegion);
+
+                const audienceOpts = ppApiAudiences.map(a => `<option value="${a.id}" ${ppFilterSource==a.id?'selected':''}>${esc(a.name)}</option>`).join('');
+                const regionsOpts = [...allRegions].sort().map(r => `<option value="${esc(r)}" ${ppFilterRegion===r?'selected':''}>${esc(r)}</option>`).join('');
+
+                const hasSelected = ppSelectedIds.size > 0;
+
+                el.innerHTML = `
+                    <div class="pp-filters">
+                        <select onchange="ppFilterSource=this.value;ppRerender()">
+                            <option value="all">Все источники</option>${audienceOpts}
+                        </select>
+                        <select onchange="ppFilterRegion=this.value;ppRerender()">
+                            <option value="all">Все регионы</option>${regionsOpts}
+                        </select>
+                        <input type="date" value="${ppFilterDateFrom}" onchange="ppFilterDateFrom=this.value;ppRerender()" title="Дата от">
+                        <input type="date" value="${ppFilterDateTo}" onchange="ppFilterDateTo=this.value;ppRerender()" title="Дата до">
+                    </div>
+                    <div class="pp-actions">
+                        <button class="btn btn-sm" onclick="ppSelectAllAPI()"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="9 11 12 14 22 4"/><path d="M21 12v7a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h11"/></svg> Выбрать все</button>
+                        <button class="btn btn-sm" onclick="ppExportSelected()"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="7 10 12 15 17 10"/><line x1="12" y1="15" x2="12" y2="3"/></svg> Экспорт</button>
+                        <button class="btn btn-sm" onclick="ppUploadCSVClick()" style="background:linear-gradient(135deg,#f59e0b,#d97706);color:#fff;">📁 Загрузить CSV от DMP</button>
+                        <input type="file" id="pp-csv-upload" accept=".csv" style="display:none" onchange="ppHandleCSVUpload(this)">
+                        <button class="btn btn-sm ${hasSelected?'':'disabled'}" ${hasSelected?'':'disabled'} onclick="ppSendToAiProcessAPI()" style="background:linear-gradient(135deg,#6c5ce7,#a855f7);color:#fff;${hasSelected?'':'opacity:0.5;cursor:not-allowed;'}"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><path d="M12 6v6l4 2"/></svg> В AI Процессы</button>
+                    </div>
+                    <div style="font-size:.8rem;color:var(--text-muted);margin-bottom:8px;">Всего: ${filtered.length} номеров${ppSelectedIds.size > 0 ? ', выбрано: ' + ppSelectedIds.size : ''}</div>
+                    <div class="pp-scroll">
+                        <table>
+                            <thead><tr><th style="width:30px;"><input type="checkbox" class="pp-check" onchange="ppToggleAllAPI(this.checked)"></th><th>Телефон</th><th>Контакт</th><th>Регион</th><th>Источник</th><th>Статус</th><th>Дата</th></tr></thead>
+                            <tbody>${filtered.length === 0 ? '<tr><td colspan="7" style="text-align:center;color:var(--text-muted);padding:30px;">Нет спарсенных номеров</td></tr>' :
+                                filtered.map(c => `<tr>
+                                    <td><input type="checkbox" class="pp-check" data-id="${c.id}" ${ppSelectedIds.has(c.id)?'checked':''} onchange="ppToggleId(${c.id},this.checked)"></td>
+                                    <td style="font-family:'JetBrains Mono',monospace;font-size:.85rem;">${esc(c.phone || '')}</td>
+                                    <td>${c.name ? '<strong style="font-size:.85rem;">'+esc(c.name)+'</strong>' : '<span style="color:var(--text-muted);font-size:.8rem;">—</span>'}</td>
+                                    <td><span class="pp-region">${esc(c._region)}</span></td>
+                                    <td>${c.audience_name ? '<span class="pp-source" title="'+esc(c.audience_name)+'">'+esc(c.audience_name)+'</span>' : '<span style="color:var(--text-muted);font-size:.8rem;">—</span>'}</td>
+                                    <td>${c.status === 'ai_processing' ? '<span class="tag" style="background:#3b82f6;color:#fff;">В обзвоне</span>' : '<span class="tag" style="background:#6b7280;color:#fff;">Новый</span>'}</td>
+                                    <td>${formatDate(c.created_at)}</td>
+                                </tr>`).join('')}
+                            </tbody>
+                        </table>
+                    </div>
+                `;
+            })
+            .catch(() => {
+                el.innerHTML = '<div class="empty-state"><p>Ошибка загрузки контактов</p></div>';
+            });
+    }
+
+    function ppToggleId(id, checked) {
+        if (checked) ppSelectedIds.add(id);
+        else ppSelectedIds.delete(id);
+        ppRerender();
+    }
+
+    function ppToggleAllAPI(checked) {
+        ppSelectedIds.clear();
+        if (checked) ppApiContacts.forEach(c => ppSelectedIds.add(c.id));
+        ppRerender();
+    }
+
+    function ppSelectAllAPI() {
+        ppApiContacts.forEach(c => ppSelectedIds.add(c.id));
+        ppRerender();
+        toast('Выбрано ' + ppSelectedIds.size + ' номеров');
+    }
+
+    function ppTogglePhone(phoneClean, checked) {
+        if (checked) ppSelectedIds.add(phoneClean);
+        else ppSelectedIds.delete(phoneClean);
+    }
+
+    function ppToggleAll(checked) {
+        const all = ppGetAllPhones();
+        ppSelectedIds.clear();
+        if (checked) all.forEach(p => ppSelectedIds.add(p.phoneClean));
+        document.querySelectorAll('.pp-check[data-phone]').forEach(cb => cb.checked = checked);
+    }
+
+    function ppSelectAll() {
+        ppToggleAll(true);
+        const headerCb = document.querySelector('.pp-scroll thead .pp-check');
+        if (headerCb) headerCb.checked = true;
+        document.querySelectorAll('.pp-check[data-phone]').forEach(cb => cb.checked = true);
+        toast('Выбрано ' + ppSelectedIds.size + ' номеров');
+    }
+
+    function ppExportSelected() {
+        const c = getClient(currentDetailClient);
+        const all = ppGetAllPhones(c ? c.id : '');
+        const selected = ppSelectedIds.size > 0 ? all.filter(p => ppSelectedIds.has(p.phoneClean)) : all;
+        if (selected.length === 0) { toast('Нет номеров для экспорта'); return; }
+        let csv = 'Телефон;Контакт;Регион;Источник;Дата\n';
+        selected.forEach(p => {
+            csv += `${p.phone};${p.contactName || ''};${p.region};${p.sources.join(', ')};${formatDate(p.created)}\n`;
+        });
+        const blob = new Blob(['\uFEFF' + csv], { type: 'text/csv;charset=utf-8;' });
+        const url = URL.createObjectURL(blob);
+        const a = document.createElement('a');
+        a.href = url; a.download = 'parsed_phones_' + new Date().toISOString().slice(0,10) + '.csv';
+        a.click(); URL.revokeObjectURL(url);
+        toast('Экспортировано ' + selected.length + ' номеров');
+    }
+
+    function ppUploadCSVClick() {
+        const c = getClient(currentDetailClient);
+        if (!c) { toast('Клиент не найден'); return; }
+
+        fetch(API_BASE + '/api/admin/clients/' + c.id + '/campaigns', { headers: apiHeaders() })
+            .then(r => r.ok ? r.json() : [])
+            .then(campaigns => {
+                const opts = campaigns.map(camp =>
+                    '<option value="' + camp.id + '">' + esc(camp.name || ('Запуск #' + camp.id)) +
+                    (camp.audience_name ? ' — ' + esc(camp.audience_name) : '') +
+                    ' (' + (camp.status || '?') + ')</option>'
+                ).join('');
+
+                const overlay = document.createElement('div');
+                overlay.style.cssText = 'position:fixed;top:0;left:0;right:0;bottom:0;background:rgba(0,0,0,0.5);z-index:10000;display:flex;align-items:center;justify-content:center;';
+                overlay.innerHTML = `
+                    <div style="background:var(--bg);border:1px solid var(--card-border);border-radius:12px;padding:24px;max-width:450px;width:90%;box-shadow:0 20px 40px rgba(0,0,0,0.3);">
+                        <h3 style="margin:0 0 16px;font-size:1.1rem;">📁 Загрузить CSV от DMP</h3>
+                        <div style="margin-bottom:16px;">
+                            <label style="font-size:.85rem;color:var(--text-secondary);display:block;margin-bottom:6px;">Привязать к запуску</label>
+                            <select id="pp-csv-campaign-select" style="width:100%;padding:8px;border-radius:6px;border:1px solid var(--border-color);background:var(--input-bg);color:var(--text);">
+                                <option value="">— Без запуска —</option>
+                                ${opts}
+                            </select>
+                        </div>
+                        <div style="margin-bottom:20px;">
+                            <label style="font-size:.85rem;color:var(--text-secondary);display:block;margin-bottom:6px;">Выберите CSV файл</label>
+                            <input type="file" id="pp-csv-modal-file" accept=".csv" style="width:100%;">
+                        </div>
+                        <div style="display:flex;gap:8px;justify-content:flex-end;">
+                            <button class="btn btn-sm" style="padding:8px 20px;" onclick="this.closest('div[style*=fixed]').remove()">Отмена</button>
+                            <button class="btn btn-sm" id="pp-csv-import-btn" style="background:linear-gradient(135deg,#f59e0b,#d97706);color:#fff;padding:8px 20px;">Импортировать</button>
+                        </div>
+                    </div>`;
+                document.body.appendChild(overlay);
+                overlay.addEventListener('click', function(e) { if (e.target === overlay) overlay.remove(); });
+                overlay.querySelector('#pp-csv-import-btn').onclick = function() {
+                    const fileInput = document.getElementById('pp-csv-modal-file');
+                    const campaignSel = document.getElementById('pp-csv-campaign-select');
+                    const campaignId = campaignSel.value ? parseInt(campaignSel.value) : null;
+                    const file = fileInput.files[0];
+                    if (!file) { toast('Выберите CSV файл'); return; }
+                    overlay.remove();
+                    ppParseAndImportCSV(file, c.id, campaignId);
+                };
+            })
+            .catch(() => toast('Ошибка загрузки списка запусков'));
+    }
+
+    function ppParseAndImportCSV(file, clientId, campaignId) {
+        const reader = new FileReader();
+        reader.onload = function(e) {
+            const text = e.target.result;
+            const lines = text.split('\n').map(l => l.replace(/\r$/, ''));
+            if (lines.length < 2) { toast('CSV файл пуст'); return; }
+            const headers = lines[0].split(';').map(h => h.trim());
+            const idx = (name) => headers.indexOf(name);
+            if (idx('Phone') < 0) { toast('В CSV не найден столбец Phone'); return; }
+            const contacts = [];
+            for (let i = 1; i < lines.length; i++) {
+                if (!lines[i].trim()) continue;
+                const cols = lines[i].split(';');
+                const phone = (cols[idx('Phone')] || '').trim();
+                if (!phone) continue;
+                const raw = (cols[idx('Date')] || '').trim();
+                let visit_date = null;
+                if (raw) {
+                    const m = raw.match(/^(\d{2})\.(\d{2})\.(\d{4})\s+(\d{2}):(\d{2}):(\d{2})$/);
+                    visit_date = m ? m[3]+'-'+m[2]+'-'+m[1]+'T'+m[4]+':'+m[5]+':'+m[6] : raw;
+                }
+                contacts.push({
+                    phone,
+                    company: (cols[idx('Sitename')] || '').trim() || null,
+                    visit_date
+                });
+            }
+            if (contacts.length === 0) { toast('Нет контактов с телефонами в CSV'); return; }
+            const body = { contacts };
+            if (campaignId) body.campaign_id = campaignId;
+            fetch(API_BASE + '/api/admin/clients/' + clientId + '/import-contacts', {
+                method: 'POST',
+                headers: { ...apiHeaders(), 'Content-Type': 'application/json' },
+                body: JSON.stringify(body)
+            })
+            .then(r => { if (!r.ok) throw r; return r.json(); })
+            .then(data => {
+                toast('Импортировано: ' + data.imported + ', пропущено (дубли): ' + data.skipped);
+                ppRerender();
+            })
+            .catch(() => toast('Ошибка импорта контактов'));
+        };
+        reader.readAsText(file);
+    }
+
+    function ppHandleCSVUpload(input) {
+        ppUploadCSVClick();
+    }
+
+    function ppSendToTelemarketing() {
+        const c = getClient(currentDetailClient);
+        const all = ppGetAllPhones(c ? c.id : '');
+        const selected = ppSelectedIds.size > 0 ? all.filter(p => ppSelectedIds.has(p.phoneClean)) : all;
+        if (selected.length === 0) { toast('Нет номеров для отправки'); return; }
+        const cl = {
+            id: genId(),
+            name: 'Спарсенные ' + new Date().toLocaleDateString('ru'),
+            source: 'dmp',
+            sourceId: '',
+            contacts: selected.map(p => ({ phone: p.phone, tags: [p.region], additionalFields: { source: p.sources.join(', ') } })),
+            totalContacts: selected.length,
+            sentContacts: 0,
+            status: 'idle',
+            created: now()
+        };
+        tmCallLists.push(cl);
+        persist();
+        toast('Отправлено ' + selected.length + ' номеров в телемаркетинг');
+    }
+
+    function ppDeleteSelected() {
+        if (ppSelectedIds.size === 0) { toast('Выберите номера для удаления'); return; }
+        const c = getClient(currentDetailClient);
+        const all = ppGetAllPhones(c ? c.id : '');
+        const toDelete = all.filter(p => ppSelectedIds.has(p.phoneClean));
+        const idsToRemove = new Set();
+        toDelete.forEach(p => p.ids.forEach(id => idsToRemove.add(id)));
+        dmpResults = dmpResults.filter(r => !idsToRemove.has(r.id));
+        persist();
+        ppSelectedIds.clear();
+        renderParsedPhones(document.getElementById('client-detail-content'), c);
+        toast('Удалено ' + toDelete.length + ' номеров');
+    }
+
+    function ppSendToAiProcess() {
+        const c = getClient(currentDetailClient);
+        const cId = c ? c.id : '';
+        const all = ppGetAllPhones(cId);
+        const selected = ppSelectedIds.size > 0 ? all.filter(p => ppSelectedIds.has(p.phoneClean)) : all;
+        if (selected.length === 0) { toast('Нет номеров для отправки'); return; }
+        let added = 0;
+        selected.forEach(p => {
+            const exists = aiProcessItems.find(i => i.phoneClean === p.phoneClean && i.clientId === cId);
+            if (exists) return;
+            aiProcessItems.push({
+                id: genId(),
+                clientId: cId,
+                phone: p.phone,
+                phoneClean: p.phoneClean,
+                contactName: p.contactName || '',
+                region: p.region,
+                source: p.sources.join(', '),
+                dialogId: '',
+                dialogName: '',
+                status: 'waiting',
+                attempts: 0,
+                maxAttempts: 3,
+                lastCallAt: '',
+                recordUrl: '',
+                created: now()
+            });
+            added++;
+        });
+        persist();
+        ppSelectedIds.clear();
+        toast(added > 0 ? 'Добавлено ' + added + ' номеров в AI Процессы' : 'Все номера уже в AI Процессах');
+    }
+
+    function ppSendToAiProcessAPI() {
+        if (ppSelectedIds.size === 0) { toast('Выберите номера'); return; }
+        const c = getClient(currentDetailClient);
+        if (!c) return;
+        const ids = [...ppSelectedIds];
+        fetch(API_BASE + '/api/admin/clients/' + c.id + '/send-to-sasha', {
+            method: 'POST', headers: apiHeaders(),
+            body: JSON.stringify({ contact_ids: ids })
+        })
+        .then(r => { if (!r.ok) throw r; return r.json(); })
+        .then(data => {
+            toast('Отправлено ' + data.updated + ' контактов в AI Процессы');
+            ppSelectedIds.clear();
+            ppRerender();
+        })
+        .catch(() => { toast('Ошибка отправки в AI Процессы'); });
+    }
+
+    // ==================== AI PROCESSES ====================
+    function aipStatusName(s) {
+        const m = { waiting:'Ожидает звонка', calling:'Звонок...', called:'Позвонил', missed:'Недозвон', lead:'Квал. лид' };
+        return m[s] || s;
+    }
+    function aipStatusClass(s) {
+        const m = { waiting:'aip-status-waiting', calling:'aip-status-calling', called:'aip-status-called', missed:'aip-status-missed', lead:'aip-status-lead' };
+        return m[s] || 'aip-status-waiting';
+    }
+
+    function aipGetDialogs(login) {
+        try { return JSON.parse(localStorage.getItem('user_' + (login || '') + '_dialogs') || '[]'); } catch(e) { return []; }
+    }
+
+    function aipCountActiveDialogs() {
+        const activeIds = new Set();
+        aiProcessItems.forEach(i => {
+            if ((i.status === 'waiting' || i.status === 'calling') && i.dialogId) activeIds.add(i.dialogId);
+        });
+        return activeIds.size;
+    }
+
+    let aipApiContacts = [];
+    let aipApiSkillbases = [];
+    let aipApiAudiences = [];
+    let aipFilterStatus = 'all';
+    let aipFilterSkillbase = 'all';
+    let aipFilterAudience = 'all';
+    let aipFilterDateFrom = '';
+    let aipFilterDateTo = '';
+
+    function aipRerender() {
+        renderAiProcesses(document.getElementById('client-detail-content'), getClient(currentDetailClient));
+    }
+
+    function renderAiProcesses(el, client) {
+        if (!client) { el.innerHTML = '<div class="empty-state"><p>Клиент не найден</p></div>'; return; }
+        const cId = client.id;
+
+        el.innerHTML = '<div style="text-align:center;padding:40px;color:var(--text-muted);font-size:.85rem;">Загрузка...</div>';
+
+        if (aipApiAudiences.length === 0 && crmToken) {
+            fetch(API_BASE + '/api/admin/clients/' + cId + '/campaigns', { headers: apiHeaders() })
+                .then(r => r.ok ? r.json() : [])
+                .then(camps => {
+                    const seen = new Set();
+                    camps.forEach(c => { if (c.audience_name && !seen.has(c.audience_name)) { seen.add(c.audience_name); aipApiAudiences.push({ id: c.audience_id, name: c.audience_name }); }});
+                }).catch(() => {});
+        }
+
+        let url = API_BASE + '/api/admin/clients/' + cId + '/contacts?status=ai_processing';
+        if (aipFilterSkillbase !== 'all') url += '&skillbase_id=' + encodeURIComponent(aipFilterSkillbase);
+        if (aipFilterAudience !== 'all') url += '&audience_id=' + encodeURIComponent(aipFilterAudience);
+        if (aipFilterDateFrom) url += '&from=' + encodeURIComponent(aipFilterDateFrom);
+        if (aipFilterDateTo) url += '&to=' + encodeURIComponent(aipFilterDateTo);
+
+        const sbPromise = fetch(API_BASE + '/api/admin/clients/' + cId + '/skillbases', { headers: apiHeaders() })
+            .then(r => r.ok ? r.json() : []).catch(() => []);
+        const ctPromise = fetch(url, { headers: apiHeaders() })
+            .then(r => r.ok ? r.json() : []).catch(() => []);
+
+        Promise.all([sbPromise, ctPromise]).then(([skillbases, contacts]) => {
+            aipApiSkillbases = skillbases;
+            aipApiContacts = contacts;
+
+            const total = contacts.length;
+            const dialogOpts = skillbases.map(s => {
+                const isLocked = s.locked_until && new Date(s.locked_until) > new Date();
+                return `<option value="${s.id}" ${isLocked ? 'disabled' : ''}>${isLocked ? '🔒 ' : ''}${esc(s.name)}</option>`;
+            }).join('');
+            const hasSelected = aipSelectedIds.size > 0;
+
+            const selectedContacts = contacts.filter(c => aipSelectedIds.has(c.id));
+            const allHaveDialog = hasSelected && selectedContacts.every(c => c.skillbase_name);
+
+            const skillbaseFilterOpts = skillbases.map(s => {
+                const isLocked = s.locked_until && new Date(s.locked_until) > new Date();
+                return `<option value="${s.id}" ${aipFilterSkillbase==s.id?'selected':''}>${isLocked ? '🔒 ' : ''}${esc(s.name)}</option>`;
+            }).join('');
+            const audienceFilterOpts = aipApiAudiences.map(a => `<option value="${a.id}" ${aipFilterAudience==a.id?'selected':''}>${esc(a.name)}</option>`).join('');
+
+            el.innerHTML = `
+                <div class="aip-stats">
+                    <div class="aip-stat"><div class="aip-stat-num">${total}</div><div class="aip-stat-label">Всего в обзвоне</div></div>
+                </div>
+                <div class="pp-filters" style="margin-bottom:12px;">
+                    <select onchange="aipFilterSkillbase=this.value;aipRerender()">
+                        <option value="all">Все диалоги</option>${skillbaseFilterOpts}
+                    </select>
+                    <select onchange="aipFilterAudience=this.value;aipRerender()">
+                        <option value="all">Все ЦА</option>${audienceFilterOpts}
+                    </select>
+                    <input type="date" value="${aipFilterDateFrom}" onchange="aipFilterDateFrom=this.value;aipRerender()" title="Дата от">
+                    <input type="date" value="${aipFilterDateTo}" onchange="aipFilterDateTo=this.value;aipRerender()" title="Дата до">
+                </div>
+                <div class="aip-launch">
+                    <div>
+                        <label>Диалог для обзвона</label>
+                        <select id="aip-dialog-select">${dialogOpts.length ? dialogOpts : '<option value="">Нет диалогов</option>'}</select>
+                    </div>
+                    <button class="btn btn-sm ${hasSelected?'':'disabled'}" ${hasSelected?'':'disabled'} style="background:linear-gradient(135deg,#6c5ce7,#a855f7);color:#fff;padding:8px 20px;${hasSelected?'':'opacity:0.5;cursor:not-allowed;'}" onclick="aipAssignDialogAPI()">Назначить диалог</button>
+                    <button class="btn btn-sm ${allHaveDialog?'':'disabled'}" ${allHaveDialog?'':'disabled'} style="background:linear-gradient(135deg,#34d399,#10b981);color:#fff;padding:8px 20px;${allHaveDialog?'':'opacity:0.5;cursor:not-allowed;'}" onclick="aipStartCallingAPI()" ${allHaveDialog?'':'title="У всех контактов должен быть диалог (через запуск или назначенный вручную)"'}>Запустить обзвон</button>
+                </div>
+                <div style="font-size:.8rem;color:var(--text-muted);margin-bottom:8px;">Всего: ${total} контактов${aipSelectedIds.size > 0 ? ', выбрано: ' + aipSelectedIds.size : ''}</div>
+                <div class="aip-scroll">
+                    <table>
+                        <thead><tr><th style="width:30px;"><input type="checkbox" class="pp-check" onchange="aipToggleAllAPI(this.checked)"></th><th>Телефон</th><th>Контакт</th><th>ЦА</th><th>Диалог</th><th>Статус</th><th>Попытки</th><th>Запись</th></tr></thead>
+                        <tbody>${contacts.length === 0 ? '<tr><td colspan="8" style="text-align:center;color:var(--text-muted);padding:30px;">Нет контактов в AI Процессах</td></tr>' :
+                            contacts.map(c => `<tr>
+                                <td><input type="checkbox" class="pp-check" data-aip="${c.id}" ${aipSelectedIds.has(c.id)?'checked':''} onchange="aipToggleItemAPI(${c.id},this.checked)"></td>
+                                <td style="font-family:'JetBrains Mono',monospace;font-size:.85rem;">${esc(c.phone || '')}</td>
+                                <td>${c.name ? '<strong style="font-size:.85rem;">'+esc(c.name)+'</strong>' : '<span style="color:var(--text-muted);">—</span>'}</td>
+                                <td>${c.audience_name ? '<span class="pp-source">'+esc(c.audience_name)+'</span>' : '<span style="color:var(--text-muted);font-size:.8rem;">—</span>'}</td>
+                                <td>${c.skillbase_name ? '<span class="aip-dialog-tag">'+esc(c.skillbase_name)+'</span>' : '<span style="color:var(--text-muted);font-size:.8rem;">Не назначен</span>'}</td>
+                                <td><span class="aip-status ${aipStatusClass(c.status)}">${aipStatusName(c.status)}</span></td>
+                                <td class="aip-attempts">—</td>
+                                <td><span style="color:var(--text-muted);font-size:.8rem;">—</span></td>
+                            </tr>`).join('')}
+                        </tbody>
+                    </table>
+                </div>
+            `;
+        });
+    }
+
+    let aipSelectedIds = new Set();
+
+    function aipToggleItemAPI(id, checked) {
+        if (checked) aipSelectedIds.add(id);
+        else aipSelectedIds.delete(id);
+        aipRerender();
+    }
+
+    function aipToggleAllAPI(checked) {
+        aipSelectedIds.clear();
+        if (checked) aipApiContacts.forEach(c => aipSelectedIds.add(c.id));
+        aipRerender();
+    }
+
+    function aipAssignDialogAPI() {
+        if (aipSelectedIds.size === 0) { toast('Выберите контакты'); return; }
+        const selDlg = document.getElementById('aip-dialog-select');
+        if (!selDlg || !selDlg.value) { toast('Выберите диалог'); return; }
+        const c = getClient(currentDetailClient);
+        if (!c) return;
+        const skillbase_id = parseInt(selDlg.value);
+        const dialogName = selDlg.options[selDlg.selectedIndex].text;
+        const ids = [...aipSelectedIds];
+        fetch(API_BASE + '/api/admin/clients/' + c.id + '/contacts/assign-skillbase', {
+            method: 'PATCH', headers: apiHeaders(),
+            body: JSON.stringify({ contact_ids: ids, skillbase_id: skillbase_id })
+        })
+        .then(r => { if (!r.ok) throw r; return r.json(); })
+        .then(data => {
+            toast('Диалог «' + dialogName + '» назначен для ' + data.updated + ' контактов');
+            aipSelectedIds.clear();
+            aipRerender();
+        })
+        .catch(() => { toast('Ошибка назначения диалога'); });
+    }
+
+    function aipStartCallingAPI() {
+        if (aipSelectedIds.size === 0) { toast('Выберите контакты'); return; }
+        const c = getClient(currentDetailClient);
+        if (!c) return;
+        const ids = [...aipSelectedIds];
+
+        const selectedContacts = aipApiContacts.filter(ct => aipSelectedIds.has(ct.id));
+        const noSkillbase = selectedContacts.filter(ct => !ct.skillbase_id);
+
+        if (noSkillbase.length > 0) {
+            const list = noSkillbase.slice(0, 5).map(ct => esc(ct.phone)).join(', ');
+            toast('У ' + noSkillbase.length + ' контактов не назначен диалог (через запуск или вручную): ' + list + (noSkillbase.length > 5 ? '...' : ''));
+            return;
+        }
+
+        aipDoStartCalling(c.id, ids);
+    }
+
+    function aipDoStartCalling(clientId, ids) {
+        fetch(API_BASE + '/api/admin/clients/' + clientId + '/send-to-sasha', {
+            method: 'POST', headers: apiHeaders(),
+            body: JSON.stringify({ contact_ids: ids })
+        })
+        .then(r => { if (!r.ok) throw r; return r.json(); })
+        .then(data => {
+            toast('Обзвон запущен для ' + data.updated + ' контактов');
+            aipSelectedIds.clear();
+            aipRerender();
+        })
+        .catch(() => { toast('Ошибка запуска обзвона'); });
+    }
+
+    function showConfirmModal(title, bodyHtml, onConfirm) {
+        const overlay = document.createElement('div');
+        overlay.style.cssText = 'position:fixed;top:0;left:0;right:0;bottom:0;background:rgba(0,0,0,0.5);z-index:10000;display:flex;align-items:center;justify-content:center;';
+        overlay.innerHTML = `
+            <div style="background:var(--bg);border:1px solid var(--card-border);border-radius:12px;padding:24px;max-width:500px;width:90%;box-shadow:0 20px 40px rgba(0,0,0,0.3);">
+                <h3 style="margin:0 0 12px;font-size:1.1rem;">${title}</h3>
+                <div style="font-size:.9rem;color:var(--text-secondary);margin-bottom:20px;">${bodyHtml}</div>
+                <div style="display:flex;gap:8px;justify-content:flex-end;">
+                    <button class="btn btn-sm" style="padding:8px 20px;" onclick="this.closest('div[style*=fixed]').remove()">Отмена</button>
+                    <button class="btn btn-sm" id="aip-confirm-btn" style="background:linear-gradient(135deg,#f59e0b,#ef4444);color:#fff;padding:8px 20px;">Продолжить</button>
+                </div>
+            </div>`;
+        document.body.appendChild(overlay);
+        overlay.querySelector('#aip-confirm-btn').onclick = function() { overlay.remove(); onConfirm(); };
+        overlay.addEventListener('click', function(e) { if (e.target === overlay) overlay.remove(); });
+    }
+
+    function aipToggleItem(id, checked) {
+        if (checked) aipSelectedIds.add(id);
+        else aipSelectedIds.delete(id);
+    }
+
+    function aipToggleAll(checked) {
+        aipSelectedIds.clear();
+        if (checked) aiProcessItems.forEach(i => aipSelectedIds.add(i.id));
+        document.querySelectorAll('.pp-check[data-aip]').forEach(cb => cb.checked = checked);
+    }
+
+    // ==================== LAUNCHES ====================
+    function renderLaunches(el, client) {
+        el.innerHTML = '<div style="text-align:center;padding:40px;color:var(--text-muted);font-size:.85rem;">Загрузка...</div>';
+        fetch(API_BASE + '/api/admin/clients/' + client.id + '/campaigns', { headers: apiHeaders() })
+            .then(r => { if (!r.ok) throw r; return r.json(); })
+            .then(campaigns => {
+                if (campaigns.length === 0) {
+                    el.innerHTML = '<div class="empty-state"><p>Нет запусков</p></div>';
+                    return;
+                }
+                el.innerHTML = '<div style="overflow-x:auto;"><table><thead><tr>' +
+                    '<th>ID</th><th>Название</th><th>Целевая аудитория</th><th>Диалог</th><th>Лидов/день</th>' +
+                    '<th>Контактов нужно</th><th>Статус</th><th>Создан</th><th>Квал. лидов</th><th>Действия</th>' +
+                    '</tr></thead><tbody>' +
+                    campaigns.map(c => {
+                        let actionBtn = '';
+                        if (c.status === 'draft') actionBtn = `<button class="btn btn-sm" style="background:#3b82f6;color:#fff;font-size:.75rem;padding:4px 10px;" onclick="adminCampaignAction(${client.id},${c.id},'launch','${esc(c.name)}')">Запустить</button>`;
+                        else if (c.status === 'calling') actionBtn = `<button class="btn btn-sm" style="background:#f97316;color:#fff;font-size:.75rem;padding:4px 10px;" onclick="adminCampaignAction(${client.id},${c.id},'pause')">Пауза</button>`;
+                        else if (c.status === 'paused') actionBtn = `<button class="btn btn-sm" style="background:#10b981;color:#fff;font-size:.75rem;padding:4px 10px;" onclick="adminCampaignAction(${client.id},${c.id},'resume')">Возобновить</button>`;
+                        const dmpBtn = `<button class="btn btn-sm" style="background:#8b5cf6;color:#fff;font-size:.75rem;padding:4px 10px;margin-left:4px;" onclick='openDmpInstruction(${JSON.stringify({name:c.name,dmp_project_name:c.dmp_project_name||"",contacts_needed:c.contacts_needed||0,leads_per_day:c.leads_per_day||50,competitor_sites:c.audience_competitor_sites||[]}).replace(/'/g,"&#39;")})'>📋 Инструкция DMP</button>`;
+                        const auLocked = c.audience_locked_until && new Date(c.audience_locked_until) > new Date();
+                        const sbLocked = c.skillbase_locked_until && new Date(c.skillbase_locked_until) > new Date();
+                        return `<tr>
+                        <td>${c.id}</td>
+                        <td>${esc(c.name)}</td>
+                        <td>${auLocked ? '🔒 ' : ''}${esc(c.audience_name || '—')}</td>
+                        <td>${sbLocked ? '🔒 ' : ''}${esc(c.skillbase_name || '—')}</td>
+                        <td>${c.leads_per_day ?? '—'}</td>
+                        <td>${c.contacts_needed ?? '—'}</td>
+                        <td>${launchStatusBadge(c.status)}</td>
+                        <td>${formatDate(c.created_at)}</td>
+                        <td><strong>${c.qualified_leads}</strong></td>
+                        <td style="white-space:nowrap;">${actionBtn}${dmpBtn}</td>
+                    </tr>`;
+                    }).join('') +
+                    '</tbody></table></div>';
+            })
+            .catch(() => {
+                el.innerHTML = '<div class="empty-state"><p>Ошибка загрузки запусков</p></div>';
+            });
+    }
+
+    function adminCampaignAction(clientId, campaignId, action, campaignName) {
+        if (action === 'launch') {
+            if (!confirm('⚠️ После запуска нельзя редактировать запуск и отменить его в течение 24 часов. Продолжить?')) return;
+        }
+        fetch(API_BASE + '/api/admin/clients/' + clientId + '/campaigns/' + campaignId + '/' + action, {
+            method: 'POST',
+            headers: apiHeaders()
+        })
+        .then(r => {
+            if (!r.ok) return r.json().then(d => { throw new Error(d.error || 'Ошибка'); });
+            return r.json();
+        })
+        .then(() => {
+            const msgs = { launch: 'Кампания запущена', pause: 'Кампания на паузе', resume: 'Кампания возобновлена' };
+            toast(msgs[action] || 'Готово');
+            const el = document.getElementById('client-detail-content');
+            if (el) renderLaunches(el, { id: clientId });
+        })
+        .catch(err => {
+            toast(err.message);
+        });
+    }
+
+    // ==================== DMP INSTRUCTION ====================
+    function openDmpInstruction(c) {
+        const sites = Array.isArray(c.competitor_sites) ? c.competitor_sites.join(', ') : (c.competitor_sites || '');
+        const webhookUrl = 'https://api.easysale.tech/api/dmp/webhook';
+        const dailyLimit = (c.leads_per_day || 50) * 25;
+        const steps = [
+            'Зайти на dmp.one → Проекты → "Проект без кода"',
+            `Название проекта: <code>${esc(c.dmp_project_name || '')}</code> <button class="btn btn-sm" style="font-size:.7rem;padding:2px 8px;margin-left:4px;" onclick="navigator.clipboard.writeText('${(c.dmp_project_name||'').replace(/'/g,"\\'")}');toast('Скопировано')">копировать</button>`,
+            `Добавить домены конкурентов: <code>${esc(sites)}</code> <button class="btn btn-sm" style="font-size:.7rem;padding:2px 8px;margin-left:4px;" onclick="navigator.clipboard.writeText('${sites.replace(/'/g,"\\'")}');toast('Скопировано')">копировать</button>`,
+            `Глобальный лимит: <strong>${c.contacts_needed || '—'}</strong>`,
+            `Дневной лимит: <strong>${dailyLimit}</strong>`,
+            'Открыть настройки проекта → Интеграция → "URL для приема данных"',
+            `Включить чекбокс и вставить URL: <code>${webhookUrl}</code> <button class="btn btn-sm" style="font-size:.7rem;padding:2px 8px;margin-left:4px;" onclick="navigator.clipboard.writeText('${webhookUrl}');toast('Скопировано')">копировать</button>`,
+            'Включить "Отправлять json формат"',
+            'Нажать "Отправить тестовый визит" — убедиться что пришел ответ 200',
+            'Сохранить'
+        ];
+        document.getElementById('dmp-instruction-title').textContent = 'Настройка парсинга в DMP.one для запуска ' + (c.name || '');
+        document.getElementById('dmp-instruction-body').innerHTML = '<div style="display:flex;flex-direction:column;gap:12px;">' +
+            steps.map((s, i) => `<label style="display:flex;align-items:flex-start;gap:8px;cursor:pointer;font-size:.9rem;line-height:1.5;">
+                <input type="checkbox" class="dmp-step-check" data-step="${i}" style="margin-top:4px;flex-shrink:0;">
+                <span>${s}</span>
+            </label>`).join('') + '</div>';
+        openModal('dmp-instruction-modal');
+    }
+
+    function closeDmpInstruction() {
+        closeModal('dmp-instruction-modal');
+        toast('Инструкция DMP завершена');
+    }
+
+    // ==================== MESSAGES ====================
+    function renderClientMessages(clientId) {
+        const clientConvs = conversations.filter(c => c.clientId === clientId);
+        if (clientConvs.length === 0) return '<div class="empty-state"><p>Нет сообщений</p></div>';
+
+        return clientConvs.map(conv => `
+            <div class="card" style="cursor:pointer;" onclick="window.location.href='index.html'">
+                <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:8px;">
+                    <span class="tag ${conv.status==='open'?'tag-info':'tag-success'}">${conv.status==='open'?'Открыт':'Закрыт'}</span>
+                    <span style="font-size:.75rem;color:var(--text-muted);">${formatDateTime(conv.created)}</span>
+                </div>
+                <div style="font-size:.85rem;">
+                    ${(conv.messages||[]).slice(-3).map(m => `
+                        <div style="margin-bottom:4px;"><strong style="font-size:.75rem;color:${m.author==='manager'?'var(--accent-light)':'var(--text-secondary)'};">${m.author==='manager'?'Менеджер':'Клиент'}:</strong> <span style="color:var(--text-secondary);">${esc((m.text||'').substring(0,80))}${(m.text||'').length>80?'...':''}</span></div>
+                    `).join('')}
+                </div>
+                <div style="font-size:.75rem;color:var(--text-muted);margin-top:8px;">Сообщений: ${(conv.messages||[]).length} · Нажмите для перехода</div>
+            </div>
+        `).join('');
+    }
+
+    // ==================== INIT ====================
+    const clientId = new URLSearchParams(window.location.search).get('id');
+    if (!clientId) {
+        document.getElementById('client-detail-content').innerHTML = '<div class="empty-state"><p>ID клиента не указан</p></div>';
+    } else {
+        currentDetailClient = clientId;
+        const c = getClient(clientId);
+        if (!c) {
+            document.getElementById('client-detail-title').textContent = 'Клиент не найден';
+            document.getElementById('client-detail-content').innerHTML = '<div class="empty-state"><p>Клиент с ID «' + esc(clientId) + '» не найден</p></div>';
+        } else {
+            document.title = c.name + ' — CRM';
+            renderClientDetail();
+        }
+    }
+    </script>
+</body>
+</html>

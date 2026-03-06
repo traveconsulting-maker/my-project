@@ -1518,33 +1518,6 @@
         </div>
     </div>
 
-    <!-- Client Detail Modal -->
-    <div class="modal-overlay" id="client-detail-modal">
-        <div class="modal modal-wide">
-            <div class="modal-header">
-                <div class="modal-title" id="client-detail-title">Клиент</div>
-                <div style="display:flex;gap:8px;">
-                    <button class="btn btn-sm" onclick="editClientFromDetail()">Редактировать</button>
-                    <button class="modal-close" onclick="closeModal('client-detail-modal')">&times;</button>
-                </div>
-            </div>
-            <div class="tabs" id="client-detail-tabs">
-                <div class="tab active" onclick="switchClientTab('info',this)">Информация</div>
-                <div class="tab" onclick="switchClientTab('dialogs',this)">Диалоги</div>
-                <div class="tab" onclick="switchClientTab('phones',this)">Спарсенные номера</div>
-                <div class="tab" onclick="switchClientTab('aiprocess',this)">AI Процессы</div>
-                <div class="tab" onclick="switchClientTab('deals',this)">Сделки</div>
-                <div class="tab" onclick="switchClientTab('calls',this)">Звонки</div>
-                <div class="tab" onclick="switchClientTab('tasks',this)">Задачи</div>
-                <div class="tab" onclick="switchClientTab('tickets',this)">Тикеты</div>
-                <div class="tab" onclick="switchClientTab('launches',this)">Запуски</div>
-                <div class="tab" onclick="switchClientTab('messages',this)">Сообщения</div>
-                <div class="tab" onclick="switchClientTab('history',this)">История</div>
-            </div>
-            <div id="client-detail-content"></div>
-        </div>
-    </div>
-
     <!-- Deal Modal -->
     <div class="modal-overlay" id="deal-modal">
         <div class="modal">
@@ -3006,11 +2979,7 @@ let currentDetailClient = null;
 let currentDetailTab = 'info';
 
 function openClientDetail(id) {
-    currentDetailClient = id;
-    currentDetailTab = 'info';
-    document.querySelectorAll('#client-detail-tabs .tab').forEach((t,i) => t.classList.toggle('active', i===0));
-    renderClientDetail();
-    openModal('client-detail-modal');
+    window.location.href = 'client.html?id=' + id;
 }
 
 function switchClientTab(tab, el) {
