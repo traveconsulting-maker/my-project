@@ -2769,7 +2769,10 @@ function renderAiProcesses(el, client) {
         aipApiContacts = contacts;
 
         const total = contacts.length;
-        const dialogOpts = skillbases.map(s => `<option value="${s.id}">${esc(s.name)}</option>`).join('');
+        const dialogOpts = skillbases.map(s => {
+            const isLocked = s.locked_until && new Date(s.locked_until) > new Date();
+            return `<option value="${s.id}" ${isLocked ? 'disabled' : ''}>${isLocked ? '🔒 ' : ''}${esc(s.name)}</option>`;
+        }).join('');
         const hasSelected = aipSelectedIds.size > 0;
 
         // Check if all selected contacts have a skillbase assigned
@@ -2777,7 +2780,10 @@ function renderAiProcesses(el, client) {
         const allHaveDialog = hasSelected && selectedContacts.every(c => c.skillbase_name);
 
         // Filter options
-        const skillbaseFilterOpts = skillbases.map(s => `<option value="${s.id}" ${aipFilterSkillbase==s.id?'selected':''}>${esc(s.name)}</option>`).join('');
+        const skillbaseFilterOpts = skillbases.map(s => {
+            const isLocked = s.locked_until && new Date(s.locked_until) > new Date();
+            return `<option value="${s.id}" ${aipFilterSkillbase==s.id?'selected':''}>${isLocked ? '🔒 ' : ''}${esc(s.name)}</option>`;
+        }).join('');
         const audienceFilterOpts = aipApiAudiences.map(a => `<option value="${a.id}" ${aipFilterAudience==a.id?'selected':''}>${esc(a.name)}</option>`).join('');
 
         el.innerHTML = `
@@ -3170,24 +3176,57 @@ function renderLaunches(el, client) {
             }
             el.innerHTML = '<div style="overflow-x:auto;"><table><thead><tr>' +
                 '<th>ID</th><th>Название</th><th>Целевая аудитория</th><th>Диалог</th><th>Лидов/день</th>' +
-                '<th>Контактов нужно</th><th>Статус</th><th>Создан</th><th>Квал. лидов</th>' +
+                '<th>Контактов нужно</th><th>Статус</th><th>Создан</th><th>Квал. лидов</th><th>Действия</th>' +
                 '</tr></thead><tbody>' +
-                campaigns.map(c => `<tr>
+                campaigns.map(c => {
+                    let actionBtn = '';
+                    if (c.status === 'draft') actionBtn = `<button class="btn btn-sm" style="background:#3b82f6;color:#fff;font-size:.75rem;padding:4px 10px;" onclick="adminCampaignAction(${client.id},${c.id},'launch','${esc(c.name)}')">Запустить</button>`;
+                    else if (c.status === 'calling') actionBtn = `<button class="btn btn-sm" style="background:#f97316;color:#fff;font-size:.75rem;padding:4px 10px;" onclick="adminCampaignAction(${client.id},${c.id},'pause')">Пауза</button>`;
+                    else if (c.status === 'paused') actionBtn = `<button class="btn btn-sm" style="background:#10b981;color:#fff;font-size:.75rem;padding:4px 10px;" onclick="adminCampaignAction(${client.id},${c.id},'resume')">Возобновить</button>`;
+                    const auLocked = c.audience_locked_until && new Date(c.audience_locked_until) > new Date();
+                    const sbLocked = c.skillbase_locked_until && new Date(c.skillbase_locked_until) > new Date();
+                    return `<tr>
                     <td>${c.id}</td>
                     <td>${esc(c.name)}</td>
-                    <td>${esc(c.audience_name || '—')}</td>
-                    <td>${esc(c.skillbase_name || '—')}</td>
+                    <td>${auLocked ? '🔒 ' : ''}${esc(c.audience_name || '—')}</td>
+                    <td>${sbLocked ? '🔒 ' : ''}${esc(c.skillbase_name || '—')}</td>
                     <td>${c.leads_per_day ?? '—'}</td>
                     <td>${c.contacts_needed ?? '—'}</td>
                     <td>${launchStatusBadge(c.status)}</td>
                     <td>${formatDate(c.created_at)}</td>
                     <td><strong>${c.qualified_leads}</strong></td>
-                </tr>`).join('') +
+                    <td>${actionBtn}</td>
+                </tr>`;
+                }).join('') +
                 '</tbody></table></div>';
         })
         .catch(() => {
             el.innerHTML = '<div class="empty-state"><p>Ошибка загрузки запусков</p></div>';
         });
+}
+
+function adminCampaignAction(clientId, campaignId, action, campaignName) {
+    if (action === 'launch') {
+        if (!confirm('⚠️ После запуска нельзя редактировать запуск и отменить его в течение 24 часов. Продолжить?')) return;
+    }
+    fetch(API_BASE + '/api/admin/clients/' + clientId + '/campaigns/' + campaignId + '/' + action, {
+        method: 'POST',
+        headers: apiHeaders()
+    })
+    .then(r => {
+        if (!r.ok) return r.json().then(d => { throw new Error(d.error || 'Ошибка'); });
+        return r.json();
+    })
+    .then(() => {
+        const msgs = { launch: 'Кампания запущена', pause: 'Кампания на паузе', resume: 'Кампания возобновлена' };
+        toast(msgs[action] || 'Готово');
+        // Re-render launches tab
+        const el = document.getElementById('client-detail-content');
+        if (el) renderLaunches(el, { id: clientId });
+    })
+    .catch(err => {
+        toast(err.message);
+    });
 }
 
 function deleteClient(id) {
