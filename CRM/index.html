@@ -2031,6 +2031,7 @@ function syncFromAPI() {
 
 // Автообновление каждые 30 секунд
 setInterval(syncFromAPI, 30000);
+setInterval(updateTasksBadge, 30000);
 
 function getClient(id) { return clients.find(c => c.id === id); }
 function getClientName(id) {
@@ -2128,9 +2129,24 @@ function populateClientSelects() {
 function updateBadges() {
     document.getElementById('badge-clients').textContent = clients.length;
     document.getElementById('badge-dialogs').textContent = conversations.filter(c => c.status === 'open').length;
-    document.getElementById('badge-tasks').textContent = tasks.filter(t => !t.completed).length;
     document.getElementById('badge-apps').textContent = applications.filter(a => a.status === 'new').length;
     document.getElementById('badge-tickets').textContent = tickets.filter(t => t.status !== 'closed').length;
+    updateTasksBadge();
+}
+
+function updateTasksBadge() {
+    if (!crmToken) {
+        document.getElementById('badge-tasks').textContent = tasks.filter(t => !t.completed).length;
+        return;
+    }
+    fetch(API_BASE + '/api/admin/tasks?status=pending', { headers: apiHeaders() })
+    .then(function(r) { return r.ok ? r.json() : []; })
+    .then(function(data) {
+        var count = Array.isArray(data) ? data.length : 0;
+        var badge = document.getElementById('badge-tasks');
+        badge.textContent = count;
+        badge.style.background = count > 0 ? '#e74c3c' : 'var(--accent)';
+    }).catch(function() {});
 }
 
 // ==================== DASHBOARD ====================
@@ -3435,7 +3451,8 @@ function renderTasksList() {
                         '<span>' + esc(trimmed) + '</span></div>';
                 }).join('') + '</div>';
         }
-        return '<div class="card" style="margin-bottom:12px;padding:16px 20px;' + (isDone ? 'opacity:0.5;' : '') + '">' +
+        var isPending = t.status === 'pending';
+        return '<div class="card" style="margin-bottom:12px;padding:16px 20px;' + (isDone ? 'opacity:0.5;' : '') + (isPending ? 'border-left:3px solid #e74c3c;' : '') + '">' +
             '<div style="display:flex;align-items:center;gap:12px;">' +
                 '<div class="checkbox ' + (isDone ? 'checked' : '') + '" onclick="toggleCrmTask(' + t.id + ',\'' + t.status + '\')"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3"><polyline points="20 6 9 17 4 12"/></svg></div>' +
                 '<div style="flex:1;">' +
