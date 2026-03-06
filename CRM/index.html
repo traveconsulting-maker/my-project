@@ -1817,6 +1817,19 @@
         </div>
     </div>
 
+    <div class="modal-overlay" id="dmp-instruction-modal">
+        <div class="modal" style="max-width:600px;">
+            <div class="modal-header">
+                <div class="modal-title" id="dmp-instruction-title">Настройка парсинга в DMP.one</div>
+                <button class="modal-close" onclick="closeModal('dmp-instruction-modal')">&times;</button>
+            </div>
+            <div id="dmp-instruction-body" style="padding:20px;max-height:70vh;overflow-y:auto;"></div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-primary" onclick="closeDmpInstruction()">Всё готово</button>
+            </div>
+        </div>
+    </div>
+
 <script>
 // ==================== DATA LAYER ====================
 const STAGES = [
@@ -3183,6 +3196,7 @@ function renderLaunches(el, client) {
                     if (c.status === 'draft') actionBtn = `<button class="btn btn-sm" style="background:#3b82f6;color:#fff;font-size:.75rem;padding:4px 10px;" onclick="adminCampaignAction(${client.id},${c.id},'launch','${esc(c.name)}')">Запустить</button>`;
                     else if (c.status === 'calling') actionBtn = `<button class="btn btn-sm" style="background:#f97316;color:#fff;font-size:.75rem;padding:4px 10px;" onclick="adminCampaignAction(${client.id},${c.id},'pause')">Пауза</button>`;
                     else if (c.status === 'paused') actionBtn = `<button class="btn btn-sm" style="background:#10b981;color:#fff;font-size:.75rem;padding:4px 10px;" onclick="adminCampaignAction(${client.id},${c.id},'resume')">Возобновить</button>`;
+                    const dmpBtn = `<button class="btn btn-sm" style="background:#8b5cf6;color:#fff;font-size:.75rem;padding:4px 10px;margin-left:4px;" onclick='openDmpInstruction(${JSON.stringify({name:c.name,dmp_project_name:c.dmp_project_name||"",contacts_needed:c.contacts_needed||0,leads_per_day:c.leads_per_day||50,competitor_sites:c.audience_competitor_sites||[]}).replace(/'/g,"&#39;")})'>📋 Инструкция DMP</button>`;
                     const auLocked = c.audience_locked_until && new Date(c.audience_locked_until) > new Date();
                     const sbLocked = c.skillbase_locked_until && new Date(c.skillbase_locked_until) > new Date();
                     return `<tr>
@@ -3195,7 +3209,7 @@ function renderLaunches(el, client) {
                     <td>${launchStatusBadge(c.status)}</td>
                     <td>${formatDate(c.created_at)}</td>
                     <td><strong>${c.qualified_leads}</strong></td>
-                    <td>${actionBtn}</td>
+                    <td style="white-space:nowrap;">${actionBtn}${dmpBtn}</td>
                 </tr>`;
                 }).join('') +
                 '</tbody></table></div>';
@@ -3227,6 +3241,36 @@ function adminCampaignAction(clientId, campaignId, action, campaignName) {
     .catch(err => {
         toast(err.message);
     });
+}
+
+function openDmpInstruction(c) {
+    const sites = Array.isArray(c.competitor_sites) ? c.competitor_sites.join(', ') : (c.competitor_sites || '');
+    const webhookUrl = 'https://api.easysale.tech/api/dmp/webhook';
+    const dailyLimit = (c.leads_per_day || 50) * 25;
+    const steps = [
+        'Зайти на dmp.one → Проекты → "Проект без кода"',
+        `Название проекта: <code>${esc(c.dmp_project_name || '')}</code> <button class="btn btn-sm" style="font-size:.7rem;padding:2px 8px;margin-left:4px;" onclick="navigator.clipboard.writeText('${(c.dmp_project_name||'').replace(/'/g,"\\'")}');toast('Скопировано')">копировать</button>`,
+        `Добавить домены конкурентов: <code>${esc(sites)}</code> <button class="btn btn-sm" style="font-size:.7rem;padding:2px 8px;margin-left:4px;" onclick="navigator.clipboard.writeText('${sites.replace(/'/g,"\\'")}');toast('Скопировано')">копировать</button>`,
+        `Глобальный лимит: <strong>${c.contacts_needed || '—'}</strong>`,
+        `Дневной лимит: <strong>${dailyLimit}</strong>`,
+        'Открыть настройки проекта → Интеграция → "URL для приема данных"',
+        `Включить чекбокс и вставить URL: <code>${webhookUrl}</code> <button class="btn btn-sm" style="font-size:.7rem;padding:2px 8px;margin-left:4px;" onclick="navigator.clipboard.writeText('${webhookUrl}');toast('Скопировано')">копировать</button>`,
+        'Включить "Отправлять json формат"',
+        'Нажать "Отправить тестовый визит" — убедиться что пришел ответ 200',
+        'Сохранить'
+    ];
+    document.getElementById('dmp-instruction-title').textContent = 'Настройка парсинга в DMP.one для запуска ' + (c.name || '');
+    document.getElementById('dmp-instruction-body').innerHTML = '<div style="display:flex;flex-direction:column;gap:12px;">' +
+        steps.map((s, i) => `<label style="display:flex;align-items:flex-start;gap:8px;cursor:pointer;font-size:.9rem;line-height:1.5;">
+            <input type="checkbox" class="dmp-step-check" data-step="${i}" style="margin-top:4px;flex-shrink:0;">
+            <span>${s}</span>
+        </label>`).join('') + '</div>';
+    openModal('dmp-instruction-modal');
+}
+
+function closeDmpInstruction() {
+    closeModal('dmp-instruction-modal');
+    toast('Инструкция DMP завершена');
 }
 
 function deleteClient(id) {
