@@ -1,0 +1,1073 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>EasySale — Первые продажи легче, чем ты думаешь</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800;900&family=Onest:wght@300;400;500;600;700&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --bg: #0a0a1a;
+            --card-bg: rgba(255, 255, 255, 0.04);
+            --card-border: rgba(255, 255, 255, 0.08);
+            --card-shadow: 0 30px 80px rgba(0, 0, 0, 0.4);
+            --card-inset: inset 0 1px 0 rgba(255, 255, 255, 0.06);
+            --text: #fff;
+            --text-muted: rgba(255, 255, 255, 0.45);
+            --text-secondary: rgba(255, 255, 255, 0.85);
+            --text-dim: rgba(255, 255, 255, 0.5);
+            --text-label: rgba(255, 255, 255, 0.55);
+            --hover-bg: rgba(255, 255, 255, 0.04);
+            --link-bg: rgba(255, 255, 255, 0.06);
+            --link-border: rgba(255, 255, 255, 0.06);
+            --input-bg: rgba(255, 255, 255, 0.05);
+            --input-border: rgba(255, 255, 255, 0.1);
+            --modal-bg: #16162a;
+            --topbar-bg: rgba(10, 10, 26, 0.8);
+            --border-color: rgba(255, 255, 255, 0.06);
+            --nav-icon-bg: rgba(255, 255, 255, 0.06);
+            --skill-card-hover: rgba(255, 255, 255, 0.05);
+            --divider-color: rgba(255, 255, 255, 0.25);
+            --divider-line: rgba(255, 255, 255, 0.08);
+            --orb-opacity: 0.5;
+            --orb3-opacity: 0.3;
+            --step-line: rgba(108, 92, 231, 0.3);
+        }
+
+        body.light {
+            --bg: #f0f2f5;
+            --card-bg: rgba(255, 255, 255, 0.85);
+            --card-border: rgba(0, 0, 0, 0.08);
+            --card-shadow: 0 30px 80px rgba(0, 0, 0, 0.08);
+            --card-inset: inset 0 1px 0 rgba(255, 255, 255, 0.8);
+            --text: #1a1a2e;
+            --text-muted: rgba(0, 0, 0, 0.45);
+            --text-secondary: rgba(0, 0, 0, 0.75);
+            --text-dim: rgba(0, 0, 0, 0.5);
+            --text-label: rgba(0, 0, 0, 0.55);
+            --hover-bg: rgba(0, 0, 0, 0.04);
+            --link-bg: rgba(0, 0, 0, 0.05);
+            --link-border: rgba(0, 0, 0, 0.06);
+            --input-bg: rgba(0, 0, 0, 0.04);
+            --input-border: rgba(0, 0, 0, 0.12);
+            --modal-bg: #ffffff;
+            --topbar-bg: rgba(240, 242, 245, 0.85);
+            --border-color: rgba(0, 0, 0, 0.08);
+            --nav-icon-bg: rgba(0, 0, 0, 0.05);
+            --skill-card-hover: rgba(255, 255, 255, 0.9);
+            --divider-color: rgba(0, 0, 0, 0.25);
+            --divider-line: rgba(0, 0, 0, 0.08);
+            --orb-opacity: 0.25;
+            --orb3-opacity: 0.15;
+            --step-line: rgba(108, 92, 231, 0.15);
+        }
+
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+
+        body {
+            font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
+            min-height: 100vh;
+            background: var(--bg);
+            overflow-x: hidden;
+            transition: background 0.4s;
+        }
+
+        /* BG orbs */
+        .bg { position: fixed; inset: 0; z-index: 0; pointer-events: none; }
+        .bg-orb {
+            position: absolute; border-radius: 50%; filter: blur(80px);
+            opacity: var(--orb-opacity); animation: float 8s ease-in-out infinite; transition: opacity 0.4s;
+        }
+        .bg-orb:nth-child(1) { width: 400px; height: 400px; background: #6c5ce7; top: -10%; left: -5%; }
+        .bg-orb:nth-child(2) { width: 350px; height: 350px; background: #0984e3; bottom: -10%; right: -5%; animation-delay: -3s; }
+        .bg-orb:nth-child(3) { width: 250px; height: 250px; background: #e17055; top: 50%; left: 50%; transform: translate(-50%,-50%); animation-delay: -5s; opacity: var(--orb3-opacity); }
+        @keyframes float {
+            0%,100% { transform: translate(0,0) scale(1); }
+            33% { transform: translate(30px,-20px) scale(1.05); }
+            66% { transform: translate(-20px,20px) scale(0.95); }
+        }
+
+        /* ===== LANDING ===== */
+        #landingPage {
+            position: relative; z-index: 1;
+        }
+
+        /* Top bar landing */
+        .land-topbar {
+            position: fixed; top: 0; left: 0; right: 0; z-index: 20;
+            display: flex; align-items: center; justify-content: space-between;
+            padding: 16px 40px;
+            background: var(--topbar-bg);
+            backdrop-filter: blur(20px); -webkit-backdrop-filter: blur(20px);
+            border-bottom: 1px solid var(--border-color);
+            transition: background 0.4s, border-color 0.4s;
+        }
+        .land-logo {
+            font-size: 20px; font-weight: 900; color: var(--text);
+            display: flex; align-items: center; gap: 10px; transition: color 0.4s;
+        }
+        .land-logo-icon {
+            width: 36px; height: 36px; border-radius: 12px;
+            background: linear-gradient(135deg, #6c5ce7, #a855f7);
+            display: flex; align-items: center; justify-content: center;
+        }
+        .land-logo-icon svg { width: 20px; height: 20px; fill: #fff; }
+        .land-topbar-right { display: flex; align-items: center; gap: 12px; }
+        .land-nav { display: flex; align-items: center; gap: 8px; }
+        .land-nav a {
+            color: var(--text-dim); text-decoration: none; font-size: 14px; font-weight: 500;
+            padding: 8px 14px; border-radius: 10px; transition: color 0.2s, background 0.2s;
+        }
+        .land-nav a:hover { color: var(--text); background: var(--hover-bg); }
+
+        .reg-btn {
+            display: inline-flex; align-items: center; gap: 8px;
+            padding: 10px 22px;
+            background: linear-gradient(135deg, #6c5ce7, #a855f7);
+            border: none; border-radius: 12px; color: #fff;
+            font-family: inherit; font-size: 14px; font-weight: 600;
+            cursor: pointer; transition: all 0.3s cubic-bezier(0.16,1,0.3,1);
+            box-shadow: 0 4px 20px rgba(108,92,231,0.3);
+            text-decoration: none;
+        }
+        .reg-btn:hover { transform: translateY(-2px); box-shadow: 0 8px 30px rgba(108,92,231,0.45); }
+        .reg-btn svg { width: 18px; height: 18px; fill: currentColor; }
+
+        /* Hero */
+        .hero {
+            padding: 160px 40px 80px; text-align: center; max-width: 900px; margin: 0 auto;
+        }
+        .hero-badge {
+            display: inline-flex; align-items: center; gap: 8px;
+            padding: 8px 20px; border-radius: 100px;
+            background: rgba(108,92,231,0.12); color: #a78bfa;
+            font-size: 13px; font-weight: 600; margin-bottom: 28px;
+        }
+        .hero-badge svg { width: 16px; height: 16px; fill: currentColor; }
+        .hero h1 {
+            font-size: clamp(36px, 5.5vw, 64px); font-weight: 900; line-height: 1.1;
+            color: var(--text); margin-bottom: 24px; letter-spacing: -1.5px;
+            transition: color 0.4s;
+        }
+        .hero h1 span {
+            background: linear-gradient(135deg, #6c5ce7, #a855f7, #ec4899);
+            -webkit-background-clip: text; -webkit-text-fill-color: transparent;
+            background-clip: text;
+        }
+        .hero p {
+            font-size: 18px; line-height: 1.7; color: var(--text-muted);
+            max-width: 640px; margin: 0 auto 40px; transition: color 0.4s;
+        }
+        .hero-cta {
+            display: inline-flex; align-items: center; gap: 10px;
+            padding: 18px 44px; border-radius: 16px;
+            background: linear-gradient(135deg, #6c5ce7, #a855f7);
+            color: #fff; text-decoration: none; font-size: 16px; font-weight: 700;
+            box-shadow: 0 8px 30px rgba(108,92,231,0.35);
+            transition: all 0.3s cubic-bezier(0.16,1,0.3,1); cursor: pointer; border: none;
+            font-family: inherit;
+        }
+        .hero-cta:hover { transform: translateY(-3px); box-shadow: 0 14px 40px rgba(108,92,231,0.5); }
+        .hero-cta svg { width: 20px; height: 20px; fill: currentColor; }
+
+        /* Section titles */
+        .section { padding: 80px 40px; max-width: 1200px; margin: 0 auto; }
+        .section-label {
+            display: inline-flex; align-items: center; gap: 8px;
+            padding: 6px 16px; border-radius: 100px;
+            background: rgba(108,92,231,0.1); color: #a78bfa;
+            font-size: 12px; font-weight: 700; text-transform: uppercase; letter-spacing: 1.5px;
+            margin-bottom: 16px;
+        }
+        .section-title {
+            font-size: clamp(28px, 4vw, 42px); font-weight: 800; color: var(--text);
+            margin-bottom: 12px; letter-spacing: -0.5px; transition: color 0.4s;
+        }
+        .section-desc {
+            font-size: 16px; color: var(--text-muted); max-width: 600px;
+            line-height: 1.7; margin-bottom: 48px; transition: color 0.4s;
+        }
+
+        /* Feature grid */
+        .feat-grid {
+            display: grid; grid-template-columns: repeat(auto-fill, minmax(320px, 1fr)); gap: 20px;
+        }
+        .feat-card {
+            background: var(--card-bg); border: 1px solid var(--card-border);
+            border-radius: 24px; padding: 32px;
+            transition: all 0.3s cubic-bezier(0.16,1,0.3,1);
+            backdrop-filter: blur(20px); -webkit-backdrop-filter: blur(20px);
+        }
+        .feat-card:hover {
+            background: var(--skill-card-hover); transform: translateY(-6px);
+            box-shadow: 0 20px 50px rgba(0,0,0,0.15);
+        }
+        .feat-card:first-child {
+            grid-column: 1 / -1;
+            background: linear-gradient(135deg, rgba(108,92,231,0.12), rgba(168,85,247,0.08));
+            border-color: rgba(108,92,231,0.2);
+        }
+        .feat-card:first-child .feat-icon { background: linear-gradient(135deg, #6c5ce7, #a855f7); }
+        .feat-card:first-child .feat-icon svg { fill: #fff; }
+        .feat-icon {
+            width: 52px; height: 52px; border-radius: 16px;
+            display: flex; align-items: center; justify-content: center;
+            margin-bottom: 20px;
+        }
+        .feat-icon svg { width: 24px; height: 24px; }
+        .feat-card h3 {
+            font-size: 18px; font-weight: 700; color: var(--text);
+            margin-bottom: 10px; transition: color 0.4s;
+        }
+        .feat-card p {
+            font-size: 14px; color: var(--text-muted); line-height: 1.7;
+            transition: color 0.4s;
+        }
+
+        .ic-purple { background: rgba(108,92,231,0.12); }
+        .ic-purple svg { fill: #a78bfa; }
+        .ic-blue { background: rgba(56,189,248,0.12); }
+        .ic-blue svg { fill: #38bdf8; }
+        .ic-green { background: rgba(52,211,153,0.12); }
+        .ic-green svg { fill: #34d399; }
+        .ic-orange { background: rgba(251,146,60,0.12); }
+        .ic-orange svg { fill: #fb923c; }
+        .ic-pink { background: rgba(236,72,153,0.12); }
+        .ic-pink svg { fill: #ec4899; }
+        .ic-cyan { background: rgba(34,211,238,0.12); }
+        .ic-cyan svg { fill: #22d3ee; }
+
+        /* Steps */
+        .steps {
+            display: grid; grid-template-columns: repeat(4, 1fr); gap: 0;
+            position: relative; margin-top: 48px;
+        }
+        .steps::before {
+            content: ''; position: absolute; top: 36px; left: 10%; right: 10%;
+            height: 2px; background: var(--step-line); transition: background 0.4s;
+        }
+        .step {
+            text-align: center; position: relative; padding: 0 12px;
+        }
+        .step-num {
+            width: 72px; height: 72px; border-radius: 50%; margin: 0 auto 20px;
+            display: flex; align-items: center; justify-content: center;
+            font-size: 24px; font-weight: 800; color: #fff;
+            background: linear-gradient(135deg, #6c5ce7, #a855f7);
+            box-shadow: 0 8px 30px rgba(108,92,231,0.3);
+            position: relative; z-index: 1;
+        }
+        .step h4 {
+            font-size: 16px; font-weight: 700; color: var(--text);
+            margin-bottom: 8px; transition: color 0.4s;
+        }
+        .step p {
+            font-size: 13px; color: var(--text-muted); line-height: 1.6;
+            transition: color 0.4s;
+        }
+
+        /* CTA banner */
+        .cta-banner {
+            margin: 80px 40px; max-width: 1120px; margin-left: auto; margin-right: auto;
+            padding: 56px 48px; border-radius: 32px; text-align: center;
+            background: linear-gradient(135deg, rgba(108,92,231,0.15), rgba(168,85,247,0.1));
+            border: 1px solid rgba(108,92,231,0.2);
+            backdrop-filter: blur(20px); -webkit-backdrop-filter: blur(20px);
+        }
+        .cta-banner h2 {
+            font-size: clamp(22px, 3vw, 32px); font-weight: 800; color: var(--text);
+            margin-bottom: 16px; line-height: 1.3; transition: color 0.4s;
+        }
+        .cta-banner h2 span {
+            background: linear-gradient(135deg, #6c5ce7, #a855f7, #ec4899);
+            -webkit-background-clip: text; -webkit-text-fill-color: transparent; background-clip: text;
+        }
+        .cta-banner p {
+            font-size: 16px; color: var(--text-muted); max-width: 550px;
+            margin: 0 auto 32px; line-height: 1.7; transition: color 0.4s;
+        }
+
+        /* Mission section */
+        .mission-section {
+            padding: 100px 40px;
+            max-width: 900px;
+            margin: 0 auto;
+            text-align: center;
+            position: relative;
+        }
+        .mission-section .section-label {
+            display: inline-flex; align-items: center; gap: 8px;
+            padding: 6px 16px; border-radius: 100px;
+            background: rgba(108,92,231,0.1); color: #a78bfa;
+            font-size: 12px; font-weight: 700; text-transform: uppercase; letter-spacing: 1.5px;
+            margin-bottom: 16px;
+        }
+        .mission-title {
+            font-size: clamp(28px, 4vw, 42px);
+            font-weight: 900;
+            color: var(--text);
+            margin-bottom: 48px;
+            letter-spacing: -1px;
+            transition: color 0.4s;
+        }
+        .mission-body {
+            text-align: left;
+            position: relative;
+        }
+        .mission-body p {
+            font-size: 16px;
+            line-height: 1.85;
+            color: var(--text-secondary);
+            margin-bottom: 24px;
+            transition: color 0.4s;
+        }
+        .mission-body p:last-of-type {
+            margin-bottom: 0;
+        }
+        .mission-highlight {
+            color: var(--text);
+            font-weight: 600;
+        }
+        .mission-signature {
+            margin-top: 48px;
+            padding-top: 32px;
+            border-top: 1px solid var(--border-color);
+            font-size: 15px;
+            color: var(--text-muted);
+            font-style: italic;
+            text-align: center;
+            transition: color 0.4s, border-color 0.4s;
+        }
+
+        /* Mission visual elements */
+        .mission-visuals {
+            display: flex;
+            justify-content: center;
+            gap: 48px;
+            margin-top: 48px;
+            margin-bottom: 8px;
+        }
+        .mission-visual-item {
+            width: 80px;
+            height: 80px;
+            position: relative;
+            opacity: 0.5;
+            transition: opacity 0.4s;
+        }
+        .mission-visual-item:hover {
+            opacity: 0.8;
+        }
+        .mv-neural {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+        .mv-neural svg {
+            width: 64px;
+            height: 64px;
+        }
+        .mv-neural svg circle {
+            fill: rgba(108, 92, 231, 0.6);
+            transition: fill 0.3s;
+        }
+        .mv-neural svg line {
+            stroke: rgba(108, 92, 231, 0.25);
+            stroke-width: 1;
+        }
+        .mv-grid {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+        .mv-grid svg {
+            width: 64px;
+            height: 64px;
+        }
+        .mv-grid svg rect {
+            fill: none;
+            stroke: rgba(168, 85, 247, 0.3);
+            stroke-width: 0.8;
+            rx: 2;
+        }
+        .mv-grid svg circle {
+            fill: rgba(168, 85, 247, 0.5);
+        }
+        .mv-circuit {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+        .mv-circuit svg {
+            width: 64px;
+            height: 64px;
+        }
+        .mv-circuit svg path {
+            fill: none;
+            stroke: rgba(108, 92, 231, 0.3);
+            stroke-width: 1;
+        }
+        .mv-circuit svg circle {
+            fill: rgba(108, 92, 231, 0.5);
+        }
+
+        .mission-divider-line {
+            width: 1px;
+            height: 60px;
+            background: linear-gradient(180deg, transparent, rgba(108,92,231,0.2), transparent);
+            align-self: center;
+        }
+
+        /* Footer */
+        .land-footer {
+            padding: 40px; text-align: center;
+            color: var(--text-muted); font-size: 13px;
+            border-top: 1px solid var(--border-color); transition: color 0.4s, border-color 0.4s;
+        }
+
+        /* Theme toggle */
+        .theme-toggle {
+            display: flex; align-items: center; gap: 8px;
+            cursor: pointer; padding: 6px 10px; border-radius: 10px;
+            transition: background 0.2s;
+        }
+        .theme-toggle:hover { background: var(--hover-bg); }
+        .theme-toggle svg { width: 16px; height: 16px; fill: var(--text-muted); transition: fill 0.3s; }
+        .toggle-track {
+            width: 44px; height: 24px; border-radius: 12px;
+            background: rgba(108,92,231,0.3); position: relative; transition: background 0.3s;
+        }
+        body.light .toggle-track { background: rgba(251,191,36,0.3); }
+        .toggle-thumb {
+            width: 20px; height: 20px; border-radius: 50%; background: #6c5ce7;
+            position: absolute; top: 2px; left: 2px;
+            transition: transform 0.3s cubic-bezier(0.16,1,0.3,1), background 0.3s;
+        }
+        body.light .toggle-thumb { transform: translateX(20px); background: #f59e0b; }
+        .icon-moon, .icon-sun { transition: opacity 0.3s; }
+        body.light .icon-moon { opacity: 0; width: 0; overflow: hidden; }
+        body:not(.light) .icon-sun { opacity: 0; width: 0; overflow: hidden; }
+
+        /* Lang button */
+        .lang-btn {
+            padding: 4px 10px; border-radius: 8px; border: 1.5px solid var(--card-border);
+            background: var(--card-bg); color: var(--text-secondary);
+            font-family: inherit; font-size: 12px; font-weight: 700;
+            cursor: pointer; transition: all 0.2s; letter-spacing: 0.5px;
+            backdrop-filter: blur(10px); -webkit-backdrop-filter: blur(10px);
+        }
+        .lang-btn:hover { border-color: rgba(108,92,231,0.4); background: rgba(108,92,231,0.08); }
+
+        /* ===== MODAL (access modal) ===== */
+        .modal-overlay {
+            position: fixed; inset: 0; z-index: 100;
+            background: rgba(0,0,0,0.6); backdrop-filter: blur(8px); -webkit-backdrop-filter: blur(8px);
+            display: flex; align-items: center; justify-content: center;
+            opacity: 0; visibility: hidden; transition: all 0.3s;
+        }
+        .modal-overlay.active { opacity: 1; visibility: visible; }
+        .modal {
+            background: var(--modal-bg); border: 1px solid var(--card-border);
+            border-radius: 28px; padding: 44px 36px; max-width: 420px; width: 90%;
+            text-align: center; box-shadow: 0 30px 80px rgba(0,0,0,0.5);
+            transform: translateY(30px) scale(0.96); transition: transform 0.4s cubic-bezier(0.16,1,0.3,1), background 0.4s;
+            position: relative;
+        }
+        .modal-overlay.active .modal { transform: translateY(0) scale(1); }
+        .modal-close {
+            position: absolute; top: 16px; right: 16px; width: 36px; height: 36px;
+            border-radius: 10px; border: none; background: var(--link-bg);
+            color: var(--text-dim); font-size: 20px; cursor: pointer;
+            display: flex; align-items: center; justify-content: center; transition: all 0.2s;
+        }
+        .modal-close:hover { background: var(--hover-bg); color: var(--text); }
+        .modal-title { font-size: 26px; font-weight: 800; color: var(--text); margin-bottom: 8px; }
+        .modal-subtitle { font-size: 14px; color: var(--text-muted); margin-bottom: 32px; }
+        .form-group { margin-bottom: 16px; text-align: left; }
+        .form-group label { display: block; font-size: 13px; font-weight: 600; color: var(--text-label); margin-bottom: 8px; }
+        .form-group input {
+            width: 100%; padding: 14px 16px; background: var(--input-bg);
+            border: 1px solid var(--input-border); border-radius: 14px; color: var(--text);
+            font-family: inherit; font-size: 15px; outline: none; transition: border-color 0.3s, background 0.3s;
+        }
+        .form-group input::placeholder { color: var(--text-muted); }
+        .form-group input:focus { border-color: rgba(108,92,231,0.6); background: rgba(108,92,231,0.06); }
+        .form-group input.error { border-color: #ef4444; background: rgba(239,68,68,0.06); }
+        .error-msg {
+            display: none; margin-top: 12px; padding: 12px 16px;
+            background: rgba(239,68,68,0.1); border: 1px solid rgba(239,68,68,0.2);
+            border-radius: 12px; color: #f87171; font-size: 13px; font-weight: 500; text-align: center;
+        }
+        .error-msg.show { display: block; }
+
+        /* Access submit btn states */
+        .access-submit {
+            width: 100%; padding: 16px; margin-top: 8px;
+            background: rgba(108,92,231,0.2); color: rgba(255,255,255,0.3);
+            border: none; border-radius: 14px; font-family: inherit;
+            font-size: 15px; font-weight: 700; cursor: not-allowed;
+            transition: all 0.4s cubic-bezier(0.16,1,0.3,1);
+        }
+        .access-submit.active {
+            background: linear-gradient(135deg, #6c5ce7, #a855f7);
+            color: #fff; cursor: pointer;
+            box-shadow: 0 6px 24px rgba(108,92,231,0.3);
+        }
+        .access-submit.active:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 10px 32px rgba(108,92,231,0.45);
+        }
+        body.light .access-submit {
+            background: rgba(108,92,231,0.08); color: rgba(0,0,0,0.25);
+        }
+        body.light .access-submit.active {
+            background: linear-gradient(135deg, #6c5ce7, #a855f7); color: #fff;
+        }
+
+        .access-success {
+            display: none; flex-direction: column; align-items: center; gap: 16px; padding: 20px 0;
+        }
+        .access-success.show { display: flex; }
+        .access-success-icon {
+            width: 72px; height: 72px; border-radius: 50%;
+            background: rgba(52,211,153,0.12);
+            display: flex; align-items: center; justify-content: center;
+        }
+        .access-success-icon svg { width: 36px; height: 36px; fill: #34d399; }
+        .access-success h3 { font-size: 22px; font-weight: 700; color: var(--text); }
+        .access-success p { font-size: 14px; color: var(--text-muted); line-height: 1.6; text-align: center; }
+
+        .field-hint {
+            font-size: 12px; color: #f87171; margin-top: 6px; display: none;
+        }
+        .field-hint.show { display: block; }
+
+        /* Responsive */
+        @media (max-width: 768px) {
+            .steps { grid-template-columns: repeat(2, 1fr); gap: 32px; }
+            .steps::before { display: none; }
+            .feat-grid { grid-template-columns: 1fr; }
+            .feat-card:first-child { grid-column: auto; }
+        }
+        @media (max-width: 600px) {
+            .mission-visuals {
+                gap: 24px;
+            }
+            .mission-visual-item {
+                width: 56px;
+                height: 56px;
+            }
+            .mission-visual-item svg {
+                width: 48px !important;
+                height: 48px !important;
+            }
+        }
+        @media (max-width: 480px) {
+            .hero { padding: 130px 20px 60px; }
+            .hero h1 { font-size: 32px; }
+            .section { padding: 60px 20px; }
+            .cta-banner { margin: 60px 20px; padding: 40px 24px; }
+            .steps { grid-template-columns: 1fr; }
+            .land-topbar { padding: 12px 16px; }
+        }
+    </style>
+</head>
+<body>
+
+    <!-- ===== LANDING ===== -->
+    <div id="landingPage">
+        <div class="bg">
+            <div class="bg-orb"></div>
+            <div class="bg-orb"></div>
+            <div class="bg-orb"></div>
+        </div>
+
+        <!-- Top bar -->
+        <div class="land-topbar">
+            <div class="land-logo">
+                <div class="land-logo-icon">
+                    <svg viewBox="0 0 24 24"><path d="M13 3a9 9 0 00-9 9H1l3.89 3.89.07.14L9 12H6c0-3.87 3.13-7 7-7s7 3.13 7 7-3.13 7-7 7a6.99 6.99 0 01-4.95-2.05l-1.41 1.41A8.96 8.96 0 0013 21a9 9 0 000-18zm-1 5v5l4.28 2.54.72-1.21-3.5-2.08V8H12z"/></svg>
+                </div>
+                EasySale
+            </div>
+            <div class="land-topbar-right">
+                <nav class="land-nav">
+                    <a href="#mission" data-i18n="mission">Миссия</a>
+                    <a href="#contacts" data-i18n="contacts">Контакты</a>
+                </nav>
+                <button class="lang-btn" onclick="switchLang()" id="landLangBtn">EN</button>
+                <div class="theme-toggle" onclick="toggleTheme()">
+                    <svg class="icon-moon" viewBox="0 0 24 24"><path d="M12 3a9 9 0 109 9c0-.46-.04-.92-.1-1.36a5.39 5.39 0 01-4.4 2.26 5.4 5.4 0 01-3.14-9.8c-.44-.06-.9-.1-1.36-.1z"/></svg>
+                    <svg class="icon-sun" viewBox="0 0 24 24"><path d="M6.76 4.84l-1.8-1.79-1.41 1.41 1.79 1.79 1.42-1.41zM4 10.5H1v2h3v-2zm9-9.95h-2V3.5h2V.55zm7.45 3.91l-1.41-1.41-1.79 1.79 1.41 1.41 1.79-1.79zm-3.21 13.7l1.79 1.8 1.41-1.41-1.8-1.79-1.4 1.4zM20 10.5v2h3v-2h-3zm-8-5c-3.31 0-6 2.69-6 6s2.69 6 6 6 6-2.69 6-6-2.69-6-6-6zm-1 16.95h2V19.5h-2v2.95zm-7.45-3.91l1.41 1.41 1.79-1.8-1.41-1.41-1.79 1.8z"/></svg>
+                    <div class="toggle-track"><div class="toggle-thumb"></div></div>
+                </div>
+                <a class="reg-btn" href="https://app.easysale.tech">
+                    <svg viewBox="0 0 24 24"><path d="M11 7L9.6 8.4l2.6 2.6H2v2h10.2l-2.6 2.6L11 17l5-5-5-5zm9 12h-8v2h8c1.1 0 2-.9 2-2V5c0-1.1-.9-2-2-2h-8v2h8v14z"/></svg>
+                    <span data-i18n="login">Войти</span>
+                </a>
+            </div>
+        </div>
+
+        <!-- Hero -->
+        <div class="hero">
+            <div class="hero-badge">
+                <svg viewBox="0 0 24 24"><path d="M19 3H5c-1.1 0-2 .9-2 2v14c0 1.1.9 2 2 2h14c1.1 0 2-.9 2-2V5c0-1.1-.9-2-2-2zm-5 14H7v-2h7v2zm3-4H7v-2h10v2zm0-4H7V7h10v2z"/></svg>
+                <span data-i18n="heroBadge">Платформа нового поколения</span>
+            </div>
+            <h1 data-i18n-html="heroTitle">Первые продажи легче,<br>чем ты думаешь</h1>
+            <button class="hero-cta" onclick="openAccessModal()">
+                <span data-i18n="requestAccess">Запросить доступ</span>
+                <svg viewBox="0 0 24 24"><path d="M12 4l-1.41 1.41L16.17 11H4v2h12.17l-5.58 5.59L12 20l8-8-8-8z"/></svg>
+            </button>
+        </div>
+
+        <!-- Features -->
+        <div class="section">
+            <div class="section-label" data-i18n="featLabel">Возможности</div>
+            <div class="section-title" data-i18n="featTitle">Комплексное решение</div>
+
+            <div class="feat-grid">
+                <div class="feat-card">
+                    <div class="feat-icon">
+                        <svg viewBox="0 0 24 24"><path d="M21 11.5a8.38 8.38 0 01-.9 3.8 8.5 8.5 0 01-7.6 4.7 8.38 8.38 0 01-3.8-.9L3 21l1.9-5.7a8.38 8.38 0 01-.9-3.8 8.5 8.5 0 014.7-7.6 8.38 8.38 0 013.8-.9h.5a8.48 8.48 0 018 8v.5z"/></svg>
+                    </div>
+                    <h3 data-i18n="f1t">AI отдел продаж</h3>
+                    <p data-i18n="f1d">Самостоятельно формирует, прозванивает холодную базу клиентов и передает вашим менеджерам уже готовых клиентов.</p>
+                </div>
+                <div class="feat-card">
+                    <div class="feat-icon ic-cyan">
+                        <svg viewBox="0 0 24 24"><path d="M13 3a9 9 0 00-9 9H1l3.89 3.89.07.14L9 12H6c0-3.87 3.13-7 7-7s7 3.13 7 7-3.13 7-7 7a6.99 6.99 0 01-4.95-2.05l-1.41 1.41A8.96 8.96 0 0013 21a9 9 0 000-18zm-1 5v5l4.28 2.54.72-1.21-3.5-2.08V8H12z"/></svg>
+                    </div>
+                    <h3 data-i18n="f2t">Быстрая настройка</h3>
+                    <p data-i18n="f2d">Запуск отдела продаж за 2-5 минут.</p>
+                </div>
+                <div class="feat-card">
+                    <div class="feat-icon ic-green">
+                        <svg viewBox="0 0 24 24"><path d="M11 7h2v2h-2zm0 4h2v6h-2zm1-9C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm0 18c-4.41 0-8-3.59-8-8s3.59-8 8-8 8 3.59 8 8-3.59 8-8 8z"/></svg>
+                    </div>
+                    <h3 data-i18n="f3t">Быстрый лид</h3>
+                    <p data-i18n="f3d">Получай теплые лиды в компанию уже на следующий день.</p>
+                </div>
+                <div class="feat-card">
+                    <div class="feat-icon ic-orange">
+                        <svg viewBox="0 0 24 24"><path d="M19.14 12.94a7.07 7.07 0 000-1.88l2.03-1.58a.49.49 0 00.12-.61l-1.92-3.32a.49.49 0 00-.59-.22l-2.39.96a7.04 7.04 0 00-1.62-.94l-.36-2.54a.48.48 0 00-.48-.41h-3.84a.48.48 0 00-.48.41l-.36 2.54c-.59.24-1.13.57-1.62.94l-2.39-.96a.48.48 0 00-.59.22L2.74 8.87a.48.48 0 00.12.61l2.03 1.58a7.07 7.07 0 000 1.88l-2.03 1.58a.49.49 0 00-.12.61l1.92 3.32c.12.22.37.29.59.22l2.39-.96c.5.38 1.04.7 1.62.94l.36 2.54c.05.24.26.41.48.41h3.84c.24 0 .44-.17.48-.41l.36-2.54a7.04 7.04 0 001.62-.94l2.39.96c.22.08.47 0 .59-.22l1.92-3.32c.12-.22.07-.49-.12-.61l-2.03-1.58zM12 15.6A3.6 3.6 0 1115.6 12 3.61 3.61 0 0112 15.6z"/></svg>
+                    </div>
+                    <h3 data-i18n="f4t">Интеграция с СРМ системами</h3>
+                    <p data-i18n="f4d">Получай моментально теплые лиды сразу в вашу воронку СРМ.</p>
+                </div>
+            </div>
+        </div>
+
+        <!-- How it works -->
+        <div class="section" style="text-align:center;">
+            <div class="section-label" data-i18n="stepsLabel">Процесс</div>
+            <div class="section-title" style="text-align:center;" data-i18n="stepsTitle">Как это работает?</div>
+            <div class="section-desc" style="text-align:center; margin-left:auto; margin-right:auto;" data-i18n="stepsDesc">От идеи до лида в 4 шага</div>
+
+            <div class="steps">
+                <div class="step">
+                    <div class="step-num">1</div>
+                    <h4 data-i18n="s1t">Регистрация</h4>
+                    <p data-i18n="s1d">Создай аккаунт</p>
+                </div>
+                <div class="step">
+                    <div class="step-num">2</div>
+                    <h4 data-i18n="s2t">Сформируй свою ЦА</h4>
+                    <p data-i18n="s2d">Укажите каких клиентов ищем для вас</p>
+                </div>
+                <div class="step">
+                    <div class="step-num">3</div>
+                    <h4 data-i18n="s3t">Запуск отдела</h4>
+                    <p data-i18n="s3d">Укажите когда звоним, что предлагаем и как квалифицируем</p>
+                </div>
+                <div class="step">
+                    <div class="step-num">4</div>
+                    <h4 data-i18n="s4t">Получайте заявки</h4>
+                    <p data-i18n="s4d">Получайте входящие заявки и растите свой бизнес</p>
+                </div>
+            </div>
+        </div>
+
+
+        <!-- Mission -->
+        <div class="mission-section" id="mission">
+            <div class="section-label" data-i18n="missionLabel">Миссия</div>
+            <div class="mission-title" data-i18n="missionTitle">Наша миссия</div>
+
+            <div class="mission-body">
+                <p data-i18n="missionP1">EasySale помогает компаниям расти быстрее рынка, устраняя человеческий фактор из первичных продаж — тот самый, который болеет по понедельникам, выгорает по пятницам и внезапно увольняется в разгар сезона продаж.</p>
+
+                <p data-i18n="missionP2">Мы превращаем холодные звонки в управляемую систему, где результат зависит не от настроения менеджера, а от технологии.</p>
+
+                <p data-i18n="missionP3">Наш сервис — это автономный двигатель привлечения клиентов, который работает стабильно и масштабируется без драм и текучки.</p>
+
+                <p data-i18n="missionP4"><span class="mission-highlight" data-i18n="missionP4h">Вы получите</span> не просто лиды, а предсказуемость и контроль над ростом. Мы убираем хаос из начала воронки, чтобы бизнес мог сосредоточиться на главном — закрытии сделок и развитии. Потому что рост должен зависеть от стратегии, а не от того, кто сегодня вышел на работу.</p>
+            </div>
+
+            <!-- Visual elements: intellect / system / technology -->
+            <div class="mission-visuals">
+                <!-- Neural network -->
+                <div class="mission-visual-item mv-neural">
+                    <svg viewBox="0 0 64 64">
+                        <line x1="16" y1="16" x2="32" y2="8"/>
+                        <line x1="32" y1="8" x2="48" y2="16"/>
+                        <line x1="16" y1="16" x2="24" y2="32"/>
+                        <line x1="48" y1="16" x2="40" y2="32"/>
+                        <line x1="24" y1="32" x2="40" y2="32"/>
+                        <line x1="24" y1="32" x2="16" y2="48"/>
+                        <line x1="40" y1="32" x2="48" y2="48"/>
+                        <line x1="16" y1="48" x2="32" y2="56"/>
+                        <line x1="48" y1="48" x2="32" y2="56"/>
+                        <line x1="32" y1="8" x2="32" y2="32" style="stroke:rgba(108,92,231,0.12)"/>
+                        <line x1="32" y1="32" x2="32" y2="56" style="stroke:rgba(108,92,231,0.12)"/>
+                        <circle cx="32" cy="8" r="3"/>
+                        <circle cx="16" cy="16" r="2.5"/>
+                        <circle cx="48" cy="16" r="2.5"/>
+                        <circle cx="24" cy="32" r="3"/>
+                        <circle cx="40" cy="32" r="3"/>
+                        <circle cx="16" cy="48" r="2.5"/>
+                        <circle cx="48" cy="48" r="2.5"/>
+                        <circle cx="32" cy="56" r="3"/>
+                        <circle cx="32" cy="32" r="4" style="fill:rgba(108,92,231,0.9)"/>
+                    </svg>
+                </div>
+
+                <div class="mission-divider-line"></div>
+
+                <!-- Grid -->
+                <div class="mission-visual-item mv-grid">
+                    <svg viewBox="0 0 64 64">
+                        <rect x="6" y="6" width="16" height="16"/>
+                        <rect x="26" y="6" width="16" height="16"/>
+                        <rect x="46" y="6" width="12" height="16"/>
+                        <rect x="6" y="26" width="16" height="16"/>
+                        <rect x="26" y="26" width="16" height="16"/>
+                        <rect x="46" y="26" width="12" height="16"/>
+                        <rect x="6" y="46" width="16" height="12"/>
+                        <rect x="26" y="46" width="16" height="12"/>
+                        <rect x="46" y="46" width="12" height="12"/>
+                        <circle cx="14" cy="14" r="2"/>
+                        <circle cx="34" cy="14" r="2"/>
+                        <circle cx="14" cy="34" r="2"/>
+                        <circle cx="34" cy="34" r="2.5" style="fill:rgba(168,85,247,0.8)"/>
+                        <circle cx="52" cy="34" r="2"/>
+                        <circle cx="34" cy="52" r="2"/>
+                    </svg>
+                </div>
+
+                <div class="mission-divider-line"></div>
+
+                <!-- Circuit -->
+                <div class="mission-visual-item mv-circuit">
+                    <svg viewBox="0 0 64 64">
+                        <path d="M8 32 H24"/>
+                        <path d="M40 32 H56"/>
+                        <path d="M32 8 V24"/>
+                        <path d="M32 40 V56"/>
+                        <path d="M16 16 L24 24"/>
+                        <path d="M40 24 L48 16"/>
+                        <path d="M24 40 L16 48"/>
+                        <path d="M40 40 L48 48"/>
+                        <circle cx="32" cy="32" r="8" style="fill:none;stroke:rgba(108,92,231,0.4);stroke-width:1.5"/>
+                        <circle cx="32" cy="32" r="3" style="fill:rgba(108,92,231,0.7)"/>
+                        <circle cx="8" cy="32" r="2"/>
+                        <circle cx="56" cy="32" r="2"/>
+                        <circle cx="32" cy="8" r="2"/>
+                        <circle cx="32" cy="56" r="2"/>
+                        <circle cx="16" cy="16" r="1.5"/>
+                        <circle cx="48" cy="16" r="1.5"/>
+                        <circle cx="16" cy="48" r="1.5"/>
+                        <circle cx="48" cy="48" r="1.5"/>
+                    </svg>
+                </div>
+            </div>
+
+            <div class="mission-signature" data-i18n="missionSign">С заботой о вашем бизнесе, команда EasySale ❤️</div>
+        </div>
+
+        <div class="land-footer">EasySale &copy; 2025-2026</div>
+    </div>
+
+    <!-- Access Modal -->
+    <div class="modal-overlay" id="accessModal" onclick="closeAccessOnOverlay(event)">
+        <div class="modal">
+            <button class="modal-close" onclick="closeAccessModal()">&times;</button>
+
+            <div id="accessForm">
+                <div class="modal-title" data-i18n="accessTitle">Запросить доступ</div>
+                <div class="modal-subtitle" data-i18n="accessSub">Заполните данные и мы свяжемся с вами</div>
+
+                <div class="form-group">
+                    <label data-i18n="fioLabel">Имя</label>
+                    <input type="text" id="accName" placeholder="Иванов Иван Иванович" data-i18n-ph="phFio" oninput="checkAccessForm()">
+                    <div class="field-hint" id="hintName"></div>
+                </div>
+                <div class="form-group">
+                    <label data-i18n="phoneLabel">Номер телефона</label>
+                    <input type="tel" id="accPhone" placeholder="+7 (999) 123-45-67" data-i18n-ph="phPhone" oninput="formatAccPhone()" onblur="validatePhoneOnBlur()" maxlength="18">
+                    <div class="field-hint" id="hintPhone"></div>
+                </div>
+                <div class="form-group">
+                    <label data-i18n="emailTgLabel">Email / Telegram</label>
+                    <input type="text" id="accEmailTg" placeholder="Email или @telegram" data-i18n-ph="phEmailTg" oninput="checkAccessForm()">
+                    <div class="field-hint" id="hintEmailTg"></div>
+                </div>
+
+                <button class="access-submit" id="accessSubmitBtn" onclick="submitAccess()" data-i18n="getAccess">
+                    Получить доступ
+                </button>
+            </div>
+
+            <div class="access-success" id="accessSuccess">
+                <div class="access-success-icon">
+                    <svg viewBox="0 0 24 24"><path d="M9 16.17L4.83 12l-1.42 1.41L9 19 21 7l-1.41-1.41L9 16.17z"/></svg>
+                </div>
+                <h3 data-i18n="accessOk">Заявка отправлена!</h3>
+                <p data-i18n-html="accessOkDesc">Мы свяжемся с вами<br>в течение 15 минут</p>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // ===== i18n =====
+        var currentLang = localStorage.getItem('lang') || 'ru';
+
+        var i18n = {
+            // Landing nav
+            mission: { ru:'Миссия', en:'Mission' },
+            missionLabel: { ru:'Миссия', en:'Mission' },
+            missionTitle: { ru:'Наша миссия', en:'Our Mission' },
+            missionP1: { ru:'EasySale помогает компаниям расти быстрее рынка, устраняя человеческий фактор из первичных продаж — тот самый, который болеет по понедельникам, выгорает по пятницам и внезапно увольняется в разгар сезона продаж.', en:'EasySale helps companies grow faster than the market by eliminating the human factor from initial sales — the one that calls in sick on Mondays, burns out on Fridays, and suddenly quits in the middle of sales season.' },
+            missionP2: { ru:'Мы превращаем холодные звонки в управляемую систему, где результат зависит не от настроения менеджера, а от технологии.', en:'We turn cold calls into a managed system where results depend on technology, not on a manager\'s mood.' },
+            missionP3: { ru:'Наш сервис — это автономный двигатель привлечения клиентов, который работает стабильно и масштабируется без драм и текучки.', en:'Our service is an autonomous customer acquisition engine that runs reliably and scales without drama or turnover.' },
+            missionP4: { ru:'<span class="mission-highlight">Вы получите</span> не просто лиды, а предсказуемость и контроль над ростом. Мы убираем хаос из начала воронки, чтобы бизнес мог сосредоточиться на главном — закрытии сделок и развитии. Потому что рост должен зависеть от стратегии, а не от того, кто сегодня вышел на работу.', en:'<span class="mission-highlight">You\'ll get</span> not just leads, but predictability and control over growth. We remove chaos from the top of the funnel so your business can focus on what matters — closing deals and growing. Because growth should depend on strategy, not on who showed up to work today.' },
+            missionP4h: { ru:'Вы получите', en:'You\'ll get' },
+            missionSign: { ru:'С заботой о вашем бизнесе, команда EasySale ❤️', en:'With care for your business, the EasySale team ❤️' },
+            contacts: { ru:'Контакты', en:'Contacts' },
+            login: { ru:'Войти', en:'Sign In' },
+            // Hero
+            heroBadge: { ru:'Платформа нового поколения', en:'Next-Generation Platform' },
+            heroTitle: { ru:'Первые продажи легче,<br>чем ты думаешь', en:'First sales are easier<br>than you think' },
+            requestAccess: { ru:'Запросить доступ', en:'Request Access' },
+            // Features
+            featLabel: { ru:'Возможности', en:'Capabilities' },
+            featTitle: { ru:'Комплексное решение', en:'Complete Solution' },
+            f1t: { ru:'AI отдел продаж', en:'AI Sales Department' },
+            f1d: { ru:'Самостоятельно формирует, прозванивает холодную базу клиентов и передает вашим менеджерам уже готовых клиентов.', en:'Independently forms and cold-calls a client base, then passes ready customers to your managers.' },
+            f2t: { ru:'Быстрая настройка', en:'Quick Setup' },
+            f2d: { ru:'Запуск отдела продаж за 2-5 минут.', en:'Launch a sales department in 2-5 minutes.' },
+            f3t: { ru:'Быстрый лид', en:'Quick Lead' },
+            f3d: { ru:'Получай теплые лиды в компанию уже на следующий день.', en:'Get warm leads for your company the very next day.' },
+            f4t: { ru:'Интеграция с СРМ системами', en:'CRM Integration' },
+            f4d: { ru:'Получай моментально теплые лиды сразу в вашу воронку СРМ.', en:'Instantly receive warm leads directly into your CRM funnel.' },
+            // Steps
+            stepsLabel: { ru:'Процесс', en:'Process' },
+            stepsTitle: { ru:'Как это работает?', en:'How It Works?' },
+            stepsDesc: { ru:'От идеи до лида в 4 шага', en:'From Idea to Lead in 4 Steps' },
+            s1t: { ru:'Регистрация', en:'Registration' },
+            s1d: { ru:'Создай аккаунт', en:'Create an account' },
+            s2t: { ru:'Сформируй свою ЦА', en:'Define Your Target Audience' },
+            s2d: { ru:'Укажите каких клиентов ищем для вас', en:'Specify which clients we should find for you' },
+            s3t: { ru:'Запуск отдела', en:'Launch Department' },
+            s3d: { ru:'Укажите когда звоним, что предлагаем и как квалифицируем', en:'Set when to call, what to offer, and how to qualify' },
+            s4t: { ru:'Получайте заявки', en:'Get Applications' },
+            s4d: { ru:'Получайте входящие заявки и растите свой бизнес', en:'Receive incoming leads and grow your business' },
+            // Access modal
+            accessTitle: { ru:'Запросить доступ', en:'Request Access' },
+            accessSub: { ru:'Заполните данные и мы свяжемся с вами', en:'Fill in the details and we\'ll contact you' },
+            fioLabel: { ru:'Имя', en:'Name' },
+            phoneLabel: { ru:'Номер телефона', en:'Phone Number' },
+            emailTgLabel: { ru:'Email / Telegram', en:'Email / Telegram' },
+            getAccess: { ru:'Получить доступ', en:'Get Access' },
+            accessOk: { ru:'Заявка отправлена!', en:'Application Submitted!' },
+            accessOkDesc: { ru:'Мы свяжемся с вами<br>в течение 15 минут', en:'We\'ll contact you<br>within 15 minutes' },
+            // Placeholders
+            phFio: { ru:'Иванов Иван Иванович', en:'John Smith' },
+            phPhone: { ru:'+7 (999) 123-45-67', en:'+1 (555) 123-4567' },
+            phEmailTg: { ru:'Email или @telegram', en:'Email or @telegram' },
+            // Validation
+            valName: { ru:'Укажите имя (только буквы)', en:'Enter name (letters only)' },
+            valPhone: { ru:'Введите корректный номер (минимум 10 цифр)', en:'Enter a valid phone number (at least 10 digits)' }
+        };
+
+        function t(key) {
+            var entry = i18n[key];
+            if (!entry) return key;
+            return entry[currentLang] || entry.ru;
+        }
+
+        function switchLang() {
+            currentLang = currentLang === 'ru' ? 'en' : 'ru';
+            localStorage.setItem('lang', currentLang);
+            applyLang();
+        }
+
+        function applyLang() {
+            var label = currentLang === 'ru' ? 'EN' : 'RU';
+            document.getElementById('landLangBtn').textContent = label;
+
+            // data-i18n text
+            document.querySelectorAll('[data-i18n]').forEach(function(el) {
+                var key = el.getAttribute('data-i18n');
+                if (i18n[key]) el.textContent = i18n[key][currentLang];
+            });
+            // data-i18n-html (innerHTML)
+            document.querySelectorAll('[data-i18n-html]').forEach(function(el) {
+                var key = el.getAttribute('data-i18n-html');
+                if (i18n[key]) el.innerHTML = i18n[key][currentLang];
+            });
+            // data-i18n-ph (placeholder)
+            document.querySelectorAll('[data-i18n-ph]').forEach(function(el) {
+                var key = el.getAttribute('data-i18n-ph');
+                if (i18n[key]) el.placeholder = i18n[key][currentLang];
+            });
+        }
+
+        // Apply saved language on load
+        if (currentLang === 'en') applyLang();
+
+        // ===== Theme =====
+        function toggleTheme() {
+            document.body.classList.toggle('light');
+            localStorage.setItem('theme', document.body.classList.contains('light') ? 'light' : 'dark');
+        }
+
+        if (localStorage.getItem('theme') === 'light') {
+            document.body.classList.add('light');
+        }
+
+        // ===== Access Modal =====
+        var accessModal = document.getElementById('accessModal');
+        var accessForm = document.getElementById('accessForm');
+        var accessSuccess = document.getElementById('accessSuccess');
+        var accessSubmitBtn = document.getElementById('accessSubmitBtn');
+
+        function openAccessModal() {
+            accessModal.classList.add('active');
+            document.body.style.overflow = 'hidden';
+            accessForm.style.display = '';
+            accessSuccess.classList.remove('show');
+            document.getElementById('accName').value = '';
+            document.getElementById('accPhone').value = '';
+            document.getElementById('accEmailTg').value = '';
+            accessSubmitBtn.classList.remove('active');
+            document.querySelectorAll('.field-hint').forEach(function(h) { h.classList.remove('show'); });
+            document.querySelectorAll('#accessForm input').forEach(function(i) { i.classList.remove('error'); });
+        }
+
+        function closeAccessModal() {
+            accessModal.classList.remove('active');
+            document.body.style.overflow = '';
+        }
+
+        function closeAccessOnOverlay(e) {
+            if (e.target === accessModal) closeAccessModal();
+        }
+
+        function validateName(v) {
+            return v.trim().length >= 2 && /^[а-яёА-ЯЁa-zA-Z\s-]+$/.test(v.trim());
+        }
+
+        function validatePhone(v) {
+            var digits = v.replace(/\D/g, '');
+            return digits.length >= 10;
+        }
+
+        function showHint(id, msg) {
+            var el = document.getElementById(id);
+            el.textContent = msg;
+            el.classList.add('show');
+        }
+
+        function hideHint(id) {
+            document.getElementById(id).classList.remove('show');
+        }
+
+        function formatAccPhone() {
+            var phoneEl = document.getElementById('accPhone');
+            var digits = phoneEl.value.replace(/\D/g, '');
+            phoneEl.classList.remove('error');
+            hideHint('hintPhone');
+            checkAccessForm();
+        }
+
+        function validatePhoneOnBlur() {
+            var phone = document.getElementById('accPhone').value.trim();
+            if (phone && !validatePhone(phone)) {
+                showHint('hintPhone', t('valPhone'));
+                document.getElementById('accPhone').classList.add('error');
+            } else {
+                hideHint('hintPhone');
+                document.getElementById('accPhone').classList.remove('error');
+            }
+        }
+
+        function checkAccessForm() {
+            var name = document.getElementById('accName').value.trim();
+            var phone = document.getElementById('accPhone').value.trim();
+            var emailTg = document.getElementById('accEmailTg').value.trim();
+
+            var nameOk = validateName(name);
+            var phoneOk = validatePhone(phone);
+            var emailTgOk = emailTg.length >= 2;
+
+            if (name && !nameOk) { showHint('hintName', t('valName')); }
+            else { hideHint('hintName'); }
+
+            document.getElementById('accName').classList.toggle('error', name !== '' && !nameOk);
+
+            if (nameOk && phoneOk && emailTgOk) {
+                accessSubmitBtn.classList.add('active');
+            } else {
+                accessSubmitBtn.classList.remove('active');
+            }
+        }
+
+        function submitAccess() {
+            var name = document.getElementById('accName').value.trim();
+            var phone = document.getElementById('accPhone').value.trim();
+            var emailTg = document.getElementById('accEmailTg').value.trim();
+
+            var valid = true;
+
+            if (!name) { showHint('hintName', 'Укажите ваше имя'); valid = false; }
+            else if (!validateName(name)) { showHint('hintName', 'Укажите имя (только буквы)'); valid = false; }
+
+            if (!phone) { showHint('hintPhone', 'Укажите номер телефона'); valid = false; }
+            else if (!validatePhone(phone)) { showHint('hintPhone', 'Введите корректный номер (минимум 10 цифр)'); valid = false; }
+
+            if (!emailTg) { showHint('hintEmailTg', 'Укажите Email или Telegram'); valid = false; }
+
+            if (!valid) {
+                if (phone && !validatePhone(phone)) {
+                    document.getElementById('accPhone').classList.add('error');
+                }
+                document.getElementById('accName').classList.toggle('error', name !== '' && !validateName(name));
+                return;
+            }
+
+            fetch('https://api.easysale.tech/api/tickets', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json'
+                },
+                body: JSON.stringify({
+                    subject: 'Заявка на доступ: ' + name,
+                    type: 'access_request',
+                    priority: 'medium',
+                    description: JSON.stringify({ name: name, phone: phone, email: emailTg, company: '' })
+                })
+            })
+            .then(function(res) { return res.json(); })
+            .then(function() {
+                accessForm.style.display = 'none';
+                accessSuccess.classList.add('show');
+            })
+            .catch(function() {
+                accessForm.style.display = 'none';
+                accessSuccess.classList.add('show');
+            });
+        }
+    </script>
+</body>
+</html>
