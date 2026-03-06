@@ -3190,20 +3190,51 @@ function renderLaunches(el, client) {
 
 function adminCampaignAction(clientId, campaignId, action, campaignName) {
     if (action === 'launch') {
-        if (!confirm('⚠️ После запуска нельзя редактировать запуск и отменить его в течение 24 часов. Продолжить?')) return;
+        showLaunchConfirmModal(function() {
+            adminCampaignActionExec(clientId, campaignId, action);
+        });
+        return;
     }
+    adminCampaignActionExec(clientId, campaignId, action);
+}
+
+function showLaunchConfirmModal(onConfirm) {
+    const overlay = document.createElement('div');
+    overlay.style.cssText = 'position:fixed;top:0;left:0;right:0;bottom:0;background:rgba(0,0,0,0.5);z-index:10000;display:flex;align-items:center;justify-content:center;';
+    overlay.innerHTML = `
+        <div style="background:var(--bg);border:1px solid var(--card-border);border-radius:14px;padding:28px;max-width:460px;width:90%;box-shadow:0 20px 60px rgba(0,0,0,0.4);">
+            <div style="font-size:1.1rem;font-weight:700;margin-bottom:16px;">⚠️ Внимание!</div>
+            <div style="font-size:.9rem;color:var(--text-secondary);margin-bottom:24px;line-height:1.6;">После запуска вы не сможете остановить или изменить этот запуск в течение 24 часов. Продолжить?</div>
+            <div style="display:flex;gap:10px;justify-content:flex-end;">
+                <button class="btn btn-sm" style="padding:8px 20px;" id="launch-cancel-btn">Отмена</button>
+                <button class="btn btn-sm" style="background:#3b82f6;color:#fff;padding:8px 20px;" id="launch-confirm-btn">Запустить</button>
+            </div>
+        </div>`;
+    document.body.appendChild(overlay);
+    overlay.addEventListener('click', function(e) { if (e.target === overlay) overlay.remove(); });
+    overlay.querySelector('#launch-cancel-btn').onclick = function() { overlay.remove(); };
+    overlay.querySelector('#launch-confirm-btn').onclick = function() { overlay.remove(); onConfirm(); };
+}
+
+function adminCampaignActionExec(clientId, campaignId, action) {
     fetch(API_BASE + '/api/admin/clients/' + clientId + '/campaigns/' + campaignId + '/' + action, {
         method: 'POST',
         headers: apiHeaders()
     })
     .then(r => {
-        if (!r.ok) return r.json().then(d => { throw new Error(d.error || 'Ошибка'); });
+        if (!r.ok) {
+            if (action === 'pause' && r.status === 403) {
+                toast('⏳ Запуск нельзя остановить в течение 24 часов после старта');
+                return null;
+            }
+            return r.json().then(d => { throw new Error(d.error || 'Ошибка'); });
+        }
         return r.json();
     })
-    .then(() => {
+    .then(data => {
+        if (!data) return;
         const msgs = { launch: 'Кампания запущена', pause: 'Кампания на паузе', resume: 'Кампания возобновлена' };
         toast(msgs[action] || 'Готово');
-        // Re-render launches tab
         const el = document.getElementById('client-detail-content');
         if (el) renderLaunches(el, { id: clientId });
     })
