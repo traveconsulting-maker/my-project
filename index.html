@@ -7778,15 +7778,8 @@
                     '<div><div class="cl-card-title">' + clEsc(l.name) + '</div><div class="cl-card-subtitle">Диалог: ' + clEsc(dialogName) + '</div></div>' +
                     statusHtml +
                 '</div>' +
-                '<div class="cl-stats">' +
-                    '<div class="cl-stat"><div class="cl-stat-num">' + totalContacts + '</div><div class="cl-stat-label">Всего</div></div>' +
-                    '<div class="cl-stat"><div class="cl-stat-num" style="color:#3498db;">' + called + '</div><div class="cl-stat-label">Позвонил</div></div>' +
-                    '<div class="cl-stat"><div class="cl-stat-num" style="color:#e74c3c;">' + missed + '</div><div class="cl-stat-label">Недозвон</div></div>' +
+                '<div class="cl-stats" style="grid-template-columns:1fr;">' +
                     '<div class="cl-stat"><div class="cl-stat-num" style="color:#00b894;">' + leads + '</div><div class="cl-stat-label">Лиды</div></div>' +
-                '</div>' +
-                '<div class="cl-progress">' +
-                    '<div class="cl-progress-label"><span style="color:var(--text-muted);">Прогресс</span><span style="color:var(--text);">' + processed + '/' + totalContacts + ' (' + pct + '%)</span></div>' +
-                    '<div class="cl-progress-bar"><div class="cl-progress-fill" style="width:' + pct + '%"></div></div>' +
                 '</div>' +
                 '<div class="cl-info-row"><span class="cl-info-label">ЦА</span><span class="cl-info-tag">' + clEsc((typeof taAudiences!=='undefined' && l.audienceId ? (taAudiences.find(function(t){return t.id===l.audienceId})||{}).name : '') || '—') + '</span></div>' +
                 '<div class="cl-info-row"><span class="cl-info-label">Цель в день</span><span class="cl-info-value">' + (l.goalLeads || 1) + ' лидов</span></div>' +
