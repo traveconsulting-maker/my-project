@@ -467,6 +467,24 @@
     <!-- Toast container -->
     <div class="toast-container" id="toast-container"></div>
 
+    <!-- Balance Modal -->
+    <div class="modal-overlay" id="balance-modal">
+        <div class="modal" style="max-width:400px;">
+            <div class="modal-header">
+                <div class="modal-title" id="balance-modal-title">Пополнить баланс</div>
+                <button class="modal-close" onclick="closeModal('balance-modal')">&times;</button>
+            </div>
+            <div style="padding:20px;">
+                <label style="display:block;margin-bottom:6px;font-size:.85rem;color:var(--text-secondary);">Сумма (₽)</label>
+                <input type="number" id="balance-amount" min="0" step="0.01" placeholder="0.00" style="width:100%;padding:10px 12px;border-radius:8px;border:1px solid var(--input-border);background:var(--input-bg);color:var(--text);font-size:1rem;">
+            </div>
+            <div class="modal-footer">
+                <button class="btn btn-primary" onclick="submitBalance()">Применить</button>
+                <button class="btn" style="background:var(--input-bg);color:var(--text);border:1px solid var(--input-border);" onclick="closeModal('balance-modal')">Отмена</button>
+            </div>
+        </div>
+    </div>
+
     <!-- DMP Instruction Modal -->
     <div class="modal-overlay" id="dmp-instruction-modal">
         <div class="modal" style="max-width:600px;">
@@ -667,6 +685,46 @@
         window.location.href = 'index.html';
     }
 
+    // ==================== BALANCE ====================
+    var currentBalanceOp = 'add';
+
+    function loadClientBalance() {
+        if (!crmToken || !currentDetailClient) return;
+        fetch(API_BASE + '/api/admin/clients/' + currentDetailClient, { headers: apiHeaders() })
+        .then(r => r.json())
+        .then(data => {
+            if (data && data.balance !== undefined) {
+                const el = document.getElementById('balanceDisplay');
+                if (el) el.textContent = parseFloat(data.balance).toLocaleString('ru-RU', {minimumFractionDigits: 2, maximumFractionDigits: 2});
+            }
+        }).catch(() => {});
+    }
+
+    function openBalanceModal(op) {
+        currentBalanceOp = op;
+        document.getElementById('balance-modal-title').textContent = op === 'add' ? 'Пополнить баланс' : 'Установить баланс';
+        document.getElementById('balance-amount').value = '';
+        document.getElementById('balance-modal').classList.add('open');
+    }
+
+    function submitBalance() {
+        const amount = document.getElementById('balance-amount').value;
+        if (!amount || isNaN(parseFloat(amount))) { toast('Введите сумму'); return; }
+        fetch(API_BASE + '/api/admin/clients/' + currentDetailClient + '/balance', {
+            method: 'PATCH',
+            headers: apiHeaders(),
+            body: JSON.stringify({ amount: parseFloat(amount), operation: currentBalanceOp })
+        })
+        .then(r => { if (!r.ok) throw r; return r.json(); })
+        .then(data => {
+            closeModal('balance-modal');
+            const el = document.getElementById('balanceDisplay');
+            if (el) el.textContent = parseFloat(data.balance).toLocaleString('ru-RU', {minimumFractionDigits: 2, maximumFractionDigits: 2});
+            toast(currentBalanceOp === 'add' ? 'Баланс пополнен' : 'Баланс установлен');
+        })
+        .catch(() => { toast('Ошибка обновления баланса'); });
+    }
+
     function updateClientPricePerLead(clientId, value) {
         const c = getClient(clientId);
         if (!c) return;
@@ -733,10 +791,22 @@
                         ${c.notes ? `<div class="client-detail-section"><h3>Заметки</h3><p style="font-size:.85rem;color:var(--text-secondary);white-space:pre-wrap;">${esc(c.notes)}</p></div>` : ''}
                     </div>
                 </div>
+                <div class="client-detail-section" style="margin-top:20px;">
+                    <h3>Баланс</h3>
+                    <div style="display:flex;align-items:center;gap:16px;margin-top:8px;">
+                        <span id="balanceDisplay" style="font-size:1.5rem;font-weight:700;color:var(--accent-light);">—</span>
+                        <span style="font-size:1rem;color:var(--text-muted);">₽</span>
+                    </div>
+                    <div style="display:flex;gap:8px;margin-top:12px;">
+                        <button class="btn btn-primary btn-sm" onclick="openBalanceModal('add')">Пополнить</button>
+                        <button class="btn btn-sm" style="background:var(--input-bg);color:var(--text);border:1px solid var(--input-border);" onclick="openBalanceModal('set')">Установить</button>
+                    </div>
+                </div>
                 <div style="margin-top:16px;">
                     <button class="btn btn-danger btn-sm" onclick="deleteClient('${c.id}')">Удалить клиента</button>
                 </div>
             `;
+            loadClientBalance();
         } else if (currentDetailTab === 'dialogs') {
             let cDialogs = [];
             try { cDialogs = JSON.parse(localStorage.getItem('user_' + (c.login || '') + '_dialogs') || '[]'); } catch(e) {}
