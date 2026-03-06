@@ -8027,10 +8027,13 @@
             if (esHasToken() && l.serverId) {
                 fetch(ES_API + '/api/campaigns/' + l.serverId + '/pause', {
                     method: 'POST', headers: esApiHeaders()
-                }).then(function(r) { if (!r.ok) throw r; return r.json(); })
-                .then(function() {
-                    clToast('Обзвон приостановлен');
-                    clLoadFromAPI();
+                }).then(function(r) {
+                    if (r.status === 403) { clToast('⏳ Запуск нельзя остановить в течение 24 часов после старта'); return; }
+                    if (!r.ok) throw r;
+                    return r.json();
+                })
+                .then(function(data) {
+                    if (data) { clToast('Обзвон приостановлен'); clLoadFromAPI(); }
                 }).catch(function() { clToast('Ошибка паузы обзвона'); });
             } else {
                 l.status = 'paused'; l.updated = clNow();
