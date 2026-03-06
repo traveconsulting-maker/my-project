@@ -4669,11 +4669,15 @@
             localStorage.removeItem('sc_conv_id');
             localStorage.removeItem('sc_ticket_id');
             setTimeout(() => {
-                landingPage.classList.remove('hidden');
                 document.getElementById('loginUser').value = '';
                 document.getElementById('loginPass').value = '';
                 document.querySelector('.dash-user-name').textContent = '';
                 window.scrollTo(0, 0);
+                if (isAppDomain) {
+                    openModal();
+                } else {
+                    landingPage.classList.remove('hidden');
+                }
             }, 100);
         }
 
@@ -8868,6 +8872,8 @@
         stRenderAll();
 
         // ===== AUTO-RESTORE SESSION =====
+        var isAppDomain = window.location.hostname === 'app.easysale.tech';
+
         (function autoRestore() {
             var token = localStorage.getItem('jwt_token');
             var login = localStorage.getItem('current_login');
@@ -8888,7 +8894,14 @@
                         qlLoadFromAPI();
                         onbCheckSteps();
                     }, 500);
+                } else if (isAppDomain) {
+                    landingPage.classList.add('hidden');
+                    showAfterLogin();
                 }
+            } else if (isAppDomain) {
+                // On app.easysale.tech without token — skip landing, show login
+                landingPage.classList.add('hidden');
+                openModal();
             }
         })();
     </script>
