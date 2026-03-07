@@ -1101,6 +1101,10 @@
                 <div class="tab active" onclick="switchDialogsTab('all',this)">Все</div>
                 <div class="tab" onclick="switchDialogsTab('anon',this)">Анонимные</div>
                 <div class="tab" onclick="switchDialogsTab('client',this)">Клиенты</div>
+                <div class="tab" onclick="switchDialogsTab('telegram',this)">
+                    <svg viewBox="0 0 24 24" fill="currentColor" width="14" height="14" style="width:14px;height:14px;vertical-align:middle;margin-right:4px;"><path d="M11.944 0A12 12 0 0 0 0 12a12 12 0 0 0 12 12 12 12 0 0 0 12-12A12 12 0 0 0 12 0h-.056zm4.962 7.224c.1-.002.321.023.465.14a.506.506 0 0 1 .171.325c.016.093.036.306.02.472-.18 1.898-.962 6.502-1.36 8.627-.168.9-.499 1.201-.82 1.23-.696.065-1.225-.46-1.9-.902-1.056-.693-1.653-1.124-2.678-1.8-1.185-.78-.417-1.21.258-1.91.177-.184 3.247-2.977 3.307-3.23.007-.032.014-.15-.056-.212s-.174-.041-.249-.024c-.106.024-1.793 1.14-5.061 3.345-.479.33-.913.49-1.302.48-.428-.008-1.252-.241-1.865-.44-.752-.245-1.349-.374-1.297-.789.027-.216.325-.437.893-.663 3.498-1.524 5.83-2.529 6.998-3.014 3.332-1.386 4.025-1.627 4.476-1.635z"/></svg>
+                    Поддержка Telegram
+                </div>
             </div>
             <div class="chat-layout">
                 <div class="chat-list">
@@ -2047,11 +2051,50 @@ function fetchChatDialogsFromAPI() {
         .catch(() => {});
 }
 
+function fetchTelegramDialogsFromAPI() {
+    if (!crmToken) return;
+    fetch(API_BASE + '/api/tickets', { headers: apiHeaders() })
+        .then(r => { if (!r.ok) throw r; return r.json(); })
+        .then(data => {
+            data.filter(t => t.source === 'telegram').forEach(apiChat => {
+                const exists = conversations.find(c => c.apiId === apiChat.id.toString());
+                if (!exists) {
+                    conversations.push({
+                        id: 'tg_' + apiChat.id,
+                        apiId: apiChat.id.toString(),
+                        clientId: apiChat.client_id ? apiChat.client_id.toString() : null,
+                        clientName: apiChat.telegram_username ? '@' + apiChat.telegram_username : (apiChat.client_name || 'Telegram'),
+                        telegramUsername: apiChat.telegram_username || '',
+                        source: 'telegram',
+                        status: apiChat.status === 'closed' ? 'closed' : 'open',
+                        hasNewMessage: true,
+                        messages: [{
+                            author: 'client',
+                            text: apiChat.description || '',
+                            time: apiChat.created_at || now(),
+                            files: []
+                        }],
+                        created: apiChat.created_at || now(),
+                        updated: apiChat.updated_at || now()
+                    });
+                } else {
+                    exists.status = apiChat.status === 'closed' ? 'closed' : 'open';
+                    exists.telegramUsername = apiChat.telegram_username || exists.telegramUsername;
+                }
+            });
+            persist();
+            renderDialogsList();
+            updateBadges();
+        })
+        .catch(() => {});
+}
+
 function syncFromAPI() {
     fetchClientsFromAPI();
     fetchTicketsFromAPI();
     fetchApplicationsFromAPI();
     fetchChatDialogsFromAPI();
+    fetchTelegramDialogsFromAPI();
 }
 
 // Автообновление каждые 30 секунд
@@ -4071,8 +4114,9 @@ function renderDialogs() {
 function renderDialogsList() {
     const search = (document.getElementById('dialogs-search')?.value || '').toLowerCase();
     let filtered = conversations.filter(c => c.status !== 'closed');
-    if (dialogsTab === 'anon') filtered = filtered.filter(c => !c.clientId);
-    else if (dialogsTab === 'client') filtered = filtered.filter(c => c.clientId);
+    if (dialogsTab === 'anon') filtered = filtered.filter(c => !c.clientId && c.source !== 'telegram');
+    else if (dialogsTab === 'client') filtered = filtered.filter(c => c.clientId && c.source !== 'telegram');
+    else if (dialogsTab === 'telegram') filtered = filtered.filter(c => c.source === 'telegram');
     if (search) filtered = filtered.filter(c => (c.clientName||'').toLowerCase().includes(search) || (c.messages||[]).some(m => (m.text||'').toLowerCase().includes(search)));
     filtered.sort((a,b) => new Date(b.updated||b.created) - new Date(a.updated||a.created));
 
@@ -4085,10 +4129,11 @@ function renderDialogsList() {
         const lastMsg = (c.messages||[]).length > 0 ? c.messages[c.messages.length-1] : null;
         const initials = (c.clientName||'А').split(' ').map(w=>w[0]).join('').substring(0,2).toUpperCase();
         const hasUnread = c.hasNewMessage;
+        const isTg = c.source === 'telegram';
         return `<div class="chat-item ${activeConvId===c.id?'active':''}" onclick="openConversation('${c.id}')">
-            <div class="chat-item-avatar ${c.clientId?'client':'anon'}">${initials}</div>
+            <div class="chat-item-avatar ${c.clientId?'client':isTg?'tg':'anon'}">${isTg ? '<svg viewBox="0 0 24 24" fill="currentColor" style="width:16px;height:16px;"><path d="M11.944 0A12 12 0 0 0 0 12a12 12 0 0 0 12 12 12 12 0 0 0 12-12A12 12 0 0 0 12 0h-.056zm4.962 7.224c.1-.002.321.023.465.14a.506.506 0 0 1 .171.325c.016.093.036.306.02.472-.18 1.898-.962 6.502-1.36 8.627-.168.9-.499 1.201-.82 1.23-.696.065-1.225-.46-1.9-.902-1.056-.693-1.653-1.124-2.678-1.8-1.185-.78-.417-1.21.258-1.91.177-.184 3.247-2.977 3.307-3.23.007-.032.014-.15-.056-.212s-.174-.041-.249-.024c-.106.024-1.793 1.14-5.061 3.345-.479.33-.913.49-1.302.48-.428-.008-1.252-.241-1.865-.44-.752-.245-1.349-.374-1.297-.789.027-.216.325-.437.893-.663 3.498-1.524 5.83-2.529 6.998-3.014 3.332-1.386 4.025-1.627 4.476-1.635z"/></svg>' : initials}</div>
             <div class="chat-item-info">
-                <div class="chat-item-name">${esc(c.clientName||'Аноним')} ${c.clientId?'':'<span class="tag tag-muted" style="font-size:.65rem;vertical-align:middle;">аноним</span>'}</div>
+                <div class="chat-item-name">${esc(c.clientName||'Аноним')} ${isTg?'<span class="tag" style="font-size:.65rem;vertical-align:middle;background:rgba(0,136,204,0.15);color:#0088cc;">Telegram</span>':c.clientId?'':'<span class="tag tag-muted" style="font-size:.65rem;vertical-align:middle;">аноним</span>'}</div>
                 <div class="chat-item-last">${lastMsg ? esc(lastMsg.text||'').substring(0,50) : 'Нет сообщений'}</div>
             </div>
             <div style="display:flex;flex-direction:column;align-items:flex-end;gap:4px;">
@@ -4155,7 +4200,7 @@ function renderChatBody(id) {
     document.getElementById('chat-body').innerHTML = `
         <div class="chat-body-header">
             <div>
-                <div class="chat-body-name">${esc(conv.clientName||'Аноним')} ${conv.clientId?'':'<span class="tag tag-muted" style="font-size:.7rem;">анонимное обращение</span>'}</div>
+                <div class="chat-body-name">${esc(conv.clientName||'Аноним')} ${conv.source==='telegram'?'<span class="tag" style="font-size:.7rem;background:rgba(0,136,204,0.15);color:#0088cc;vertical-align:middle;"><svg viewBox="0 0 24 24" fill="currentColor" style="width:10px;height:10px;vertical-align:middle;margin-right:2px;"><path d="M11.944 0A12 12 0 0 0 0 12a12 12 0 0 0 12 12 12 12 0 0 0 12-12A12 12 0 0 0 12 0h-.056zm4.962 7.224c.1-.002.321.023.465.14a.506.506 0 0 1 .171.325c.016.093.036.306.02.472-.18 1.898-.962 6.502-1.36 8.627-.168.9-.499 1.201-.82 1.23-.696.065-1.225-.46-1.9-.902-1.056-.693-1.653-1.124-2.678-1.8-1.185-.78-.417-1.21.258-1.91.177-.184 3.247-2.977 3.307-3.23.007-.032.014-.15-.056-.212s-.174-.041-.249-.024c-.106.024-1.793 1.14-5.061 3.345-.479.33-.913.49-1.302.48-.428-.008-1.252-.241-1.865-.44-.752-.245-1.349-.374-1.297-.789.027-.216.325-.437.893-.663 3.498-1.524 5.83-2.529 6.998-3.014 3.332-1.386 4.025-1.627 4.476-1.635z"/></svg> @'+esc(conv.telegramUsername||'')+'</span>':conv.clientId?'':'<span class="tag tag-muted" style="font-size:.7rem;">анонимное обращение</span>'}</div>
                 <div class="chat-body-status">${conv.status==='open'?'Открыт':'Закрыт'} · ${formatDateTime(conv.created)}</div>
             </div>
             <div style="display:flex;gap:8px;">${clientLink} ${statusBtn}</div>
@@ -4201,6 +4246,21 @@ function sendChatReply(convId) {
 
     // Отправляем через API
     if (conv.apiId) {
+        // If telegram ticket — send via reply-telegram endpoint
+        if (conv.source === 'telegram') {
+            fetch(API_BASE + '/api/tickets/' + conv.apiId + '/reply-telegram', {
+                method: 'POST',
+                headers: apiHeaders(),
+                body: JSON.stringify({ text: text })
+            })
+            .then(r => r.json())
+            .then(data => {
+                conv.messages = (conv.messages || []);
+                conv.messages.push({ author: 'manager', text, time: now(), files: [] });
+                addActivity('dialog', `Ответ в Telegram: ${conv.clientName||'Аноним'}`, conv.clientId);
+            })
+            .catch(() => {});
+        } else {
         fetch(API_BASE + '/api/tickets/' + conv.apiId + '/messages', {
             method: 'POST',
             headers: apiHeaders(),
@@ -4215,6 +4275,7 @@ function sendChatReply(convId) {
             addActivity('dialog', `Ответ в диалоге: ${conv.clientName||'Аноним'}`, conv.clientId);
         })
         .catch(() => {});
+        }
     } else {
         conv.messages = conv.messages || [];
         conv.messages.push({ author:'manager', text, time: now(), files:[] });
