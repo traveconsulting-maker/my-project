@@ -3882,9 +3882,9 @@
                     if (data.referral_link) {
                         document.getElementById('refLinkInput').value = data.referral_link;
                     }
-                    document.getElementById('refBonusLeads').textContent = data.referral_bonus_leads || 0;
+                    document.getElementById('refBonusLeads').textContent = data.bonus_leads || 0;
                     var el = document.getElementById('refClientsTable');
-                    if (!data.referred_clients || data.referred_clients.length === 0) {
+                    if (!data.referred_users || data.referred_users.length === 0) {
                         el.innerHTML = '<div style="padding:32px;text-align:center;color:var(--text-muted);font-size:14px;">Пока никто не зарегистрировался по вашей ссылке</div>';
                         return;
                     }
@@ -3894,7 +3894,7 @@
                     html += '<th style="padding:12px 16px;text-align:left;font-size:13px;font-weight:600;color:var(--text-muted);">Дата</th>';
                     html += '<th style="padding:12px 16px;text-align:left;font-size:13px;font-weight:600;color:var(--text-muted);">Статус</th>';
                     html += '</tr></thead><tbody>';
-                    data.referred_clients.forEach(function(c) {
+                    data.referred_users.forEach(function(c) {
                         html += '<tr style="border-bottom:1px solid var(--card-border);">';
                         html += '<td style="padding:12px 16px;font-size:14px;color:var(--text);">' + (c.company || '—') + '</td>';
                         html += '<td style="padding:12px 16px;font-size:14px;color:var(--text-muted);">' + new Date(c.created_at).toLocaleDateString('ru-RU') + '</td>';
