@@ -1058,6 +1058,10 @@
                 <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M15.05 5A5 5 0 0119 8.95M15.05 1A9 9 0 0123 8.94"/><path d="M22 16.92v3a2 2 0 01-2.18 2 19.79 19.79 0 01-8.63-3.07 19.5 19.5 0 01-6-6A19.79 19.79 0 012.12 4.18 2 2 0 014.11 2h3a2 2 0 012 1.72c.127.96.361 1.903.7 2.81a2 2 0 01-.45 2.11L8.09 9.91a16 16 0 006 6l1.27-1.27a2 2 0 012.11-.45c.907.339 1.85.573 2.81.7A2 2 0 0122 16.92z"/></svg>
                 Телемаркетинг
             </div>
+            <div class="nav-item" data-section="referrals" onclick="showSection('referrals')">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M16 21v-2a4 4 0 00-4-4H5a4 4 0 00-4 4v2"/><circle cx="8.5" cy="7" r="4"/><line x1="20" y1="8" x2="20" y2="14"/><line x1="23" y1="11" x2="17" y2="11"/></svg>
+                Рефералы
+            </div>
         </div>
         <div class="sidebar-bottom">
             <button class="theme-btn" onclick="toggleTheme()">
@@ -1482,6 +1486,21 @@
                 </div>
             </div>
         </div>
+
+        <!-- Referrals Section -->
+        <div id="section-referrals" class="section">
+            <div class="section-header">
+                <h1>Рефералы</h1>
+                <p style="color:var(--text-muted);margin-top:4px;">Управление реферальной программой</p>
+            </div>
+            <div style="display:grid;grid-template-columns:repeat(3,1fr);gap:16px;margin-bottom:24px;" id="refAdminStats"></div>
+            <div style="margin-bottom:16px;">
+                <input type="text" id="refAdminSearch" placeholder="Поиск по компании..." style="padding:10px 16px;border-radius:10px;border:1px solid var(--border);background:var(--input-bg);color:var(--text);font-size:14px;width:300px;outline:none;" oninput="refAdminFilter()">
+            </div>
+            <div id="refAdminTable" style="background:var(--card-bg);border:1px solid var(--border);border-radius:12px;overflow:hidden;">
+                <div style="padding:32px;text-align:center;color:var(--text-muted);">Загрузка...</div>
+            </div>
+        </div>
     </main>
 
     <!-- Toast container -->
@@ -1896,7 +1915,10 @@ function fetchClientsFromAPI() {
                         notes: apiClient.notes || '',
                         active: apiClient.active,
                         source: apiClient.source || 'api',
-                        created: apiClient.created_at || now()
+                        created: apiClient.created_at || now(),
+                        referral_code: apiClient.referral_code || '',
+                        referred_by: apiClient.referred_by || null,
+                        referral_bonus_leads: apiClient.referral_bonus_leads || 0
                     });
                 } else {
                     // Обновляем активность из API
@@ -1905,6 +1927,9 @@ function fetchClientsFromAPI() {
                     exists.phone = apiClient.phone || exists.phone;
                     exists.email = apiClient.email || exists.email;
                     exists.company = apiClient.company || exists.company;
+                    exists.referral_code = apiClient.referral_code || exists.referral_code;
+                    exists.referred_by = apiClient.referred_by || exists.referred_by;
+                    exists.referral_bonus_leads = apiClient.referral_bonus_leads || exists.referral_bonus_leads;
                 }
             });
             persist();
@@ -2098,7 +2123,68 @@ function renderSection(name) {
         case 'portation': renderPortation(); break;
         case 'telephony': renderTelephony(); break;
         case 'telemarketing': renderTelemarketing(); break;
+        case 'referrals': renderReferrals(); break;
     }
+}
+
+// ==================== REFERRALS ====================
+let refAdminData = [];
+function renderReferrals() {
+    fetch(API_BASE + '/api/admin/referrals', { headers: apiHeaders() })
+        .then(r => r.json())
+        .then(data => {
+            refAdminData = data.clients || [];
+            const withRef = refAdminData.filter(c => c.referred_by);
+            const activeRef = withRef.filter(c => c.active);
+            const totalBonus = refAdminData.reduce((s, c) => s + (c.referral_bonus_leads || 0), 0);
+            document.getElementById('refAdminStats').innerHTML = `
+                <div style="padding:20px;background:var(--card-bg);border:1px solid var(--border);border-radius:12px;text-align:center;">
+                    <div style="font-size:28px;font-weight:700;color:var(--accent);">${withRef.length}</div>
+                    <div style="font-size:13px;color:var(--text-muted);margin-top:4px;">Всего рефералов</div>
+                </div>
+                <div style="padding:20px;background:var(--card-bg);border:1px solid var(--border);border-radius:12px;text-align:center;">
+                    <div style="font-size:28px;font-weight:700;color:#34d399;">${activeRef.length}</div>
+                    <div style="font-size:13px;color:var(--text-muted);margin-top:4px;">Активных</div>
+                </div>
+                <div style="padding:20px;background:var(--card-bg);border:1px solid var(--border);border-radius:12px;text-align:center;">
+                    <div style="font-size:28px;font-weight:700;color:#a855f7;">${totalBonus}</div>
+                    <div style="font-size:13px;color:var(--text-muted);margin-top:4px;">Бонусных лидов выдано</div>
+                </div>`;
+            refAdminRenderTable(refAdminData);
+        })
+        .catch(err => console.error('renderReferrals error:', err));
+}
+function refAdminFilter() {
+    const q = document.getElementById('refAdminSearch').value.toLowerCase();
+    const filtered = refAdminData.filter(c => (c.company || '').toLowerCase().includes(q) || (c.name || '').toLowerCase().includes(q));
+    refAdminRenderTable(filtered);
+}
+function refAdminRenderTable(list) {
+    const withRef = list.filter(c => c.referred_by);
+    if (withRef.length === 0) {
+        document.getElementById('refAdminTable').innerHTML = '<div style="padding:32px;text-align:center;color:var(--text-muted);">Нет рефералов</div>';
+        return;
+    }
+    let html = '<table style="width:100%;border-collapse:collapse;">';
+    html += '<thead><tr style="border-bottom:1px solid var(--border);">';
+    html += '<th style="padding:12px 16px;text-align:left;font-size:12px;font-weight:600;color:var(--text-muted);text-transform:uppercase;">Реферер</th>';
+    html += '<th style="padding:12px 16px;text-align:left;font-size:12px;font-weight:600;color:var(--text-muted);text-transform:uppercase;">Приглашённый</th>';
+    html += '<th style="padding:12px 16px;text-align:left;font-size:12px;font-weight:600;color:var(--text-muted);text-transform:uppercase;">Дата</th>';
+    html += '<th style="padding:12px 16px;text-align:left;font-size:12px;font-weight:600;color:var(--text-muted);text-transform:uppercase;">Статус</th>';
+    html += '<th style="padding:12px 16px;text-align:left;font-size:12px;font-weight:600;color:var(--text-muted);text-transform:uppercase;">Бонусы</th>';
+    html += '</tr></thead><tbody>';
+    withRef.forEach(c => {
+        const statusStyle = c.active ? 'background:rgba(52,211,153,0.15);color:#34d399;' : 'background:rgba(251,191,36,0.15);color:#fbbf24;';
+        html += '<tr style="border-bottom:1px solid var(--border);">';
+        html += `<td style="padding:12px 16px;font-size:14px;color:var(--text);">${esc(c.referrer_company || c.referrer_name || '—')}</td>`;
+        html += `<td style="padding:12px 16px;font-size:14px;color:var(--text);">${esc(c.company || c.name)}</td>`;
+        html += `<td style="padding:12px 16px;font-size:13px;color:var(--text-muted);">${new Date(c.created_at).toLocaleDateString('ru-RU')}</td>`;
+        html += `<td style="padding:12px 16px;"><span style="padding:4px 10px;border-radius:8px;font-size:12px;font-weight:600;${statusStyle}">${c.active ? 'Активен' : 'Ожидает'}</span></td>`;
+        html += `<td style="padding:12px 16px;font-size:14px;font-weight:600;color:var(--accent);">${c.referral_bonus_leads || 0}</td>`;
+        html += '</tr>';
+    });
+    html += '</tbody></table>';
+    document.getElementById('refAdminTable').innerHTML = html;
 }
 
 // ==================== MODALS ====================

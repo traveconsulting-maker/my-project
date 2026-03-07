@@ -2962,6 +2962,10 @@
                     <span class="nav-icon"><svg viewBox="0 0 24 24"><path d="M19.14 12.94a7.07 7.07 0 000-1.88l2.03-1.58a.49.49 0 00.12-.61l-1.92-3.32a.49.49 0 00-.59-.22l-2.39.96a7.04 7.04 0 00-1.62-.94l-.36-2.54a.48.48 0 00-.48-.41h-3.84a.48.48 0 00-.48.41l-.36 2.54a7.04 7.04 0 00-1.62.94l-2.39-.96a.48.48 0 00-.59.22L2.74 8.87a.48.48 0 00.12.61l2.03 1.58a7.07 7.07 0 000 1.88l-2.03 1.58a.49.49 0 00-.12.61l1.92 3.32c.12.22.37.29.59.22l2.39-.96c.5.38 1.04.7 1.62.94l.36 2.54c.05.24.26.41.48.41h3.84c.24 0 .44-.17.48-.41l.36-2.54a7.04 7.04 0 001.62-.94l2.39.96c.22.08.47 0 .59-.22l1.92-3.32a.49.49 0 00-.12-.61l-2.03-1.58zM12 15.6A3.6 3.6 0 1115.6 12 3.6 3.6 0 0112 15.6z"/></svg></span>
                     <span data-i18n="navSettings">Настройки</span>
                 </a></li>
+                <li><a href="#" data-page="pageReferral" onclick="setActive(this)">
+                    <span class="nav-icon"><svg viewBox="0 0 24 24"><path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm-2 15l-5-5 1.41-1.41L10 14.17l7.59-7.59L19 8l-9 9z"/></svg></span>
+                    <span>Реферальная программа</span>
+                </a></li>
             </ul>
         </div>
 
@@ -3579,6 +3583,45 @@
                     </div>
                 </div>
             </div>
+
+            <!-- PAGE: Реферальная программа -->
+            <div class="page-section" id="pageReferral">
+                <h1>Реферальная программа</h1>
+                <p class="subtitle">Пригласите друга — получите клиентов бесплатно</p>
+
+                <div style="margin-top:24px;padding:24px;background:var(--card-bg);border:1px solid var(--card-border);border-radius:20px;">
+                    <div style="font-size:14px;font-weight:600;color:var(--text-muted);margin-bottom:8px;">Ваша реферальная ссылка</div>
+                    <div style="display:flex;gap:10px;align-items:center;">
+                        <input type="text" id="refLinkInput" readonly style="flex:1;padding:13px 16px;background:var(--input-bg);border:1px solid var(--input-border);border-radius:14px;color:var(--text);font-family:'JetBrains Mono',monospace;font-size:14px;outline:none;" value="">
+                        <button onclick="refCopyLink()" style="padding:13px 24px;background:linear-gradient(135deg,#6c5ce7,#a855f7);color:#fff;border:none;border-radius:14px;font-family:inherit;font-size:14px;font-weight:600;cursor:pointer;white-space:nowrap;transition:all .3s;">Копировать</button>
+                    </div>
+                </div>
+
+                <div style="display:grid;grid-template-columns:1fr 1fr;gap:16px;margin-top:20px;">
+                    <div style="padding:24px;background:var(--card-bg);border:1px solid var(--card-border);border-radius:20px;text-align:center;">
+                        <div style="font-size:36px;font-weight:800;background:linear-gradient(135deg,#6c5ce7,#a855f7);-webkit-background-clip:text;-webkit-text-fill-color:transparent;">5</div>
+                        <div style="font-size:15px;font-weight:600;color:var(--text);margin-top:4px;">клиентов бесплатно</div>
+                        <div style="font-size:13px;color:var(--text-muted);margin-top:4px;">Вам за каждого приглашённого</div>
+                    </div>
+                    <div style="padding:24px;background:var(--card-bg);border:1px solid var(--card-border);border-radius:20px;text-align:center;">
+                        <div style="font-size:36px;font-weight:800;background:linear-gradient(135deg,#6c5ce7,#a855f7);-webkit-background-clip:text;-webkit-text-fill-color:transparent;">20%</div>
+                        <div style="font-size:15px;font-weight:600;color:var(--text);margin-top:4px;">скидка для друга</div>
+                        <div style="font-size:13px;color:var(--text-muted);margin-top:4px;">На первые 10 лидов</div>
+                    </div>
+                </div>
+
+                <div style="margin-top:24px;padding:20px 24px;background:var(--card-bg);border:1px solid var(--card-border);border-radius:20px;display:flex;align-items:center;gap:16px;">
+                    <div style="font-size:14px;color:var(--text-muted);">Ваши бонусные лиды:</div>
+                    <div id="refBonusLeads" style="font-size:24px;font-weight:800;background:linear-gradient(135deg,#6c5ce7,#a855f7);-webkit-background-clip:text;-webkit-text-fill-color:transparent;">0</div>
+                </div>
+
+                <div style="margin-top:24px;">
+                    <h2 style="font-size:18px;font-weight:700;color:var(--text);margin-bottom:12px;">Приглашённые пользователи</h2>
+                    <div id="refClientsTable" style="background:var(--card-bg);border:1px solid var(--card-border);border-radius:16px;overflow:hidden;">
+                        <div style="padding:32px;text-align:center;color:var(--text-muted);font-size:14px;">Загрузка...</div>
+                    </div>
+                </div>
+            </div>
         </div>
     </div>
 
@@ -3823,6 +3866,55 @@
             return h;
         }
         function esHasToken() { return !!localStorage.getItem('jwt_token'); }
+
+        // ===== REFERRAL URL CAPTURE =====
+        (function() {
+            var params = new URLSearchParams(window.location.search);
+            var ref = params.get('ref');
+            if (ref) localStorage.setItem('referral_code', ref);
+        })();
+
+        // ===== REFERRAL PROGRAM =====
+        function refLoadStats() {
+            fetch(ES_API + '/api/referral/stats', { headers: esApiHeaders() })
+                .then(function(r) { return r.json(); })
+                .then(function(data) {
+                    if (data.referral_link) {
+                        document.getElementById('refLinkInput').value = data.referral_link;
+                    }
+                    document.getElementById('refBonusLeads').textContent = data.referral_bonus_leads || 0;
+                    var el = document.getElementById('refClientsTable');
+                    if (!data.referred_clients || data.referred_clients.length === 0) {
+                        el.innerHTML = '<div style="padding:32px;text-align:center;color:var(--text-muted);font-size:14px;">Пока никто не зарегистрировался по вашей ссылке</div>';
+                        return;
+                    }
+                    var html = '<table style="width:100%;border-collapse:collapse;">';
+                    html += '<thead><tr style="border-bottom:1px solid var(--card-border);">';
+                    html += '<th style="padding:12px 16px;text-align:left;font-size:13px;font-weight:600;color:var(--text-muted);">Компания</th>';
+                    html += '<th style="padding:12px 16px;text-align:left;font-size:13px;font-weight:600;color:var(--text-muted);">Дата</th>';
+                    html += '<th style="padding:12px 16px;text-align:left;font-size:13px;font-weight:600;color:var(--text-muted);">Статус</th>';
+                    html += '</tr></thead><tbody>';
+                    data.referred_clients.forEach(function(c) {
+                        html += '<tr style="border-bottom:1px solid var(--card-border);">';
+                        html += '<td style="padding:12px 16px;font-size:14px;color:var(--text);">' + (c.company || '—') + '</td>';
+                        html += '<td style="padding:12px 16px;font-size:14px;color:var(--text-muted);">' + new Date(c.created_at).toLocaleDateString('ru-RU') + '</td>';
+                        html += '<td style="padding:12px 16px;"><span style="padding:4px 12px;border-radius:8px;font-size:12px;font-weight:600;' + (c.active ? 'background:rgba(52,211,153,0.15);color:#34d399;' : 'background:rgba(251,191,36,0.15);color:#fbbf24;') + '">' + (c.active ? 'Активен' : 'Ожидает') + '</span></td>';
+                        html += '</tr>';
+                    });
+                    html += '</tbody></table>';
+                    el.innerHTML = html;
+                })
+                .catch(function(err) { console.error('refLoadStats error:', err); });
+        }
+
+        function refCopyLink() {
+            var input = document.getElementById('refLinkInput');
+            input.select();
+            document.execCommand('copy');
+            var btn = input.nextElementSibling;
+            btn.textContent = 'Скопировано!';
+            setTimeout(function() { btn.textContent = 'Копировать'; }, 2000);
+        }
 
         // ===== ACTIVE LOCKS (campaigns with status=calling) =====
         var activeLocks = { locked_skillbase_ids: [], locked_audience_ids: [] };
@@ -5838,6 +5930,7 @@
                 if (pageId === 'pageQualLeads') { qlLoadFromAPI(); qlPopulateFilters(); qlRender(); }
                 if (pageId === 'pageStats') { stRenderAll(); }
                 if (pageId === 'pageMain') { onbCheckSteps(); }
+                if (pageId === 'pageReferral') { refLoadStats(); }
             }
         }
 

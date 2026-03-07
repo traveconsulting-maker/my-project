@@ -221,6 +221,13 @@
             localStorage.setItem('theme', document.body.classList.contains('light') ? 'light' : 'dark');
         }
 
+        // Capture referral code from URL
+        (function() {
+            var params = new URLSearchParams(window.location.search);
+            var ref = params.get('ref');
+            if (ref) localStorage.setItem('referral_code', ref);
+        })();
+
         function handleRegister(e) {
             e.preventDefault();
             var company = document.getElementById('regCompany').value.trim();
@@ -276,7 +283,8 @@
                     phone: phone,
                     email: email,
                     login: login,
-                    password: password
+                    password: password,
+                    ref: localStorage.getItem('referral_code') || undefined
                 })
             })
             .then(function(res) { return res.json().then(function(data) { return { status: res.status, data: data }; }); })
