@@ -3649,6 +3649,7 @@
                             <input type="number" id="balAmountInput" min="1000" step="100" value="1000" placeholder="1000" style="width:100%;padding:13px 16px;background:var(--input-bg);border:1px solid var(--input-border);border-radius:14px;color:var(--text);font-family:inherit;font-size:16px;outline:none;">
                         </div>
                         <button onclick="balCreatePayment()" style="padding:13px 28px;background:linear-gradient(135deg,#6c5ce7,#a855f7);color:#fff;border:none;border-radius:14px;font-family:inherit;font-size:15px;font-weight:600;cursor:pointer;white-space:nowrap;transition:all .3s;">Пополнить через СБП</button>
+                        <button onclick="balOpenInvoiceModal()" style="padding:13px 28px;background:var(--card-bg);color:var(--text);border:1px solid var(--card-border);border-radius:14px;font-family:inherit;font-size:15px;font-weight:600;cursor:pointer;white-space:nowrap;transition:all .3s;">Выставить счёт для юрлица</button>
                     </div>
                 </div>
 
@@ -3666,6 +3667,36 @@
                     </div>
                 </div>
             </div>
+        </div>
+    </div>
+
+    <!-- MODAL: Invoice for legal entity -->
+    <div class="modal-overlay" id="balInvoiceModal" onclick="if(event.target===this)balCloseInvoiceModal()">
+        <div class="modal" style="max-width:560px;">
+            <button class="modal-close" onclick="balCloseInvoiceModal()">&times;</button>
+            <h2 style="margin-bottom:20px;">Счёт для юридического лица</h2>
+            <form onsubmit="balGenerateInvoice(event)">
+                <div style="display:grid;grid-template-columns:1fr 1fr;gap:12px;">
+                    <div><label style="display:block;font-size:13px;font-weight:600;color:var(--text-muted);margin-bottom:4px;">Название организации *</label><input type="text" id="invLegalName" required style="width:100%;padding:10px 14px;background:var(--input-bg);border:1px solid var(--input-border);border-radius:10px;color:var(--text);font-size:14px;outline:none;"></div>
+                    <div><label style="display:block;font-size:13px;font-weight:600;color:var(--text-muted);margin-bottom:4px;">ИНН *</label><input type="text" id="invInn" required style="width:100%;padding:10px 14px;background:var(--input-bg);border:1px solid var(--input-border);border-radius:10px;color:var(--text);font-size:14px;outline:none;"></div>
+                    <div><label style="display:block;font-size:13px;font-weight:600;color:var(--text-muted);margin-bottom:4px;">КПП</label><input type="text" id="invKpp" style="width:100%;padding:10px 14px;background:var(--input-bg);border:1px solid var(--input-border);border-radius:10px;color:var(--text);font-size:14px;outline:none;"></div>
+                    <div><label style="display:block;font-size:13px;font-weight:600;color:var(--text-muted);margin-bottom:4px;">Контактное лицо</label><input type="text" id="invContactPerson" style="width:100%;padding:10px 14px;background:var(--input-bg);border:1px solid var(--input-border);border-radius:10px;color:var(--text);font-size:14px;outline:none;"></div>
+                </div>
+                <div style="margin-top:12px;"><label style="display:block;font-size:13px;font-weight:600;color:var(--text-muted);margin-bottom:4px;">Юридический адрес</label><input type="text" id="invLegalAddress" style="width:100%;padding:10px 14px;background:var(--input-bg);border:1px solid var(--input-border);border-radius:10px;color:var(--text);font-size:14px;outline:none;"></div>
+                <div style="display:grid;grid-template-columns:1fr 1fr 1fr;gap:12px;margin-top:12px;">
+                    <div><label style="display:block;font-size:13px;font-weight:600;color:var(--text-muted);margin-bottom:4px;">Р/с</label><input type="text" id="invBankAccount" style="width:100%;padding:10px 14px;background:var(--input-bg);border:1px solid var(--input-border);border-radius:10px;color:var(--text);font-size:14px;outline:none;"></div>
+                    <div><label style="display:block;font-size:13px;font-weight:600;color:var(--text-muted);margin-bottom:4px;">БИК</label><input type="text" id="invBankBik" style="width:100%;padding:10px 14px;background:var(--input-bg);border:1px solid var(--input-border);border-radius:10px;color:var(--text);font-size:14px;outline:none;"></div>
+                    <div><label style="display:block;font-size:13px;font-weight:600;color:var(--text-muted);margin-bottom:4px;">Банк</label><input type="text" id="invBankName" style="width:100%;padding:10px 14px;background:var(--input-bg);border:1px solid var(--input-border);border-radius:10px;color:var(--text);font-size:14px;outline:none;"></div>
+                </div>
+                <div style="display:grid;grid-template-columns:1fr 1fr;gap:12px;margin-top:12px;">
+                    <div><label style="display:block;font-size:13px;font-weight:600;color:var(--text-muted);margin-bottom:4px;">Сумма (₽) *</label><input type="number" id="invAmount" min="1" step="0.01" required style="width:100%;padding:10px 14px;background:var(--input-bg);border:1px solid var(--input-border);border-radius:10px;color:var(--text);font-size:14px;outline:none;"></div>
+                    <div><label style="display:block;font-size:13px;font-weight:600;color:var(--text-muted);margin-bottom:4px;">Email</label><input type="email" id="invEmail" style="width:100%;padding:10px 14px;background:var(--input-bg);border:1px solid var(--input-border);border-radius:10px;color:var(--text);font-size:14px;outline:none;"></div>
+                </div>
+                <div style="display:flex;gap:12px;margin-top:20px;justify-content:flex-end;">
+                    <button type="button" onclick="balSaveRequisites()" style="padding:11px 22px;background:var(--card-bg);border:1px solid var(--card-border);border-radius:12px;color:var(--text);font-family:inherit;font-size:14px;font-weight:600;cursor:pointer;">Сохранить реквизиты</button>
+                    <button type="submit" style="padding:11px 22px;background:linear-gradient(135deg,#6c5ce7,#a855f7);color:#fff;border:none;border-radius:12px;font-family:inherit;font-size:14px;font-weight:600;cursor:pointer;">Сгенерировать счёт</button>
+                </div>
+            </form>
         </div>
     </div>
 
@@ -3996,7 +4027,7 @@
                         var date = new Date(p.created_at).toLocaleString('ru-RU');
                         var statusLabel = p.status === 'paid' ? 'Оплачен' : p.status === 'pending' ? 'Ожидание' : p.status;
                         var statusColor = p.status === 'paid' ? '#10b981' : '#f59e0b';
-                        var sourceLabel = p.source === 'sbp' ? 'СБП' : p.source === 'manual' ? 'Начисление' : p.source;
+                        var sourceLabel = p.source === 'sbp' ? 'СБП' : p.source === 'manual' ? 'Начисление' : p.source === 'invoice' ? 'Счёт' : p.source;
                         html += '<tr style="border-bottom:1px solid var(--card-border);">';
                         html += '<td style="padding:12px 16px;font-size:14px;color:var(--text);">' + date + '</td>';
                         html += '<td style="padding:12px 16px;font-size:14px;font-weight:600;color:var(--text);">' + parseFloat(p.amount).toFixed(2) + ' ₽</td>';
@@ -4062,6 +4093,87 @@
                     }
                 })
                 .catch(function(err) { console.error('balCheckStatus error:', err); });
+        }
+
+        // ===== INVOICE MODAL =====
+        function balOpenInvoiceModal() {
+            if (!esHasToken()) return;
+            // Load saved requisites
+            fetch(ES_API + '/api/clients/me', { headers: esApiHeaders() })
+                .then(function(r) { return r.json(); })
+                .then(function(data) {
+                    document.getElementById('invLegalName').value = data.legal_name || '';
+                    document.getElementById('invInn').value = data.inn || '';
+                    document.getElementById('invKpp').value = data.kpp || '';
+                    document.getElementById('invLegalAddress').value = data.legal_address || '';
+                    document.getElementById('invBankAccount').value = data.bank_account || '';
+                    document.getElementById('invBankBik').value = data.bank_bik || '';
+                    document.getElementById('invBankName').value = data.bank_name || '';
+                    document.getElementById('invContactPerson').value = data.contact_person || '';
+                    document.getElementById('invEmail').value = data.email || '';
+                })
+                .catch(function() {});
+            document.getElementById('invAmount').value = '';
+            document.getElementById('balInvoiceModal').style.display = 'flex';
+        }
+
+        function balCloseInvoiceModal() {
+            document.getElementById('balInvoiceModal').style.display = 'none';
+        }
+
+        function balSaveRequisites() {
+            var body = {
+                legal_name: document.getElementById('invLegalName').value,
+                inn: document.getElementById('invInn').value,
+                kpp: document.getElementById('invKpp').value,
+                legal_address: document.getElementById('invLegalAddress').value,
+                bank_account: document.getElementById('invBankAccount').value,
+                bank_bik: document.getElementById('invBankBik').value,
+                bank_name: document.getElementById('invBankName').value,
+                contact_person: document.getElementById('invContactPerson').value
+            };
+            fetch(ES_API + '/api/clients/requisites', {
+                method: 'PUT',
+                headers: esApiHeaders(),
+                body: JSON.stringify(body)
+            })
+            .then(function(r) { return r.json(); })
+            .then(function(data) {
+                if (data.error) { showTtsToast(data.error); return; }
+                showTtsToast('Реквизиты сохранены');
+            })
+            .catch(function() { showTtsToast('Ошибка сохранения'); });
+        }
+
+        function balGenerateInvoice(e) {
+            e.preventDefault();
+            var amount = document.getElementById('invAmount').value;
+            if (!amount || parseFloat(amount) <= 0) { showTtsToast('Введите сумму'); return; }
+            // Save requisites first, then generate
+            balSaveRequisites();
+            fetch(ES_API + '/api/payments/invoice', {
+                method: 'POST',
+                headers: esApiHeaders(),
+                body: JSON.stringify({ amount: parseFloat(amount), purpose: 'Пополнение баланса EaseSale' })
+            })
+            .then(function(r) {
+                if (!r.ok) return r.json().then(function(d) { throw new Error(d.error || 'Ошибка'); });
+                return r.blob();
+            })
+            .then(function(blob) {
+                var url = URL.createObjectURL(blob);
+                var a = document.createElement('a');
+                a.href = url;
+                a.download = 'invoice.pdf';
+                a.click();
+                URL.revokeObjectURL(url);
+                balCloseInvoiceModal();
+                showTtsToast('Счёт сгенерирован');
+                balLoadHistory();
+            })
+            .catch(function(err) {
+                showTtsToast(err.message || 'Ошибка генерации счёта');
+            });
         }
 
         // ===== ACTIVE LOCKS (campaigns with status=calling) =====

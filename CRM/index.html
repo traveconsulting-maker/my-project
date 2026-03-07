@@ -1062,6 +1062,10 @@
                 <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M16 21v-2a4 4 0 00-4-4H5a4 4 0 00-4 4v2"/><circle cx="8.5" cy="7" r="4"/><line x1="20" y1="8" x2="20" y2="14"/><line x1="23" y1="11" x2="17" y2="11"/></svg>
                 Рефералы
             </div>
+            <div class="nav-item" data-section="payments" onclick="showSection('payments')">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="1" y="4" width="22" height="16" rx="2" ry="2"/><line x1="1" y1="10" x2="23" y2="10"/></svg>
+                Платежи
+            </div>
         </div>
         <div class="sidebar-bottom">
             <button class="theme-btn" onclick="toggleTheme()">
@@ -1491,6 +1495,21 @@
             </div>
         </div>
 
+        <!-- Payments Section -->
+        <div id="section-payments" class="section">
+            <div class="section-header">
+                <h1>Платежи</h1>
+                <p style="color:var(--text-muted);margin-top:4px;">Управление платежами клиентов</p>
+            </div>
+            <div style="display:grid;grid-template-columns:repeat(3,1fr);gap:16px;margin-bottom:24px;" id="paymentsStats"></div>
+            <div style="margin-bottom:16px;">
+                <input type="text" id="paymentsSearch" placeholder="Поиск по клиенту..." style="padding:10px 16px;border-radius:10px;border:1px solid var(--border);background:var(--input-bg);color:var(--text);font-size:14px;width:300px;outline:none;" oninput="paymentsFilter()">
+            </div>
+            <div id="paymentsTable" style="background:var(--card-bg);border:1px solid var(--border);border-radius:12px;overflow:hidden;">
+                <div style="padding:32px;text-align:center;color:var(--text-muted);">Загрузка...</div>
+            </div>
+        </div>
+
         <!-- Referrals Section -->
         <div id="section-referrals" class="section">
             <div class="section-header">
@@ -1823,6 +1842,27 @@
             <div class="modal-footer">
                 <button type="button" class="btn btn-primary" onclick="closeDmpInstruction()">Всё готово</button>
             </div>
+        </div>
+    </div>
+
+    <!-- Balance Modal -->
+    <div class="modal-overlay" id="balance-modal">
+        <div class="modal">
+            <div class="modal-header">
+                <div class="modal-title">Начислить баланс</div>
+                <button class="modal-close" onclick="closeModal('balance-modal')">&times;</button>
+            </div>
+            <form onsubmit="submitBalanceModal(event)">
+                <input type="hidden" id="balance-modal-client-id">
+                <div class="form-group">
+                    <label>Сумма (₽)</label>
+                    <input type="number" id="balance-modal-amount" min="1" step="0.01" required style="width:100%;padding:10px 14px;border-radius:10px;border:1px solid var(--border);background:var(--input-bg);color:var(--text);font-size:14px;">
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn" onclick="closeModal('balance-modal')">Отмена</button>
+                    <button type="submit" class="btn btn-primary">Начислить</button>
+                </div>
+            </form>
         </div>
     </div>
 
@@ -2167,6 +2207,7 @@ function renderSection(name) {
         case 'telephony': renderTelephony(); break;
         case 'telemarketing': renderTelemarketing(); break;
         case 'referrals': renderReferrals(); break;
+        case 'payments': renderPayments(); break;
     }
 }
 
@@ -2228,6 +2269,122 @@ function refAdminRenderTable(list) {
     });
     html += '</tbody></table>';
     document.getElementById('refAdminTable').innerHTML = html;
+}
+
+// ==================== PAYMENTS ====================
+let paymentsAdminData = [];
+
+function renderPayments() {
+    fetch(API_BASE + '/api/admin/payments', { headers: apiHeaders() })
+        .then(r => r.json())
+        .then(data => {
+            paymentsAdminData = Array.isArray(data) ? data : [];
+            const totalCount = paymentsAdminData.length;
+            const totalAmount = paymentsAdminData.filter(p => p.status === 'paid').reduce((s, p) => s + parseFloat(p.amount || 0), 0);
+            const today = new Date().toDateString();
+            const todayCount = paymentsAdminData.filter(p => new Date(p.created_at).toDateString() === today).length;
+            document.getElementById('paymentsStats').innerHTML = `
+                <div style="padding:20px;background:var(--card-bg);border:1px solid var(--border);border-radius:12px;text-align:center;">
+                    <div style="font-size:28px;font-weight:700;color:var(--accent);">${totalCount}</div>
+                    <div style="font-size:13px;color:var(--text-muted);margin-top:4px;">Всего платежей</div>
+                </div>
+                <div style="padding:20px;background:var(--card-bg);border:1px solid var(--border);border-radius:12px;text-align:center;">
+                    <div style="font-size:28px;font-weight:700;color:#34d399;">${totalAmount.toFixed(2)} ₽</div>
+                    <div style="font-size:13px;color:var(--text-muted);margin-top:4px;">Общая сумма</div>
+                </div>
+                <div style="padding:20px;background:var(--card-bg);border:1px solid var(--border);border-radius:12px;text-align:center;">
+                    <div style="font-size:28px;font-weight:700;color:#a855f7;">${todayCount}</div>
+                    <div style="font-size:13px;color:var(--text-muted);margin-top:4px;">Сегодня</div>
+                </div>`;
+            paymentsRenderTable(paymentsAdminData);
+        })
+        .catch(err => console.error('renderPayments error:', err));
+}
+
+function paymentsFilter() {
+    const q = document.getElementById('paymentsSearch').value.toLowerCase();
+    const filtered = paymentsAdminData.filter(p =>
+        (p.client_name || '').toLowerCase().includes(q) ||
+        (p.client_company || '').toLowerCase().includes(q)
+    );
+    paymentsRenderTable(filtered);
+}
+
+function paymentsRenderTable(list) {
+    if (list.length === 0) {
+        document.getElementById('paymentsTable').innerHTML = '<div style="padding:32px;text-align:center;color:var(--text-muted);">Нет платежей</div>';
+        return;
+    }
+    let html = '<table style="width:100%;border-collapse:collapse;">';
+    html += '<thead><tr style="border-bottom:1px solid var(--border);">';
+    html += '<th style="padding:12px 16px;text-align:left;font-size:12px;font-weight:600;color:var(--text-muted);text-transform:uppercase;">Клиент</th>';
+    html += '<th style="padding:12px 16px;text-align:left;font-size:12px;font-weight:600;color:var(--text-muted);text-transform:uppercase;">Сумма</th>';
+    html += '<th style="padding:12px 16px;text-align:left;font-size:12px;font-weight:600;color:var(--text-muted);text-transform:uppercase;">Дата</th>';
+    html += '<th style="padding:12px 16px;text-align:left;font-size:12px;font-weight:600;color:var(--text-muted);text-transform:uppercase;">Статус</th>';
+    html += '<th style="padding:12px 16px;text-align:left;font-size:12px;font-weight:600;color:var(--text-muted);text-transform:uppercase;">Источник</th>';
+    html += '</tr></thead><tbody>';
+    list.forEach(p => {
+        const statusLabel = p.status === 'paid' ? 'Оплачен' : p.status === 'pending' ? 'Ожидание' : p.status;
+        const statusStyle = p.status === 'paid' ? 'background:rgba(52,211,153,0.15);color:#34d399;' : 'background:rgba(251,191,36,0.15);color:#fbbf24;';
+        const sourceLabel = p.source === 'sbp' ? 'СБП' : p.source === 'manual' ? 'Начисление' : p.source === 'invoice' ? 'Счёт' : (p.source || '—');
+        const invoiceLink = p.source === 'invoice' && p.invoice_number ? ` <a href="#" onclick="downloadInvoicePdf(${p.id});return false;" style="color:var(--accent);font-size:12px;">PDF</a>` : '';
+        html += '<tr style="border-bottom:1px solid var(--border);">';
+        html += `<td style="padding:12px 16px;font-size:14px;color:var(--text);">${esc(p.client_company || p.client_name || 'ID:' + p.client_id)}</td>`;
+        html += `<td style="padding:12px 16px;font-size:14px;font-weight:600;color:var(--text);">${parseFloat(p.amount).toFixed(2)} ₽</td>`;
+        html += `<td style="padding:12px 16px;font-size:13px;color:var(--text-muted);">${new Date(p.created_at).toLocaleString('ru-RU')}</td>`;
+        html += `<td style="padding:12px 16px;"><span style="padding:4px 10px;border-radius:8px;font-size:12px;font-weight:600;${statusStyle}">${statusLabel}</span></td>`;
+        html += `<td style="padding:12px 16px;font-size:13px;color:var(--text-muted);">${sourceLabel}${invoiceLink}</td>`;
+        html += '</tr>';
+    });
+    html += '</tbody></table>';
+    document.getElementById('paymentsTable').innerHTML = html;
+}
+
+// ==================== CLIENT BALANCE MODAL ====================
+function downloadInvoicePdf(paymentId) {
+    fetch(API_BASE + '/api/admin/payments/' + paymentId + '/invoice-pdf', { headers: apiHeaders() })
+    .then(r => { if (!r.ok) throw r; return r.blob(); })
+    .then(blob => {
+        const url = URL.createObjectURL(blob);
+        const a = document.createElement('a');
+        a.href = url;
+        a.download = 'invoice.pdf';
+        a.click();
+        URL.revokeObjectURL(url);
+    })
+    .catch(() => toast('Ошибка скачивания счёта'));
+}
+
+function openBalanceModal(clientId) {
+    document.getElementById('balance-modal-client-id').value = clientId;
+    document.getElementById('balance-modal-amount').value = '';
+    openModal('balance-modal');
+}
+
+function submitBalanceModal(e) {
+    e.preventDefault();
+    const clientId = document.getElementById('balance-modal-client-id').value;
+    const amount = document.getElementById('balance-modal-amount').value;
+    if (!amount || parseFloat(amount) <= 0) return;
+
+    fetch(API_BASE + '/api/admin/clients/' + clientId + '/add-balance', {
+        method: 'POST',
+        headers: apiHeaders(),
+        body: JSON.stringify({ amount: parseFloat(amount) })
+    })
+    .then(r => r.json())
+    .then(data => {
+        if (data.error) { toast(data.error); return; }
+        closeModal('balance-modal');
+        toast('Баланс начислен: ' + parseFloat(data.balance).toFixed(2) + ' ₽');
+        // Refresh client data
+        fetchClientsFromAPI();
+        setTimeout(() => renderClientDetail(), 500);
+    })
+    .catch(err => {
+        console.error('submitBalanceModal error:', err);
+        toast('Ошибка начисления баланса');
+    });
 }
 
 // ==================== MODALS ====================
@@ -3191,6 +3348,13 @@ function renderClientDetail() {
                         <div class="client-info-row"><span class="client-info-label">Цена за лид</span><span><input type="number" min="0" value="${c.pricePerLead||2000}" style="width:90px;padding:4px 8px;border-radius:6px;border:1px solid var(--border);background:var(--bg);color:var(--text);font-size:.85rem;text-align:right;" onchange="updateClientPricePerLead('${c.id}',this.value)"> ₽</span></div>
                     </div>
                     ${c.notes ? `<div class="client-detail-section"><h3>Заметки</h3><p style="font-size:.85rem;color:var(--text-secondary);white-space:pre-wrap;">${esc(c.notes)}</p></div>` : ''}
+                </div>
+            </div>
+            <div class="client-detail-section" style="margin-top:16px;">
+                <h3>Баланс</h3>
+                <div style="display:flex;align-items:center;gap:16px;">
+                    <div style="font-size:28px;font-weight:800;background:linear-gradient(135deg,#6c5ce7,#a855f7);-webkit-background-clip:text;-webkit-text-fill-color:transparent;">${parseFloat(c.balance||0).toFixed(2)} ₽</div>
+                    <button class="btn btn-primary btn-sm" onclick="openBalanceModal('${c.id}')">Начислить баланс</button>
                 </div>
             </div>
             <div style="margin-top:16px;">

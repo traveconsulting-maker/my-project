@@ -740,6 +740,28 @@
         .catch(() => { toast('Ошибка обновления баланса'); });
     }
 
+    function saveClientRequisites() {
+        if (!crmToken || !currentDetailClient) return;
+        var body = {
+            legal_name: document.getElementById('reqLegalName').value,
+            inn: document.getElementById('reqInn').value,
+            kpp: document.getElementById('reqKpp').value,
+            legal_address: document.getElementById('reqLegalAddress').value,
+            bank_account: document.getElementById('reqBankAccount').value,
+            bank_bik: document.getElementById('reqBankBik').value,
+            bank_name: document.getElementById('reqBankName').value,
+            contact_person: document.getElementById('reqContactPerson').value
+        };
+        fetch(API_BASE + '/api/admin/clients/' + currentDetailClient + '/requisites', {
+            method: 'PUT',
+            headers: apiHeaders(),
+            body: JSON.stringify(body)
+        })
+        .then(r => { if (!r.ok) throw r; return r.json(); })
+        .then(() => { toast('Реквизиты сохранены'); })
+        .catch(() => { toast('Ошибка сохранения реквизитов'); });
+    }
+
     // ==================== SKILLBASES (DIALOGS TAB) ====================
     function loadSkillbases(clientId, container) {
         if (!crmToken) { container.innerHTML = '<div class="empty-state"><p>Нет авторизации</p></div>'; return; }
@@ -911,6 +933,20 @@
                         </div>
                         ${c.notes ? `<div class="client-detail-section"><h3>Заметки</h3><p style="font-size:.85rem;color:var(--text-secondary);white-space:pre-wrap;">${esc(c.notes)}</p></div>` : ''}
                     </div>
+                </div>
+                <div class="client-detail-section" style="margin-top:20px;">
+                    <h3>Реквизиты компании</h3>
+                    <div style="display:grid;grid-template-columns:1fr 1fr;gap:8px 16px;margin-top:8px;">
+                        <div class="client-info-row"><span class="client-info-label">Организация</span><input type="text" id="reqLegalName" value="${esc(c.legal_name||'')}" style="flex:1;padding:4px 8px;border-radius:6px;border:1px solid var(--border);background:var(--bg);color:var(--text);font-size:.85rem;width:100%;"></div>
+                        <div class="client-info-row"><span class="client-info-label">ИНН</span><input type="text" id="reqInn" value="${esc(c.inn||'')}" style="flex:1;padding:4px 8px;border-radius:6px;border:1px solid var(--border);background:var(--bg);color:var(--text);font-size:.85rem;width:100%;"></div>
+                        <div class="client-info-row"><span class="client-info-label">КПП</span><input type="text" id="reqKpp" value="${esc(c.kpp||'')}" style="flex:1;padding:4px 8px;border-radius:6px;border:1px solid var(--border);background:var(--bg);color:var(--text);font-size:.85rem;width:100%;"></div>
+                        <div class="client-info-row"><span class="client-info-label">Юр. адрес</span><input type="text" id="reqLegalAddress" value="${esc(c.legal_address||'')}" style="flex:1;padding:4px 8px;border-radius:6px;border:1px solid var(--border);background:var(--bg);color:var(--text);font-size:.85rem;width:100%;"></div>
+                        <div class="client-info-row"><span class="client-info-label">Р/с</span><input type="text" id="reqBankAccount" value="${esc(c.bank_account||'')}" style="flex:1;padding:4px 8px;border-radius:6px;border:1px solid var(--border);background:var(--bg);color:var(--text);font-size:.85rem;width:100%;"></div>
+                        <div class="client-info-row"><span class="client-info-label">БИК</span><input type="text" id="reqBankBik" value="${esc(c.bank_bik||'')}" style="flex:1;padding:4px 8px;border-radius:6px;border:1px solid var(--border);background:var(--bg);color:var(--text);font-size:.85rem;width:100%;"></div>
+                        <div class="client-info-row"><span class="client-info-label">Банк</span><input type="text" id="reqBankName" value="${esc(c.bank_name||'')}" style="flex:1;padding:4px 8px;border-radius:6px;border:1px solid var(--border);background:var(--bg);color:var(--text);font-size:.85rem;width:100%;"></div>
+                        <div class="client-info-row"><span class="client-info-label">Контакт. лицо</span><input type="text" id="reqContactPerson" value="${esc(c.contact_person||'')}" style="flex:1;padding:4px 8px;border-radius:6px;border:1px solid var(--border);background:var(--bg);color:var(--text);font-size:.85rem;width:100%;"></div>
+                    </div>
+                    <button class="btn btn-primary btn-sm" style="margin-top:10px;" onclick="saveClientRequisites()">Сохранить реквизиты</button>
                 </div>
                 <div class="client-detail-section" style="margin-top:20px;">
                     <h3>Баланс</h3>
