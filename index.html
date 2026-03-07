@@ -3871,11 +3871,11 @@
         var ES_API = 'https://api.easysale.tech';
         function esApiHeaders() {
             var h = { 'Content-Type': 'application/json' };
-            var token = localStorage.getItem('jwt_token');
+            var token = sessionStorage.getItem('jwt_token');
             if (token) h['Authorization'] = 'Bearer ' + token;
             return h;
         }
-        function esHasToken() { return !!localStorage.getItem('jwt_token'); }
+        function esHasToken() { return !!sessionStorage.getItem('jwt_token'); }
 
         // ===== REFERRAL URL CAPTURE =====
         (function() {
@@ -4527,7 +4527,7 @@
             .then(res => res.json().then(data => ({ status: res.status, data })))
             .then(result => {
                 if (result.status === 200) {
-                    localStorage.setItem('jwt_token', result.data.token);
+                    sessionStorage.setItem('jwt_token', result.data.token);
                     localStorage.setItem('sc_login', user.value);
                     applyUserSession(user.value);
 
@@ -4578,7 +4578,7 @@
                 return;
             }
 
-            var token = localStorage.getItem('jwt_token') || '';
+            var token = sessionStorage.getItem('jwt_token') || '';
             fetch('https://api.easysale.tech/api/auth/change-password', {
                 method: 'PATCH',
                 headers: {
@@ -4903,7 +4903,7 @@
             saveUserSession();
             dashboard.classList.remove('show');
             localStorage.removeItem('onboarded');
-            localStorage.removeItem('jwt_token');
+            sessionStorage.removeItem('jwt_token');
             localStorage.removeItem('current_login');
             localStorage.removeItem('sc_login');
             localStorage.removeItem('sc_conv_id');
@@ -7330,7 +7330,7 @@
             }
 
             // Отправляем заявку на сервер
-            var token = localStorage.getItem('jwt_token') || '';
+            var token = sessionStorage.getItem('jwt_token') || '';
             fetch('https://api.easysale.tech/api/tickets', {
                 method: 'POST',
                 headers: {
@@ -9119,7 +9119,7 @@
         var isAppDomain = window.location.hostname === 'app.easysale.tech';
 
         (function autoRestore() {
-            var token = localStorage.getItem('jwt_token');
+            var token = sessionStorage.getItem('jwt_token');
             var login = localStorage.getItem('current_login');
             if (token && login) {
                 applyUserSession(login);
@@ -9209,7 +9209,7 @@
 
     function scApiHeaders() {
         var h = { 'Content-Type': 'application/json' };
-        var token = localStorage.getItem('jwt_token');
+        var token = sessionStorage.getItem('jwt_token');
         if (token) h['Authorization'] = 'Bearer ' + token;
         return h;
     }
