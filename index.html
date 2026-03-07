@@ -4036,7 +4036,7 @@
                         html += '<td style="padding:12px 16px;font-size:14px;color:var(--text-muted);">' + sourceLabel + '</td>';
                         html += '<td style="padding:12px 16px;">';
                         if (p.source === 'invoice' && p.id) {
-                            html += '<a href="' + ES_API + '/api/payments/' + p.id + '/invoice-pdf" style="display:inline-flex;align-items:center;gap:6px;padding:4px 12px;border-radius:8px;background:#7c3aed22;color:#7c3aed;font-size:12px;font-weight:600;text-decoration:none;" download>📄 Скачать счёт</a>';
+                            html += '<button onclick="balDownloadInvoice(' + p.id + ', \'' + (p.invoice_number || p.id) + '\')" style="display:inline-flex;align-items:center;gap:6px;padding:4px 12px;border-radius:8px;background:#7c3aed22;color:#7c3aed;font-size:12px;font-weight:600;border:none;cursor:pointer;">📄 Скачать счёт</button>';
                         }
                         html += '</td>';
                         html += '</tr>';
@@ -4045,6 +4045,19 @@
                     el.innerHTML = html;
                 })
                 .catch(function(err) { console.error('balLoadHistory error:', err); });
+        }
+
+        function balDownloadInvoice(id, num) {
+            fetch(ES_API + '/api/payments/' + id + '/invoice-pdf', { headers: esApiHeaders() })
+                .then(function(r) { return r.blob(); })
+                .then(function(blob) {
+                    var url = URL.createObjectURL(blob);
+                    var a = document.createElement('a');
+                    a.href = url;
+                    a.download = 'invoice_' + num + '.pdf';
+                    a.click();
+                    URL.revokeObjectURL(url);
+                });
         }
 
         function balCreatePayment() {
