@@ -2956,14 +2956,6 @@
 
                 <div class="nav-divider"></div>
 
-                <li><a href="#" data-page="pageStats" onclick="setActive(this)">
-                    <span class="nav-icon"><svg viewBox="0 0 24 24"><path d="M19 3H5c-1.1 0-2 .9-2 2v14c0 1.1.9 2 2 2h14c1.1 0 2-.9 2-2V5c0-1.1-.9-2-2-2zM9 17H7v-7h2v7zm4 0h-2V7h2v10zm4 0h-2v-4h2v4z"/></svg></span>
-                    <span data-i18n="navStats">Статистика</span>
-                </a></li>
-                <li><a href="#" data-page="pageKnowledge" onclick="setActive(this)">
-                    <span class="nav-icon"><svg viewBox="0 0 24 24"><path d="M18 2H6c-1.1 0-2 .9-2 2v16c0 1.1.9 2 2 2h12c1.1 0 2-.9 2-2V4c0-1.1-.9-2-2-2zM6 4h5v8l-2.5-1.5L6 12V4z"/></svg></span>
-                    <span data-i18n="navKb">База знаний</span>
-                </a></li>
                 <li><a href="#" data-page="pageTemplates" onclick="setActive(this)">
                     <span class="nav-icon"><svg viewBox="0 0 24 24"><path d="M14 2H6c-1.1 0-2 .9-2 2v16c0 1.1.9 2 2 2h12c1.1 0 2-.9 2-2V8l-6-6zm2 16H8v-2h8v2zm0-4H8v-2h8v2zm-3-5V3.5L18.5 9H13z"/></svg></span>
                     <span data-i18n="navTemplates">Шаблоны</span>
@@ -4573,6 +4565,10 @@
                 .then(function(me) {
                     if (me && me.company) {
                         localStorage.setItem('onboarded', '1');
+                    }
+                    if (me && me.balance !== undefined) {
+                        userBalance = Math.round(parseFloat(me.balance));
+                        clUpdateBalance();
                     }
                     var onboarded = localStorage.getItem('onboarded');
                     if (onboarded) {
