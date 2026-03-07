@@ -4022,6 +4022,7 @@
                     html += '<th style="padding:12px 16px;text-align:left;font-size:13px;font-weight:600;color:var(--text-muted);">Сумма</th>';
                     html += '<th style="padding:12px 16px;text-align:left;font-size:13px;font-weight:600;color:var(--text-muted);">Статус</th>';
                     html += '<th style="padding:12px 16px;text-align:left;font-size:13px;font-weight:600;color:var(--text-muted);">Источник</th>';
+                    html += '<th style="padding:12px 16px;text-align:left;font-size:13px;font-weight:600;color:var(--text-muted);"></th>';
                     html += '</tr></thead><tbody>';
                     rows.forEach(function(p) {
                         var date = new Date(p.created_at).toLocaleString('ru-RU');
@@ -4033,6 +4034,11 @@
                         html += '<td style="padding:12px 16px;font-size:14px;font-weight:600;color:var(--text);">' + parseFloat(p.amount).toFixed(2) + ' ₽</td>';
                         html += '<td style="padding:12px 16px;"><span style="padding:4px 12px;border-radius:8px;font-size:12px;font-weight:600;background:' + statusColor + '22;color:' + statusColor + ';">' + statusLabel + '</span></td>';
                         html += '<td style="padding:12px 16px;font-size:14px;color:var(--text-muted);">' + sourceLabel + '</td>';
+                        html += '<td style="padding:12px 16px;">';
+                        if (p.source === 'invoice' && p.id) {
+                            html += '<a href="' + ES_API + '/api/payments/' + p.id + '/invoice-pdf" style="display:inline-flex;align-items:center;gap:6px;padding:4px 12px;border-radius:8px;background:#7c3aed22;color:#7c3aed;font-size:12px;font-weight:600;text-decoration:none;" download>📄 Скачать счёт</a>';
+                        }
+                        html += '</td>';
                         html += '</tr>';
                     });
                     html += '</tbody></table>';
