@@ -4234,14 +4234,16 @@ function sendChatReply(convId) {
     const conv = conversations.find(c => c.id === convId);
     if (!conv) return;
 
-    // Добавляем bubble локально сразу
-    const container = document.getElementById('chat-messages-' + convId);
-    if (container) {
-        const div = document.createElement('div');
-        div.className = 'chat-msg from-manager';
-        div.innerHTML = `<div class="chat-msg-text">${esc(text)}</div><div class="chat-msg-time">${formatDateTime(now())}</div>`;
-        container.appendChild(div);
-        container.scrollTop = container.scrollHeight;
+    // Для telegram — не добавляем bubble сразу, polling подхватит из БД
+    if (conv.source !== 'telegram') {
+        const container = document.getElementById('chat-messages-' + convId);
+        if (container) {
+            const div = document.createElement('div');
+            div.className = 'chat-msg from-manager';
+            div.innerHTML = `<div class="chat-msg-text">${esc(text)}</div><div class="chat-msg-time">${formatDateTime(now())}</div>`;
+            container.appendChild(div);
+            container.scrollTop = container.scrollHeight;
+        }
     }
 
     // Отправляем через API
