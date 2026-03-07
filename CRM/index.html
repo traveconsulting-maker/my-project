@@ -4255,6 +4255,7 @@ function sendChatReply(convId) {
             })
             .then(r => r.json())
             .then(data => {
+                if (data.id) { dialogsLastMsgId = data.id; dialogsKnownMsgIds[data.id] = true; }
                 conv.messages = (conv.messages || []);
                 conv.messages.push({ author: 'manager', text, time: now(), files: [] });
                 addActivity('dialog', `Ответ в Telegram: ${conv.clientName||'Аноним'}`, conv.clientId);
