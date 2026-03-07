@@ -4114,11 +4114,11 @@
                 })
                 .catch(function() {});
             document.getElementById('invAmount').value = '';
-            document.getElementById('balInvoiceModal').style.display = 'flex';
+            document.getElementById('balInvoiceModal').classList.add('active');
         }
 
         function balCloseInvoiceModal() {
-            document.getElementById('balInvoiceModal').style.display = 'none';
+            document.getElementById('balInvoiceModal').classList.remove('active');
         }
 
         function balSaveRequisites() {
