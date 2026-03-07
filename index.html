@@ -2972,6 +2972,10 @@
                     <span class="nav-icon"><svg viewBox="0 0 24 24"><path d="M19.14 12.94a7.07 7.07 0 000-1.88l2.03-1.58a.49.49 0 00.12-.61l-1.92-3.32a.49.49 0 00-.59-.22l-2.39.96a7.04 7.04 0 00-1.62-.94l-.36-2.54a.48.48 0 00-.48-.41h-3.84a.48.48 0 00-.48.41l-.36 2.54a7.04 7.04 0 00-1.62.94l-2.39-.96a.48.48 0 00-.59.22L2.74 8.87a.48.48 0 00.12.61l2.03 1.58a7.07 7.07 0 000 1.88l-2.03 1.58a.49.49 0 00-.12.61l1.92 3.32c.12.22.37.29.59.22l2.39-.96c.5.38 1.04.7 1.62.94l.36 2.54c.05.24.26.41.48.41h3.84c.24 0 .44-.17.48-.41l.36-2.54a7.04 7.04 0 001.62-.94l2.39.96c.22.08.47 0 .59-.22l1.92-3.32a.49.49 0 00-.12-.61l-2.03-1.58zM12 15.6A3.6 3.6 0 1115.6 12 3.6 3.6 0 0112 15.6z"/></svg></span>
                     <span data-i18n="navSettings">Настройки</span>
                 </a></li>
+                <li><a href="#" data-page="pageBalance" onclick="setActive(this)">
+                    <span class="nav-icon"><svg viewBox="0 0 24 24"><path d="M21 18v1a2 2 0 01-2 2H5a2 2 0 01-2-2V5a2 2 0 012-2h14a2 2 0 012 2v1"/><path d="M13 9h8v6h-8a3 3 0 010-6z"/><circle cx="18" cy="12" r="1"/></svg></span>
+                    <span>Баланс</span>
+                </a></li>
                 <li><a href="#" data-page="pageReferral" onclick="setActive(this)">
                     <span class="nav-icon"><svg viewBox="0 0 24 24"><path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm-2 15l-5-5 1.41-1.41L10 14.17l7.59-7.59L19 8l-9 9z"/></svg></span>
                     <span>Реферальная программа</span>
@@ -3632,6 +3636,44 @@
                     </div>
                 </div>
             </div>
+
+            <!-- PAGE: Баланс -->
+            <div class="page-section" id="pageBalance">
+                <h1>Баланс</h1>
+                <p class="subtitle">Пополнение через СБП (Система Быстрых Платежей)</p>
+
+                <div style="margin-top:24px;padding:24px;background:var(--card-bg);border:1px solid var(--card-border);border-radius:20px;display:flex;align-items:center;gap:24px;">
+                    <div>
+                        <div style="font-size:14px;font-weight:600;color:var(--text-muted);margin-bottom:4px;">Текущий баланс</div>
+                        <div id="balCurrentBalance" style="font-size:42px;font-weight:800;background:linear-gradient(135deg,#6c5ce7,#a855f7);-webkit-background-clip:text;-webkit-text-fill-color:transparent;">0.00 ₽</div>
+                    </div>
+                </div>
+
+                <div style="margin-top:20px;padding:24px;background:var(--card-bg);border:1px solid var(--card-border);border-radius:20px;">
+                    <div style="font-size:16px;font-weight:700;color:var(--text);margin-bottom:16px;">Пополнить баланс</div>
+                    <div style="display:flex;gap:12px;align-items:flex-end;">
+                        <div style="flex:1;">
+                            <label style="display:block;font-size:13px;font-weight:600;color:var(--text-muted);margin-bottom:6px;">Сумма (мин. 1000 ₽)</label>
+                            <input type="number" id="balAmountInput" min="1000" step="100" value="1000" placeholder="1000" style="width:100%;padding:13px 16px;background:var(--input-bg);border:1px solid var(--input-border);border-radius:14px;color:var(--text);font-family:inherit;font-size:16px;outline:none;">
+                        </div>
+                        <button onclick="balCreatePayment()" style="padding:13px 28px;background:linear-gradient(135deg,#6c5ce7,#a855f7);color:#fff;border:none;border-radius:14px;font-family:inherit;font-size:15px;font-weight:600;cursor:pointer;white-space:nowrap;transition:all .3s;">Пополнить через СБП</button>
+                    </div>
+                </div>
+
+                <div id="balQrArea" style="display:none;margin-top:20px;padding:24px;background:var(--card-bg);border:1px solid var(--card-border);border-radius:20px;text-align:center;">
+                    <div style="font-size:16px;font-weight:700;color:var(--text);margin-bottom:16px;">Отсканируйте QR-код для оплаты</div>
+                    <div id="balQrImage" style="margin-bottom:16px;"></div>
+                    <a id="balQrLink" href="#" target="_blank" style="color:var(--accent-light);font-size:14px;text-decoration:underline;">Открыть ссылку для оплаты</a>
+                    <div id="balStatusIndicator" style="margin-top:16px;font-size:14px;color:var(--text-muted);">Ожидание оплаты...</div>
+                </div>
+
+                <div style="margin-top:24px;">
+                    <h2 style="font-size:18px;font-weight:700;color:var(--text);margin-bottom:12px;">История пополнений</h2>
+                    <div id="balHistoryTable" style="background:var(--card-bg);border:1px solid var(--card-border);border-radius:16px;overflow:hidden;">
+                        <div style="padding:32px;text-align:center;color:var(--text-muted);font-size:14px;">Загрузка...</div>
+                    </div>
+                </div>
+            </div>
         </div>
     </div>
 
@@ -3924,6 +3966,110 @@
             var btn = input.nextElementSibling;
             btn.textContent = 'Скопировано!';
             setTimeout(function() { btn.textContent = 'Копировать'; }, 2000);
+        }
+
+        // ===== BALANCE PAGE =====
+        var balPollingTimer = null;
+
+        function balLoadPage() {
+            if (!esHasToken()) return;
+            // Fetch balance from client profile
+            fetch(ES_API + '/api/clients/me', { headers: esApiHeaders() })
+                .then(function(r) { return r.json(); })
+                .then(function(data) {
+                    var bal = parseFloat(data.balance || 0).toFixed(2);
+                    document.getElementById('balCurrentBalance').textContent = bal + ' ₽';
+                })
+                .catch(function(err) { console.error('balLoadPage balance error:', err); });
+            balLoadHistory();
+        }
+
+        function balLoadHistory() {
+            fetch(ES_API + '/api/payments/history', { headers: esApiHeaders() })
+                .then(function(r) { return r.json(); })
+                .then(function(rows) {
+                    var el = document.getElementById('balHistoryTable');
+                    if (!rows || rows.length === 0) {
+                        el.innerHTML = '<div style="padding:32px;text-align:center;color:var(--text-muted);font-size:14px;">Нет платежей</div>';
+                        return;
+                    }
+                    var html = '<table style="width:100%;border-collapse:collapse;">';
+                    html += '<thead><tr style="border-bottom:1px solid var(--card-border);">';
+                    html += '<th style="padding:12px 16px;text-align:left;font-size:13px;font-weight:600;color:var(--text-muted);">Дата</th>';
+                    html += '<th style="padding:12px 16px;text-align:left;font-size:13px;font-weight:600;color:var(--text-muted);">Сумма</th>';
+                    html += '<th style="padding:12px 16px;text-align:left;font-size:13px;font-weight:600;color:var(--text-muted);">Статус</th>';
+                    html += '<th style="padding:12px 16px;text-align:left;font-size:13px;font-weight:600;color:var(--text-muted);">Источник</th>';
+                    html += '</tr></thead><tbody>';
+                    rows.forEach(function(p) {
+                        var date = new Date(p.created_at).toLocaleString('ru-RU');
+                        var statusLabel = p.status === 'paid' ? 'Оплачен' : p.status === 'pending' ? 'Ожидание' : p.status;
+                        var statusColor = p.status === 'paid' ? '#10b981' : '#f59e0b';
+                        var sourceLabel = p.source === 'sbp' ? 'СБП' : p.source === 'manual' ? 'Начисление' : p.source;
+                        html += '<tr style="border-bottom:1px solid var(--card-border);">';
+                        html += '<td style="padding:12px 16px;font-size:14px;color:var(--text);">' + date + '</td>';
+                        html += '<td style="padding:12px 16px;font-size:14px;font-weight:600;color:var(--text);">' + parseFloat(p.amount).toFixed(2) + ' ₽</td>';
+                        html += '<td style="padding:12px 16px;"><span style="padding:4px 12px;border-radius:8px;font-size:12px;font-weight:600;background:' + statusColor + '22;color:' + statusColor + ';">' + statusLabel + '</span></td>';
+                        html += '<td style="padding:12px 16px;font-size:14px;color:var(--text-muted);">' + sourceLabel + '</td>';
+                        html += '</tr>';
+                    });
+                    html += '</tbody></table>';
+                    el.innerHTML = html;
+                })
+                .catch(function(err) { console.error('balLoadHistory error:', err); });
+        }
+
+        function balCreatePayment() {
+            var amount = document.getElementById('balAmountInput').value;
+            if (!amount || parseFloat(amount) < 1000) {
+                showTtsToast('Минимальная сумма 1000 ₽');
+                return;
+            }
+            fetch(ES_API + '/api/payments/create', {
+                method: 'POST',
+                headers: esApiHeaders(),
+                body: JSON.stringify({ amount: parseFloat(amount) })
+            })
+            .then(function(r) { return r.json(); })
+            .then(function(data) {
+                if (data.error) { showTtsToast(data.error); return; }
+                var qrArea = document.getElementById('balQrArea');
+                qrArea.style.display = '';
+                var imgEl = document.getElementById('balQrImage');
+                if (data.image) {
+                    imgEl.innerHTML = '<img src="data:image/png;base64,' + data.image + '" style="max-width:280px;border-radius:12px;">';
+                } else {
+                    imgEl.innerHTML = '<div style="padding:16px;color:var(--text-muted);">QR-код недоступен</div>';
+                }
+                var linkEl = document.getElementById('balQrLink');
+                if (data.qrUrl) {
+                    linkEl.href = data.qrUrl;
+                    linkEl.style.display = '';
+                } else {
+                    linkEl.style.display = 'none';
+                }
+                document.getElementById('balStatusIndicator').textContent = 'Ожидание оплаты...';
+                // Start polling
+                if (balPollingTimer) clearInterval(balPollingTimer);
+                balPollingTimer = setInterval(function() { balCheckStatus(data.qrcId); }, 3000);
+            })
+            .catch(function(err) {
+                console.error('balCreatePayment error:', err);
+                showTtsToast('Ошибка создания платежа');
+            });
+        }
+
+        function balCheckStatus(qrcId) {
+            fetch(ES_API + '/api/payments/status/' + encodeURIComponent(qrcId), { headers: esApiHeaders() })
+                .then(function(r) { return r.json(); })
+                .then(function(data) {
+                    if (data.status === 'ACSC' || data.status === 'ACTC') {
+                        if (balPollingTimer) { clearInterval(balPollingTimer); balPollingTimer = null; }
+                        document.getElementById('balStatusIndicator').innerHTML = '<span style="color:#10b981;font-weight:600;">Оплата получена!</span>';
+                        showTtsToast('Оплата прошла успешно!');
+                        balLoadPage();
+                    }
+                })
+                .catch(function(err) { console.error('balCheckStatus error:', err); });
         }
 
         // ===== ACTIVE LOCKS (campaigns with status=calling) =====
@@ -5941,6 +6087,7 @@
                 if (pageId === 'pageStats') { stRenderAll(); }
                 if (pageId === 'pageMain') { onbCheckSteps(); }
                 if (pageId === 'pageReferral') { refLoadStats(); }
+                if (pageId === 'pageBalance') { balLoadPage(); }
             }
         }
 
