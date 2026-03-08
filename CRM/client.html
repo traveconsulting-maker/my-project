@@ -1115,6 +1115,8 @@
             closeModal('delete-client-modal');
             toast('Клиент удалён');
             pendingDeleteClientId = null;
+            localStorage.removeItem('crm_clients');
+            localStorage.removeItem('clients');
             setTimeout(function() { window.location.href = 'index.html'; }, 800);
         })
         .catch(function() {

@@ -1963,6 +1963,9 @@ function fetchClientsFromAPI() {
     fetch(API_BASE + '/api/clients', { headers: apiHeaders() })
         .then(r => { if (!r.ok) throw r; return r.json(); })
         .then(data => {
+            const apiLogins = data.map(c => c.login);
+            // Удаляем клиентов которых больше нет в API
+            clients = clients.filter(c => !c.login || apiLogins.includes(c.login));
             // Мержим: API-клиенты добавляются если их login ещё нет локально
             data.forEach(apiClient => {
                 const exists = clients.find(c => c.login === apiClient.login);
