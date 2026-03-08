@@ -992,7 +992,6 @@
                             <div class="client-info-row"><span class="client-info-label">Реф. код</span><span style="font-family:'JetBrains Mono',monospace;">${esc(c.referral_code||'—')}</span></div>
                             <div class="client-info-row"><span class="client-info-label">Приглашён</span><span>${c.referred_by ? 'ID: '+c.referred_by : '—'}</span></div>
                             <div class="client-info-row"><span class="client-info-label">Бонусных лидов</span><span style="font-weight:600;color:var(--accent-light);">${c.referral_bonus_leads||0}</span></div>
-                            <div id="refClientReferrals" style="margin-top:8px;"></div>
                         </div>
                     </div>
                     <div>
@@ -1038,7 +1037,6 @@
                 </div>
             `;
             loadClientBalance();
-            loadClientReferrals(c);
         } else if (currentDetailTab === 'dialogs') {
             el.innerHTML = '<div class="empty-state"><p>Загрузка...</p></div>';
             loadSkillbases(c.id, el);
