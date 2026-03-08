@@ -4968,8 +4968,8 @@
         // ===== SETTINGS PAGE =====
         function openSettingsAudience() {
             var niche = settingsAudienceData.niche || selectedNiche || '';
-            var client = settingsAudienceData.client || document.getElementById('onbClient').value || '';
-            var sites = settingsAudienceData.sites || document.getElementById('onbSites').value || '';
+            var client = settingsAudienceData.client || '';
+            var sites = settingsAudienceData.sites || '';
             document.getElementById('setAudNiche').value = niche;
             document.getElementById('setAudClient').value = client;
             document.getElementById('setAudSites').value = sites;
@@ -5050,12 +5050,12 @@
 
         function openSettingsCompany() {
             var d = settingsCompanyData;
-            document.getElementById('setCompName').value = d.name || document.getElementById('onbCompanyName').value || '';
-            document.getElementById('setCompLoc').value = d.location || document.getElementById('onbCompanyLocation').value || '';
-            document.getElementById('setCompSite').value = d.site || document.getElementById('onbCompanySite').value || '';
-            document.getElementById('setCompProd').value = d.product || document.getElementById('onbCompanyProduct').value || '';
-            document.getElementById('setCompUtp').value = d.utp || document.getElementById('onbCompanyUtp').value || '';
-            document.getElementById('setCompInfo').value = d.info || document.getElementById('onbCompanyInfo').value || '';
+            document.getElementById('setCompName').value = d.name || '';
+            document.getElementById('setCompLoc').value = d.location || '';
+            document.getElementById('setCompSite').value = d.site || '';
+            document.getElementById('setCompProd').value = d.product || '';
+            document.getElementById('setCompUtp').value = d.utp || '';
+            document.getElementById('setCompInfo').value = d.info || '';
             document.getElementById('setCompInn').value = d.inn || '';
             document.getElementById('setCompPerson').value = d.person || '';
             document.getElementById('setCompReq').value = d.requisites || '';
