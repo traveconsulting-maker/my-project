@@ -4607,7 +4607,7 @@
             fetch(ES_API + '/api/auth/register', {
                 method: 'POST',
                 headers: { 'Content-Type': 'application/json' },
-                body: JSON.stringify({ name: company, company: company, phone: phone, email: email, login: login, password: password })
+                body: JSON.stringify({ name: company, company: company, phone: phone, email: email, login: login, password: password, ref_code: localStorage.getItem('referral_code') || '' })
             })
             .then(function(res) { return res.json().then(function(data) { return { status: res.status, data: data }; }); })
             .then(function(result) {
