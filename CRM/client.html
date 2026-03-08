@@ -572,6 +572,7 @@
     // ==================== API ====================
     const API_BASE = 'https://api.easysale.tech';
     let crmToken = sessionStorage.getItem('crm_jwt_token') || '';
+    var pendingDeleteClientId = null;
 
     function apiHeaders() {
         return { 'Content-Type': 'application/json', 'Authorization': 'Bearer ' + crmToken };
@@ -1083,15 +1084,44 @@
     }
 
     function deleteClient(id) {
-        if (!confirm('Удалить клиента и все связанные данные?')) return;
-        clients = clients.filter(c => c.id !== id);
-        deals = deals.filter(d => d.clientId !== id);
-        tasks = tasks.filter(t => t.clientId !== id);
-        calls = calls.filter(c => c.clientId !== id);
-        tickets = tickets.filter(t => t.clientId !== id);
-        persist();
-        toast('Клиент удалён');
-        window.location.href = 'index.html';
+        pendingDeleteClientId = id;
+        document.getElementById('delete-client-password').value = '';
+        document.getElementById('delete-client-error').style.display = 'none';
+        openModal('delete-client-modal');
+    }
+
+    function confirmDeleteClient() {
+        var pw = document.getElementById('delete-client-password').value;
+        if (pw !== 'crm_admin') {
+            var err = document.getElementById('delete-client-error');
+            err.textContent = 'Неверный пароль';
+            err.style.display = '';
+            return;
+        }
+        var id = pendingDeleteClientId;
+        fetch(API_BASE + '/api/admin/clients/' + id, {
+            method: 'DELETE',
+            headers: { 'Content-Type': 'application/json', 'Authorization': 'Bearer ' + crmToken },
+            body: JSON.stringify({ confirm_password: 'crm_admin' })
+        })
+        .then(function(r) { return r.json(); })
+        .then(function(data) {
+            if (data.error) {
+                var err = document.getElementById('delete-client-error');
+                err.textContent = data.error;
+                err.style.display = '';
+                return;
+            }
+            closeModal('delete-client-modal');
+            toast('Клиент удалён');
+            pendingDeleteClientId = null;
+            setTimeout(function() { window.location.href = 'index.html'; }, 800);
+        })
+        .catch(function() {
+            var err = document.getElementById('delete-client-error');
+            err.textContent = 'Ошибка сервера';
+            err.style.display = '';
+        });
     }
 
     // ==================== PARSED PHONES ====================
@@ -1899,5 +1929,23 @@
         }
     }
     </script>
+
+    <div class="modal-overlay" id="delete-client-modal">
+        <div class="modal" style="max-width:420px;">
+            <div class="modal-header">
+                <div class="modal-title">Подтверждение удаления</div>
+                <button class="modal-close" onclick="closeModal('delete-client-modal')">&times;</button>
+            </div>
+            <p style="color:var(--text-secondary);margin-bottom:16px;">Для удаления клиента введите пароль подтверждения:</p>
+            <div class="form-group">
+                <input type="password" id="delete-client-password" placeholder="Пароль" style="width:100%;">
+            </div>
+            <div id="delete-client-error" style="color:#ef4444;font-size:.85rem;margin-bottom:12px;display:none;"></div>
+            <div class="modal-footer">
+                <button type="button" class="btn" onclick="closeModal('delete-client-modal')">Отмена</button>
+                <button type="button" class="btn btn-danger" onclick="confirmDeleteClient()">Удалить</button>
+            </div>
+        </div>
+    </div>
 </body>
 </html>
