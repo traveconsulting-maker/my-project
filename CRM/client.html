@@ -946,7 +946,22 @@
         .then(function(r) { return r.json(); })
         .then(function(fresh) {
             if (fresh && fresh.id) {
-                Object.assign(c, fresh);
+                // Only add server fields, keep local object intact
+                c.niche = fresh.niche;
+                c.sales_department = fresh.sales_department;
+                c.lead_cost = fresh.lead_cost;
+                c.legal_name = fresh.legal_name;
+                c.inn = fresh.inn;
+                c.kpp = fresh.kpp;
+                c.legal_address = fresh.legal_address;
+                c.bank_account = fresh.bank_account;
+                c.bank_bik = fresh.bank_bik;
+                c.bank_name = fresh.bank_name;
+                c.contact_person = fresh.contact_person;
+                c.referral_code = fresh.referral_code;
+                c.referred_by = fresh.referred_by;
+                c.referral_bonus_leads = fresh.referral_bonus_leads;
+                c.balance = fresh.balance;
             }
             _renderClientDetailWith(c);
         })
