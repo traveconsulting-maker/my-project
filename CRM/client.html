@@ -886,6 +886,21 @@
             document.getElementById('client-detail-content').innerHTML = '<div class="empty-state"><p>Клиент не найден</p></div>';
             return;
         }
+        // Fetch fresh data from server to get niche, sales_department, lead_cost
+        fetch(API_BASE + '/api/admin/clients/' + currentDetailClient, { headers: apiHeaders() })
+        .then(function(r) { return r.json(); })
+        .then(function(fresh) {
+            if (fresh && fresh.id) {
+                Object.assign(c, fresh);
+            }
+            _renderClientDetailWith(c);
+        })
+        .catch(function() {
+            _renderClientDetailWith(c);
+        });
+    }
+
+    function _renderClientDetailWith(c) {
         document.getElementById('client-detail-title').innerHTML = esc(c.name) + ' <span style="font-size:.75rem;color:var(--text-muted);font-weight:400;">ID: ' + esc(c.id) + '</span>';
         const el = document.getElementById('client-detail-content');
 
