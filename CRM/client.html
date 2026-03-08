@@ -457,6 +457,7 @@
             <div class="tab" onclick="switchClientTab('tickets',this)">Тикеты</div>
             <div class="tab" onclick="switchClientTab('launches',this)">Запуски</div>
             <div class="tab" onclick="switchClientTab('messages',this)">Сообщения</div>
+            <div class="tab" onclick="switchClientTab('referrals',this)">Рефералы</div>
             <div class="tab" onclick="switchClientTab('history',this)">История</div>
         </div>
 
@@ -704,16 +705,70 @@
     function loadClientReferrals(c) {
         const el = document.getElementById('refClientReferrals');
         if (!el) return;
-        const referred = clients.filter(cl => cl.referred_by && cl.referred_by.toString() === c.id.toString());
-        if (referred.length === 0) {
-            el.innerHTML = '<div style="font-size:.8rem;color:var(--text-muted);">Никого не пригласил</div>';
-            return;
-        }
-        let html = '<div style="font-size:.8rem;color:var(--text-muted);margin-bottom:4px;">Приглашённые (' + referred.length + '):</div>';
-        referred.forEach(r => {
-            html += '<div style="font-size:.85rem;color:var(--text);padding:2px 0;">' + esc(r.company || r.name) + ' <span style="color:var(--text-muted);">(' + (r.active ? 'активен' : 'ожидает') + ')</span></div>';
+        if (!crmToken) { el.innerHTML = ''; return; }
+        fetch(API_BASE + '/api/admin/clients/' + c.id + '/referrals', { headers: apiHeaders() })
+        .then(function(r) { return r.json(); })
+        .then(function(data) {
+            if (!Array.isArray(data) || data.length === 0) {
+                el.innerHTML = '<div style="font-size:.8rem;color:var(--text-muted);">Никого не пригласил</div>';
+                return;
+            }
+            var html = '<div style="font-size:.8rem;color:var(--text-muted);margin-bottom:4px;">Приглашённые (' + data.length + '):</div>';
+            data.forEach(function(r) {
+                html += '<div style="font-size:.85rem;color:var(--text);padding:4px 0;display:flex;align-items:center;gap:8px;">' +
+                    esc(r.company || r.name) +
+                    (r.referral_activated
+                        ? ' <span style="color:#34d399;font-size:.75rem;">✓ активирован</span>'
+                        : ' <button class="btn btn-sm" style="font-size:.7rem;padding:2px 10px;background:#8b5cf6;color:#fff;" onclick="activateReferral(' + r.id + ')">Активировать</button>') +
+                    '</div>';
+            });
+            el.innerHTML = html;
+        })
+        .catch(function() {
+            el.innerHTML = '<div style="font-size:.8rem;color:var(--text-muted);">Ошибка загрузки</div>';
         });
-        el.innerHTML = html;
+    }
+
+    function loadClientReferralsTab(c) {
+        const el = document.getElementById('refTab');
+        if (!el || !crmToken) return;
+        el.innerHTML = '<div style="color:var(--text-muted);font-size:.85rem;">Загрузка...</div>';
+        fetch(API_BASE + '/api/admin/clients/' + c.id + '/referrals', { headers: apiHeaders() })
+        .then(function(r) { return r.json(); })
+        .then(function(data) {
+            if (!Array.isArray(data) || data.length === 0) {
+                el.innerHTML = '<div class="empty-state"><p>Нет приглашённых клиентов</p></div>';
+                return;
+            }
+            el.innerHTML = '<table><thead><tr><th>Имя</th><th>Компания</th><th>Дата регистрации</th><th>Статус</th><th>Действие</th></tr></thead><tbody>' +
+                data.map(function(r) {
+                    return '<tr>' +
+                        '<td>' + esc(r.name || '—') + '</td>' +
+                        '<td>' + esc(r.company || '—') + '</td>' +
+                        '<td>' + formatDate(r.created_at) + '</td>' +
+                        '<td>' + (r.referral_activated ? '<span class="tag" style="background:#34d399;color:#fff;">Активирован</span>' : '<span class="tag" style="background:#f59e0b;color:#fff;">Ожидает</span>') + '</td>' +
+                        '<td>' + (r.referral_activated ? '—' : '<button class="btn btn-sm" style="font-size:.75rem;padding:3px 12px;background:#8b5cf6;color:#fff;" onclick="activateReferral(' + r.id + ')">Активировать</button>') + '</td>' +
+                        '</tr>';
+                }).join('') +
+                '</tbody></table>';
+        })
+        .catch(function() {
+            el.innerHTML = '<div class="empty-state"><p>Ошибка загрузки</p></div>';
+        });
+    }
+
+    function activateReferral(referralId) {
+        fetch(API_BASE + '/api/admin/referral/activate/' + referralId, {
+            method: 'POST',
+            headers: apiHeaders()
+        })
+        .then(function(r) { return r.json(); })
+        .then(function(data) {
+            if (data.error) { toast(data.error); return; }
+            toast('Реферал активирован');
+            renderClientDetail();
+        })
+        .catch(function() { toast('Ошибка сервера'); });
     }
 
     function openBalanceModal(op) {
@@ -1038,6 +1093,9 @@
             }
         } else if (currentDetailTab === 'launches') {
             renderLaunches(el, c);
+        } else if (currentDetailTab === 'referrals') {
+            el.innerHTML = '<div class="client-detail-section"><h3>Рефералы</h3><div id="refTab"></div></div>';
+            loadClientReferralsTab(c);
         } else if (currentDetailTab === 'history') {
             const cActs = activities.filter(a => a.clientId === c.id);
             if (cActs.length === 0) {
