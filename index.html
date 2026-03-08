@@ -2243,98 +2243,46 @@
                 </button>
             </div>
 
-            <!-- Step 2: Target audience -->
+            <!-- Step 2: Sales department -->
             <div id="onbStep2" style="display:none;">
-                <div class="onb-title" data-i18n="onb2title">Целевая аудитория</div>
-                <div class="onb-subtitle" data-i18n="onb2sub">Помогите нам понять ваших клиентов</div>
-
-                <div class="form-group" style="margin-bottom:24px;">
-                    <label style="color:var(--text-secondary);font-size:14px;font-weight:600;margin-bottom:10px;" data-i18n="onb2sitesLabel">Укажите от 3 до 10 сайтов конкурентов или смежных компаний</label>
-                    <textarea id="onbSites" class="onb-textarea" placeholder="Например:&#10;competitor1.ru&#10;competitor2.com&#10;similar-company.ru" data-i18n-ph="phSites" oninput="checkStep2()"></textarea>
-                    <div class="onb-hint" data-i18n="onb2hint">Каждый сайт с новой строки</div>
+                <div class="onb-title">Есть ли у вас отдел продаж?</div>
+                <div class="onb-subtitle">Это поможет нам подобрать оптимальное решение</div>
+                <div class="niche-grid" style="grid-template-columns:repeat(auto-fill,minmax(220px,1fr));">
+                    <div class="niche-item" onclick="selectSalesDept(this)">Нет отдела продаж</div>
+                    <div class="niche-item" onclick="selectSalesDept(this)">Да, до 3 человек</div>
+                    <div class="niche-item" onclick="selectSalesDept(this)">Больше 3 человек</div>
                 </div>
-
-                <div class="form-group" style="margin-bottom:16px;">
-                    <label style="color:var(--text-secondary);font-size:14px;font-weight:600;margin-bottom:10px;" data-i18n="onb2clientLabel">Опишите вашего идеального клиента</label>
-                    <textarea id="onbClient" class="onb-textarea" placeholder="Например: владелец малого бизнеса, 30-50 лет, ищет способы увеличить продажи..." data-i18n-ph="phClient" oninput="checkStep2()" ondragover="event.preventDefault()" ondrop="dropTag(event)"></textarea>
-                </div>
-
-                <div class="tags-section">
-                    <div class="tags-label" data-i18n="onb2tagsLabel">Быстрые теги — нажмите или перетащите в описание:</div>
-                    <div class="tags-list">
-                        <span class="tag-chip" data-i18n="tag1" draggable="true" ondragstart="dragTag(event)" onclick="insertTag(this)">Владелец бизнеса</span>
-                        <span class="tag-chip" data-i18n="tag2" draggable="true" ondragstart="dragTag(event)" onclick="insertTag(this)">ЛПР</span>
-                        <span class="tag-chip" data-i18n="tag3" draggable="true" ondragstart="dragTag(event)" onclick="insertTag(this)">B2B клиент</span>
-                        <span class="tag-chip" data-i18n="tag4" draggable="true" ondragstart="dragTag(event)" onclick="insertTag(this)">Малый бизнес</span>
-                        <span class="tag-chip" data-i18n="tag5" draggable="true" ondragstart="dragTag(event)" onclick="insertTag(this)">Средний бизнес</span>
-                        <span class="tag-chip" data-i18n="tag6" draggable="true" ondragstart="dragTag(event)" onclick="insertTag(this)">Крупный бизнес</span>
-                        <span class="tag-chip" data-i18n="tag7" draggable="true" ondragstart="dragTag(event)" onclick="insertTag(this)">Физическое лицо</span>
-                        <span class="tag-chip" data-i18n="tag8" draggable="true" ondragstart="dragTag(event)" onclick="insertTag(this)">25-35 лет</span>
-                        <span class="tag-chip" data-i18n="tag9" draggable="true" ondragstart="dragTag(event)" onclick="insertTag(this)">35-50 лет</span>
-                        <span class="tag-chip" data-i18n="tag10" draggable="true" ondragstart="dragTag(event)" onclick="insertTag(this)">50+ лет</span>
-                        <span class="tag-chip" data-i18n="tag11" draggable="true" ondragstart="dragTag(event)" onclick="insertTag(this)">Высокий доход</span>
-                        <span class="tag-chip" data-i18n="tag12" draggable="true" ondragstart="dragTag(event)" onclick="insertTag(this)">Средний доход</span>
-                        <span class="tag-chip" data-i18n="tag13" draggable="true" ondragstart="dragTag(event)" onclick="insertTag(this)">Ищет подрядчика</span>
-                        <span class="tag-chip" data-i18n="tag14" draggable="true" ondragstart="dragTag(event)" onclick="insertTag(this)">Хочет сэкономить</span>
-                        <span class="tag-chip" data-i18n="tag15" draggable="true" ondragstart="dragTag(event)" onclick="insertTag(this)">Нужно быстро</span>
-                        <span class="tag-chip" data-i18n="tag16" draggable="true" ondragstart="dragTag(event)" onclick="insertTag(this)">Регион: Москва</span>
-                        <span class="tag-chip" data-i18n="tag17" draggable="true" ondragstart="dragTag(event)" onclick="insertTag(this)">Регион: вся РФ</span>
-                        <span class="tag-chip" data-i18n="tag18" draggable="true" ondragstart="dragTag(event)" onclick="insertTag(this)">Новый клиент</span>
-                    </div>
-                </div>
-
                 <div style="display:flex;gap:12px;margin-top:36px;">
-                    <button class="onb-btn active" onclick="goToStep(1)" style="background:var(--link-bg);color:var(--text-dim);box-shadow:none;cursor:pointer;" data-i18n="back">
+                    <button class="onb-btn active" onclick="goToStep(1)" style="background:var(--link-bg);color:var(--text-dim);box-shadow:none;cursor:pointer;">
                         Назад
                     </button>
                     <button class="onb-btn" id="onbNext2" onclick="goToStep(3)" style="flex:1;">
-                        <span data-i18n="next">Далее</span>
+                        <span>Далее</span>
                         <svg viewBox="0 0 24 24"><path d="M12 4l-1.41 1.41L16.17 11H4v2h12.17l-5.58 5.59L12 20l8-8-8-8z"/></svg>
                     </button>
                 </div>
             </div>
 
-            <!-- Step 3: About company -->
+            <!-- Step 3: Lead cost -->
             <div id="onbStep3" style="display:none;">
-                <div class="onb-title" data-i18n="onb3title">О вашей компании</div>
-                <div class="onb-subtitle" data-i18n="onb3sub">Мы уже обучаем AI на ваши продажи — чтобы он знал о вас всё, заполните эту информацию</div>
-
-                <div class="onb-fields">
-                    <div class="onb-field">
-                        <label class="onb-field-label" data-i18n="onb3name">Короткое название компании</label>
-                        <input type="text" class="onb-input" id="onbCompanyName" placeholder="Например: СтройМастер" data-i18n-ph="phCompName">
-                    </div>
-                    <div class="onb-field">
-                        <label class="onb-field-label" data-i18n="onb3loc">Где находится компания</label>
-                        <input type="text" class="onb-input" id="onbCompanyLocation" placeholder="Например: Москва, Россия" data-i18n-ph="phCompLoc">
-                    </div>
-                    <div class="onb-field">
-                        <label class="onb-field-label" data-i18n="onb3site">Ссылка на сайт</label>
-                        <input type="text" class="onb-input" id="onbCompanySite" placeholder="Например: company.ru" data-i18n-ph="phCompSite">
-                    </div>
-                    <div class="onb-field">
-                        <label class="onb-field-label" data-i18n="onb3prod">Какой основной продукт / услуга</label>
-                        <input type="text" class="onb-input" id="onbCompanyProduct" placeholder="Например: строительство загородных домов" data-i18n-ph="phCompProd">
-                    </div>
-                    <div class="onb-field">
-                        <label class="onb-field-label" data-i18n="onb3utp">УТП (уникальное торговое предложение)</label>
-                        <input type="text" class="onb-input" id="onbCompanyUtp" placeholder="Например: строим дом за 30 дней или вернём деньги" data-i18n-ph="phCompUtp">
-                    </div>
-                    <div class="onb-field">
-                        <label class="onb-field-label" data-i18n="onb3info">Всё, что нам нужно знать о вашей компании</label>
-                        <textarea class="onb-textarea" id="onbCompanyInfo" placeholder="Расскажите о компании всё что считаете важным: история, ценности, преимущества, особенности работы, целевая аудитория..." data-i18n-ph="phCompInfo" style="min-height:120px;"></textarea>
-                    </div>
+                <div class="onb-title">Сколько сейчас в среднем вы платите за входящую заявку?</div>
+                <div class="onb-subtitle">Укажите примерную стоимость одной заявки в вашу компанию</div>
+                <div class="niche-grid" style="grid-template-columns:repeat(auto-fill,minmax(200px,1fr));">
+                    <div class="niche-item" onclick="selectLeadCost(this)">1 000 ₽</div>
+                    <div class="niche-item" onclick="selectLeadCost(this)">Больше 1 500 ₽</div>
+                    <div class="niche-item" onclick="selectLeadCost(this)">Больше 3 000 ₽</div>
+                    <div class="niche-item" onclick="selectLeadCost(this)">Не знаю</div>
+                    <div class="niche-item" data-custom="1" onclick="selectLeadCost(this)">Свой вариант</div>
                 </div>
-
+                <div id="customLeadCostBox" style="display:none;margin-bottom:24px;">
+                    <input type="text" id="customLeadCostInput" class="onb-textarea" style="min-height:auto;padding:14px 18px;" placeholder="Введите сумму, например: 2000 ₽" oninput="checkCustomLeadCost()">
+                </div>
                 <div style="display:flex;gap:12px;margin-top:36px;">
-                    <button class="onb-btn active" onclick="goToStep(2)" style="background:var(--link-bg);color:var(--text-dim);box-shadow:none;cursor:pointer;" data-i18n="back">
+                    <button class="onb-btn active" onclick="goToStep(2)" style="background:var(--link-bg);color:var(--text-dim);box-shadow:none;cursor:pointer;">
                         Назад
                     </button>
-                    <button class="onb-btn active" onclick="skipStep3()" style="background:var(--link-bg);color:var(--text-dim);box-shadow:none;cursor:pointer;" data-i18n="fillLater">
-                        Заполнить потом
-                    </button>
-                    <button class="onb-btn active" onclick="finishOnboarding()" style="flex:1;">
-                        <span data-i18n="next">Далее</span>
+                    <button class="onb-btn" id="onbFinish" onclick="finishOnboarding()" style="flex:1;">
+                        <span>Начать работу</span>
                         <svg viewBox="0 0 24 24"><path d="M12 4l-1.41 1.41L16.17 11H4v2h12.17l-5.58 5.59L12 20l8-8-8-8z"/></svg>
                     </button>
                 </div>
@@ -4888,11 +4836,13 @@
 
         // Onboarding
         let selectedNiche = null;
+        let selectedSalesDept = null;
+        let selectedLeadCost = null;
         var settingsAudienceData = { niche: '', client: '', sites: '' };
         var settingsCompanyData = { name: '', location: '', site: '', product: '', utp: '', info: '', inn: '', person: '', requisites: '' };
 
         function selectNiche(el) {
-            document.querySelectorAll('.niche-item').forEach(n => n.classList.remove('selected'));
+            document.querySelectorAll('#onbStep1 .niche-item').forEach(n => n.classList.remove('selected'));
             el.classList.add('selected');
             var box = document.getElementById('customNicheBox');
             var btn = document.getElementById('onbNext1');
@@ -4922,13 +4872,47 @@
             }
         }
 
+        function selectSalesDept(el) {
+            document.querySelectorAll('#onbStep2 .niche-item').forEach(n => n.classList.remove('selected'));
+            el.classList.add('selected');
+            selectedSalesDept = el.textContent;
+            document.getElementById('onbNext2').classList.add('active');
+        }
+
+        function selectLeadCost(el) {
+            document.querySelectorAll('#onbStep3 .niche-item').forEach(n => n.classList.remove('selected'));
+            el.classList.add('selected');
+            var box = document.getElementById('customLeadCostBox');
+            var btn = document.getElementById('onbFinish');
+            if (el.getAttribute('data-custom') === '1') {
+                box.style.display = '';
+                document.getElementById('customLeadCostInput').focus();
+                selectedLeadCost = null;
+                btn.classList.remove('active');
+                checkCustomLeadCost();
+            } else {
+                box.style.display = 'none';
+                document.getElementById('customLeadCostInput').value = '';
+                selectedLeadCost = el.textContent;
+                btn.classList.add('active');
+            }
+        }
+
+        function checkCustomLeadCost() {
+            var val = document.getElementById('customLeadCostInput').value.trim();
+            var btn = document.getElementById('onbFinish');
+            if (val.length > 0) {
+                selectedLeadCost = val;
+                btn.classList.add('active');
+            } else {
+                selectedLeadCost = null;
+                btn.classList.remove('active');
+            }
+        }
+
         function goToStep(step) {
             if (step === 2 && !selectedNiche) return;
-            if (step === 3) {
-                var s = document.getElementById('onbSites').value.trim();
-                var c = document.getElementById('onbClient').value.trim();
-                if (!s || !c) return;
-            }
+            if (step === 3 && !selectedSalesDept) return;
             // Show/hide steps
             document.getElementById('onbStep1').style.display = step === 1 ? '' : 'none';
             document.getElementById('onbStep2').style.display = step === 2 ? '' : 'none';
@@ -4961,25 +4945,15 @@
         }
 
         function finishOnboarding() {
-            // Save onboarding data to settings globals
-            settingsAudienceData.niche = selectedNiche || '';
-            settingsAudienceData.client = document.getElementById('onbClient').value || '';
-            settingsAudienceData.sites = document.getElementById('onbSites').value || '';
-            settingsCompanyData.name = document.getElementById('onbCompanyName').value || '';
-            settingsCompanyData.location = document.getElementById('onbCompanyLocation').value || '';
-            settingsCompanyData.site = document.getElementById('onbCompanySite').value || '';
-            settingsCompanyData.product = document.getElementById('onbCompanyProduct').value || '';
-            settingsCompanyData.utp = document.getElementById('onbCompanyUtp').value || '';
-            settingsCompanyData.info = document.getElementById('onbCompanyInfo').value || '';
+            if (!selectedLeadCost) return;
             localStorage.setItem('onboarded', '1');
             saveUserSession();
             // Save onboarding data to backend
             if (esHasToken()) {
                 var patchData = {};
-                if (settingsCompanyData.name) patchData.company = settingsCompanyData.name;
                 if (selectedNiche) patchData.niche = selectedNiche;
-                var desc = [settingsCompanyData.product, settingsCompanyData.utp, settingsCompanyData.info].filter(Boolean).join('. ');
-                if (desc) patchData.description = desc;
+                if (selectedSalesDept) patchData.sales_department = selectedSalesDept;
+                if (selectedLeadCost) patchData.lead_cost = selectedLeadCost;
                 if (Object.keys(patchData).length > 0) {
                     fetch(ES_API + '/api/clients/me', {
                         method: 'PATCH', headers: esApiHeaders(),
@@ -4987,71 +4961,8 @@
                     }).catch(function(err) { console.error('API client update error:', err); });
                 }
             }
-            // Create ЦА from onboarding data if audience info provided
-            if (typeof taAudiences !== 'undefined' && (settingsAudienceData.niche || settingsAudienceData.client || settingsAudienceData.sites)) {
-                var taName = settingsAudienceData.niche || 'Основная ЦА';
-                taAudiences.push({
-                    id: 'ta_' + Date.now().toString(36) + Math.random().toString(36).substr(2, 4),
-                    name: taName, niche: settingsAudienceData.niche,
-                    client: settingsAudienceData.client, sites: settingsAudienceData.sites,
-                    created: new Date().toISOString(), updated: new Date().toISOString()
-                });
-                if (typeof taPersist === 'function') taPersist();
-            }
-            // Sync audience to CRM
-            syncAudienceToCRM();
             onboarding.classList.remove('show');
             dashboard.classList.add('show');
-        }
-
-        function skipStep3() {
-            finishOnboarding();
-        }
-
-        function checkStep2() {
-            var sites = document.getElementById('onbSites').value.trim();
-            var client = document.getElementById('onbClient').value.trim();
-            var btn = document.getElementById('onbNext2');
-            if (sites.length > 0 && client.length > 0) {
-                btn.classList.add('active');
-            } else {
-                btn.classList.remove('active');
-            }
-        }
-
-        function dragTag(e) {
-            e.dataTransfer.setData('text/plain', e.target.textContent);
-        }
-
-        function insertTag(el) {
-            var ta = document.getElementById('onbClient');
-            var text = el.textContent;
-            var start = ta.selectionStart;
-            var end = ta.selectionEnd;
-            var val = ta.value;
-            var before = val.substring(0, start);
-            var after = val.substring(end);
-            var sep = before.length > 0 && !before.endsWith(' ') && !before.endsWith('\n') ? ', ' : '';
-            ta.value = before + sep + text + after;
-            ta.focus();
-            var pos = (before + sep + text).length;
-            ta.setSelectionRange(pos, pos);
-            el.classList.add('used');
-            checkStep2();
-        }
-
-        function dropTag(e) {
-            e.preventDefault();
-            var text = e.dataTransfer.getData('text/plain');
-            var ta = document.getElementById('onbClient');
-            var val = ta.value;
-            var sep = val.length > 0 && !val.endsWith(' ') && !val.endsWith('\n') ? ', ' : '';
-            ta.value = val + sep + text;
-            // Mark the tag chip as used
-            document.querySelectorAll('.tag-chip').forEach(function(ch) {
-                if (ch.textContent === text) ch.classList.add('used');
-            });
-            checkStep2();
         }
 
         // ===== SETTINGS PAGE =====

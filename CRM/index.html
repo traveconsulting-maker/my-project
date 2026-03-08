@@ -1692,6 +1692,25 @@
         </div>
     </div>
 
+    <!-- Delete Client Confirmation Modal -->
+    <div class="modal-overlay" id="delete-client-modal">
+        <div class="modal" style="max-width:420px;">
+            <div class="modal-header">
+                <div class="modal-title">Подтверждение удаления</div>
+                <button class="modal-close" onclick="closeModal('delete-client-modal')">&times;</button>
+            </div>
+            <p style="color:var(--text-secondary);margin-bottom:16px;">Для удаления клиента введите пароль подтверждения:</p>
+            <div class="form-group">
+                <input type="password" id="delete-client-password" placeholder="Пароль" style="width:100%;">
+            </div>
+            <div id="delete-client-error" style="color:#ef4444;font-size:.85rem;margin-bottom:12px;display:none;"></div>
+            <div class="modal-footer">
+                <button type="button" class="btn" onclick="closeModal('delete-client-modal')">Отмена</button>
+                <button type="button" class="btn btn-danger" onclick="confirmDeleteClient()">Удалить</button>
+            </div>
+        </div>
+    </div>
+
     <!-- Ticket Detail Modal -->
     <div class="modal-overlay" id="ticket-detail-modal">
         <div class="modal modal-wide">
@@ -3330,6 +3349,9 @@ function renderClientDetail() {
                         <div class="client-info-row"><span class="client-info-label">Телефон</span><span>${esc(c.phone||'—')}</span></div>
                         <div class="client-info-row"><span class="client-info-label">Email</span><span>${esc(c.email||'—')}</span></div>
                         <div class="client-info-row"><span class="client-info-label">Компания</span><span>${esc(c.company||'—')}</span></div>
+                        <div class="client-info-row"><span class="client-info-label">Ниша</span><span>${esc(c.niche||'—')}</span></div>
+                        <div class="client-info-row"><span class="client-info-label">Отдел продаж</span><span>${esc(c.sales_department||'—')}</span></div>
+                        <div class="client-info-row"><span class="client-info-label">Стоимость заявки</span><span>${esc(c.lead_cost||'—')}</span></div>
                     </div>
                     <div class="client-detail-section">
                         <h3>Доступ</h3>
@@ -3582,19 +3604,37 @@ function closeDmpInstruction() {
     toast('Инструкция DMP завершена');
 }
 
+var pendingDeleteClientId = null;
+
 function deleteClient(id) {
-    if (!confirm('Удалить клиента и все связанные данные?')) return;
+    pendingDeleteClientId = id;
+    document.getElementById('delete-client-password').value = '';
+    document.getElementById('delete-client-error').style.display = 'none';
+    openModal('delete-client-modal');
+}
+
+function confirmDeleteClient() {
+    var pw = document.getElementById('delete-client-password').value;
+    if (pw !== 'crm_admin') {
+        var err = document.getElementById('delete-client-error');
+        err.textContent = 'Неверный пароль';
+        err.style.display = '';
+        return;
+    }
+    var id = pendingDeleteClientId;
     clients = clients.filter(c => c.id !== id);
     deals = deals.filter(d => d.clientId !== id);
     tasks = tasks.filter(t => t.clientId !== id);
     calls = calls.filter(c => c.clientId !== id);
     tickets = tickets.filter(t => t.clientId !== id);
     persist();
+    closeModal('delete-client-modal');
     closeModal('client-detail-modal');
     renderClients();
     updateBadges();
     populateClientSelects();
     toast('Клиент удалён');
+    pendingDeleteClientId = null;
 }
 
 // ==================== DEALS / KANBAN ====================
