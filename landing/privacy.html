@@ -1,0 +1,364 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Политика конфиденциальности — EasySale</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800;900&family=Onest:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --bg: #0a0a1a;
+            --card-bg: rgba(255, 255, 255, 0.04);
+            --card-border: rgba(255, 255, 255, 0.08);
+            --text: #fff;
+            --text-muted: rgba(255, 255, 255, 0.45);
+            --text-secondary: rgba(255, 255, 255, 0.85);
+            --text-dim: rgba(255, 255, 255, 0.5);
+            --hover-bg: rgba(255, 255, 255, 0.04);
+            --topbar-bg: rgba(10, 10, 26, 0.8);
+            --border-color: rgba(255, 255, 255, 0.06);
+            --orb-opacity: 0.5;
+            --orb3-opacity: 0.3;
+        }
+
+        body.light {
+            --bg: #f0f2f5;
+            --card-bg: rgba(255, 255, 255, 0.85);
+            --card-border: rgba(0, 0, 0, 0.08);
+            --text: #1a1a2e;
+            --text-muted: rgba(0, 0, 0, 0.45);
+            --text-secondary: rgba(0, 0, 0, 0.75);
+            --text-dim: rgba(0, 0, 0, 0.5);
+            --hover-bg: rgba(0, 0, 0, 0.04);
+            --topbar-bg: rgba(240, 242, 245, 0.85);
+            --border-color: rgba(0, 0, 0, 0.08);
+            --orb-opacity: 0.25;
+            --orb3-opacity: 0.15;
+        }
+
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+
+        body {
+            font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
+            min-height: 100vh;
+            background: var(--bg);
+            overflow-x: hidden;
+            transition: background 0.4s;
+        }
+
+        /* BG orbs */
+        .bg { position: fixed; inset: 0; z-index: 0; pointer-events: none; }
+        .bg-orb {
+            position: absolute; border-radius: 50%; filter: blur(80px);
+            opacity: var(--orb-opacity); animation: float 8s ease-in-out infinite; transition: opacity 0.4s;
+        }
+        .bg-orb:nth-child(1) { width: 400px; height: 400px; background: #6c5ce7; top: -10%; left: -5%; }
+        .bg-orb:nth-child(2) { width: 350px; height: 350px; background: #0984e3; bottom: -10%; right: -5%; animation-delay: -3s; }
+        .bg-orb:nth-child(3) { width: 250px; height: 250px; background: #e17055; top: 50%; left: 50%; transform: translate(-50%,-50%); animation-delay: -5s; opacity: var(--orb3-opacity); }
+        @keyframes float {
+            0%,100% { transform: translate(0,0) scale(1); }
+            33% { transform: translate(30px,-20px) scale(1.05); }
+            66% { transform: translate(-20px,20px) scale(0.95); }
+        }
+
+        /* Top bar */
+        .land-topbar {
+            position: fixed; top: 0; left: 0; right: 0; z-index: 20;
+            display: flex; align-items: center; justify-content: space-between;
+            padding: 16px 40px;
+            background: var(--topbar-bg);
+            backdrop-filter: blur(20px); -webkit-backdrop-filter: blur(20px);
+            border-bottom: 1px solid var(--border-color);
+            transition: background 0.4s, border-color 0.4s;
+        }
+        .land-logo {
+            font-size: 20px; font-weight: 900; color: var(--text);
+            display: flex; align-items: center; gap: 10px; transition: color 0.4s;
+            text-decoration: none;
+        }
+        .land-logo-icon {
+            width: 36px; height: 36px; border-radius: 12px;
+            background: linear-gradient(135deg, #6c5ce7, #a855f7);
+            display: flex; align-items: center; justify-content: center;
+        }
+        .land-logo-icon svg { width: 20px; height: 20px; fill: #fff; }
+        .land-topbar-right { display: flex; align-items: center; gap: 12px; }
+
+        /* Theme toggle */
+        .theme-toggle {
+            display: flex; align-items: center; gap: 8px;
+            cursor: pointer; padding: 6px 10px; border-radius: 10px;
+            transition: background 0.2s;
+        }
+        .theme-toggle:hover { background: var(--hover-bg); }
+        .theme-toggle svg { width: 16px; height: 16px; fill: var(--text-muted); transition: fill 0.3s; }
+        .toggle-track {
+            width: 44px; height: 24px; border-radius: 12px;
+            background: rgba(108,92,231,0.3); position: relative; transition: background 0.3s;
+        }
+        body.light .toggle-track { background: rgba(251,191,36,0.3); }
+        .toggle-thumb {
+            width: 20px; height: 20px; border-radius: 50%; background: #6c5ce7;
+            position: absolute; top: 2px; left: 2px;
+            transition: transform 0.3s cubic-bezier(0.16,1,0.3,1), background 0.3s;
+        }
+        body.light .toggle-thumb { transform: translateX(20px); background: #f59e0b; }
+        .icon-moon, .icon-sun { transition: opacity 0.3s; }
+        body.light .icon-moon { opacity: 0; width: 0; overflow: hidden; }
+        body:not(.light) .icon-sun { opacity: 0; width: 0; overflow: hidden; }
+
+        .back-link {
+            display: inline-flex; align-items: center; gap: 6px;
+            color: var(--text-dim); text-decoration: none; font-size: 14px; font-weight: 500;
+            padding: 8px 14px; border-radius: 10px; transition: color 0.2s, background 0.2s;
+        }
+        .back-link:hover { color: var(--text); background: var(--hover-bg); }
+        .back-link svg { width: 18px; height: 18px; fill: currentColor; }
+
+        /* Content */
+        .privacy-page {
+            position: relative; z-index: 1;
+        }
+
+        .privacy-content {
+            max-width: 800px;
+            margin: 0 auto;
+            padding: 120px 40px 60px;
+        }
+
+        .privacy-content h1 {
+            font-size: clamp(28px, 4vw, 42px);
+            font-weight: 900;
+            color: var(--text);
+            margin-bottom: 8px;
+            line-height: 1.2;
+            transition: color 0.4s;
+        }
+
+        .privacy-date {
+            color: var(--text-muted);
+            font-size: 14px;
+            margin-bottom: 48px;
+            transition: color 0.4s;
+        }
+
+        .privacy-content h2 {
+            font-size: 20px;
+            font-weight: 700;
+            color: var(--text);
+            margin-top: 40px;
+            margin-bottom: 16px;
+            transition: color 0.4s;
+        }
+
+        .privacy-content p,
+        .privacy-content li {
+            color: var(--text-secondary);
+            font-size: 15px;
+            line-height: 1.7;
+            margin-bottom: 12px;
+            transition: color 0.4s;
+        }
+
+        .privacy-content ul {
+            padding-left: 24px;
+            margin-bottom: 16px;
+        }
+
+        .privacy-content li {
+            margin-bottom: 6px;
+        }
+
+        .privacy-content a {
+            color: #a78bfa;
+            text-decoration: none;
+            transition: color 0.2s;
+        }
+        .privacy-content a:hover {
+            color: #c4b5fd;
+            text-decoration: underline;
+        }
+        body.light .privacy-content a { color: #6c5ce7; }
+        body.light .privacy-content a:hover { color: #5a4bd1; }
+
+        .operator-info {
+            background: var(--card-bg);
+            border: 1px solid var(--card-border);
+            border-radius: 16px;
+            padding: 24px;
+            margin-bottom: 16px;
+            transition: background 0.4s, border-color 0.4s;
+        }
+
+        .operator-info p {
+            margin-bottom: 6px;
+        }
+
+        /* Footer */
+        .land-footer {
+            padding: 40px; text-align: center;
+            color: var(--text-muted); font-size: 13px;
+            border-top: 1px solid var(--border-color); transition: color 0.4s, border-color 0.4s;
+        }
+        .land-footer a {
+            color: var(--text-muted);
+            text-decoration: none;
+            transition: color 0.2s;
+        }
+        .land-footer a:hover {
+            color: var(--text);
+        }
+
+        @media (max-width: 768px) {
+            .land-topbar { padding: 12px 20px; }
+            .privacy-content { padding: 100px 20px 40px; }
+            .privacy-content h1 { font-size: 26px; }
+            .privacy-content h2 { font-size: 18px; margin-top: 32px; }
+            .land-footer { padding: 24px 20px; font-size: 12px; }
+        }
+    </style>
+</head>
+<body>
+    <div class="bg">
+        <div class="bg-orb"></div>
+        <div class="bg-orb"></div>
+        <div class="bg-orb"></div>
+    </div>
+
+    <div class="privacy-page">
+        <div class="land-topbar">
+            <a class="land-logo" href="/">
+                <div class="land-logo-icon">
+                    <svg viewBox="0 0 24 24"><path d="M13 3a9 9 0 00-9 9H1l3.89 3.89.07.14L9 12H6c0-3.87 3.13-7 7-7s7 3.13 7 7-3.13 7-7 7a6.99 6.99 0 01-4.95-2.05l-1.41 1.41A8.96 8.96 0 0013 21a9 9 0 000-18zm-1 5v5l4.28 2.54.72-1.21-3.5-2.08V8H12z"/></svg>
+                </div>
+                EasySale
+            </a>
+            <div class="land-topbar-right">
+                <a class="back-link" href="/">
+                    <svg viewBox="0 0 24 24"><path d="M20 11H7.83l5.59-5.59L12 4l-8 8 8 8 1.41-1.41L7.83 13H20v-2z"/></svg>
+                    На главную
+                </a>
+                <div class="theme-toggle" onclick="toggleTheme()">
+                    <svg class="icon-moon" viewBox="0 0 24 24"><path d="M12 3a9 9 0 109 9c0-.46-.04-.92-.1-1.36a5.39 5.39 0 01-4.4 2.26 5.4 5.4 0 01-3.14-9.8c-.44-.06-.9-.1-1.36-.1z"/></svg>
+                    <svg class="icon-sun" viewBox="0 0 24 24"><path d="M6.76 4.84l-1.8-1.79-1.41 1.41 1.79 1.79 1.42-1.41zM4 10.5H1v2h3v-2zm9-9.95h-2V3.5h2V.55zm7.45 3.91l-1.41-1.41-1.79 1.79 1.41 1.41 1.79-1.79zm-3.21 13.7l1.79 1.8 1.41-1.41-1.8-1.79-1.4 1.4zM20 10.5v2h3v-2h-3zm-8-5c-3.31 0-6 2.69-6 6s2.69 6 6 6 6-2.69 6-6-2.69-6-6-6zm-1 16.95h2V19.5h-2v2.95zm-7.45-3.91l1.41 1.41 1.79-1.8-1.41-1.41-1.79 1.8z"/></svg>
+                    <div class="toggle-track"><div class="toggle-thumb"></div></div>
+                </div>
+            </div>
+        </div>
+
+        <div class="privacy-content">
+            <h1>Политика конфиденциальности</h1>
+            <p class="privacy-date">Дата последнего обновления: 9 марта 2026 г.</p>
+
+            <div class="operator-info">
+                <p><strong>Оператор персональных данных:</strong></p>
+                <p>ИП Максимов Вячеслав Владимирович</p>
+                <p>ИНН: 741517030858</p>
+                <p>ОГРНИП: 325745600106984</p>
+                <p>Email: <a href="mailto:info@easysale.tech">info@easysale.tech</a></p>
+                <p>Сайт: <a href="https://easysale.tech">easysale.tech</a></p>
+            </div>
+
+            <h2>1. Общие положения</h2>
+            <p>Настоящая Политика конфиденциальности (далее — «Политика») определяет порядок обработки и защиты персональных данных пользователей сервиса EasySale (далее — «Сервис»), расположенного по адресу easysale.tech.</p>
+            <p>Используя Сервис, вы соглашаетесь с условиями настоящей Политики. Если вы не согласны с условиями Политики, пожалуйста, не используйте Сервис.</p>
+            <p>Политика разработана в соответствии с Федеральным законом от 27.07.2006 № 152-ФЗ «О персональных данных» и иными нормативно-правовыми актами Российской Федерации.</p>
+
+            <h2>2. Какие персональные данные мы собираем</h2>
+            <p>В процессе использования Сервиса мы можем собирать следующие персональные данные:</p>
+            <ul>
+                <li><strong>Имя</strong> — для идентификации и персонализации взаимодействия;</li>
+                <li><strong>Номер телефона</strong> — для связи и подтверждения учётной записи;</li>
+                <li><strong>Адрес электронной почты (email)</strong> — для связи, отправки уведомлений и восстановления доступа;</li>
+                <li><strong>Название компании</strong> — для настройки Сервиса под потребности вашего бизнеса;</li>
+                <li><strong>Данные об использовании Сервиса</strong> — информация о действиях в Сервисе, используемых функциях, настройках, а также технические данные (IP-адрес, тип браузера, операционная система, дата и время доступа).</li>
+            </ul>
+
+            <h2>3. Цели обработки данных</h2>
+            <p>Мы обрабатываем ваши персональные данные в следующих целях:</p>
+            <ul>
+                <li>Предоставление доступа к функциям Сервиса и его корректная работа;</li>
+                <li>Идентификация пользователя и управление учётной записью;</li>
+                <li>Связь с пользователем: ответы на запросы, техническая поддержка, отправка уведомлений;</li>
+                <li>Улучшение качества Сервиса и разработка новых функций;</li>
+                <li>Обеспечение безопасности и предотвращение мошенничества;</li>
+                <li>Выполнение обязательств, предусмотренных законодательством РФ.</li>
+            </ul>
+
+            <h2>4. Правовые основания обработки</h2>
+            <p>Обработка персональных данных осуществляется на следующих правовых основаниях:</p>
+            <ul>
+                <li><strong>Согласие субъекта</strong> — предоставляется при регистрации в Сервисе и/или заполнении форм на сайте (ст. 6 ч. 1 п. 1 ФЗ-152);</li>
+                <li><strong>Исполнение договора</strong> — обработка необходима для предоставления услуг Сервиса (ст. 6 ч. 1 п. 5 ФЗ-152);</li>
+                <li><strong>Законные интересы оператора</strong> — улучшение Сервиса, аналитика, обеспечение безопасности (ст. 6 ч. 1 п. 7 ФЗ-152).</li>
+            </ul>
+
+            <h2>5. Хранение и защита данных</h2>
+            <p>Персональные данные хранятся на серверах, расположенных на территории Российской Федерации, в соответствии с требованиями ФЗ-152.</p>
+            <p>Мы применяем организационные и технические меры для защиты персональных данных от несанкционированного доступа, изменения, раскрытия или уничтожения, включая:</p>
+            <ul>
+                <li>Шифрование данных при передаче (SSL/TLS);</li>
+                <li>Ограничение доступа сотрудников к персональным данным;</li>
+                <li>Регулярное обновление программного обеспечения и средств защиты;</li>
+                <li>Мониторинг и аудит систем безопасности.</li>
+            </ul>
+            <p>Персональные данные хранятся не дольше, чем это необходимо для целей их обработки. При удалении учётной записи данные удаляются или обезличиваются, за исключением случаев, когда хранение предусмотрено законодательством.</p>
+
+            <h2>6. Передача данных третьим лицам</h2>
+            <p>Мы не продаём и не передаём ваши персональные данные третьим лицам, за исключением следующих случаев:</p>
+            <ul>
+                <li><strong>С вашего согласия</strong> — когда вы явно разрешили передачу данных;</li>
+                <li><strong>Поставщики услуг</strong> — мы можем привлекать сторонних поставщиков (хостинг, аналитика, почтовые сервисы), которые обрабатывают данные от нашего имени и обязаны соблюдать конфиденциальность;</li>
+                <li><strong>Требования законодательства</strong> — по запросу уполномоченных государственных органов в случаях, предусмотренных законодательством РФ.</li>
+            </ul>
+
+            <h2>7. Права субъектов персональных данных</h2>
+            <p>В соответствии с ФЗ-152 вы имеете право:</p>
+            <ul>
+                <li>Получить информацию об обработке ваших персональных данных;</li>
+                <li>Требовать уточнения, блокирования или уничтожения персональных данных, если они являются неполными, устаревшими, неточными или незаконно полученными;</li>
+                <li>Отозвать согласие на обработку персональных данных;</li>
+                <li>Обжаловать действия или бездействие оператора в Роскомнадзор или в судебном порядке;</li>
+                <li>Требовать прекращения обработки персональных данных в целях продвижения товаров и услуг.</li>
+            </ul>
+            <p>Для реализации своих прав вы можете обратиться к нам по адресу: <a href="mailto:info@easysale.tech">info@easysale.tech</a>. Мы рассмотрим ваш запрос в течение 30 дней с момента получения.</p>
+
+            <h2>8. Cookies и аналитика</h2>
+            <p>Сервис может использовать файлы cookies и аналогичные технологии для:</p>
+            <ul>
+                <li>Сохранения пользовательских настроек (тема оформления, язык интерфейса);</li>
+                <li>Сбора аналитических данных об использовании Сервиса;</li>
+                <li>Обеспечения корректной работы функций Сервиса.</li>
+            </ul>
+            <p>Вы можете управлять cookies через настройки вашего браузера. Отключение cookies может повлиять на функциональность Сервиса.</p>
+            <p>Мы можем использовать сторонние аналитические сервисы (например, Яндекс.Метрика) для анализа использования Сервиса. Эти сервисы могут собирать обезличенные данные в соответствии с собственными политиками конфиденциальности.</p>
+
+            <h2>9. Изменение политики</h2>
+            <p>Мы оставляем за собой право вносить изменения в настоящую Политику. Актуальная версия Политики всегда доступна по адресу: <a href="/privacy">easysale.tech/privacy</a>.</p>
+            <p>В случае существенных изменений мы уведомим вас через Сервис или по электронной почте. Продолжение использования Сервиса после внесения изменений означает ваше согласие с обновлённой Политикой.</p>
+
+            <h2>10. Контакты и обращения</h2>
+            <p>По всем вопросам, связанным с обработкой персональных данных, вы можете обратиться к нам:</p>
+            <div class="operator-info">
+                <p><strong>ИП Максимов Вячеслав Владимирович</strong></p>
+                <p>Email: <a href="mailto:info@easysale.tech">info@easysale.tech</a></p>
+                <p>Сайт: <a href="https://easysale.tech">easysale.tech</a></p>
+            </div>
+        </div>
+
+        <div class="land-footer">EasySale &copy; 2025-2026</div>
+    </div>
+
+    <script>
+        function toggleTheme() {
+            document.body.classList.toggle('light');
+            localStorage.setItem('theme', document.body.classList.contains('light') ? 'light' : 'dark');
+        }
+
+        if (localStorage.getItem('theme') === 'light') {
+            document.body.classList.add('light');
+        }
+    </script>
+</body>
+</html>
