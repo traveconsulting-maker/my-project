@@ -4649,14 +4649,12 @@
                 fetch(ES_API + '/api/clients/me', { headers: esApiHeaders() })
                 .then(function(r) { return r.ok ? r.json() : null; })
                 .then(function(me) {
-                    if (me && me.company) {
-                        localStorage.setItem('onboarded', '1');
-                    }
                     if (me && me.balance !== undefined) {
                         userBalance = Math.round(parseFloat(me.balance));
                         clUpdateBalance();
                     }
-                    var onboarded = localStorage.getItem('onboarded');
+                    var login = localStorage.getItem('current_login');
+                    var onboarded = login && localStorage.getItem('onboarded_' + login);
                     if (onboarded) {
                         setTimeout(() => { dashboard.classList.add('show'); document.body.style.overflow = ''; }, 400);
                     } else {
@@ -4664,7 +4662,8 @@
                     }
                 })
                 .catch(function() {
-                    var onboarded = localStorage.getItem('onboarded');
+                    var login = localStorage.getItem('current_login');
+                    var onboarded = login && localStorage.getItem('onboarded_' + login);
                     if (onboarded) {
                         setTimeout(() => { dashboard.classList.add('show'); document.body.style.overflow = ''; }, 400);
                     } else {
@@ -4672,7 +4671,8 @@
                     }
                 });
             } else {
-                var onboarded = localStorage.getItem('onboarded');
+                var login = localStorage.getItem('current_login');
+                var onboarded = login && localStorage.getItem('onboarded_' + login);
                 if (onboarded) {
                     setTimeout(() => { dashboard.classList.add('show'); document.body.style.overflow = ''; }, 400);
                 } else {
@@ -4692,11 +4692,13 @@
         function userKey(login) { return 'user_' + login + '_'; }
 
         function applyUserSession(login) {
+            // Миграция: перенос старого ключа в новый формат
             const prefix = userKey(login);
-            // Восстанавливаем данные этого пользователя
-            const savedOnboarded = localStorage.getItem(prefix + 'onboarded');
-            if (savedOnboarded) localStorage.setItem('onboarded', savedOnboarded);
-            else localStorage.removeItem('onboarded');
+            const oldKey = localStorage.getItem(prefix + 'onboarded');
+            if (oldKey && !localStorage.getItem('onboarded_' + login)) {
+                localStorage.setItem('onboarded_' + login, oldKey);
+                localStorage.removeItem(prefix + 'onboarded');
+            }
 
             // Обновляем имя в шапке дашборда
             const nameEl = document.querySelector('.dash-user-name');
@@ -4722,12 +4724,7 @@
         }
 
         function saveUserSession() {
-            const login = localStorage.getItem('current_login');
-            if (!login) return;
-            const prefix = userKey(login);
-            const onboarded = localStorage.getItem('onboarded');
-            if (onboarded) localStorage.setItem(prefix + 'onboarded', onboarded);
-            else localStorage.removeItem(prefix + 'onboarded');
+            // onboarded теперь хранится напрямую как onboarded_<login>, синхронизация не нужна
         }
 
         // Stores old password temporarily for change-password flow
@@ -4953,8 +4950,8 @@
 
         function finishOnboarding() {
             if (!selectedLeadCost) return;
-            localStorage.setItem('onboarded', '1');
-            saveUserSession();
+            var login = localStorage.getItem('current_login');
+            if (login) localStorage.setItem('onboarded_' + login, '1');
             // Save onboarding data to backend
             if (esHasToken()) {
                 var patchData = {};
@@ -5093,7 +5090,6 @@
         function handleLogout() {
             saveUserSession();
             dashboard.classList.remove('show');
-            localStorage.removeItem('onboarded');
             sessionStorage.removeItem('jwt_token');
             localStorage.removeItem('current_login');
             localStorage.removeItem('sc_login');
@@ -9315,7 +9311,7 @@
             var login = localStorage.getItem('current_login');
             if (token && login) {
                 applyUserSession(login);
-                var onboarded = localStorage.getItem('onboarded');
+                var onboarded = localStorage.getItem('onboarded_' + login);
                 if (onboarded) {
                     landingPage.classList.add('hidden');
                     setTimeout(function() {
