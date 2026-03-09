@@ -288,6 +288,58 @@
             margin: 0 auto 32px; line-height: 1.7; transition: color 0.4s;
         }
 
+        /* Pricing section */
+        .pricing-section {
+            padding: 100px 40px;
+            max-width: 900px;
+            margin: 0 auto;
+            text-align: center;
+        }
+        .pricing-section .section-label {
+            display: inline-flex; align-items: center; gap: 8px;
+            padding: 6px 16px; border-radius: 100px;
+            background: rgba(108,92,231,0.12); color: #a78bfa;
+            font-size: 13px; font-weight: 600; margin-bottom: 20px;
+        }
+        .pricing-title {
+            font-size: clamp(24px, 3.5vw, 36px); font-weight: 800;
+            color: var(--text); margin-bottom: 12px; transition: color 0.4s;
+        }
+        .pricing-subtitle {
+            font-size: 16px; color: var(--text-muted); margin-bottom: 48px; transition: color 0.4s;
+        }
+        .pricing-card {
+            background: linear-gradient(135deg, rgba(108,92,231,0.12), rgba(168,85,247,0.08));
+            border: 1px solid rgba(108,92,231,0.2);
+            border-radius: 24px; padding: 48px 40px;
+            backdrop-filter: blur(20px); -webkit-backdrop-filter: blur(20px);
+            position: relative; overflow: hidden;
+        }
+        .pricing-card::before {
+            content: ''; position: absolute; top: 0; left: 0; right: 0; height: 2px;
+            background: linear-gradient(90deg, transparent, #6c5ce7, #a855f7, transparent);
+        }
+        .pricing-price {
+            font-size: clamp(28px, 4vw, 40px); font-weight: 900; line-height: 1.2; margin-bottom: 20px;
+            background: linear-gradient(135deg, #6c5ce7, #a855f7, #ec4899);
+            -webkit-background-clip: text; -webkit-text-fill-color: transparent; background-clip: text;
+        }
+        .pricing-desc {
+            font-size: 16px; color: var(--text-secondary); line-height: 1.7;
+            max-width: 560px; margin: 0 auto 36px; transition: color 0.4s;
+        }
+        .pricing-btn {
+            display: inline-flex; align-items: center; gap: 8px;
+            padding: 14px 32px;
+            background: linear-gradient(135deg, #6c5ce7, #a855f7);
+            border: none; border-radius: 14px; color: #fff;
+            font-family: inherit; font-size: 16px; font-weight: 600;
+            cursor: pointer; transition: all 0.3s cubic-bezier(0.16,1,0.3,1);
+            box-shadow: 0 4px 20px rgba(108,92,231,0.3);
+            text-decoration: none;
+        }
+        .pricing-btn:hover { transform: translateY(-2px); box-shadow: 0 8px 30px rgba(108,92,231,0.45); }
+
         /* Mission section */
         .mission-section {
             padding: 100px 40px;
@@ -563,6 +615,8 @@
             .step-num { width: 56px; height: 56px; font-size: 20px; }
             .step h4 { font-size: 15px; }
             .step p { font-size: 12px; }
+            .pricing-section { padding: 60px 24px; }
+            .pricing-card { padding: 40px 28px; }
             .mission-section { padding: 60px 24px; }
             .mission-body p { font-size: 15px; }
             .mission-visual-item { width: 64px; height: 64px; }
@@ -603,6 +657,10 @@
             .step-num { width: 48px; height: 48px; font-size: 18px; margin-bottom: 14px; }
             .step h4 { font-size: 14px; }
             .step p { font-size: 12px; }
+            .pricing-section { padding: 48px 20px; }
+            .pricing-card { padding: 32px 20px; border-radius: 20px; }
+            .pricing-desc { font-size: 14px; }
+            .pricing-btn { padding: 12px 28px; font-size: 15px; }
             .mission-section { padding: 48px 20px; }
             .mission-body p { font-size: 14px; line-height: 1.75; }
             .mission-visuals { gap: 20px; }
@@ -852,6 +910,18 @@
             </div>
 
             <div class="mission-signature" data-i18n="missionSign">С любовью и легкостью, команда EasySale ❤️</div>
+        </div>
+
+        <!-- Pricing -->
+        <div class="pricing-section" id="pricing">
+            <div class="section-label">Тарифы</div>
+            <div class="pricing-title">Тарифы</div>
+            <div class="pricing-subtitle">Прозрачное ценообразование</div>
+            <div class="pricing-card">
+                <div class="pricing-price">От 500 ₽ за клиента</div>
+                <div class="pricing-desc">Стоимость варьируется в зависимости от ниши и сложности аудитории. Точная цена формируется индивидуально и корректируется после первых двух недель работы — когда вы видите реальные результаты.</div>
+                <a class="pricing-btn" href="#" onclick="openAccessModal(); return false;">Обсудить условия</a>
+            </div>
         </div>
 
         <div class="land-footer">EasySale &copy; 2025-2026 &nbsp;·&nbsp; <a href="/privacy" style="color: inherit; text-decoration: none; transition: opacity 0.2s;" onmouseover="this.style.opacity='0.7'" onmouseout="this.style.opacity='1'">Политика конфиденциальности</a></div>
