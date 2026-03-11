@@ -3599,8 +3599,8 @@
                     <div style="font-size:16px;font-weight:700;color:var(--text);margin-bottom:16px;">Пополнить баланс</div>
                     <div style="display:flex;gap:12px;align-items:flex-end;">
                         <div style="flex:1;">
-                            <label style="display:block;font-size:13px;font-weight:600;color:var(--text-muted);margin-bottom:6px;">Сумма (мин. 1000 ₽)</label>
-                            <input type="number" id="balAmountInput" min="1000" step="100" value="1000" placeholder="1000" style="width:100%;padding:13px 16px;background:var(--input-bg);border:1px solid var(--input-border);border-radius:14px;color:var(--text);font-family:inherit;font-size:16px;outline:none;">
+                            <label style="display:block;font-size:13px;font-weight:600;color:var(--text-muted);margin-bottom:6px;">Сумма (мин. 100 ₽)</label>
+                            <input type="number" id="balAmountInput" min="100" step="100" value="100" placeholder="100" style="width:100%;padding:13px 16px;background:var(--input-bg);border:1px solid var(--input-border);border-radius:14px;color:var(--text);font-family:inherit;font-size:16px;outline:none;">
                         </div>
                         <button id="balPayBtn" onclick="balCreatePayment()" style="padding:13px 28px;background:linear-gradient(135deg,#6c5ce7,#a855f7);color:#fff;border:none;border-radius:14px;font-family:inherit;font-size:15px;font-weight:600;cursor:pointer;white-space:nowrap;transition:all .3s;">Пополнить</button>
                         <button onclick="balOpenInvoiceModal()" style="padding:13px 28px;background:var(--card-bg);color:var(--text);border:1px solid var(--card-border);border-radius:14px;font-family:inherit;font-size:15px;font-weight:600;cursor:pointer;white-space:nowrap;transition:all .3s;">Выставить счёт для юрлица</button>
@@ -4016,8 +4016,8 @@
 
         function balCreatePayment() {
             var amount = document.getElementById('balAmountInput').value;
-            if (!amount || parseFloat(amount) < 1000) {
-                showTtsToast('Минимальная сумма 1000 ₽');
+            if (!amount || parseFloat(amount) < 100) {
+                showTtsToast('Минимальная сумма 100 ₽');
                 return;
             }
             var btn = document.getElementById('balPayBtn');
