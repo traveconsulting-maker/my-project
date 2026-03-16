@@ -1543,6 +1543,16 @@
             text-decoration: none;
         }
         .tg-fab:hover { transform: scale(1.1); box-shadow: 0 6px 28px rgba(0, 136, 204, 0.55); }
+        .max-fab {
+            position: fixed; bottom: 160px; right: 24px; z-index: 9998;
+            width: 56px; height: 56px; border-radius: 50%; border: none; cursor: pointer;
+            background: #0077FF;
+            box-shadow: 0 4px 20px rgba(0, 119, 255, 0.4);
+            display: flex; align-items: center; justify-content: center;
+            transition: transform 0.3s, box-shadow 0.3s;
+            text-decoration: none;
+        }
+        .max-fab:hover { transform: scale(1.1); box-shadow: 0 6px 28px rgba(0, 119, 255, 0.55); }
         .sc-fab.open svg { display: none; }
         .sc-fab.open::after { content: '×'; color: #fff; font-size: 28px; line-height: 1; }
 
@@ -3956,6 +3966,8 @@
                 .then(function(data) {
                     var bal = parseFloat(data.balance || 0).toFixed(2);
                     document.getElementById('balCurrentBalance').textContent = bal + ' ₽';
+                    userBalance = Math.round(parseFloat(data.balance || 0));
+                    clUpdateBalance();
                 })
                 .catch(function(err) { console.error('balLoadPage balance error:', err); });
             balLoadHistory();
@@ -3980,8 +3992,8 @@
                     html += '</tr></thead><tbody>';
                     rows.forEach(function(p) {
                         var date = new Date(p.created_at).toLocaleString('ru-RU');
-                        var statusLabel = p.status === 'paid' ? 'Оплачен' : p.status === 'pending' ? 'Ожидание' : p.status;
-                        var statusColor = p.status === 'paid' ? '#10b981' : '#f59e0b';
+                        var statusLabel = p.status === 'paid' ? 'Оплачен' : p.status === 'completed' ? 'Оплачен' : p.status === 'pending' ? 'Ожидание' : p.status === 'failed' ? 'Отклонён' : p.status;
+                        var statusColor = (p.status === 'paid' || p.status === 'completed') ? '#10b981' : p.status === 'failed' ? '#ef4444' : '#f59e0b';
                         var sourceLabel = p.source === 'sbp' ? 'СБП' : p.source === 'acquiring' ? 'Карта/СБП' : p.source === 'manual' ? 'Начисление' : p.source === 'invoice' ? 'Счёт' : p.source;
                         html += '<tr style="border-bottom:1px solid var(--card-border);">';
                         html += '<td style="padding:12px 16px;font-size:14px;color:var(--text);">' + date + '</td>';
@@ -4662,7 +4674,8 @@
                         clUpdateBalance();
                     }
                     var login = localStorage.getItem('current_login');
-                    var onboarded = login && localStorage.getItem('onboarded_' + login);
+                    var onboarded = (me && me.onboarded) || (login && localStorage.getItem('onboarded_' + login));
+                    if (me && me.onboarded && login) localStorage.setItem('onboarded_' + login, '1');
                     if (onboarded) {
                         setTimeout(() => { dashboard.classList.add('show'); document.body.style.overflow = ''; }, 400);
                     } else {
@@ -4962,16 +4975,14 @@
             if (login) localStorage.setItem('onboarded_' + login, '1');
             // Save onboarding data to backend
             if (esHasToken()) {
-                var patchData = {};
+                var patchData = { onboarded: true };
                 if (selectedNiche) patchData.niche = selectedNiche;
                 if (selectedSalesDept) patchData.sales_department = selectedSalesDept;
                 if (selectedLeadCost) patchData.lead_cost = selectedLeadCost;
-                if (Object.keys(patchData).length > 0) {
-                    fetch(ES_API + '/api/clients/me', {
-                        method: 'PATCH', headers: esApiHeaders(),
-                        body: JSON.stringify(patchData)
-                    }).catch(function(err) { console.error('API client update error:', err); });
-                }
+                fetch(ES_API + '/api/clients/me', {
+                    method: 'PATCH', headers: esApiHeaders(),
+                    body: JSON.stringify(patchData)
+                }).catch(function(err) { console.error('API client update error:', err); });
             }
             onboarding.classList.remove('show');
             dashboard.classList.add('show');
@@ -8142,6 +8153,8 @@
         function clUpdateBalance() {
             var el = document.getElementById('dashBalance');
             if (el) el.textContent = clFormatMoney(userBalance);
+            var sEl = document.getElementById('settingsBalance');
+            if (sEl) sEl.textContent = clFormatMoney(userBalance);
             localStorage.setItem('user_balance', String(userBalance));
         }
         function clUpdateCost() {
@@ -9369,6 +9382,9 @@
         <button class="sc-send-btn" onclick="scSend()">➤</button>
     </div>
 </div>
+<a class="max-fab" href="https://max.ru/id741517030858_bot" target="_blank" title="Написать в MAX">
+    <span style="font-weight:900;font-size:18px;color:#fff;line-height:1;">M</span>
+</a>
 <a class="tg-fab" href="https://t.me/easesale_support_bot" target="_blank" title="Написать в Telegram">
     <svg width="24" height="24" viewBox="0 0 24 24" fill="white"><path d="M11.944 0A12 12 0 0 0 0 12a12 12 0 0 0 12 12 12 12 0 0 0 12-12A12 12 0 0 0 12 0h-.056zm4.962 7.224c.1-.002.321.023.465.14a.506.506 0 0 1 .171.325c.016.093.036.306.02.472-.18 1.898-.962 6.502-1.36 8.627-.168.9-.499 1.201-.82 1.23-.696.065-1.225-.46-1.9-.902-1.056-.693-1.653-1.124-2.678-1.8-1.185-.78-.417-1.21.258-1.91.177-.184 3.247-2.977 3.307-3.23.007-.032.014-.15-.056-.212s-.174-.041-.249-.024c-.106.024-1.793 1.14-5.061 3.345-.479.33-.913.49-1.302.48-.428-.008-1.252-.241-1.865-.44-.752-.245-1.349-.374-1.297-.789.027-.216.325-.437.893-.663 3.498-1.524 5.83-2.529 6.998-3.014 3.332-1.386 4.025-1.627 4.476-1.635z"/></svg>
 </a>
