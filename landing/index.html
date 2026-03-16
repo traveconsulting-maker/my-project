@@ -1159,6 +1159,7 @@
             var name = document.getElementById('accName').value.trim();
             var phone = document.getElementById('accPhone').value.trim();
             var emailTg = document.getElementById('accEmailTg').value.trim();
+            var btn = document.getElementById('accessSubmitBtn');
 
             var valid = true;
 
@@ -1177,6 +1178,11 @@
                 document.getElementById('accName').classList.toggle('error', name !== '' && !validateName(name));
                 return;
             }
+
+            // Блокируем кнопку сразу после клика, чтобы избежать дублей
+            btn.disabled = true;
+            btn.style.opacity = '0.6';
+            btn.textContent = 'Отправка...';
 
             fetch('https://api.easysale.tech/api/tickets', {
                 method: 'POST',
