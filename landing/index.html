@@ -291,15 +291,9 @@
         /* Pricing section */
         .pricing-section {
             padding: 100px 40px;
-            max-width: 900px;
+            max-width: 1100px;
             margin: 0 auto;
             text-align: center;
-        }
-        .pricing-section .section-label {
-            display: inline-flex; align-items: center; gap: 8px;
-            padding: 6px 16px; border-radius: 100px;
-            background: rgba(108,92,231,0.12); color: #a78bfa;
-            font-size: 13px; font-weight: 600; margin-bottom: 20px;
         }
         .pricing-title {
             font-size: clamp(24px, 3.5vw, 36px); font-weight: 800;
@@ -308,10 +302,14 @@
         .pricing-subtitle {
             font-size: 16px; color: var(--text-muted); margin-bottom: 48px; transition: color 0.4s;
         }
+        .pricing-calc {
+            display: grid; grid-template-columns: 1fr 1fr; gap: 24px;
+            text-align: left;
+        }
         .pricing-card {
             background: linear-gradient(135deg, rgba(108,92,231,0.12), rgba(168,85,247,0.08));
             border: 1px solid rgba(108,92,231,0.2);
-            border-radius: 24px; padding: 48px 40px;
+            border-radius: 24px; padding: 36px 32px;
             backdrop-filter: blur(20px); -webkit-backdrop-filter: blur(20px);
             position: relative; overflow: hidden;
         }
@@ -319,14 +317,96 @@
             content: ''; position: absolute; top: 0; left: 0; right: 0; height: 2px;
             background: linear-gradient(90deg, transparent, #6c5ce7, #a855f7, transparent);
         }
-        .pricing-price {
-            font-size: clamp(28px, 4vw, 40px); font-weight: 900; line-height: 1.2; margin-bottom: 20px;
+        .pricing-card-rival {
+            background: var(--card-bg);
+            border: 1px solid var(--border-color);
+            border-radius: 24px; padding: 36px 32px;
+            position: relative; overflow: hidden; opacity: 0.85;
+        }
+        .pricing-card-rival::before {
+            content: ''; position: absolute; top: 0; left: 0; right: 0; height: 2px;
+            background: linear-gradient(90deg, transparent, rgba(255,255,255,0.15), transparent);
+        }
+        .pricing-card-label {
+            display: inline-flex; align-items: center; gap: 6px;
+            padding: 5px 14px; border-radius: 100px;
+            font-size: 12px; font-weight: 600; margin-bottom: 20px;
+        }
+        .pricing-card-label.ours { background: rgba(108,92,231,0.15); color: #a78bfa; }
+        .pricing-card-label.rival { background: rgba(255,255,255,0.08); color: var(--text-muted); }
+        .pricing-result-price {
+            font-size: clamp(32px, 4vw, 48px); font-weight: 900; line-height: 1.1; margin-bottom: 6px;
+            transition: color 0.4s;
+        }
+        .pricing-result-price.ours {
             background: linear-gradient(135deg, #6c5ce7, #a855f7, #ec4899);
             -webkit-background-clip: text; -webkit-text-fill-color: transparent; background-clip: text;
         }
-        .pricing-desc {
-            font-size: 16px; color: var(--text-secondary); line-height: 1.7;
-            max-width: 560px; margin: 0 auto 36px; transition: color 0.4s;
+        .pricing-result-price.rival { color: var(--text-muted); }
+        .pricing-result-sub {
+            font-size: 14px; color: var(--text-muted); margin-bottom: 20px; transition: color 0.4s;
+        }
+        .pricing-result-per-lead {
+            font-size: 15px; font-weight: 600; color: var(--text-secondary); margin-bottom: 4px;
+        }
+        .pricing-result-total-leads {
+            font-size: 13px; color: var(--text-muted);
+        }
+        .pricing-savings {
+            margin-top: 16px; padding: 10px 16px; border-radius: 12px;
+            background: var(--success-bg); color: var(--success);
+            font-size: 14px; font-weight: 600; display: inline-block;
+        }
+        .pricing-rival-extra {
+            margin-top: 16px; padding: 10px 16px; border-radius: 12px;
+            background: rgba(231,76,60,0.1); color: #e74c3c;
+            font-size: 14px; font-weight: 600; display: inline-block;
+        }
+        .pricing-controls {
+            margin-bottom: 40px; text-align: left;
+            background: var(--card-bg); border: 1px solid var(--border-color);
+            border-radius: 20px; padding: 32px;
+        }
+        .pricing-control-row {
+            margin-bottom: 24px;
+        }
+        .pricing-control-row:last-child { margin-bottom: 0; }
+        .pricing-control-label {
+            display: flex; justify-content: space-between; align-items: center;
+            margin-bottom: 10px;
+        }
+        .pricing-control-label span {
+            font-size: 14px; font-weight: 500; color: var(--text-secondary); transition: color 0.4s;
+        }
+        .pricing-control-label strong {
+            font-size: 15px; font-weight: 700; color: var(--text); transition: color 0.4s;
+        }
+        .pricing-select {
+            width: 100%; padding: 12px 16px; border-radius: 12px;
+            border: 1px solid var(--border-color); background: var(--input-bg);
+            color: var(--text); font-family: inherit; font-size: 14px; font-weight: 500;
+            cursor: pointer; appearance: none;
+            background-image: url("data:image/svg+xml,%3Csvg width='12' height='8' viewBox='0 0 12 8' fill='none' xmlns='http://www.w3.org/2000/svg'%3E%3Cpath d='M1 1.5L6 6.5L11 1.5' stroke='%23a78bfa' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'/%3E%3C/svg%3E");
+            background-repeat: no-repeat; background-position: right 16px center;
+            transition: border-color 0.3s, background 0.3s, color 0.3s;
+        }
+        .pricing-select:focus { outline: none; border-color: rgba(108,92,231,0.5); }
+        .pricing-range {
+            -webkit-appearance: none; appearance: none; width: 100%; height: 6px;
+            border-radius: 3px; background: var(--border-color);
+            outline: none; cursor: pointer;
+        }
+        .pricing-range::-webkit-slider-thumb {
+            -webkit-appearance: none; appearance: none; width: 22px; height: 22px;
+            border-radius: 50%; background: linear-gradient(135deg, #6c5ce7, #a855f7);
+            border: 3px solid var(--bg); cursor: pointer;
+            box-shadow: 0 2px 8px rgba(108,92,231,0.4);
+        }
+        .pricing-range::-moz-range-thumb {
+            width: 22px; height: 22px; border-radius: 50%;
+            background: linear-gradient(135deg, #6c5ce7, #a855f7);
+            border: 3px solid var(--bg); cursor: pointer;
+            box-shadow: 0 2px 8px rgba(108,92,231,0.4);
         }
         .pricing-btn {
             display: inline-flex; align-items: center; gap: 8px;
@@ -336,7 +416,7 @@
             font-family: inherit; font-size: 16px; font-weight: 600;
             cursor: pointer; transition: all 0.3s cubic-bezier(0.16,1,0.3,1);
             box-shadow: 0 4px 20px rgba(108,92,231,0.3);
-            text-decoration: none;
+            text-decoration: none; margin-top: 24px;
         }
         .pricing-btn:hover { transform: translateY(-2px); box-shadow: 0 8px 30px rgba(108,92,231,0.45); }
 
@@ -675,7 +755,9 @@
             .step h4 { font-size: 15px; }
             .step p { font-size: 12px; }
             .pricing-section { padding: 60px 24px; }
-            .pricing-card { padding: 40px 28px; }
+            .pricing-calc { grid-template-columns: 1fr 1fr; gap: 16px; }
+            .pricing-card, .pricing-card-rival { padding: 28px 24px; }
+            .pricing-controls { padding: 24px; }
             .faq-section { padding: 60px 24px; }
             .mission-section { padding: 60px 24px; }
             .mission-body p { font-size: 15px; }
@@ -718,8 +800,10 @@
             .step h4 { font-size: 14px; }
             .step p { font-size: 12px; }
             .pricing-section { padding: 48px 20px; }
-            .pricing-card { padding: 32px 20px; border-radius: 20px; }
-            .pricing-desc { font-size: 14px; }
+            .pricing-calc { grid-template-columns: 1fr; }
+            .pricing-card, .pricing-card-rival { padding: 28px 20px; border-radius: 20px; }
+            .pricing-controls { padding: 20px; border-radius: 16px; }
+            .pricing-result-price { font-size: 28px; }
             .pricing-btn { padding: 12px 28px; font-size: 15px; }
             .faq-section { padding: 48px 20px; }
             .faq-question { padding: 16px 20px; }
@@ -985,12 +1069,71 @@
 
         <!-- Pricing -->
         <div class="pricing-section" id="pricing">
-            <div class="pricing-title">Тарифы</div>
-            <div class="pricing-subtitle">Прозрачное ценообразование</div>
-            <div class="pricing-card">
-                <div class="pricing-price">От 500 ₽ за клиента</div>
-                <div class="pricing-desc">Стоимость варьируется в зависимости от ниши и сложности аудитории. Точная цена формируется индивидуально и корректируется после первых двух недель работы — когда вы видите реальные результаты.</div>
-                <a class="pricing-btn" href="#" onclick="openAccessModal(); return false;">Обсудить условия</a>
+            <div class="pricing-title">Рассчитайте стоимость</div>
+            <div class="pricing-subtitle">Выберите нишу и параметры — увидите цену мгновенно</div>
+
+            <div class="pricing-controls">
+                <div class="pricing-control-row">
+                    <div class="pricing-control-label">
+                        <span>Ваша ниша</span>
+                    </div>
+                    <select class="pricing-select" id="calcNiche" onchange="calcPrice()">
+                        <option value="3000">Маркетинговые агентства</option>
+                        <option value="4000">Рекрутинговые агентства</option>
+                        <option value="7000">IT-разработка / автоматизация</option>
+                        <option value="4000">Аутсорсинг продаж</option>
+                        <option value="5000">Юридические услуги (B2B)</option>
+                        <option value="2500">Бухгалтерские услуги</option>
+                        <option value="2000">Образование / онлайн-школы</option>
+                        <option value="6000">Производственные компании</option>
+                        <option value="3000">Логистика / грузоперевозки</option>
+                        <option value="5000">Франшизы</option>
+                        <option value="8000">Коммерческая недвижимость</option>
+                        <option value="5000">Консалтинг</option>
+                        <option value="6000">Внедрение CRM</option>
+                        <option value="3000">SaaS сервисы</option>
+                        <option value="3000">Кадровые агентства</option>
+                        <option value="4000">Финансовый аутсорсинг</option>
+                        <option value="7000">Строительные компании</option>
+                        <option value="8000">Поставщики оборудования</option>
+                        <option value="5000">Оптовые компании</option>
+                        <option value="3000">Event-агентства</option>
+                    </select>
+                </div>
+                <div class="pricing-control-row">
+                    <div class="pricing-control-label">
+                        <span>Лидов в день</span>
+                        <strong id="calcLeadsVal">3</strong>
+                    </div>
+                    <input type="range" class="pricing-range" id="calcLeads" min="1" max="10" value="3" oninput="calcPrice()">
+                </div>
+                <div class="pricing-control-row">
+                    <div class="pricing-control-label">
+                        <span>Дней работы</span>
+                        <strong id="calcDaysVal">22</strong>
+                    </div>
+                    <input type="range" class="pricing-range" id="calcDays" min="1" max="30" value="22" oninput="calcPrice()">
+                </div>
+            </div>
+
+            <div class="pricing-calc">
+                <div class="pricing-card">
+                    <div class="pricing-card-label ours">EasySale</div>
+                    <div class="pricing-result-price ours" id="calcOurPrice">198 000 ₽</div>
+                    <div class="pricing-result-sub">за выбранный период</div>
+                    <div class="pricing-result-per-lead" id="calcOurPerLead">3 000 ₽ за лид</div>
+                    <div class="pricing-result-total-leads" id="calcOurTotal">66 лидов за период</div>
+                    <div class="pricing-savings" id="calcSavings">Экономия: 99 000 ₽</div>
+                    <a class="pricing-btn" href="#" onclick="openAccessModal(); return false;">Начать</a>
+                </div>
+                <div class="pricing-card-rival">
+                    <div class="pricing-card-label rival">Аутсорсинг отдела продаж</div>
+                    <div class="pricing-result-price rival" id="calcRivalPrice">297 000 ₽</div>
+                    <div class="pricing-result-sub">за тот же период</div>
+                    <div class="pricing-result-per-lead" id="calcRivalPerLead" style="color:var(--text-muted);">4 500 ₽ за лид</div>
+                    <div class="pricing-result-total-leads" id="calcRivalTotal" style="color:var(--text-muted);">66 лидов за период</div>
+                    <div class="pricing-rival-extra" id="calcOverpay">Переплата: +99 000 ₽</div>
+                </div>
             </div>
         </div>
 
@@ -1266,6 +1409,32 @@
         var accessForm = document.getElementById('accessForm');
         var accessSuccess = document.getElementById('accessSuccess');
         var accessSubmitBtn = document.getElementById('accessSubmitBtn');
+
+        function calcPrice() {
+            var niche = document.getElementById('calcNiche');
+            var leads = document.getElementById('calcLeads');
+            var days = document.getElementById('calcDays');
+            var pricePerLead = parseInt(niche.value);
+            var leadsPerDay = parseInt(leads.value);
+            var numDays = parseInt(days.value);
+            var totalLeads = leadsPerDay * numDays;
+            var ourTotal = pricePerLead * totalLeads;
+            var rivalPerLead = pricePerLead + 1500;
+            var rivalTotal = rivalPerLead * totalLeads;
+            var savings = rivalTotal - ourTotal;
+
+            document.getElementById('calcLeadsVal').textContent = leadsPerDay;
+            document.getElementById('calcDaysVal').textContent = numDays;
+            document.getElementById('calcOurPrice').textContent = ourTotal.toLocaleString('ru-RU') + ' ₽';
+            document.getElementById('calcOurPerLead').textContent = pricePerLead.toLocaleString('ru-RU') + ' ₽ за лид';
+            document.getElementById('calcOurTotal').textContent = totalLeads + ' лидов за период';
+            document.getElementById('calcRivalPrice').textContent = rivalTotal.toLocaleString('ru-RU') + ' ₽';
+            document.getElementById('calcRivalPerLead').textContent = rivalPerLead.toLocaleString('ru-RU') + ' ₽ за лид';
+            document.getElementById('calcRivalTotal').textContent = totalLeads + ' лидов за период';
+            document.getElementById('calcSavings').textContent = 'Экономия: ' + savings.toLocaleString('ru-RU') + ' ₽';
+            document.getElementById('calcOverpay').textContent = 'Переплата: +' + savings.toLocaleString('ru-RU') + ' ₽';
+        }
+        calcPrice();
 
         function toggleFaq(el) {
             var item = el.parentElement;
