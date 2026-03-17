@@ -978,6 +978,7 @@
         <!-- Hero -->
         <div class="hero">
             <h1 data-i18n-html="heroTitle">Новые клиенты легче,<br>чем ты думаешь</h1>
+            <p style="font-size:clamp(16px,2vw,20px);color:var(--text-muted);max-width:620px;margin:0 auto 36px;line-height:1.7;transition:color 0.4s;" data-i18n="heroSub">AI-платформа, которая сама находит клиентов, звонит им и передаёт вам только заинтересованных. Без менеджеров, без холодных продаж.</p>
             <button class="hero-cta" onclick="openAccessModal()">
                 <span data-i18n="requestAccess">Запросить доступ</span>
                 <svg viewBox="0 0 24 24"><path d="M12 4l-1.41 1.41L16.17 11H4v2h12.17l-5.58 5.59L12 20l8-8-8-8z"/></svg>
@@ -1046,6 +1047,13 @@
                     <h4 data-i18n="s4t">Получайте заявки</h4>
                     <p data-i18n="s4d">Получайте входящие заявки и растите свой бизнес</p>
                 </div>
+            </div>
+
+            <div style="text-align:center;margin-top:48px;">
+                <button class="hero-cta" onclick="openAccessModal()" style="font-size:15px;padding:14px 32px;">
+                    <span data-i18n="ctaStart">Попробовать бесплатно</span>
+                    <svg viewBox="0 0 24 24"><path d="M12 4l-1.41 1.41L16.17 11H4v2h12.17l-5.58 5.59L12 20l8-8-8-8z"/></svg>
+                </button>
             </div>
         </div>
 
@@ -1254,6 +1262,21 @@
             </div>
         </div>
 
+        <!-- Final CTA -->
+        <div class="cta-banner">
+            <h2 data-i18n-html="ctaBannerTitle">Готовы получать <span>новых клиентов</span>?</h2>
+            <p data-i18n="ctaBannerDesc">Зарегистрируйтесь за 2 минуты и запустите AI-отдел продаж. Первые лиды — уже завтра.</p>
+            <div style="display:flex;gap:12px;justify-content:center;flex-wrap:wrap;">
+                <button class="hero-cta" onclick="openAccessModal()" style="font-size:15px;padding:14px 32px;">
+                    <span data-i18n="ctaGetAccess">Получить доступ</span>
+                    <svg viewBox="0 0 24 24"><path d="M12 4l-1.41 1.41L16.17 11H4v2h12.17l-5.58 5.59L12 20l8-8-8-8z"/></svg>
+                </button>
+                <a href="https://app.easysale.tech" class="hero-cta" style="font-size:15px;padding:14px 32px;background:var(--card-bg);color:var(--text);border:1px solid var(--border-color);box-shadow:none;text-decoration:none;">
+                    <span data-i18n="ctaLogin">Уже есть аккаунт? Войти</span>
+                </a>
+            </div>
+        </div>
+
         <div class="land-footer">EasySale &copy; 2025-2026 &nbsp;·&nbsp; <a href="/privacy" style="color: inherit; text-decoration: none; transition: opacity 0.2s;" onmouseover="this.style.opacity='0.7'" onmouseout="this.style.opacity='1'">Политика конфиденциальности</a></div>
     </div>
 
@@ -1318,6 +1341,7 @@
             // Hero
             heroBadge: { ru:'Платформа нового поколения', en:'Next-Generation Platform' },
             heroTitle: { ru:'Новые клиенты легче,<br>чем ты думаешь', en:'First sales are easier<br>than you think' },
+            heroSub: { ru:'AI-платформа, которая сама находит клиентов, звонит им и передаёт вам только заинтересованных. Без менеджеров, без холодных продаж.', en:'AI platform that finds clients, calls them, and delivers only interested leads. No managers, no cold selling.' },
             requestAccess: { ru:'Запросить доступ', en:'Request Access' },
             // Features
             featLabel: { ru:'Возможности', en:'Capabilities' },
@@ -1342,6 +1366,11 @@
             s3d: { ru:'Укажите когда звоним, что предлагаем и как квалифицируем', en:'Set when to call, what to offer, and how to qualify' },
             s4t: { ru:'Получайте заявки', en:'Get Applications' },
             s4d: { ru:'Получайте входящие заявки и растите свой бизнес', en:'Receive incoming leads and grow your business' },
+            ctaStart: { ru:'Попробовать бесплатно', en:'Try for Free' },
+            ctaBannerTitle: { ru:'Готовы получать <span>новых клиентов</span>?', en:'Ready to get <span>new clients</span>?' },
+            ctaBannerDesc: { ru:'Зарегистрируйтесь за 2 минуты и запустите AI-отдел продаж. Первые лиды — уже завтра.', en:'Register in 2 minutes and launch your AI sales department. First leads — tomorrow.' },
+            ctaGetAccess: { ru:'Получить доступ', en:'Get Access' },
+            ctaLogin: { ru:'Уже есть аккаунт? Войти', en:'Already have an account? Sign In' },
             // Access modal
             accessTitle: { ru:'Запросить доступ', en:'Request Access' },
             accessSub: { ru:'Заполните данные и мы свяжемся с вами', en:'Fill in the details and we\'ll contact you' },
