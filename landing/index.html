@@ -340,6 +340,65 @@
         }
         .pricing-btn:hover { transform: translateY(-2px); box-shadow: 0 8px 30px rgba(108,92,231,0.45); }
 
+        /* FAQ section */
+        .faq-section {
+            padding: 100px 40px;
+            max-width: 900px;
+            margin: 0 auto;
+        }
+        .faq-title {
+            font-size: clamp(24px, 3.5vw, 36px); font-weight: 800;
+            color: var(--text); margin-bottom: 12px; text-align: center; transition: color 0.4s;
+        }
+        .faq-subtitle {
+            font-size: 16px; color: var(--text-muted); margin-bottom: 48px; text-align: center; transition: color 0.4s;
+        }
+        .faq-list {
+            display: flex; flex-direction: column; gap: 12px;
+        }
+        .faq-item {
+            background: var(--card-bg);
+            border: 1px solid var(--border-color);
+            border-radius: 16px;
+            overflow: hidden;
+            transition: border-color 0.3s, background 0.3s;
+        }
+        .faq-item:hover { border-color: rgba(108,92,231,0.3); }
+        .faq-item.open { border-color: rgba(108,92,231,0.25); background: linear-gradient(135deg, rgba(108,92,231,0.06), rgba(168,85,247,0.03)); }
+        .faq-question {
+            display: flex; align-items: center; justify-content: space-between; gap: 16px;
+            padding: 20px 24px; cursor: pointer; user-select: none;
+        }
+        .faq-question span {
+            font-size: 15px; font-weight: 600; color: var(--text); line-height: 1.5; transition: color 0.4s;
+        }
+        .faq-chevron {
+            flex-shrink: 0; width: 20px; height: 20px; color: var(--text-muted);
+            transition: transform 0.3s cubic-bezier(0.16,1,0.3,1), color 0.3s;
+        }
+        .faq-item.open .faq-chevron { transform: rotate(180deg); color: #a78bfa; }
+        .faq-answer {
+            max-height: 0; overflow: hidden;
+            transition: max-height 0.4s cubic-bezier(0.16,1,0.3,1), padding 0.3s;
+        }
+        .faq-item.open .faq-answer { max-height: 600px; }
+        .faq-answer-inner {
+            padding: 0 24px 20px;
+            font-size: 14px; line-height: 1.8; color: var(--text-secondary); transition: color 0.4s;
+        }
+        .faq-answer-inner ul {
+            list-style: none; padding: 0; margin: 8px 0 0;
+        }
+        .faq-answer-inner ul li {
+            padding: 3px 0; padding-left: 20px; position: relative;
+        }
+        .faq-answer-inner ul li::before {
+            content: '—'; position: absolute; left: 0; color: #a78bfa;
+        }
+        .faq-answer-inner strong {
+            color: var(--text); font-weight: 600;
+        }
+
         /* Mission section */
         .mission-section {
             padding: 100px 40px;
@@ -617,6 +676,7 @@
             .step p { font-size: 12px; }
             .pricing-section { padding: 60px 24px; }
             .pricing-card { padding: 40px 28px; }
+            .faq-section { padding: 60px 24px; }
             .mission-section { padding: 60px 24px; }
             .mission-body p { font-size: 15px; }
             .mission-visual-item { width: 64px; height: 64px; }
@@ -661,6 +721,11 @@
             .pricing-card { padding: 32px 20px; border-radius: 20px; }
             .pricing-desc { font-size: 14px; }
             .pricing-btn { padding: 12px 28px; font-size: 15px; }
+            .faq-section { padding: 48px 20px; }
+            .faq-question { padding: 16px 20px; }
+            .faq-question span { font-size: 14px; }
+            .faq-answer-inner { padding: 0 20px 16px; font-size: 13px; }
+            .faq-item { border-radius: 14px; }
             .mission-section { padding: 48px 20px; }
             .mission-body p { font-size: 14px; line-height: 1.75; }
             .mission-visuals { gap: 20px; }
@@ -811,6 +876,7 @@
                 <nav class="land-nav">
                     <a href="#mission" data-i18n="mission">Миссия</a>
                     <a href="#pricing" data-i18n="pricing">Тарифы</a>
+                    <a href="#faq" data-i18n="faq_nav">FAQ</a>
                 </nav>
                 <button class="lang-btn" onclick="switchLang()" id="landLangBtn">EN</button>
                 <div class="theme-toggle" onclick="toggleTheme()">
@@ -928,6 +994,160 @@
             </div>
         </div>
 
+        <!-- FAQ -->
+        <div class="faq-section" id="faq">
+            <div class="faq-title">Частые вопросы</div>
+            <div class="faq-subtitle">Всё, что нужно знать перед стартом</div>
+            <div class="faq-list">
+                <div class="faq-item">
+                    <div class="faq-question" onclick="toggleFaq(this)">
+                        <span>Как работает EasySale?</span>
+                        <svg class="faq-chevron" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="6 9 12 15 18 9"/></svg>
+                    </div>
+                    <div class="faq-answer"><div class="faq-answer-inner">
+                        EasySale автоматически находит компании из вашей целевой аудитории, делает первый звонок, выявляет интерес и передаёт вам уже тёплого клиента.<br><br>
+                        Вам не нужно нанимать менеджеров для холодного поиска — система берёт это на себя.
+                    </div></div>
+                </div>
+                <div class="faq-item">
+                    <div class="faq-question" onclick="toggleFaq(this)">
+                        <span>Сколько времени занимает запуск?</span>
+                        <svg class="faq-chevron" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="6 9 12 15 18 9"/></svg>
+                    </div>
+                    <div class="faq-answer"><div class="faq-answer-inner">
+                        Регистрация занимает около 2 минут. Настройка — до 7 минут.<br><br>
+                        После этого система начинает поиск и обзвон клиентов. Первые лиды можно получить уже в течение <strong>24–48 часов</strong>.
+                    </div></div>
+                </div>
+                <div class="faq-item">
+                    <div class="faq-question" onclick="toggleFaq(this)">
+                        <span>Что именно делает AI?</span>
+                        <svg class="faq-chevron" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="6 9 12 15 18 9"/></svg>
+                    </div>
+                    <div class="faq-answer"><div class="faq-answer-inner">
+                        AI:
+                        <ul>
+                            <li>находит потенциальных клиентов</li>
+                            <li>звонит им по вашему сценарию</li>
+                            <li>обрабатывает возражения</li>
+                            <li>квалифицирует интерес</li>
+                            <li>передаёт только заинтересованных клиентов</li>
+                        </ul>
+                    </div></div>
+                </div>
+                <div class="faq-item">
+                    <div class="faq-question" onclick="toggleFaq(this)">
+                        <span>Это живые звонки или робот?</span>
+                        <svg class="faq-chevron" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="6 9 12 15 18 9"/></svg>
+                    </div>
+                    <div class="faq-answer"><div class="faq-answer-inner">
+                        Это AI-оператор, который ведёт диалог максимально приближенно к живому общению.<br><br>
+                        Клиент не чувствует разницы в формате общения, при этом вы получаете масштабируемость и скорость.
+                    </div></div>
+                </div>
+                <div class="faq-item">
+                    <div class="faq-question" onclick="toggleFaq(this)">
+                        <span>Как формируется база для звонков?</span>
+                        <svg class="faq-chevron" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="6 9 12 15 18 9"/></svg>
+                    </div>
+                    <div class="faq-answer"><div class="faq-answer-inner">
+                        Мы автоматически собираем базу компаний по заданным параметрам:
+                        <ul>
+                            <li>ниша</li>
+                            <li>регион</li>
+                            <li>тип бизнеса</li>
+                            <li>дополнительные фильтры</li>
+                        </ul>
+                    </div></div>
+                </div>
+                <div class="faq-item">
+                    <div class="faq-question" onclick="toggleFaq(this)">
+                        <span>Сколько стоит один лид?</span>
+                        <svg class="faq-chevron" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="6 9 12 15 18 9"/></svg>
+                    </div>
+                    <div class="faq-answer"><div class="faq-answer-inner">
+                        Стоимость зависит от ниши и объёма, но в среднем: <strong>от 800 ₽ за квалифицированного клиента</strong>.<br><br>
+                        Вы платите только за результат — за переданных лидов.
+                    </div></div>
+                </div>
+                <div class="faq-item">
+                    <div class="faq-question" onclick="toggleFaq(this)">
+                        <span>Есть ли бесплатный тест?</span>
+                        <svg class="faq-chevron" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="6 9 12 15 18 9"/></svg>
+                    </div>
+                    <div class="faq-answer"><div class="faq-answer-inner">
+                        Да, сейчас вы можете протестировать EasySale и получить до <strong>5 лидов бесплатно</strong>, если поделитесь реферальной ссылкой и по ней сделают оплату.<br><br>
+                        Это позволяет оценить качество перед оплатой.
+                    </div></div>
+                </div>
+                <div class="faq-item">
+                    <div class="faq-question" onclick="toggleFaq(this)">
+                        <span>В какие ниши подходит сервис?</span>
+                        <svg class="faq-chevron" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="6 9 12 15 18 9"/></svg>
+                    </div>
+                    <div class="faq-answer"><div class="faq-answer-inner">
+                        EasySale лучше всего работает для:
+                        <ul>
+                            <li>B2B компаний</li>
+                            <li>маркетинговых агентств</li>
+                            <li>IT и разработки</li>
+                            <li>рекрутинга</li>
+                            <li>услуг с чеком от 30 000 ₽</li>
+                        </ul>
+                    </div></div>
+                </div>
+                <div class="faq-item">
+                    <div class="faq-question" onclick="toggleFaq(this)">
+                        <span>Нужно ли подключать CRM?</span>
+                        <svg class="faq-chevron" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="6 9 12 15 18 9"/></svg>
+                    </div>
+                    <div class="faq-answer"><div class="faq-answer-inner">
+                        Нет, на старте это не обязательно.<br><br>
+                        Вы можете получать лиды прямо в личном кабинете или удобным для вас способом. При необходимости можно подключить CRM.
+                    </div></div>
+                </div>
+                <div class="faq-item">
+                    <div class="faq-question" onclick="toggleFaq(this)">
+                        <span>Насколько это безопасно для бренда?</span>
+                        <svg class="faq-chevron" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="6 9 12 15 18 9"/></svg>
+                    </div>
+                    <div class="faq-answer"><div class="faq-answer-inner">
+                        Сценарий звонка настраивается под ваш бизнес. Вы определяете:
+                        <ul>
+                            <li>что говорит AI</li>
+                            <li>как он отвечает</li>
+                            <li>какие вопросы задаёт</li>
+                        </ul>
+                        Вы получаете только результат.
+                    </div></div>
+                </div>
+                <div class="faq-item">
+                    <div class="faq-question" onclick="toggleFaq(this)">
+                        <span>Можно ли масштабировать?</span>
+                        <svg class="faq-chevron" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="6 9 12 15 18 9"/></svg>
+                    </div>
+                    <div class="faq-answer"><div class="faq-answer-inner">
+                        Да. Система может генерировать от десятков до сотни тёплых клиентов в день.
+                    </div></div>
+                </div>
+                <div class="faq-item">
+                    <div class="faq-question" onclick="toggleFaq(this)">
+                        <span>Чем вы лучше колл-центра?</span>
+                        <svg class="faq-chevron" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="6 9 12 15 18 9"/></svg>
+                    </div>
+                    <div class="faq-answer"><div class="faq-answer-inner">
+                        <ul>
+                            <li>быстрее запуск</li>
+                            <li>ниже стоимость</li>
+                            <li>стабильное качество</li>
+                            <li>работа 24/7</li>
+                            <li>оплата за результат, а не за часы</li>
+                        </ul>
+                    </div></div>
+                </div>
+            </div>
+        </div>
+
         <div class="land-footer">EasySale &copy; 2025-2026 &nbsp;·&nbsp; <a href="/privacy" style="color: inherit; text-decoration: none; transition: opacity 0.2s;" onmouseover="this.style.opacity='0.7'" onmouseout="this.style.opacity='1'">Политика конфиденциальности</a></div>
     </div>
 
@@ -979,6 +1199,7 @@
             // Landing nav
             mission: { ru:'Миссия', en:'Mission' },
             pricing: { ru:'Тарифы', en:'Pricing' },
+            faq_nav: { ru:'FAQ', en:'FAQ' },
             missionLabel: { ru:'Миссия', en:'Mission' },
             missionTitle: { ru:'Миссия EasySale', en:'EasySale Mission' },
             missionP1: { ru:'Миссия EasySale — помогать компаниям расти быстрее рынка, превращая привлечение клиентов в системный и предсказуемый процесс. Мы устраняем зависимость первичных продаж от человеческого фактора и переводим холодный поиск клиентов в технологическую систему.', en:'EasySale\'s mission is to help companies grow faster than the market by turning customer acquisition into a systematic and predictable process. We eliminate the dependency of initial sales on the human factor and transform cold prospecting into a technology system.' },
@@ -1084,6 +1305,13 @@
         var accessForm = document.getElementById('accessForm');
         var accessSuccess = document.getElementById('accessSuccess');
         var accessSubmitBtn = document.getElementById('accessSubmitBtn');
+
+        function toggleFaq(el) {
+            var item = el.parentElement;
+            var wasOpen = item.classList.contains('open');
+            document.querySelectorAll('.faq-item.open').forEach(function(i) { i.classList.remove('open'); });
+            if (!wasOpen) item.classList.add('open');
+        }
 
         function openAccessModal() {
             accessModal.classList.add('active');
