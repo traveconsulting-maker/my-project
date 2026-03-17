@@ -1078,8 +1078,7 @@
                         <span>Ваша ниша</span>
                     </div>
                     <select class="pricing-select" id="calcNiche" onchange="calcPrice()">
-                        <option value="" disabled selected>Выберите нишу</option>
-                        <option value="3000">Маркетинговые агентства</option>
+                        <option value="3000" selected>Маркетинговые агентства</option>
                         <option value="4000">Рекрутинговые агентства</option>
                         <option value="7000">IT-разработка / автоматизация</option>
                         <option value="4000">Аутсорсинг продаж</option>
@@ -1104,20 +1103,20 @@
                 <div class="pricing-control-row">
                     <div class="pricing-control-label">
                         <span>Лидов в день</span>
-                        <strong id="calcLeadsVal">3</strong>
+                        <strong id="calcLeadsVal">2</strong>
                     </div>
-                    <input type="range" class="pricing-range" id="calcLeads" min="1" max="10" value="3" oninput="calcPrice()">
+                    <input type="range" class="pricing-range" id="calcLeads" min="1" max="10" value="2" oninput="calcPrice()">
                 </div>
                 <div class="pricing-control-row">
                     <div class="pricing-control-label">
                         <span>Дней работы</span>
-                        <strong id="calcDaysVal">22</strong>
+                        <strong id="calcDaysVal">6</strong>
                     </div>
-                    <input type="range" class="pricing-range" id="calcDays" min="1" max="30" value="22" oninput="calcPrice()">
+                    <input type="range" class="pricing-range" id="calcDays" min="1" max="30" value="6" oninput="calcPrice()">
                 </div>
             </div>
 
-            <div class="pricing-calc" style="display:none;">
+            <div class="pricing-calc">
                 <div class="pricing-card">
                     <div class="pricing-card-label ours">EasySale</div>
                     <div class="pricing-result-price ours" id="calcOurPrice"></div>
@@ -1135,7 +1134,7 @@
                 </div>
             </div>
 
-            <div id="calcDisclaimer" style="margin-top:24px;text-align:center;font-size:13px;color:var(--text-muted);line-height:1.7;max-width:700px;margin-left:auto;margin-right:auto;display:none;">
+            <div id="calcDisclaimer" style="margin-top:24px;text-align:center;font-size:13px;color:var(--text-muted);line-height:1.7;max-width:700px;margin-left:auto;margin-right:auto;">
                 * Цены ориентировочные и могут меняться в зависимости от ваших задач. Стоимость за лид может быть значительно ниже при хорошем оффере и предложении.
             </div>
         </div>
@@ -1417,20 +1416,9 @@
             var niche = document.getElementById('calcNiche');
             var leads = document.getElementById('calcLeads');
             var days = document.getElementById('calcDays');
-            var calcBlock = document.querySelector('.pricing-calc');
-            var disclaimer = document.getElementById('calcDisclaimer');
 
             document.getElementById('calcLeadsVal').textContent = leads.value;
             document.getElementById('calcDaysVal').textContent = days.value;
-
-            if (!niche.value) {
-                calcBlock.style.display = 'none';
-                disclaimer.style.display = 'none';
-                return;
-            }
-
-            calcBlock.style.display = 'grid';
-            disclaimer.style.display = 'block';
 
             var pricePerLead = parseInt(niche.value);
             var leadsPerDay = parseInt(leads.value);
