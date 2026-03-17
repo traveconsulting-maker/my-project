@@ -6230,6 +6230,13 @@
             var allDone = onbStepsDone[0] && onbStepsDone[1] && onbStepsDone[2];
             var wrap = document.getElementById('onbDoneWrap');
             if (wrap) wrap.style.display = allDone ? 'block' : 'none';
+            // Auto-complete onboarding guide if all steps done on server
+            if (allDone && localStorage.getItem('onboarding_complete') !== 'true') {
+                localStorage.setItem('onboarding_complete', 'true');
+                document.getElementById('onbState1').style.display = 'none';
+                document.getElementById('onbState2').style.display = 'block';
+                onbLoadMetrics();
+            }
         }
 
         function onbLoadMetrics() {
@@ -9332,25 +9339,46 @@
             var login = localStorage.getItem('current_login');
             if (token && login) {
                 applyUserSession(login);
-                var onboarded = localStorage.getItem('onboarded_' + login);
-                if (onboarded) {
-                    landingPage.classList.add('hidden');
-                    setTimeout(function() {
+                landingPage.classList.add('hidden');
+                // Always check server for onboarded state (fixes incognito/cleared localStorage)
+                fetch(ES_API + '/api/clients/me', { headers: esApiHeaders() })
+                .then(function(r) { return r.ok ? r.json() : null; })
+                .then(function(me) {
+                    var onboarded = (me && me.onboarded) || !!localStorage.getItem('onboarded_' + login);
+                    if (me && me.onboarded) localStorage.setItem('onboarded_' + login, '1');
+                    if (onboarded) {
                         dashboard.classList.add('show');
                         document.body.style.overflow = '';
-                    }, 100);
-                    // Load data from backend
-                    setTimeout(function() {
-                        taLoadFromAPI();
-                        dlgLoadFromAPI();
-                        clLoadFromAPI();
-                        qlLoadFromAPI();
-                        onbCheckSteps();
-                    }, 500);
-                } else if (isAppDomain) {
-                    landingPage.classList.add('hidden');
-                    showAfterLogin();
-                }
+                        setTimeout(function() {
+                            taLoadFromAPI();
+                            dlgLoadFromAPI();
+                            clLoadFromAPI();
+                            qlLoadFromAPI();
+                            onbCheckSteps();
+                        }, 300);
+                    } else {
+                        onboarding.classList.add('show');
+                        document.body.style.overflow = '';
+                    }
+                })
+                .catch(function() {
+                    // Network error — fallback to localStorage
+                    var onboarded = localStorage.getItem('onboarded_' + login);
+                    if (onboarded) {
+                        dashboard.classList.add('show');
+                        document.body.style.overflow = '';
+                        setTimeout(function() {
+                            taLoadFromAPI();
+                            dlgLoadFromAPI();
+                            clLoadFromAPI();
+                            qlLoadFromAPI();
+                            onbCheckSteps();
+                        }, 300);
+                    } else {
+                        onboarding.classList.add('show');
+                        document.body.style.overflow = '';
+                    }
+                });
             } else if (isAppDomain) {
                 // On app.easysale.tech without token — skip landing, show login
                 landingPage.classList.add('hidden');
