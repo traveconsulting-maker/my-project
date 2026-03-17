@@ -762,7 +762,10 @@
         var el = document.getElementById('client-detail-content');
         if (!el || !crmToken) return;
         fetch(API_BASE + '/api/admin/clients/' + c.id + '/audiences', { headers: apiHeaders() })
-        .then(function(r) { return r.json(); })
+        .then(function(r) {
+            if (!r.ok) throw new Error('HTTP ' + r.status);
+            return r.json();
+        })
         .then(function(data) {
             if (!Array.isArray(data) || data.length === 0) {
                 el.innerHTML = '<div class="empty-state"><p>Клиент не создал целевых аудиторий</p></div>';
