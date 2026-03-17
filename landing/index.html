@@ -1078,6 +1078,7 @@
                         <span>Ваша ниша</span>
                     </div>
                     <select class="pricing-select" id="calcNiche" onchange="calcPrice()">
+                        <option value="" disabled selected>Выберите нишу</option>
                         <option value="3000">Маркетинговые агентства</option>
                         <option value="4000">Рекрутинговые агентства</option>
                         <option value="7000">IT-разработка / автоматизация</option>
@@ -1116,24 +1117,26 @@
                 </div>
             </div>
 
-            <div class="pricing-calc">
+            <div class="pricing-calc" style="display:none;">
                 <div class="pricing-card">
                     <div class="pricing-card-label ours">EasySale</div>
-                    <div class="pricing-result-price ours" id="calcOurPrice">198 000 ₽</div>
+                    <div class="pricing-result-price ours" id="calcOurPrice"></div>
                     <div class="pricing-result-sub">за выбранный период</div>
-                    <div class="pricing-result-per-lead" id="calcOurPerLead">3 000 ₽ за лид</div>
-                    <div class="pricing-result-total-leads" id="calcOurTotal">66 лидов за период</div>
-                    <div class="pricing-savings" id="calcSavings">Экономия: 99 000 ₽</div>
-                    <a class="pricing-btn" href="#" onclick="openAccessModal(); return false;">Начать</a>
+                    <div class="pricing-result-per-lead" id="calcOurPerLead"></div>
+                    <div class="pricing-result-total-leads" id="calcOurTotal"></div>
                 </div>
                 <div class="pricing-card-rival">
                     <div class="pricing-card-label rival">Аутсорсинг отдела продаж</div>
-                    <div class="pricing-result-price rival" id="calcRivalPrice">297 000 ₽</div>
+                    <div class="pricing-result-price rival" id="calcRivalPrice"></div>
                     <div class="pricing-result-sub">за тот же период</div>
-                    <div class="pricing-result-per-lead" id="calcRivalPerLead" style="color:var(--text-muted);">4 500 ₽ за лид</div>
-                    <div class="pricing-result-total-leads" id="calcRivalTotal" style="color:var(--text-muted);">66 лидов за период</div>
-                    <div class="pricing-rival-extra" id="calcOverpay">Переплата: +99 000 ₽</div>
+                    <div class="pricing-result-per-lead" id="calcRivalPerLead" style="color:var(--text-muted);"></div>
+                    <div class="pricing-result-total-leads" id="calcRivalTotal" style="color:var(--text-muted);"></div>
+                    <div class="pricing-rival-extra" id="calcOverpay"></div>
                 </div>
+            </div>
+
+            <div id="calcDisclaimer" style="margin-top:24px;text-align:center;font-size:13px;color:var(--text-muted);line-height:1.7;max-width:700px;margin-left:auto;margin-right:auto;display:none;">
+                * Цены ориентировочные и могут меняться в зависимости от ваших задач. Стоимость за лид может быть значительно ниже при хорошем оффере и предложении.
             </div>
         </div>
 
@@ -1414,6 +1417,21 @@
             var niche = document.getElementById('calcNiche');
             var leads = document.getElementById('calcLeads');
             var days = document.getElementById('calcDays');
+            var calcBlock = document.querySelector('.pricing-calc');
+            var disclaimer = document.getElementById('calcDisclaimer');
+
+            document.getElementById('calcLeadsVal').textContent = leads.value;
+            document.getElementById('calcDaysVal').textContent = days.value;
+
+            if (!niche.value) {
+                calcBlock.style.display = 'none';
+                disclaimer.style.display = 'none';
+                return;
+            }
+
+            calcBlock.style.display = 'grid';
+            disclaimer.style.display = 'block';
+
             var pricePerLead = parseInt(niche.value);
             var leadsPerDay = parseInt(leads.value);
             var numDays = parseInt(days.value);
@@ -1423,15 +1441,12 @@
             var rivalTotal = rivalPerLead * totalLeads;
             var savings = rivalTotal - ourTotal;
 
-            document.getElementById('calcLeadsVal').textContent = leadsPerDay;
-            document.getElementById('calcDaysVal').textContent = numDays;
             document.getElementById('calcOurPrice').textContent = ourTotal.toLocaleString('ru-RU') + ' ₽';
             document.getElementById('calcOurPerLead').textContent = pricePerLead.toLocaleString('ru-RU') + ' ₽ за лид';
             document.getElementById('calcOurTotal').textContent = totalLeads + ' лидов за период';
             document.getElementById('calcRivalPrice').textContent = rivalTotal.toLocaleString('ru-RU') + ' ₽';
             document.getElementById('calcRivalPerLead').textContent = rivalPerLead.toLocaleString('ru-RU') + ' ₽ за лид';
             document.getElementById('calcRivalTotal').textContent = totalLeads + ' лидов за период';
-            document.getElementById('calcSavings').textContent = 'Экономия: ' + savings.toLocaleString('ru-RU') + ' ₽';
             document.getElementById('calcOverpay').textContent = 'Переплата: +' + savings.toLocaleString('ru-RU') + ' ₽';
         }
         calcPrice();
