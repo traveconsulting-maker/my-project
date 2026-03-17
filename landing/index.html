@@ -420,6 +420,122 @@
         }
         .pricing-btn:hover { transform: translateY(-2px); box-shadow: 0 8px 30px rgba(108,92,231,0.45); }
 
+        /* Cases section */
+        .cases-section {
+            padding: 100px 40px;
+            max-width: 1000px;
+            margin: 0 auto;
+        }
+        .cases-title {
+            font-size: clamp(24px, 3.5vw, 36px); font-weight: 800;
+            color: var(--text); margin-bottom: 12px; text-align: center; transition: color 0.4s;
+        }
+        .cases-subtitle {
+            font-size: 16px; color: var(--text-muted); margin-bottom: 40px; text-align: center; transition: color 0.4s;
+        }
+        .cases-tabs {
+            display: flex; gap: 8px; justify-content: center; margin-bottom: 32px; flex-wrap: wrap;
+        }
+        .cases-tab {
+            padding: 10px 20px; border-radius: 12px; border: 1px solid var(--border-color);
+            background: var(--card-bg); color: var(--text-muted); font-family: inherit;
+            font-size: 13px; font-weight: 600; cursor: pointer;
+            transition: all 0.25s; white-space: nowrap;
+        }
+        .cases-tab:hover { border-color: rgba(108,92,231,0.3); color: var(--text); }
+        .cases-tab.active {
+            background: linear-gradient(135deg, rgba(108,92,231,0.15), rgba(168,85,247,0.1));
+            border-color: rgba(108,92,231,0.4); color: #a78bfa;
+        }
+        .cases-tab-niche {
+            display: block; font-size: 11px; font-weight: 400; color: var(--text-muted);
+            margin-top: 2px; transition: color 0.25s;
+        }
+        .cases-tab.active .cases-tab-niche { color: rgba(167,139,250,0.7); }
+        .case-panel { display: none; }
+        .case-panel.active { display: block; }
+        .case-card {
+            background: var(--card-bg); border: 1px solid var(--border-color);
+            border-radius: 20px; overflow: hidden; transition: border-color 0.3s;
+        }
+        .case-header {
+            padding: 28px 32px; border-bottom: 1px solid var(--border-color);
+        }
+        .case-company {
+            font-size: 20px; font-weight: 700; color: var(--text); margin-bottom: 6px; transition: color 0.4s;
+        }
+        .case-meta {
+            font-size: 13px; color: var(--text-muted); display: flex; gap: 16px; flex-wrap: wrap; transition: color 0.4s;
+        }
+        .case-body {
+            display: grid; grid-template-columns: 1fr 1fr; min-height: 0;
+        }
+        .case-before, .case-after {
+            padding: 28px 32px;
+        }
+        .case-before {
+            border-right: 1px solid var(--border-color);
+        }
+        .case-col-title {
+            font-size: 13px; font-weight: 700; text-transform: uppercase; letter-spacing: 1px;
+            margin-bottom: 16px; display: flex; align-items: center; gap: 8px;
+        }
+        .case-col-title.before { color: #e74c3c; }
+        .case-col-title.after { color: #00b894; }
+        .case-list {
+            list-style: none; padding: 0; margin: 0;
+        }
+        .case-list li {
+            font-size: 14px; color: var(--text-secondary); line-height: 1.7;
+            padding: 4px 0 4px 20px; position: relative; transition: color 0.4s;
+        }
+        .case-list.before li::before {
+            content: ''; position: absolute; left: 0; top: 12px;
+            width: 8px; height: 8px; border-radius: 50%; background: rgba(231,76,60,0.3);
+        }
+        .case-list.after li::before {
+            content: ''; position: absolute; left: 0; top: 12px;
+            width: 8px; height: 8px; border-radius: 50%; background: rgba(0,184,148,0.3);
+        }
+        .case-result {
+            padding: 24px 32px; border-top: 1px solid var(--border-color);
+            background: linear-gradient(135deg, rgba(108,92,231,0.06), rgba(168,85,247,0.03));
+        }
+        .case-result-title {
+            font-size: 13px; font-weight: 700; text-transform: uppercase; letter-spacing: 1px;
+            color: #a78bfa; margin-bottom: 12px;
+        }
+        .case-stats {
+            display: flex; gap: 32px; flex-wrap: wrap;
+        }
+        .case-stat {
+            text-align: center;
+        }
+        .case-stat-value {
+            font-size: 24px; font-weight: 800; line-height: 1.2;
+            background: linear-gradient(135deg, #6c5ce7, #a855f7);
+            -webkit-background-clip: text; -webkit-text-fill-color: transparent; background-clip: text;
+        }
+        .case-stat-label {
+            font-size: 12px; color: var(--text-muted); margin-top: 4px; transition: color 0.4s;
+        }
+        @media (max-width: 768px) {
+            .cases-section { padding: 60px 24px; }
+            .case-body { grid-template-columns: 1fr; }
+            .case-before { border-right: none; border-bottom: 1px solid var(--border-color); }
+            .case-before, .case-after { padding: 20px 24px; }
+            .case-header { padding: 20px 24px; }
+            .case-result { padding: 20px 24px; }
+            .cases-tabs { gap: 6px; }
+            .cases-tab { padding: 8px 14px; font-size: 12px; }
+        }
+        @media (max-width: 480px) {
+            .cases-section { padding: 48px 20px; }
+            .case-stats { gap: 20px; }
+            .case-stat-value { font-size: 20px; }
+            .case-before, .case-after, .case-header, .case-result { padding: 16px 20px; }
+        }
+
         /* FAQ section */
         .faq-section {
             padding: 100px 40px;
@@ -960,6 +1076,7 @@
                 <nav class="land-nav">
                     <a href="#mission" data-i18n="mission">Миссия</a>
                     <a href="#pricing" data-i18n="pricing">Тарифы</a>
+                    <a href="#cases" data-i18n="cases_nav">Кейсы</a>
                     <a href="#faq" data-i18n="faq_nav">FAQ</a>
                 </nav>
                 <button class="lang-btn" onclick="switchLang()" id="landLangBtn">EN</button>
@@ -1147,6 +1264,200 @@
             </div>
         </div>
 
+        <!-- Cases -->
+        <div class="cases-section" id="cases">
+            <div class="cases-title">Кейсы клиентов</div>
+            <div class="cases-subtitle">Реальные результаты компаний, которые используют EasySale</div>
+
+            <div class="cases-tabs">
+                <button class="cases-tab active" onclick="switchCase(0,this)">SmartMark<span class="cases-tab-niche">Digital-маркетинг</span></button>
+                <button class="cases-tab" onclick="switchCase(1,this)">TechCore<span class="cases-tab-niche">Внедрение CRM</span></button>
+                <button class="cases-tab" onclick="switchCase(2,this)">Персонал Плюс<span class="cases-tab-niche">HR / рекрутинг</span></button>
+                <button class="cases-tab" onclick="switchCase(3,this)">УпакПро<span class="cases-tab-niche">Оптовая торговля</span></button>
+            </div>
+
+            <!-- Case 1 -->
+            <div class="case-panel active" id="case0">
+                <div class="case-card">
+                    <div class="case-header">
+                        <div class="case-company">Маркетинговое агентство SmartMark</div>
+                        <div class="case-meta">
+                            <span>Digital-маркетинг</span>
+                            <span>Москва</span>
+                            <span>8 человек в команде</span>
+                        </div>
+                    </div>
+                    <div class="case-body">
+                        <div class="case-before">
+                            <div class="case-col-title before">До EasySale</div>
+                            <ul class="case-list before">
+                                <li>1 менеджер тратил 5–6 часов в день на холодный поиск</li>
+                                <li>Обзванивал ~25 компаний, дозванивался до 8–10</li>
+                                <li>Конверсия в квалифицированный лид — 4%</li>
+                                <li>Стоимость лида — ~6 800 ₽</li>
+                                <li>3–4 новых клиента в месяц</li>
+                                <li>Менеджер выгорал, сделки стояли на месте</li>
+                            </ul>
+                        </div>
+                        <div class="case-after">
+                            <div class="case-col-title after">После EasySale</div>
+                            <ul class="case-list after">
+                                <li>Настройка заняла 7 минут</li>
+                                <li>AI делал 300+ звонков в день без участия команды</li>
+                                <li>Конверсия в квалифицированный лид — 7%</li>
+                                <li>Стоимость лида упала до 2 500 ₽</li>
+                                <li>18 квалифицированных обращений в первый месяц</li>
+                                <li>Менеджер переключился на закрытие сделок</li>
+                            </ul>
+                        </div>
+                    </div>
+                    <div class="case-result">
+                        <div class="case-result-title">Итог</div>
+                        <div class="case-stats">
+                            <div class="case-stat"><div class="case-stat-value">-63%</div><div class="case-stat-label">стоимость лида</div></div>
+                            <div class="case-stat"><div class="case-stat-value">x5</div><div class="case-stat-label">обращений</div></div>
+                            <div class="case-stat"><div class="case-stat-value">+340 000 ₽</div><div class="case-stat-label">выручка за 2 мес.</div></div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Case 2 -->
+            <div class="case-panel" id="case1">
+                <div class="case-card">
+                    <div class="case-header">
+                        <div class="case-company">IT-интегратор TechCore</div>
+                        <div class="case-meta">
+                            <span>Внедрение Bitrix24 и AmoCRM</span>
+                            <span>Санкт-Петербург</span>
+                            <span>12 человек</span>
+                        </div>
+                    </div>
+                    <div class="case-body">
+                        <div class="case-before">
+                            <div class="case-col-title before">До EasySale</div>
+                            <ul class="case-list before">
+                                <li>Два менеджера занимались холодным поиском вместо тёплых клиентов</li>
+                                <li>Колл-центр на аутсорсе: 45 000 ₽/мес, слабая квалификация</li>
+                                <li>Стоимость квалифицированного лида — 9 200 ₽</li>
+                                <li>2–3 новых проекта в месяц</li>
+                                <li>Цикл от контакта до встречи — 14–21 день</li>
+                            </ul>
+                        </div>
+                        <div class="case-after">
+                            <div class="case-col-title after">После EasySale</div>
+                            <ul class="case-list after">
+                                <li>Отказались от колл-центра (экономия 45 000 ₽/мес)</li>
+                                <li>AI сам искал базу по нише «производство и оптовая торговля»</li>
+                                <li>Квалификация: размер компании, текущая CRM, бюджет</li>
+                                <li>Стоимость SQL снизилась до 3 500 ₽</li>
+                                <li>Цикл от звонка до встречи — 3–5 дней</li>
+                                <li>22–26 квалифицированных лидов в месяц</li>
+                            </ul>
+                        </div>
+                    </div>
+                    <div class="case-result">
+                        <div class="case-result-title">Итог</div>
+                        <div class="case-stats">
+                            <div class="case-stat"><div class="case-stat-value">-540 000 ₽</div><div class="case-stat-label">экономия в год</div></div>
+                            <div class="case-stat"><div class="case-stat-value">x3</div><div class="case-stat-label">закрытых проектов</div></div>
+                            <div class="case-stat"><div class="case-stat-value">7–9</div><div class="case-stat-label">проектов/мес</div></div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Case 3 -->
+            <div class="case-panel" id="case2">
+                <div class="case-card">
+                    <div class="case-header">
+                        <div class="case-company">Рекрутинговое агентство Персонал Плюс</div>
+                        <div class="case-meta">
+                            <span>HR / подбор персонала для B2B</span>
+                            <span>Екатеринбург</span>
+                            <span>6 рекрутеров</span>
+                        </div>
+                    </div>
+                    <div class="case-body">
+                        <div class="case-before">
+                            <div class="case-col-title before">До EasySale</div>
+                            <ul class="case-list before">
+                                <li>Клиентов искали через HeadHunter и личные контакты — нестабильно</li>
+                                <li>Директор обзванивал сам: 2–3 часа в день</li>
+                                <li>5–6 новых компаний в месяц</li>
+                                <li>Стоимость клиента — ~11 000 ₽</li>
+                                <li>70% времени рекрутеров уходило на поиск работодателей</li>
+                            </ul>
+                        </div>
+                        <div class="case-after">
+                            <div class="case-col-title after">После EasySale</div>
+                            <ul class="case-list after">
+                                <li>База производственных и логистических компаний Урала</li>
+                                <li>Скрипт с квалификацией: вакансии, бюджет на подбор</li>
+                                <li>AI обзванивал 180–200 компаний в день</li>
+                                <li>14 горячих заявок за первую неделю</li>
+                                <li>Директор освободил 3 часа в день</li>
+                                <li>Стоимость клиента упала до 4 500 ₽</li>
+                            </ul>
+                        </div>
+                    </div>
+                    <div class="case-result">
+                        <div class="case-result-title">Итог</div>
+                        <div class="case-stats">
+                            <div class="case-stat"><div class="case-stat-value">-59%</div><div class="case-stat-label">стоимость лида</div></div>
+                            <div class="case-stat"><div class="case-stat-value">x4</div><div class="case-stat-label">клиентопоток</div></div>
+                            <div class="case-stat"><div class="case-stat-value">2-й офис</div><div class="case-stat-label">через 3 месяца</div></div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Case 4 -->
+            <div class="case-panel" id="case3">
+                <div class="case-card">
+                    <div class="case-header">
+                        <div class="case-company">Оптовый поставщик упаковки УпакПро</div>
+                        <div class="case-meta">
+                            <span>B2B оптовая торговля / производство</span>
+                            <span>Новосибирск</span>
+                            <span>20 человек</span>
+                        </div>
+                    </div>
+                    <div class="case-body">
+                        <div class="case-before">
+                            <div class="case-col-title before">До EasySale</div>
+                            <ul class="case-list before">
+                                <li>Отдел продаж из 4 человек работал только на входящих</li>
+                                <li>Менеджеры не хотели звонить «в холодку»</li>
+                                <li>Выручка стагнировала 8 месяцев подряд</li>
+                                <li>Конкуренты забирали долю рынка</li>
+                                <li>Стоимость клиента через рекламу — 14 000–18 000 ₽</li>
+                            </ul>
+                        </div>
+                        <div class="case-after">
+                            <div class="case-col-title after">После EasySale</div>
+                            <ul class="case-list after">
+                                <li>Таргетинг на кафе, рестораны, магазины и производства в СФО</li>
+                                <li>1 200 компаний обзвонено за 4 дня</li>
+                                <li>Квалификация: объём закупок, поставщик, готовность к встрече</li>
+                                <li>37 горячих лидов за первый месяц</li>
+                                <li>Стоимость клиента: 8 000 ₽</li>
+                                <li>11 контрактов на 2,3 млн ₽ за 2 месяца</li>
+                            </ul>
+                        </div>
+                    </div>
+                    <div class="case-result">
+                        <div class="case-result-title">Итог</div>
+                        <div class="case-stats">
+                            <div class="case-stat"><div class="case-stat-value">+38%</div><div class="case-stat-label">выручка за квартал</div></div>
+                            <div class="case-stat"><div class="case-stat-value">x2</div><div class="case-stat-label">дешевле рекламы</div></div>
+                            <div class="case-stat"><div class="case-stat-value">2,3 млн ₽</div><div class="case-stat-label">новых контрактов</div></div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
         <!-- FAQ -->
         <div class="faq-section" id="faq">
             <div class="faq-title">Частые вопросы</div>
@@ -1328,6 +1639,7 @@
             // Landing nav
             mission: { ru:'Миссия', en:'Mission' },
             pricing: { ru:'Тарифы', en:'Pricing' },
+            cases_nav: { ru:'Кейсы', en:'Cases' },
             faq_nav: { ru:'FAQ', en:'FAQ' },
             missionLabel: { ru:'Миссия', en:'Mission' },
             missionTitle: { ru:'Миссия EasySale', en:'EasySale Mission' },
@@ -1467,6 +1779,14 @@
             document.getElementById('calcOverpay').textContent = 'Переплата: +' + savings.toLocaleString('ru-RU') + ' ₽';
         }
         calcPrice();
+
+        function switchCase(idx, el) {
+            document.querySelectorAll('.cases-tab').forEach(function(t) { t.classList.remove('active'); });
+            document.querySelectorAll('.case-panel').forEach(function(p) { p.classList.remove('active'); });
+            el.classList.add('active');
+            var panel = document.getElementById('case' + idx);
+            if (panel) panel.classList.add('active');
+        }
 
         function toggleFaq(el) {
             var item = el.parentElement;
