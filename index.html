@@ -4777,6 +4777,11 @@
                     localStorage.setItem('sc_login', user.value);
                     applyUserSession(user.value);
 
+                    // Sync onboarded from server immediately
+                    if (result.data.user && result.data.user.onboarded) {
+                        localStorage.setItem('onboarded_' + user.value, '1');
+                    }
+
                     // Check if password change is required
                     if (result.data.user && result.data.user.must_change_password) {
                         _cpOldPassword = pass.value;
@@ -4973,7 +4978,7 @@
             if (!selectedLeadCost) return;
             var login = localStorage.getItem('current_login');
             if (login) localStorage.setItem('onboarded_' + login, '1');
-            // Save onboarding data to backend
+            // Save onboarding data to backend — wait for confirmation
             if (esHasToken()) {
                 var patchData = { onboarded: true };
                 if (selectedNiche) patchData.niche = selectedNiche;
@@ -4982,7 +4987,18 @@
                 fetch(ES_API + '/api/clients/me', {
                     method: 'PATCH', headers: esApiHeaders(),
                     body: JSON.stringify(patchData)
-                }).catch(function(err) { console.error('API client update error:', err); });
+                })
+                .then(function(r) {
+                    if (!r.ok) {
+                        console.error('Onboarding save failed, retrying...');
+                        // Retry once
+                        return fetch(ES_API + '/api/clients/me', {
+                            method: 'PATCH', headers: esApiHeaders(),
+                            body: JSON.stringify({ onboarded: true })
+                        });
+                    }
+                })
+                .catch(function(err) { console.error('API client update error:', err); });
             }
             onboarding.classList.remove('show');
             dashboard.classList.add('show');
