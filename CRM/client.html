@@ -457,6 +457,7 @@
             <div class="tab" onclick="switchClientTab('tickets',this)">Тикеты</div>
             <div class="tab" onclick="switchClientTab('launches',this)">Запуски</div>
             <div class="tab" onclick="switchClientTab('messages',this)">Сообщения</div>
+            <div class="tab" onclick="switchClientTab('audiences',this)">Целевая аудитория</div>
             <div class="tab" onclick="switchClientTab('referrals',this)">Рефералы</div>
             <div class="tab" onclick="switchClientTab('history',this)">История</div>
         </div>
@@ -754,6 +755,93 @@
         })
         .catch(function() {
             el.innerHTML = '<div class="empty-state"><p>Ошибка загрузки</p></div>';
+        });
+    }
+
+    function loadClientAudiences(c) {
+        var el = document.getElementById('client-detail-content');
+        if (!el || !crmToken) return;
+        fetch(API_BASE + '/api/admin/clients/' + c.id + '/audiences', { headers: apiHeaders() })
+        .then(function(r) { return r.json(); })
+        .then(function(data) {
+            if (!Array.isArray(data) || data.length === 0) {
+                el.innerHTML = '<div class="empty-state"><p>Клиент не создал целевых аудиторий</p></div>';
+                return;
+            }
+            var html = '<div style="display:grid;gap:16px;">';
+            data.forEach(function(a) {
+                var sites = [];
+                try { sites = typeof a.competitor_sites === 'string' ? JSON.parse(a.competitor_sites) : (a.competitor_sites || []); } catch(e) { sites = []; }
+                var tags = [];
+                try { tags = typeof a.tags === 'string' ? JSON.parse(a.tags) : (a.tags || []); } catch(e) { tags = []; }
+
+                var isActive = a.active_campaigns_count > 0;
+                var statusBadge = isActive
+                    ? '<span class="tag" style="background:var(--success-bg);color:var(--success);font-size:.75rem;">Активна</span>'
+                    : '<span class="tag" style="background:var(--input-bg);color:var(--text-muted);font-size:.75rem;">Неактивна</span>';
+
+                html += '<div class="card" style="padding:20px;">';
+                html += '<div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:12px;">';
+                html += '<div style="display:flex;align-items:center;gap:10px;">';
+                html += '<h3 style="margin:0;font-size:1rem;">' + esc(a.name) + '</h3>';
+                html += statusBadge;
+                html += '</div>';
+                html += '<span style="font-size:.75rem;color:var(--text-muted);">ID: ' + a.id + ' &middot; ' + formatDate(a.created_at) + '</span>';
+                html += '</div>';
+
+                html += '<div style="display:grid;grid-template-columns:1fr 1fr;gap:12px 24px;">';
+
+                // Ниша
+                html += '<div class="client-info-row"><span class="client-info-label">Ниша</span><span>' + esc(a.niche || '—') + '</span></div>';
+
+                // Кампаний
+                html += '<div class="client-info-row"><span class="client-info-label">Запусков</span><span>' + (a.campaigns_count || 0) + ' (активных: ' + (a.active_campaigns_count || 0) + ')</span></div>';
+
+                // Контактов
+                html += '<div class="client-info-row"><span class="client-info-label">Контактов</span><span>' + (a.contacts_count || 0) + '</span></div>';
+
+                // Locked
+                if (a.locked_until && new Date(a.locked_until) > new Date()) {
+                    html += '<div class="client-info-row"><span class="client-info-label">Заблокирована до</span><span style="color:var(--warning);">' + formatDateTime(a.locked_until) + '</span></div>';
+                }
+
+                html += '</div>';
+
+                // Описание
+                if (a.description) {
+                    html += '<div style="margin-top:12px;"><span style="font-size:.8rem;color:var(--text-muted);display:block;margin-bottom:4px;">Описание</span>';
+                    html += '<p style="font-size:.85rem;color:var(--text-secondary);white-space:pre-wrap;margin:0;">' + esc(a.description) + '</p></div>';
+                }
+
+                // Сайты
+                if (sites.length > 0) {
+                    html += '<div style="margin-top:12px;"><span style="font-size:.8rem;color:var(--text-muted);display:block;margin-bottom:6px;">Сайты конкурентов (' + sites.length + ')</span>';
+                    html += '<div style="display:flex;flex-wrap:wrap;gap:6px;">';
+                    sites.forEach(function(site) {
+                        html += '<span style="display:inline-flex;align-items:center;gap:4px;padding:4px 10px;border-radius:6px;background:var(--accent-bg);color:var(--accent-light);font-size:.8rem;font-family:\'JetBrains Mono\',monospace;">';
+                        html += '<svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><line x1="2" y1="12" x2="22" y2="12"/><path d="M12 2a15.3 15.3 0 0 1 4 10 15.3 15.3 0 0 1-4 10 15.3 15.3 0 0 1-4-10 15.3 15.3 0 0 1 4-10z"/></svg>';
+                        html += esc(site) + '</span>';
+                    });
+                    html += '</div></div>';
+                }
+
+                // Теги
+                if (tags.length > 0) {
+                    html += '<div style="margin-top:10px;"><span style="font-size:.8rem;color:var(--text-muted);display:block;margin-bottom:6px;">Теги</span>';
+                    html += '<div style="display:flex;flex-wrap:wrap;gap:4px;">';
+                    tags.forEach(function(tag) {
+                        html += '<span class="tag" style="background:var(--info-bg);color:var(--info);font-size:.75rem;">' + esc(tag) + '</span>';
+                    });
+                    html += '</div></div>';
+                }
+
+                html += '</div>';
+            });
+            html += '</div>';
+            el.innerHTML = html;
+        })
+        .catch(function() {
+            el.innerHTML = '<div class="empty-state"><p>Ошибка загрузки целевых аудиторий</p></div>';
         });
     }
 
@@ -1106,6 +1194,9 @@
             }
         } else if (currentDetailTab === 'launches') {
             renderLaunches(el, c);
+        } else if (currentDetailTab === 'audiences') {
+            el.innerHTML = '<div class="empty-state"><p>Загрузка...</p></div>';
+            loadClientAudiences(c);
         } else if (currentDetailTab === 'referrals') {
             el.innerHTML = '<div class="client-detail-section"><h3>Рефералы</h3><div id="refTab"></div></div>';
             loadClientReferralsTab(c);
