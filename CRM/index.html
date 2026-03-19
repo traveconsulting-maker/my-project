@@ -1067,6 +1067,10 @@
                 <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M16 21v-2a4 4 0 00-4-4H5a4 4 0 00-4 4v2"/><circle cx="8.5" cy="7" r="4"/><line x1="20" y1="8" x2="20" y2="14"/><line x1="23" y1="11" x2="17" y2="11"/></svg>
                 Рефералы
             </div>
+            <div class="nav-item" data-section="enrichment" onclick="showSection('enrichment')">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="11" cy="11" r="8"/><line x1="21" y1="21" x2="16.65" y2="16.65"/><line x1="11" y1="8" x2="11" y2="14"/><line x1="8" y1="11" x2="14" y2="11"/></svg>
+                Обогащение базы
+            </div>
         </div>
         <div class="sidebar-bottom">
             <button class="theme-btn" onclick="toggleTheme()">
@@ -1527,6 +1531,41 @@
             </div>
             <div id="refAdminTable" style="background:var(--card-bg);border:1px solid var(--border);border-radius:12px;overflow:hidden;">
                 <div style="padding:32px;text-align:center;color:var(--text-muted);">Загрузка...</div>
+            </div>
+        </div>
+
+        <!-- Enrichment Section -->
+        <div id="section-enrichment" class="section">
+            <div class="page-header">
+                <div><div class="page-title">Обогащение базы</div><div class="page-subtitle">Поиск телефонов по ИНН (DaData)</div></div>
+            </div>
+            <div class="card" style="padding:24px;margin-bottom:20px;">
+                <div style="margin-bottom:16px;">
+                    <label style="display:block;font-size:13px;font-weight:600;color:var(--text-muted);margin-bottom:8px;">Список ИНН (каждый с новой строки)</label>
+                    <textarea id="enrich-inn-input" rows="8" placeholder="7707083893&#10;7736050003&#10;7728168971" style="width:100%;padding:12px 16px;border-radius:12px;border:1px solid var(--border);background:var(--input-bg);color:var(--text);font-family:'JetBrains Mono',monospace;font-size:13px;resize:vertical;outline:none;"></textarea>
+                </div>
+                <div style="display:flex;gap:12px;align-items:center;flex-wrap:wrap;">
+                    <label class="btn btn-secondary" style="cursor:pointer;margin:0;">
+                        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" width="16" height="16" style="margin-right:6px;"><path d="M21 15v4a2 2 0 01-2 2H5a2 2 0 01-2-2v-4"/><polyline points="17 8 12 3 7 8"/><line x1="12" y1="3" x2="12" y2="15"/></svg>
+                        Загрузить CSV
+                        <input type="file" accept=".csv,.txt" id="enrich-csv-input" onchange="enrichLoadCSV(this)" style="display:none;">
+                    </label>
+                    <button class="btn btn-primary" onclick="enrichStart()" id="enrich-start-btn">
+                        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" width="16" height="16" style="margin-right:6px;"><circle cx="11" cy="11" r="8"/><line x1="21" y1="21" x2="16.65" y2="16.65"/></svg>
+                        Найти телефоны
+                    </button>
+                    <span id="enrich-progress" style="font-size:13px;color:var(--text-muted);"></span>
+                    <button class="btn btn-secondary" onclick="enrichDownloadCSV()" id="enrich-download-btn" style="display:none;margin-left:auto;">
+                        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" width="16" height="16" style="margin-right:6px;"><path d="M21 15v4a2 2 0 01-2 2H5a2 2 0 01-2-2v-4"/><polyline points="7 10 12 15 17 10"/><line x1="12" y1="15" x2="12" y2="3"/></svg>
+                        Скачать CSV
+                    </button>
+                </div>
+            </div>
+            <div class="card" style="padding:0;overflow:hidden;">
+                <table>
+                    <thead><tr><th>ИНН</th><th>Название компании</th><th>Телефон</th><th>Статус</th></tr></thead>
+                    <tbody id="enrich-table"><tr><td colspan="4" style="text-align:center;color:var(--text-muted);padding:40px;">Введите ИНН и нажмите «Найти телефоны»</td></tr></tbody>
+                </table>
             </div>
         </div>
     </main>
@@ -2274,7 +2313,109 @@ function renderSection(name) {
         case 'telemarketing': renderTelemarketing(); break;
         case 'referrals': renderReferrals(); break;
         case 'payments': renderPayments(); break;
+        case 'enrichment': renderEnrichment(); break;
     }
+}
+
+// ==================== ENRICHMENT (DaData) ====================
+let enrichResults = [];
+
+function renderEnrichment() {}
+
+function enrichLoadCSV(input) {
+    const file = input.files[0];
+    if (!file) return;
+    const reader = new FileReader();
+    reader.onload = function(e) {
+        const lines = e.target.result.split(/\r?\n/).map(l => l.split(/[;,\t]/)[0].trim()).filter(v => /^\d{10,12}$/.test(v));
+        if (lines.length === 0) { toast('В файле не найдены ИНН'); return; }
+        document.getElementById('enrich-inn-input').value = lines.join('\n');
+        toast('Загружено ' + lines.length + ' ИНН из файла');
+    };
+    reader.readAsText(file);
+    input.value = '';
+}
+
+async function enrichStart() {
+    const raw = document.getElementById('enrich-inn-input').value;
+    const inns = raw.split(/\r?\n/).map(s => s.trim()).filter(v => /^\d{10,12}$/.test(v));
+    if (inns.length === 0) { toast('Введите хотя бы один корректный ИНН'); return; }
+
+    const btn = document.getElementById('enrich-start-btn');
+    const progress = document.getElementById('enrich-progress');
+    const tbody = document.getElementById('enrich-table');
+    const dlBtn = document.getElementById('enrich-download-btn');
+
+    btn.disabled = true;
+    btn.style.opacity = '0.6';
+    dlBtn.style.display = 'none';
+    enrichResults = [];
+
+    tbody.innerHTML = inns.map(inn => `<tr id="enrich-row-${inn}"><td style="font-family:'JetBrains Mono',monospace;font-size:.85rem;">${esc(inn)}</td><td>—</td><td>—</td><td><span class="tag tag-muted">Ожидание</span></td></tr>`).join('');
+
+    for (let i = 0; i < inns.length; i++) {
+        const inn = inns[i];
+        progress.textContent = 'Обработано ' + i + ' из ' + inns.length;
+        const row = document.getElementById('enrich-row-' + inn);
+        if (row) row.querySelector('td:last-child').innerHTML = '<span class="tag" style="background:rgba(108,92,231,0.12);color:#a78bfa;">Запрос...</span>';
+
+        try {
+            const res = await fetch('https://suggestions.dadata.ru/suggestions/api/4_1/rs/findById/party', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                    'Accept': 'application/json',
+                    'Authorization': 'Token f84b40764627f0302265f53cad30843d1af3e345'
+                },
+                body: JSON.stringify({ query: inn })
+            });
+            const json = await res.json();
+            const s = json.suggestions && json.suggestions[0];
+            const name = s ? (s.data.name.short_with_opf || s.data.name.full_with_opf || '—') : '—';
+            const phones = s && s.data.phones ? s.data.phones.map(p => p.data || p.source || p).join(', ') : '';
+            const phoneDisplay = phones || '—';
+            const status = s ? (phones ? 'found' : 'no_phone') : 'not_found';
+
+            enrichResults.push({ inn, name, phone: phoneDisplay, status });
+
+            if (row) {
+                row.querySelector('td:nth-child(2)').textContent = name;
+                row.querySelector('td:nth-child(3)').textContent = phoneDisplay;
+                const statusHtml = status === 'found'
+                    ? '<span class="tag tag-success">Найден</span>'
+                    : status === 'no_phone'
+                    ? '<span class="tag tag-warning">Без телефона</span>'
+                    : '<span class="tag tag-danger">Не найден</span>';
+                row.querySelector('td:last-child').innerHTML = statusHtml;
+            }
+        } catch (err) {
+            enrichResults.push({ inn, name: '—', phone: '—', status: 'error' });
+            if (row) row.querySelector('td:last-child').innerHTML = '<span class="tag tag-danger">Ошибка</span>';
+        }
+
+        if (i < inns.length - 1) await new Promise(r => setTimeout(r, 100));
+    }
+
+    progress.textContent = 'Готово: ' + inns.length + ' из ' + inns.length;
+    btn.disabled = false;
+    btn.style.opacity = '';
+    dlBtn.style.display = '';
+}
+
+function enrichDownloadCSV() {
+    if (enrichResults.length === 0) return;
+    let csv = '\uFEFF' + 'ИНН;Название компании;Телефон;Статус\n';
+    enrichResults.forEach(r => {
+        const st = r.status === 'found' ? 'Найден' : r.status === 'no_phone' ? 'Без телефона' : r.status === 'not_found' ? 'Не найден' : 'Ошибка';
+        csv += [r.inn, '"' + r.name.replace(/"/g,'""') + '"', '"' + r.phone.replace(/"/g,'""') + '"', st].join(';') + '\n';
+    });
+    const blob = new Blob([csv], { type: 'text/csv;charset=utf-8;' });
+    const url = URL.createObjectURL(blob);
+    const a = document.createElement('a');
+    a.href = url;
+    a.download = 'dadata_phones_' + new Date().toISOString().slice(0,10) + '.csv';
+    a.click();
+    URL.revokeObjectURL(url);
 }
 
 // ==================== REFERRALS ====================
