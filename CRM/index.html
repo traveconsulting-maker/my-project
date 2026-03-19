@@ -4056,34 +4056,22 @@ function deleteRelatedTask(app, callback) {
 function convertApp(id) {
     const a = applications.find(x => x.id === id);
     if (!a) return;
-    const newClient = {
-        id: genId(),
-        name: a.name,
-        phone: a.phone || '',
-        email: a.email || '',
-        company: a.company || '',
-        login: '',
-        password: '',
-        notes: 'Создан из заявки',
-        created: now()
-    };
-    clients.push(newClient);
-    a.status = 'converted';
-    a.clientId = newClient.id;
-    a.updated = now();
-    addActivity('client', `Клиент "${a.name}" создан из заявки`, newClient.id);
     deleteRelatedTask(a, function(data) {
         if (data && data.created_account) {
             const acc = data.created_account;
-            toast(`Аккаунт создан — Логин: ${acc.login} / Пароль: ${acc.password}`, 15000);
-            prompt('Данные аккаунта для клиента (скопируйте):', `Логин: ${acc.login}\nПароль: ${acc.password}`);
+            if (acc.login && acc.password) {
+                toast('Аккаунт создан — Логин: ' + acc.login + ' / Пароль: ' + acc.password, 15000);
+                prompt('Данные аккаунта для клиента (скопируйте):', 'Логин: ' + acc.login + '\nПароль: ' + acc.password);
+            }
         }
+        a.status = 'converted';
+        a.updated = now();
+        persist();
+        renderApplications();
+        updateBadges();
+        loadClients();
+        toast('Заявка конвертирована в клиента');
     });
-    persist();
-    renderApplications();
-    updateBadges();
-    populateClientSelects();
-    toast('Заявка конвертирована в клиента');
 }
 
 function rejectApp(id) {
