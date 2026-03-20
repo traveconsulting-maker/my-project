@@ -1110,7 +1110,7 @@
             <h1 data-i18n-html="heroTitle">Новые клиенты легче,<br>чем ты думаешь</h1>
             <p style="font-size:clamp(16px,2vw,20px);color:var(--text-muted);max-width:620px;margin:0 auto 36px;line-height:1.7;transition:color 0.4s;" data-i18n="heroSub">AI-платформа, которая сама находит клиентов, звонит им и передаёт вам только заинтересованных.</p>
             <button class="hero-cta" onclick="openAccessModal()">
-                <span data-i18n="requestAccess">Запросить доступ</span>
+                <span data-i18n="requestAccess">Быстрая регистрация</span>
                 <svg viewBox="0 0 24 24"><path d="M12 4l-1.41 1.41L16.17 11H4v2h12.17l-5.58 5.59L12 20l8-8-8-8z"/></svg>
             </button>
         </div>
@@ -1181,7 +1181,7 @@
 
             <div style="text-align:center;margin-top:48px;">
                 <button class="hero-cta" onclick="openAccessModal()" style="font-size:15px;padding:14px 32px;">
-                    <span data-i18n="ctaStart">Попробовать бесплатно</span>
+                    <span data-i18n="ctaStart">Зарегистрироваться бесплатно</span>
                     <svg viewBox="0 0 24 24"><path d="M12 4l-1.41 1.41L16.17 11H4v2h12.17l-5.58 5.59L12 20l8-8-8-8z"/></svg>
                 </button>
             </div>
@@ -1592,7 +1592,7 @@
             <p data-i18n="ctaBannerDesc">Зарегистрируйтесь за 2 минуты и запустите AI-отдел продаж. Первые лиды — уже завтра.</p>
             <div style="display:flex;gap:12px;justify-content:center;flex-wrap:wrap;">
                 <button class="hero-cta" onclick="openAccessModal()" style="font-size:15px;padding:14px 32px;">
-                    <span data-i18n="ctaGetAccess">Получить доступ</span>
+                    <span data-i18n="ctaGetAccess">Зарегистрироваться</span>
                     <svg viewBox="0 0 24 24"><path d="M12 4l-1.41 1.41L16.17 11H4v2h12.17l-5.58 5.59L12 20l8-8-8-8z"/></svg>
                 </button>
                 <a href="https://app.easysale.tech" class="hero-cta" style="font-size:15px;padding:14px 32px;background:var(--card-bg);color:var(--text);border:1px solid var(--border-color);box-shadow:none;text-decoration:none;">
@@ -1604,33 +1604,48 @@
         <div class="land-footer">EasySale &copy; 2025-2026 &nbsp;·&nbsp; <a href="/privacy" style="color: inherit; text-decoration: none; transition: opacity 0.2s;" onmouseover="this.style.opacity='0.7'" onmouseout="this.style.opacity='1'">Политика конфиденциальности</a></div>
     </div>
 
-    <!-- Access Modal -->
+    <!-- Registration Modal -->
     <div class="modal-overlay" id="accessModal" onclick="closeAccessOnOverlay(event)">
         <div class="modal">
             <button class="modal-close" onclick="closeAccessModal()">&times;</button>
 
             <div id="accessForm">
-                <div class="modal-title" data-i18n="accessTitle">Запросить доступ</div>
-                <div class="modal-subtitle" data-i18n="accessSub">Заполните данные и мы свяжемся с вами</div>
+                <div class="modal-title" data-i18n="accessTitle">Быстрая регистрация</div>
+                <div class="modal-subtitle" data-i18n="accessSub">Протестируйте сервис уже через 30 секунд</div>
 
                 <div class="form-group">
-                    <label data-i18n="fioLabel">Имя</label>
-                    <input type="text" id="accName" placeholder="Иванов Иван Иванович" data-i18n-ph="phFio" oninput="checkAccessForm()">
-                    <div class="field-hint" id="hintName"></div>
+                    <label data-i18n="regCompanyLabel">Название компании</label>
+                    <input type="text" id="regCompany" placeholder="ООО Моя компания" oninput="checkRegForm()">
+                    <div class="field-hint" id="hintCompany"></div>
                 </div>
                 <div class="form-group">
-                    <label data-i18n="phoneLabel">Номер телефона</label>
-                    <input type="tel" id="accPhone" placeholder="+7 (999) 123-45-67" data-i18n-ph="phPhone" oninput="formatAccPhone()" onblur="validatePhoneOnBlur()" maxlength="18">
-                    <div class="field-hint" id="hintPhone"></div>
+                    <label data-i18n="regPhoneLabel">Телефон</label>
+                    <input type="tel" id="regPhone" placeholder="+7 (999) 123-45-67" oninput="checkRegForm()" maxlength="18">
                 </div>
                 <div class="form-group">
-                    <label data-i18n="emailTgLabel">Email / Telegram</label>
-                    <input type="text" id="accEmailTg" placeholder="Email или @telegram" data-i18n-ph="phEmailTg" oninput="checkAccessForm()">
-                    <div class="field-hint" id="hintEmailTg"></div>
+                    <label>Email</label>
+                    <input type="email" id="regEmail" placeholder="mail@company.ru" oninput="checkRegForm()">
+                </div>
+                <div class="form-group">
+                    <label data-i18n="regLoginLabel">Логин</label>
+                    <input type="text" id="regLogin" placeholder="mylogin" oninput="checkRegForm()" autocomplete="username">
+                    <div class="field-hint" id="hintLogin"></div>
+                </div>
+                <div class="form-group">
+                    <label data-i18n="regPassLabel">Пароль</label>
+                    <input type="password" id="regPassword" placeholder="Минимум 6 символов" oninput="checkRegForm()" autocomplete="new-password">
+                    <div class="field-hint" id="hintPassword"></div>
+                </div>
+                <div class="form-group">
+                    <label data-i18n="regPassConfirmLabel">Подтверждение пароля</label>
+                    <input type="password" id="regPasswordConfirm" placeholder="Повторите пароль" oninput="checkRegForm()" autocomplete="new-password">
+                    <div class="field-hint" id="hintPasswordConfirm"></div>
                 </div>
 
-                <button class="access-submit" id="accessSubmitBtn" onclick="submitAccess()" data-i18n="getAccess">
-                    Получить доступ
+                <div class="error-msg" id="regError"></div>
+
+                <button class="access-submit" id="accessSubmitBtn" onclick="submitRegister()" data-i18n="getAccess">
+                    Зарегистрироваться
                 </button>
             </div>
 
@@ -1638,8 +1653,8 @@
                 <div class="access-success-icon">
                     <svg viewBox="0 0 24 24"><path d="M9 16.17L4.83 12l-1.42 1.41L9 19 21 7l-1.41-1.41L9 16.17z"/></svg>
                 </div>
-                <h3 data-i18n="accessOk">Заявка отправлена!</h3>
-                <p data-i18n-html="accessOkDesc">Мы свяжемся с вами<br>в течение 15 минут</p>
+                <h3 data-i18n="accessOk">Регистрация прошла успешно!</h3>
+                <p data-i18n-html="accessOkDesc">Перенаправляем в личный кабинет...</p>
             </div>
         </div>
     </div>
@@ -1667,7 +1682,7 @@
             heroBadge: { ru:'Платформа нового поколения', en:'Next-Generation Platform' },
             heroTitle: { ru:'Новые клиенты легче,<br>чем ты думаешь', en:'First sales are easier<br>than you think' },
             heroSub: { ru:'AI-платформа, которая сама находит клиентов, звонит им и передаёт вам только заинтересованных.', en:'AI platform that finds clients, calls them, and delivers only interested leads.' },
-            requestAccess: { ru:'Запросить доступ', en:'Request Access' },
+            requestAccess: { ru:'Быстрая регистрация', en:'Quick Registration' },
             // Features
             featLabel: { ru:'Возможности', en:'Capabilities' },
             featTitle: { ru:'Комплексное решение', en:'Complete Solution' },
@@ -1691,27 +1706,26 @@
             s3d: { ru:'Укажите когда звоним, что предлагаем и как квалифицируем', en:'Set when to call, what to offer, and how to qualify' },
             s4t: { ru:'Получайте заявки', en:'Get Applications' },
             s4d: { ru:'Получайте входящие заявки и растите свой бизнес', en:'Receive incoming leads and grow your business' },
-            ctaStart: { ru:'Попробовать бесплатно', en:'Try for Free' },
+            ctaStart: { ru:'Зарегистрироваться бесплатно', en:'Register for Free' },
             ctaBannerTitle: { ru:'Готовы получать <span>новых клиентов</span>?', en:'Ready to get <span>new clients</span>?' },
             ctaBannerDesc: { ru:'Зарегистрируйтесь за 2 минуты и запустите AI-отдел продаж. Первые лиды — уже завтра.', en:'Register in 2 minutes and launch your AI sales department. First leads — tomorrow.' },
-            ctaGetAccess: { ru:'Получить доступ', en:'Get Access' },
+            ctaGetAccess: { ru:'Зарегистрироваться', en:'Register' },
             ctaLogin: { ru:'Уже есть аккаунт? Войти', en:'Already have an account? Sign In' },
-            // Access modal
-            accessTitle: { ru:'Запросить доступ', en:'Request Access' },
-            accessSub: { ru:'Заполните данные и мы свяжемся с вами', en:'Fill in the details and we\'ll contact you' },
-            fioLabel: { ru:'Имя', en:'Name' },
-            phoneLabel: { ru:'Номер телефона', en:'Phone Number' },
-            emailTgLabel: { ru:'Email / Telegram', en:'Email / Telegram' },
-            getAccess: { ru:'Получить доступ', en:'Get Access' },
-            accessOk: { ru:'Заявка отправлена!', en:'Application Submitted!' },
-            accessOkDesc: { ru:'Мы свяжемся с вами<br>в течение 15 минут', en:'We\'ll contact you<br>within 15 minutes' },
-            // Placeholders
-            phFio: { ru:'Иванов Иван Иванович', en:'John Smith' },
-            phPhone: { ru:'+7 (999) 123-45-67', en:'+1 (555) 123-4567' },
-            phEmailTg: { ru:'Email или @telegram', en:'Email or @telegram' },
+            // Registration modal
+            accessTitle: { ru:'Быстрая регистрация', en:'Quick Registration' },
+            accessSub: { ru:'Протестируйте сервис уже через 30 секунд', en:'Test the service in just 30 seconds' },
+            regCompanyLabel: { ru:'Название компании', en:'Company Name' },
+            regPhoneLabel: { ru:'Телефон', en:'Phone' },
+            regLoginLabel: { ru:'Логин', en:'Login' },
+            regPassLabel: { ru:'Пароль', en:'Password' },
+            regPassConfirmLabel: { ru:'Подтверждение пароля', en:'Confirm Password' },
+            getAccess: { ru:'Зарегистрироваться', en:'Register' },
+            accessOk: { ru:'Регистрация прошла успешно!', en:'Registration Successful!' },
+            accessOkDesc: { ru:'Перенаправляем в личный кабинет...', en:'Redirecting to your dashboard...' },
             // Validation
-            valName: { ru:'Укажите имя (только буквы)', en:'Enter name (letters only)' },
-            valPhone: { ru:'Введите корректный номер (минимум 10 цифр)', en:'Enter a valid phone number (at least 10 digits)' }
+            valLoginShort: { ru:'Логин — минимум 6 символов', en:'Login must be at least 6 characters' },
+            valPassShort: { ru:'Пароль — минимум 6 символов', en:'Password must be at least 6 characters' },
+            valPassMismatch: { ru:'Пароли не совпадают', en:'Passwords do not match' }
         };
 
         function t(key) {
@@ -1760,7 +1774,7 @@
             document.body.classList.add('light');
         }
 
-        // ===== Access Modal =====
+        // ===== Registration Modal =====
         var accessModal = document.getElementById('accessModal');
         var accessForm = document.getElementById('accessForm');
         var accessSuccess = document.getElementById('accessSuccess');
@@ -1813,10 +1827,15 @@
             document.body.style.overflow = 'hidden';
             accessForm.style.display = '';
             accessSuccess.classList.remove('show');
-            document.getElementById('accName').value = '';
-            document.getElementById('accPhone').value = '';
-            document.getElementById('accEmailTg').value = '';
+            document.getElementById('regCompany').value = '';
+            document.getElementById('regPhone').value = '';
+            document.getElementById('regEmail').value = '';
+            document.getElementById('regLogin').value = '';
+            document.getElementById('regPassword').value = '';
+            document.getElementById('regPasswordConfirm').value = '';
             accessSubmitBtn.classList.remove('active');
+            var errEl = document.getElementById('regError');
+            errEl.classList.remove('show'); errEl.textContent = '';
             document.querySelectorAll('.field-hint').forEach(function(h) { h.classList.remove('show'); });
             document.querySelectorAll('#accessForm input').forEach(function(i) { i.classList.remove('error'); });
         }
@@ -1830,114 +1849,101 @@
             if (e.target === accessModal) closeAccessModal();
         }
 
-        function validateName(v) {
-            return v.trim().length >= 2 && /^[а-яёА-ЯЁa-zA-Z\s-]+$/.test(v.trim());
-        }
-
-        function validatePhone(v) {
-            var digits = v.replace(/\D/g, '');
-            return digits.length >= 10;
-        }
-
         function showHint(id, msg) {
             var el = document.getElementById(id);
+            if (!el) return;
             el.textContent = msg;
             el.classList.add('show');
         }
 
         function hideHint(id) {
-            document.getElementById(id).classList.remove('show');
+            var el = document.getElementById(id);
+            if (el) el.classList.remove('show');
         }
 
-        function formatAccPhone() {
-            var phoneEl = document.getElementById('accPhone');
-            var digits = phoneEl.value.replace(/\D/g, '');
-            phoneEl.classList.remove('error');
-            hideHint('hintPhone');
-            checkAccessForm();
-        }
+        function checkRegForm() {
+            var company = document.getElementById('regCompany').value.trim();
+            var login = document.getElementById('regLogin').value.trim();
+            var password = document.getElementById('regPassword').value;
+            var confirm = document.getElementById('regPasswordConfirm').value;
 
-        function validatePhoneOnBlur() {
-            var phone = document.getElementById('accPhone').value.trim();
-            if (phone && !validatePhone(phone)) {
-                showHint('hintPhone', t('valPhone'));
-                document.getElementById('accPhone').classList.add('error');
-            } else {
-                hideHint('hintPhone');
-                document.getElementById('accPhone').classList.remove('error');
-            }
-        }
+            hideHint('hintCompany');
+            hideHint('hintLogin');
+            hideHint('hintPassword');
+            hideHint('hintPasswordConfirm');
+            document.querySelectorAll('#accessForm input').forEach(function(i) { i.classList.remove('error'); });
 
-        function checkAccessForm() {
-            var name = document.getElementById('accName').value.trim();
-            var phone = document.getElementById('accPhone').value.trim();
-            var emailTg = document.getElementById('accEmailTg').value.trim();
+            var ok = company.length >= 1 && login.length >= 6 && password.length >= 6 && password === confirm;
 
-            var nameOk = validateName(name);
-            var phoneOk = validatePhone(phone);
-            var emailTgOk = emailTg.length >= 2;
+            if (login && login.length < 6) showHint('hintLogin', 'Минимум 6 символов');
+            if (password && password.length < 6) showHint('hintPassword', 'Минимум 6 символов');
+            if (confirm && password !== confirm) showHint('hintPasswordConfirm', 'Пароли не совпадают');
 
-            if (name && !nameOk) { showHint('hintName', t('valName')); }
-            else { hideHint('hintName'); }
-
-            document.getElementById('accName').classList.toggle('error', name !== '' && !nameOk);
-
-            if (nameOk && phoneOk && emailTgOk) {
+            if (ok) {
                 accessSubmitBtn.classList.add('active');
             } else {
                 accessSubmitBtn.classList.remove('active');
             }
         }
 
-        function submitAccess() {
-            var name = document.getElementById('accName').value.trim();
-            var phone = document.getElementById('accPhone').value.trim();
-            var emailTg = document.getElementById('accEmailTg').value.trim();
+        function submitRegister() {
+            var company = document.getElementById('regCompany').value.trim();
+            var phone = document.getElementById('regPhone').value.trim();
+            var email = document.getElementById('regEmail').value.trim();
+            var login = document.getElementById('regLogin').value.trim();
+            var password = document.getElementById('regPassword').value;
+            var confirm = document.getElementById('regPasswordConfirm').value;
             var btn = document.getElementById('accessSubmitBtn');
+            var errEl = document.getElementById('regError');
 
-            var valid = true;
+            errEl.classList.remove('show'); errEl.textContent = '';
+            document.querySelectorAll('.field-hint').forEach(function(h) { h.classList.remove('show'); });
+            document.querySelectorAll('#accessForm input').forEach(function(i) { i.classList.remove('error'); });
 
-            if (!name) { showHint('hintName', 'Укажите ваше имя'); valid = false; }
-            else if (!validateName(name)) { showHint('hintName', 'Укажите имя (только буквы)'); valid = false; }
+            if (!company) { showHint('hintCompany', 'Укажите название компании'); document.getElementById('regCompany').classList.add('error'); return; }
+            if (!login || login.length < 6) { showHint('hintLogin', 'Логин — минимум 6 символов'); document.getElementById('regLogin').classList.add('error'); return; }
+            if (!password || password.length < 6) { showHint('hintPassword', 'Пароль — минимум 6 символов'); document.getElementById('regPassword').classList.add('error'); return; }
+            if (password !== confirm) { showHint('hintPasswordConfirm', 'Пароли не совпадают'); document.getElementById('regPasswordConfirm').classList.add('error'); return; }
 
-            if (!phone) { showHint('hintPhone', 'Укажите номер телефона'); valid = false; }
-            else if (!validatePhone(phone)) { showHint('hintPhone', 'Введите корректный номер (минимум 10 цифр)'); valid = false; }
-
-            if (!emailTg) { showHint('hintEmailTg', 'Укажите Email или Telegram'); valid = false; }
-
-            if (!valid) {
-                if (phone && !validatePhone(phone)) {
-                    document.getElementById('accPhone').classList.add('error');
-                }
-                document.getElementById('accName').classList.toggle('error', name !== '' && !validateName(name));
-                return;
-            }
-
-            // Блокируем кнопку сразу после клика, чтобы избежать дублей
             btn.disabled = true;
             btn.style.opacity = '0.6';
-            btn.textContent = 'Отправка...';
+            btn.textContent = 'Регистрация...';
 
-            fetch('https://api.easysale.tech/api/tickets', {
+            fetch('https://api.easysale.tech/api/auth/register', {
                 method: 'POST',
-                headers: {
-                    'Content-Type': 'application/json'
-                },
+                headers: { 'Content-Type': 'application/json' },
                 body: JSON.stringify({
-                    subject: 'Заявка на доступ: ' + name,
-                    type: 'access_request',
-                    priority: 'medium',
-                    description: JSON.stringify({ name: name, phone: phone, email: emailTg, company: '' })
+                    name: company,
+                    company: company,
+                    phone: phone,
+                    email: email,
+                    login: login,
+                    password: password,
+                    ref: localStorage.getItem('referral_code') || undefined
                 })
             })
-            .then(function(res) { return res.json(); })
-            .then(function() {
-                accessForm.style.display = 'none';
-                accessSuccess.classList.add('show');
+            .then(function(res) {
+                return res.json().then(function(data) { return { status: res.status, data: data }; });
+            })
+            .then(function(result) {
+                if (result.status === 201) {
+                    accessForm.style.display = 'none';
+                    accessSuccess.classList.add('show');
+                    setTimeout(function() { window.location.href = 'https://app.easysale.tech'; }, 2000);
+                } else if (result.status === 409) {
+                    showHint('hintLogin', 'Такой логин уже существует');
+                    document.getElementById('regLogin').classList.add('error');
+                    btn.disabled = false; btn.style.opacity = ''; btn.textContent = 'Зарегистрироваться';
+                } else {
+                    errEl.textContent = result.data.error || 'Ошибка регистрации';
+                    errEl.classList.add('show');
+                    btn.disabled = false; btn.style.opacity = ''; btn.textContent = 'Зарегистрироваться';
+                }
             })
             .catch(function() {
-                accessForm.style.display = 'none';
-                accessSuccess.classList.add('show');
+                errEl.textContent = 'Ошибка соединения с сервером';
+                errEl.classList.add('show');
+                btn.disabled = false; btn.style.opacity = ''; btn.textContent = 'Зарегистрироваться';
             });
         }
     </script>
