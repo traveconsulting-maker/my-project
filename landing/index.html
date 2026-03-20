@@ -1650,11 +1650,11 @@
             </div>
 
             <div class="access-success" id="accessSuccess">
-                <div class="access-success-icon">
-                    <svg viewBox="0 0 24 24"><path d="M9 16.17L4.83 12l-1.42 1.41L9 19 21 7l-1.41-1.41L9 16.17z"/></svg>
+                <div class="access-success-icon" style="background:rgba(108,92,231,0.12);">
+                    <svg viewBox="0 0 24 24" style="width:36px;height:36px;fill:#a78bfa;"><path d="M20 4H4c-1.1 0-2 .9-2 2v12c0 1.1.9 2 2 2h16c1.1 0 2-.9 2-2V6c0-1.1-.9-2-2-2zm0 4l-8 5-8-5V6l8 5 8-5v2z"/></svg>
                 </div>
-                <h3 data-i18n="accessOk">Регистрация прошла успешно!</h3>
-                <p data-i18n-html="accessOkDesc">Перенаправляем в личный кабинет...</p>
+                <h3 data-i18n="accessOk">Проверьте почту!</h3>
+                <p data-i18n-html="accessOkDesc" id="successDesc">Мы отправили письмо для подтверждения.<br>Нажмите ссылку в письме, чтобы активировать аккаунт.</p>
             </div>
         </div>
     </div>
@@ -1720,8 +1720,8 @@
             regPassLabel: { ru:'Пароль', en:'Password' },
             regPassConfirmLabel: { ru:'Подтверждение пароля', en:'Confirm Password' },
             getAccess: { ru:'Зарегистрироваться', en:'Register' },
-            accessOk: { ru:'Регистрация прошла успешно!', en:'Registration Successful!' },
-            accessOkDesc: { ru:'Перенаправляем в личный кабинет...', en:'Redirecting to your dashboard...' },
+            accessOk: { ru:'Проверьте почту!', en:'Check your email!' },
+            accessOkDesc: { ru:'Мы отправили письмо для подтверждения.<br>Нажмите ссылку в письме, чтобы активировать аккаунт.', en:'We sent a confirmation email.<br>Click the link in the email to activate your account.' },
             // Validation
             valLoginShort: { ru:'Логин — минимум 6 символов', en:'Login must be at least 6 characters' },
             valPassShort: { ru:'Пароль — минимум 6 символов', en:'Password must be at least 6 characters' },
@@ -1929,7 +1929,12 @@
                 if (result.status === 201) {
                     accessForm.style.display = 'none';
                     accessSuccess.classList.add('show');
-                    setTimeout(function() { window.location.href = 'https://app.easysale.tech'; }, 2000);
+                    var desc = document.getElementById('successDesc');
+                    if (result.data.email_sent) {
+                        desc.innerHTML = 'Мы отправили письмо на <strong>' + email + '</strong>.<br>Нажмите ссылку в письме, чтобы активировать аккаунт.';
+                    } else {
+                        desc.innerHTML = 'Укажите email при регистрации, чтобы получить письмо для активации.<br>Или свяжитесь с нами для активации аккаунта.';
+                    }
                 } else if (result.status === 409) {
                     showHint('hintLogin', 'Такой логин уже существует');
                     document.getElementById('regLogin').classList.add('error');
