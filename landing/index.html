@@ -853,6 +853,28 @@
             background: linear-gradient(135deg, #6c5ce7, #a855f7); color: #fff;
         }
 
+        .tg-divider {
+            display: flex; align-items: center; gap: 12px; margin: 20px 0;
+        }
+        .tg-divider::before, .tg-divider::after {
+            content: ''; flex: 1; height: 1px; background: var(--card-border);
+        }
+        .tg-divider span {
+            font-size: 12px; color: var(--text-muted); font-weight: 500; text-transform: uppercase; letter-spacing: 0.5px;
+        }
+        .tg-login-btn {
+            width: 100%; padding: 14px; margin-bottom: 4px;
+            background: #54a9eb; color: #fff; border: none; border-radius: 14px;
+            font-family: inherit; font-size: 15px; font-weight: 700; cursor: pointer;
+            display: flex; align-items: center; justify-content: center; gap: 10px;
+            transition: all 0.3s;
+        }
+        .tg-login-btn:hover {
+            background: #3d99e0; transform: translateY(-1px);
+            box-shadow: 0 6px 24px rgba(84,169,235,0.3);
+        }
+        .tg-login-btn svg { width: 22px; height: 22px; fill: #fff; }
+
         .access-success {
             display: none; flex-direction: column; align-items: center; gap: 16px; padding: 20px 0;
         }
@@ -1622,6 +1644,13 @@
                 <div class="modal-title" data-i18n="accessTitle">Быстрая регистрация</div>
                 <div class="modal-subtitle" data-i18n="accessSub">Протестируйте сервис уже через 30 секунд</div>
 
+                <button class="tg-login-btn" onclick="telegramLogin()">
+                    <svg viewBox="0 0 24 24"><path d="M11.944 0A12 12 0 0 0 0 12a12 12 0 0 0 12 12 12 12 0 0 0 12-12A12 12 0 0 0 12 0h-.056zm4.962 7.224c.1-.002.321.023.465.14a.506.506 0 0 1 .171.325c.016.093.036.306.02.472-.18 1.898-.962 6.502-1.36 8.627-.168.9-.499 1.201-.82 1.23-.696.065-1.225-.46-1.9-.902-1.056-.693-1.653-1.124-2.678-1.8-1.185-.78-.417-1.21.258-1.91.177-.184 3.247-2.977 3.307-3.23.007-.032.014-.15-.056-.212s-.174-.041-.249-.024c-.106.024-1.793 1.14-5.061 3.345-.479.33-.913.49-1.302.48-.428-.008-1.252-.241-1.865-.44-.752-.245-1.349-.374-1.297-.789.027-.216.325-.437.893-.663 3.498-1.524 5.83-2.529 6.998-3.014 3.332-1.386 4.025-1.627 4.476-1.635z"/></svg>
+                    <span data-i18n="tgLogin">Войти через Telegram</span>
+                </button>
+
+                <div class="tg-divider"><span data-i18n="orLabel">или</span></div>
+
                 <div class="form-group">
                     <label data-i18n="regCompanyLabel">Название компании</label>
                     <input type="text" id="regCompany" placeholder="ООО Моя компания" oninput="checkRegForm()">
@@ -1723,6 +1752,8 @@
             // Registration modal
             accessTitle: { ru:'Быстрая регистрация', en:'Quick Registration' },
             accessSub: { ru:'Протестируйте сервис уже через 30 секунд', en:'Test the service in just 30 seconds' },
+            tgLogin: { ru:'Войти через Telegram', en:'Sign in with Telegram' },
+            orLabel: { ru:'или', en:'or' },
             regCompanyLabel: { ru:'Название компании', en:'Company Name' },
             regPhoneLabel: { ru:'Телефон', en:'Phone' },
             regLoginLabel: { ru:'Логин', en:'Login' },
@@ -1958,6 +1989,56 @@
                 errEl.textContent = 'Ошибка соединения с сервером';
                 errEl.classList.add('show');
                 btn.disabled = false; btn.style.opacity = ''; btn.textContent = 'Зарегистрироваться';
+            });
+        }
+
+        // Telegram Login Widget
+        function telegramLogin() {
+            var botId = 'easesale_support_bot';
+            var origin = encodeURIComponent(window.location.origin);
+            var w = 550, h = 470;
+            var left = Math.round(screen.width / 2 - w / 2);
+            var top = Math.round(screen.height / 2 - h / 2);
+            var popup = window.open(
+                'https://oauth.telegram.org/auth?bot_id=8781431115&origin=' + origin + '&request_access=write&embed=0',
+                'TelegramAuth',
+                'width=' + w + ',height=' + h + ',left=' + left + ',top=' + top
+            );
+
+            // Listen for message from Telegram OAuth
+            window.addEventListener('message', function onTgAuth(e) {
+                if (e.origin !== 'https://oauth.telegram.org') return;
+                window.removeEventListener('message', onTgAuth);
+                if (popup) popup.close();
+
+                var user = e.data;
+                if (!user || !user.id) return;
+
+                // Send to our backend
+                fetch('https://api.easysale.tech/api/auth/telegram', {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify(user)
+                })
+                .then(function(res) {
+                    return res.json().then(function(data) { return { status: res.status, data: data }; });
+                })
+                .then(function(result) {
+                    if (result.status === 200 || result.status === 201) {
+                        localStorage.setItem('token', result.data.token);
+                        localStorage.setItem('user', JSON.stringify(result.data.user));
+                        window.location.href = 'https://app.easysale.tech';
+                    } else {
+                        var errEl = document.getElementById('regError');
+                        errEl.textContent = result.data.error || 'Ошибка авторизации через Telegram';
+                        errEl.classList.add('show');
+                    }
+                })
+                .catch(function() {
+                    var errEl = document.getElementById('regError');
+                    errEl.textContent = 'Ошибка соединения с сервером';
+                    errEl.classList.add('show');
+                });
             });
         }
     </script>
