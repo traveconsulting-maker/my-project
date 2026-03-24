@@ -937,8 +937,46 @@
                 height: 48px !important;
             }
         }
-        @media (max-width: 480px) {
+        /* Burger menu */
+        .burger-btn {
+            display: none; width: 40px; height: 40px; border: none; background: none;
+            cursor: pointer; padding: 8px; border-radius: 10px; transition: background 0.2s;
+        }
+        .burger-btn:hover { background: var(--hover-bg); }
+        .burger-btn span {
+            display: block; width: 20px; height: 2px; background: var(--text);
+            margin: 5px auto; border-radius: 2px; transition: all 0.3s;
+        }
+        .burger-btn.active span:nth-child(1) { transform: rotate(45deg) translate(5px, 5px); }
+        .burger-btn.active span:nth-child(2) { opacity: 0; }
+        .burger-btn.active span:nth-child(3) { transform: rotate(-45deg) translate(5px, -5px); }
+
+        .mobile-menu {
+            display: none; position: fixed; top: 0; left: 0; right: 0; bottom: 0; z-index: 19;
+            background: var(--topbar-bg); backdrop-filter: blur(30px); -webkit-backdrop-filter: blur(30px);
+            padding: 80px 24px 32px; flex-direction: column; gap: 8px;
+            opacity: 0; transition: opacity 0.3s;
+        }
+        .mobile-menu.open { display: flex; opacity: 1; }
+        .mobile-menu a {
+            color: var(--text); text-decoration: none; font-size: 18px; font-weight: 600;
+            padding: 14px 20px; border-radius: 14px; transition: background 0.2s;
+        }
+        .mobile-menu a:hover { background: var(--hover-bg); }
+        .mobile-menu .mobile-menu-cta {
+            margin-top: auto; display: flex; justify-content: center;
+            padding: 14px 28px; border-radius: 14px;
+            background: linear-gradient(135deg, #6c5ce7, #a855f7);
+            color: #fff; font-size: 16px; font-weight: 600; text-align: center;
+        }
+
+        @media (max-width: 768px) {
             .land-nav { display: none; }
+            .lang-btn { display: none; }
+            .burger-btn { display: flex; flex-direction: column; justify-content: center; }
+        }
+
+        @media (max-width: 480px) {
             .land-logo { font-size: 17px; gap: 8px; }
             .land-logo-icon { width: 32px; height: 32px; border-radius: 10px; }
             .land-logo-icon svg { width: 17px; height: 17px; }
@@ -1134,7 +1172,20 @@
                     <svg viewBox="0 0 24 24"><path d="M11 7L9.6 8.4l2.6 2.6H2v2h10.2l-2.6 2.6L11 17l5-5-5-5zm9 12h-8v2h8c1.1 0 2-.9 2-2V5c0-1.1-.9-2-2-2h-8v2h8v14z"/></svg>
                     <span data-i18n="login">Войти</span>
                 </a>
+                <button class="burger-btn" onclick="toggleMobileMenu()" id="burgerBtn">
+                    <span></span><span></span><span></span>
+                </button>
             </div>
+        </div>
+
+        <!-- Mobile menu -->
+        <div class="mobile-menu" id="mobileMenu">
+            <a href="#mission" onclick="closeMobileMenu()">Миссия</a>
+            <a href="#pricing" onclick="closeMobileMenu()">Тарифы</a>
+            <a href="#cases" onclick="closeMobileMenu()">Кейсы</a>
+            <a href="#faq" onclick="closeMobileMenu()">FAQ</a>
+            <a href="#contacts" onclick="closeMobileMenu()">Контакты</a>
+            <a class="mobile-menu-cta" href="https://app.easysale.tech">Войти</a>
         </div>
 
         <!-- Hero -->
@@ -1789,6 +1840,19 @@
             var entry = i18n[key];
             if (!entry) return key;
             return entry[currentLang] || entry.ru;
+        }
+
+        function toggleMobileMenu() {
+            var menu = document.getElementById('mobileMenu');
+            var btn = document.getElementById('burgerBtn');
+            menu.classList.toggle('open');
+            btn.classList.toggle('active');
+            document.body.style.overflow = menu.classList.contains('open') ? 'hidden' : '';
+        }
+        function closeMobileMenu() {
+            document.getElementById('mobileMenu').classList.remove('open');
+            document.getElementById('burgerBtn').classList.remove('active');
+            document.body.style.overflow = '';
         }
 
         function switchLang() {
