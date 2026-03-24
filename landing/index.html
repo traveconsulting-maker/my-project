@@ -893,13 +893,46 @@
         }
         .field-hint.show { display: block; }
 
+        /* Burger menu */
+        .burger-btn {
+            display: none; width: 40px; height: 40px; border: none; background: none;
+            cursor: pointer; padding: 8px; border-radius: 10px; transition: background 0.2s;
+        }
+        .burger-btn:hover { background: var(--hover-bg); }
+        .burger-btn span {
+            display: block; width: 20px; height: 2px; background: var(--text);
+            margin: 5px auto; border-radius: 2px; transition: all 0.3s;
+        }
+        .burger-btn.active span:nth-child(1) { transform: rotate(45deg) translate(5px, 5px); }
+        .burger-btn.active span:nth-child(2) { opacity: 0; }
+        .burger-btn.active span:nth-child(3) { transform: rotate(-45deg) translate(5px, -5px); }
+
+        .mobile-menu {
+            display: none; position: fixed; top: 0; left: 0; right: 0; bottom: 0; z-index: 19;
+            background: var(--topbar-bg); backdrop-filter: blur(30px); -webkit-backdrop-filter: blur(30px);
+            padding: 80px 24px 32px; flex-direction: column; gap: 8px;
+            opacity: 0; transition: opacity 0.3s;
+        }
+        .mobile-menu.open { display: flex; opacity: 1; }
+        .mobile-menu a {
+            color: var(--text); text-decoration: none; font-size: 18px; font-weight: 600;
+            padding: 14px 20px; border-radius: 14px; transition: background 0.2s;
+        }
+        .mobile-menu a:hover { background: var(--hover-bg); }
+        .mobile-menu .mobile-menu-cta {
+            margin-top: auto; display: flex; justify-content: center;
+            padding: 14px 28px; border-radius: 14px;
+            background: linear-gradient(135deg, #6c5ce7, #a855f7);
+            color: #fff; font-size: 16px; font-weight: 600; text-align: center;
+        }
+
         /* Responsive */
         @media (max-width: 768px) {
             .land-topbar { padding: 12px 20px; }
             .land-topbar-right { gap: 8px; }
-            .land-nav { display: none !important; }
-            .lang-btn { display: none !important; }
-            .burger-btn { display: flex !important; flex-direction: column; justify-content: center; }
+            .land-nav { display: none; }
+            .lang-btn { display: none; }
+            .burger-btn { display: flex; flex-direction: column; justify-content: center; }
             .reg-btn { padding: 8px 18px; font-size: 13px; }
             .hero { padding: 120px 24px 60px; }
             .hero p { font-size: 16px; }
@@ -938,38 +971,6 @@
                 width: 48px !important;
                 height: 48px !important;
             }
-        }
-        /* Burger menu */
-        .burger-btn {
-            display: none; width: 40px; height: 40px; border: none; background: none;
-            cursor: pointer; padding: 8px; border-radius: 10px; transition: background 0.2s;
-        }
-        .burger-btn:hover { background: var(--hover-bg); }
-        .burger-btn span {
-            display: block; width: 20px; height: 2px; background: var(--text);
-            margin: 5px auto; border-radius: 2px; transition: all 0.3s;
-        }
-        .burger-btn.active span:nth-child(1) { transform: rotate(45deg) translate(5px, 5px); }
-        .burger-btn.active span:nth-child(2) { opacity: 0; }
-        .burger-btn.active span:nth-child(3) { transform: rotate(-45deg) translate(5px, -5px); }
-
-        .mobile-menu {
-            display: none; position: fixed; top: 0; left: 0; right: 0; bottom: 0; z-index: 19;
-            background: var(--topbar-bg); backdrop-filter: blur(30px); -webkit-backdrop-filter: blur(30px);
-            padding: 80px 24px 32px; flex-direction: column; gap: 8px;
-            opacity: 0; transition: opacity 0.3s;
-        }
-        .mobile-menu.open { display: flex; opacity: 1; }
-        .mobile-menu a {
-            color: var(--text); text-decoration: none; font-size: 18px; font-weight: 600;
-            padding: 14px 20px; border-radius: 14px; transition: background 0.2s;
-        }
-        .mobile-menu a:hover { background: var(--hover-bg); }
-        .mobile-menu .mobile-menu-cta {
-            margin-top: auto; display: flex; justify-content: center;
-            padding: 14px 28px; border-radius: 14px;
-            background: linear-gradient(135deg, #6c5ce7, #a855f7);
-            color: #fff; font-size: 16px; font-weight: 600; text-align: center;
         }
 
         @media (max-width: 480px) {
