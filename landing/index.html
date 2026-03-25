@@ -2354,13 +2354,12 @@
 <script>
 (function() {
     var DURATION = 600; // 10 minutes in seconds
-    var KEY = 'heroOfferStart';
-    var start = localStorage.getItem(KEY);
-    if (!start) {
-        start = Date.now();
-        localStorage.setItem(KEY, start);
-    } else {
-        start = parseInt(start, 10);
+    var KEY_START = 'heroOfferStart';
+    var KEY_DAY = 'heroOfferDay';
+
+    // Moscow date string (UTC+3)
+    function getMoscowDay() {
+        return new Date(Date.now() + 3 * 3600000).toISOString().slice(0, 10);
     }
 
     var timerEl = document.getElementById('heroTimerValue');
@@ -2368,8 +2367,43 @@
     var titleEl = document.getElementById('heroOfferTitle');
     var descEl = document.getElementById('heroOfferDesc');
     var timerRow = document.getElementById('heroOfferTimer');
+    var interval;
+
+    function resetOffer() {
+        var now = Date.now();
+        var today = getMoscowDay();
+        localStorage.setItem(KEY_START, now);
+        localStorage.setItem(KEY_DAY, today);
+        start = now;
+        offerEl.classList.remove('expired');
+        titleEl.textContent = 'Первый лид — бесплатно';
+        descEl.textContent = 'После регистрации менеджер свяжется с вами, проведёт демо и поможет настроить первую кампанию за 10 минут.';
+        timerRow.style.display = '';
+        if (interval) clearInterval(interval);
+        interval = setInterval(update, 1000);
+    }
+
+    // Check if new day (Moscow) — reset if so
+    var savedDay = localStorage.getItem(KEY_DAY);
+    var today = getMoscowDay();
+    var start;
+
+    if (!savedDay || savedDay !== today) {
+        start = Date.now();
+        localStorage.setItem(KEY_START, start);
+        localStorage.setItem(KEY_DAY, today);
+    } else {
+        start = parseInt(localStorage.getItem(KEY_START), 10) || Date.now();
+    }
 
     function update() {
+        // Check for new Moscow day while tab is open
+        var nowDay = getMoscowDay();
+        if (nowDay !== localStorage.getItem(KEY_DAY)) {
+            resetOffer();
+            return;
+        }
+
         var elapsed = Math.floor((Date.now() - start) / 1000);
         var remaining = DURATION - elapsed;
         if (remaining <= 0) {
@@ -2386,7 +2420,7 @@
     }
 
     update();
-    var interval = setInterval(update, 1000);
+    interval = setInterval(update, 1000);
 })();
 </script>
 </body>
