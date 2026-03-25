@@ -193,6 +193,22 @@
         .hero-cta:hover { transform: translateY(-3px); box-shadow: 0 14px 40px rgba(108,92,231,0.5); }
         .hero-cta svg { width: 20px; height: 20px; fill: currentColor; }
 
+        .hero-offer {
+            border: 1px solid rgba(0, 184, 148, 0.4);
+            background: rgba(0, 184, 148, 0.08);
+            border-radius: 16px;
+            padding: 20px 24px;
+            display: flex;
+            gap: 16px;
+            max-width: 600px;
+            margin: 0 auto 32px;
+            text-align: left;
+        }
+        .hero-offer-icon { font-size: 32px; line-height: 1; }
+        .hero-offer-title { font-weight: 700; color: #00b894; font-size: 16px; }
+        .hero-offer-desc { font-size: 14px; color: var(--text-muted); margin-top: 4px; line-height: 1.6; }
+        .hero-sub { font-size: 14px; color: var(--text-muted); margin-top: 12px; }
+
         /* Section titles */
         .section { padding: 80px 40px; max-width: 1200px; margin: 0 auto; }
         .section-label {
@@ -1189,10 +1205,18 @@
         <div class="hero">
             <h1 data-i18n-html="heroTitle">Новые клиенты легче,<br>чем ты думаешь</h1>
             <p style="font-size:clamp(16px,2vw,20px);color:var(--text-muted);max-width:620px;margin:0 auto 36px;line-height:1.7;transition:color 0.4s;" data-i18n="heroSub">AI-платформа, которая сама находит клиентов, звонит им и передаёт вам только заинтересованных.</p>
+            <div class="hero-offer">
+                <span class="hero-offer-icon">🎁</span>
+                <div>
+                    <div class="hero-offer-title">Первый лид — бесплатно</div>
+                    <div class="hero-offer-desc">После регистрации менеджер свяжется с вами, проведёт демо и настроит первую кампанию за 10 минут. Первый лид — бесплатно.</div>
+                </div>
+            </div>
             <button class="hero-cta" onclick="openAccessModal()">
-                <span data-i18n="requestAccess">Быстрая регистрация</span>
+                <span data-i18n="requestAccess">Получить первый лид бесплатно →</span>
                 <svg viewBox="0 0 24 24"><path d="M12 4l-1.41 1.41L16.17 11H4v2h12.17l-5.58 5.59L12 20l8-8-8-8z"/></svg>
             </button>
+            <p class="hero-sub">Настройка за 10 минут</p>
         </div>
 
         <!-- Features -->
