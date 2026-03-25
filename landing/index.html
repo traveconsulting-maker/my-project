@@ -207,7 +207,10 @@
         .hero-offer-icon { font-size: 32px; line-height: 1; }
         .hero-offer-title { font-weight: 700; color: #00b894; font-size: 16px; }
         .hero-offer-desc { font-size: 14px; color: var(--text-muted); margin-top: 4px; line-height: 1.6; }
-        .hero-sub { font-size: 14px; color: var(--text-muted); margin-top: 12px; }
+        .hero-offer-timer { display: inline-flex; align-items: center; gap: 6px; margin-top: 8px; font-size: 14px; font-weight: 700; color: #e17055; }
+        .hero-offer-timer span { font-variant-numeric: tabular-nums; }
+        .hero-offer.expired { border-color: rgba(225,112,85,0.4); background: rgba(225,112,85,0.08); }
+        .hero-offer.expired .hero-offer-title { color: #e17055; }
 
         /* Section titles */
         .section { padding: 80px 40px; max-width: 1200px; margin: 0 auto; }
@@ -1205,11 +1208,12 @@
         <div class="hero">
             <h1 data-i18n-html="heroTitle">Новые клиенты легче,<br>чем ты думаешь</h1>
             <p style="font-size:clamp(16px,2vw,20px);color:var(--text-muted);max-width:620px;margin:0 auto 36px;line-height:1.7;transition:color 0.4s;" data-i18n="heroSub">AI-платформа, которая сама находит клиентов, звонит им и передаёт вам только заинтересованных.</p>
-            <div class="hero-offer">
+            <div class="hero-offer" id="heroOffer">
                 <span class="hero-offer-icon">🎁</span>
                 <div>
-                    <div class="hero-offer-title">Первый лид — бесплатно</div>
-                    <div class="hero-offer-desc">После регистрации менеджер свяжется с вами, проведёт демо и настроит первую кампанию за 10 минут.</div>
+                    <div class="hero-offer-title" id="heroOfferTitle">Первый лид — бесплатно</div>
+                    <div class="hero-offer-desc" id="heroOfferDesc">После регистрации менеджер свяжется с вами, проведёт демо и поможет настроить первую кампанию за 10 минут.</div>
+                    <div class="hero-offer-timer" id="heroOfferTimer">⏳ Предложение исчезнет через <span id="heroTimerValue">10:00</span></div>
                 </div>
             </div>
             <button class="hero-cta" onclick="openAccessModal()">
@@ -2346,6 +2350,44 @@
     }
 
     function scRemoveFile(idx) { scFiles.splice(idx, 1); scRenderPreview(); }
+</script>
+<script>
+(function() {
+    var DURATION = 600; // 10 minutes in seconds
+    var KEY = 'heroOfferStart';
+    var start = localStorage.getItem(KEY);
+    if (!start) {
+        start = Date.now();
+        localStorage.setItem(KEY, start);
+    } else {
+        start = parseInt(start, 10);
+    }
+
+    var timerEl = document.getElementById('heroTimerValue');
+    var offerEl = document.getElementById('heroOffer');
+    var titleEl = document.getElementById('heroOfferTitle');
+    var descEl = document.getElementById('heroOfferDesc');
+    var timerRow = document.getElementById('heroOfferTimer');
+
+    function update() {
+        var elapsed = Math.floor((Date.now() - start) / 1000);
+        var remaining = DURATION - elapsed;
+        if (remaining <= 0) {
+            remaining = 0;
+            clearInterval(interval);
+            offerEl.classList.add('expired');
+            titleEl.textContent = 'Предложение истекло';
+            descEl.textContent = 'Бесплатный лид больше недоступен. Зарегистрируйтесь, чтобы узнать о новых акциях.';
+            timerRow.style.display = 'none';
+        }
+        var m = Math.floor(remaining / 60);
+        var s = remaining % 60;
+        timerEl.textContent = (m < 10 ? '0' : '') + m + ':' + (s < 10 ? '0' : '') + s;
+    }
+
+    update();
+    var interval = setInterval(update, 1000);
+})();
 </script>
 </body>
 </html>
