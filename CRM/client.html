@@ -460,6 +460,7 @@
             <div class="tab" onclick="switchClientTab('audiences',this)">Целевая аудитория</div>
             <div class="tab" onclick="switchClientTab('referrals',this)">Рефералы</div>
             <div class="tab" onclick="switchClientTab('history',this)">История</div>
+            <div class="tab" onclick="switchClientTab('qualleads',this)">Квал лиды</div>
         </div>
 
         <!-- Content -->
@@ -468,6 +469,56 @@
 
     <!-- Toast container -->
     <div class="toast-container" id="toast-container"></div>
+
+    <!-- Qual Lead Modal -->
+    <div class="modal-overlay" id="quallead-modal">
+        <div class="modal" style="max-width:540px;">
+            <div class="modal-header">
+                <div class="modal-title">Добавить квал лид</div>
+                <button class="modal-close" onclick="closeModal('quallead-modal')">&times;</button>
+            </div>
+            <div style="display:flex;flex-direction:column;gap:12px;padding:4px 0;">
+                <div>
+                    <label style="display:block;margin-bottom:4px;font-size:.85rem;color:var(--text-secondary);">Телефон *</label>
+                    <input type="tel" id="ql-phone" placeholder="+7..." style="width:100%;padding:10px 12px;border-radius:8px;border:1px solid var(--input-border);background:var(--input-bg);color:var(--text);font-size:.95rem;">
+                </div>
+                <div>
+                    <label style="display:block;margin-bottom:4px;font-size:.85rem;color:var(--text-secondary);">Имя клиента</label>
+                    <input type="text" id="ql-name" placeholder="Имя" style="width:100%;padding:10px 12px;border-radius:8px;border:1px solid var(--input-border);background:var(--input-bg);color:var(--text);font-size:.95rem;">
+                </div>
+                <div>
+                    <label style="display:block;margin-bottom:4px;font-size:.85rem;color:var(--text-secondary);">Компания</label>
+                    <input type="text" id="ql-company" placeholder="Компания" style="width:100%;padding:10px 12px;border-radius:8px;border:1px solid var(--input-border);background:var(--input-bg);color:var(--text);font-size:.95rem;">
+                </div>
+                <div style="display:flex;gap:12px;">
+                    <div style="flex:1;">
+                        <label style="display:block;margin-bottom:4px;font-size:.85rem;color:var(--text-secondary);">Время звонка</label>
+                        <input type="datetime-local" id="ql-call-time" style="width:100%;padding:10px 12px;border-radius:8px;border:1px solid var(--input-border);background:var(--input-bg);color:var(--text);font-size:.95rem;">
+                    </div>
+                    <div style="flex:1;">
+                        <label style="display:block;margin-bottom:4px;font-size:.85rem;color:var(--text-secondary);">Длительность (мм:сс)</label>
+                        <input type="text" id="ql-duration" placeholder="05:30" style="width:100%;padding:10px 12px;border-radius:8px;border:1px solid var(--input-border);background:var(--input-bg);color:var(--text);font-size:.95rem;">
+                    </div>
+                </div>
+                <div style="display:flex;align-items:center;gap:8px;">
+                    <input type="checkbox" id="ql-agreed" style="width:18px;height:18px;accent-color:var(--accent);">
+                    <label for="ql-agreed" style="font-size:.9rem;color:var(--text);">Согласие получено</label>
+                </div>
+                <div>
+                    <label style="display:block;margin-bottom:4px;font-size:.85rem;color:var(--text-secondary);">Договорённости</label>
+                    <textarea id="ql-agreements" rows="3" placeholder="О чём договорились..." style="width:100%;padding:10px 12px;border-radius:8px;border:1px solid var(--input-border);background:var(--input-bg);color:var(--text);font-size:.95rem;resize:vertical;"></textarea>
+                </div>
+                <div>
+                    <label style="display:block;margin-bottom:4px;font-size:.85rem;color:var(--text-secondary);">Факты о клиенте</label>
+                    <textarea id="ql-facts" rows="3" placeholder="Доп. информация..." style="width:100%;padding:10px 12px;border-radius:8px;border:1px solid var(--input-border);background:var(--input-bg);color:var(--text);font-size:.95rem;resize:vertical;"></textarea>
+                </div>
+            </div>
+            <div class="modal-footer">
+                <button class="btn btn-primary" onclick="submitQualLead()">Сохранить</button>
+                <button class="btn" style="background:var(--input-bg);color:var(--text);border:1px solid var(--input-border);" onclick="closeModal('quallead-modal')">Отмена</button>
+            </div>
+        </div>
+    </div>
 
     <!-- Balance Modal -->
     <div class="modal-overlay" id="balance-modal">
@@ -1215,6 +1266,15 @@
                     </div>
                 `).join('') + '</div>';
             }
+        } else if (currentDetailTab === 'qualleads') {
+            el.innerHTML = '<div class="client-detail-section">' +
+                '<div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:16px;">' +
+                    '<h3 style="margin:0;">Квал лиды</h3>' +
+                    '<button class="btn btn-primary" onclick="openModal(\'quallead-modal\')">Добавить квал лид</button>' +
+                '</div>' +
+                '<div id="qualleads-table"></div>' +
+            '</div>';
+            loadQualLeads(c.id);
         }
     }
 
@@ -2109,6 +2169,85 @@
             document.title = c.name + ' — CRM';
             renderClientDetail();
         }
+    }
+
+    // ==================== QUAL LEADS ====================
+    function loadQualLeads(clientId) {
+        var container = document.getElementById('qualleads-table');
+        if (!container) return;
+        container.innerHTML = '<p style="color:var(--text-muted);">Загрузка...</p>';
+        fetch(API_BASE + '/api/admin/clients/' + clientId + '/leads', { headers: apiHeaders() })
+        .then(function(r) { return r.json(); })
+        .then(function(leads) {
+            if (!Array.isArray(leads) || leads.length === 0) {
+                container.innerHTML = '<div class="empty-state"><p>Нет квал лидов</p></div>';
+                return;
+            }
+            var html = '<table><thead><tr>' +
+                '<th>Телефон</th><th>Имя</th><th>Компания</th><th>Время звонка</th><th>Договорённости</th><th>Статус</th>' +
+                '</tr></thead><tbody>';
+            leads.forEach(function(l) {
+                var callData = l.call_data || {};
+                var agreements = callData.agreements || '';
+                var callTime = l.created_at ? formatDateTime(l.created_at) : '—';
+                var status = l.qualified ? '<span style="color:#00b894;">Квалифицирован</span>' : '<span style="color:var(--text-muted);">Не квалифицирован</span>';
+                html += '<tr>' +
+                    '<td>' + esc(l.phone || '') + '</td>' +
+                    '<td>' + esc(l.name || '—') + '</td>' +
+                    '<td>' + esc(l.company || '—') + '</td>' +
+                    '<td>' + callTime + '</td>' +
+                    '<td>' + esc(agreements) + '</td>' +
+                    '<td>' + status + '</td>' +
+                '</tr>';
+            });
+            html += '</tbody></table>';
+            container.innerHTML = html;
+        })
+        .catch(function() {
+            container.innerHTML = '<div class="empty-state"><p>Ошибка загрузки</p></div>';
+        });
+    }
+
+    function submitQualLead() {
+        var phone = document.getElementById('ql-phone').value.trim();
+        if (!phone) { toast('Укажите телефон'); return; }
+        var durationParts = (document.getElementById('ql-duration').value || '0:0').split(':');
+        var durationSec = (parseInt(durationParts[0]) || 0) * 60 + (parseInt(durationParts[1]) || 0);
+        var payload = {
+            phone: phone,
+            name: document.getElementById('ql-name').value.trim() || null,
+            company: document.getElementById('ql-company').value.trim() || null,
+            call_time: document.getElementById('ql-call-time').value || null,
+            call_duration: durationSec,
+            qualified: document.getElementById('ql-agreed').checked,
+            agreements: document.getElementById('ql-agreements').value.trim(),
+            client_facts: document.getElementById('ql-facts').value.trim()
+        };
+        fetch(API_BASE + '/api/admin/clients/' + currentDetailClient + '/leads', {
+            method: 'POST',
+            headers: apiHeaders(),
+            body: JSON.stringify(payload)
+        })
+        .then(function(r) {
+            if (!r.ok) throw r;
+            return r.json();
+        })
+        .then(function() {
+            toast('Квал лид добавлен');
+            closeModal('quallead-modal');
+            document.getElementById('ql-phone').value = '';
+            document.getElementById('ql-name').value = '';
+            document.getElementById('ql-company').value = '';
+            document.getElementById('ql-call-time').value = '';
+            document.getElementById('ql-duration').value = '';
+            document.getElementById('ql-agreed').checked = false;
+            document.getElementById('ql-agreements').value = '';
+            document.getElementById('ql-facts').value = '';
+            loadQualLeads(currentDetailClient);
+        })
+        .catch(function() {
+            toast('Ошибка сохранения');
+        });
     }
     </script>
 
