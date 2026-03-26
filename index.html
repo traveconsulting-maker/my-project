@@ -9316,15 +9316,15 @@
             var durStr = durMin + ':' + (durSec < 10 ? '0' : '') + durSec;
             var html =
                 '<div style="display:flex;flex-direction:column;gap:14px;">' +
-                    '<div><span style="color:var(--text-muted);font-size:.85rem;">Телефон</span><div style="font-family:monospace;font-size:1rem;margin-top:2px;">' + clEsc(lead.phone || '—') + '</div></div>' +
-                    '<div><span style="color:var(--text-muted);font-size:.85rem;">Имя</span><div style="margin-top:2px;">' + clEsc(lead.name || '—') + '</div></div>' +
-                    '<div><span style="color:var(--text-muted);font-size:.85rem;">Компания</span><div style="margin-top:2px;">' + clEsc(lead.company || '—') + '</div></div>' +
+                    '<div><span style="color:var(--text-muted);font-size:.85rem;">Телефон</span><div style="font-family:monospace;font-size:1rem;margin-top:2px;color:var(--text);">' + clEsc(lead.phone || '—') + '</div></div>' +
+                    '<div><span style="color:var(--text-muted);font-size:.85rem;">Имя</span><div style="margin-top:2px;color:var(--text);">' + clEsc(lead.name || '—') + '</div></div>' +
+                    '<div><span style="color:var(--text-muted);font-size:.85rem;">Компания</span><div style="margin-top:2px;color:var(--text);">' + clEsc(lead.company || '—') + '</div></div>' +
                     '<div style="display:flex;gap:24px;">' +
-                        '<div><span style="color:var(--text-muted);font-size:.85rem;">Дата звонка</span><div style="margin-top:2px;">' + date + '</div></div>' +
-                        '<div><span style="color:var(--text-muted);font-size:.85rem;">Длительность</span><div style="margin-top:2px;">' + durStr + '</div></div>' +
+                        '<div><span style="color:var(--text-muted);font-size:.85rem;">Дата звонка</span><div style="margin-top:2px;color:var(--text);">' + date + '</div></div>' +
+                        '<div><span style="color:var(--text-muted);font-size:.85rem;">Длительность</span><div style="margin-top:2px;color:var(--text);">' + durStr + '</div></div>' +
                     '</div>' +
-                    '<div><span style="color:var(--text-muted);font-size:.85rem;">Договорённости</span><div style="margin-top:2px;white-space:pre-wrap;">' + clEsc(lead.agreements || '—') + '</div></div>' +
-                    '<div><span style="color:var(--text-muted);font-size:.85rem;">Факты о клиенте</span><div style="margin-top:2px;white-space:pre-wrap;">' + clEsc(lead.clientFacts || '—') + '</div></div>' +
+                    '<div><span style="color:var(--text-muted);font-size:.85rem;">Договорённости</span><div style="margin-top:2px;white-space:pre-wrap;color:var(--text);">' + clEsc(lead.agreements || '—') + '</div></div>' +
+                    '<div><span style="color:var(--text-muted);font-size:.85rem;">Факты о клиенте</span><div style="margin-top:2px;white-space:pre-wrap;color:var(--text);">' + clEsc(lead.clientFacts || '—') + '</div></div>' +
                 '</div>';
             document.getElementById('qlDetailContent').innerHTML = html;
             document.getElementById('qlDetailModal').classList.add('active');
