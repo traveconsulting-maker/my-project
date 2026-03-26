@@ -2714,6 +2714,15 @@
         </div>
     </div>
 
+    <!-- Qual Lead Detail Modal -->
+    <div class="modal-overlay" id="qlDetailModal" onclick="if(event.target===this)closeQlDetail()">
+        <div class="modal" style="max-width:520px;text-align:left;padding:32px 28px;">
+            <button class="modal-close" onclick="closeQlDetail()">&times;</button>
+            <div style="font-size:1.1rem;font-weight:700;margin-bottom:20px;">Квал лид</div>
+            <div id="qlDetailContent"></div>
+        </div>
+    </div>
+
     <!-- ===== QUICK START WIZARD ===== -->
     <div class="qs-overlay" id="qsWizard" onclick="if(event.target===this)closeQsWizard()">
         <div class="qs-modal">
@@ -3400,10 +3409,10 @@
                                 <th>Телефон</th>
                                 <th>Имя</th>
                                 <th>Компания</th>
-                                <th>Диалог</th>
                                 <th>Длительность</th>
-                                <th>Запись</th>
                                 <th>Дата</th>
+                                <th>Договорённости</th>
+                                <th>Факты о клиенте</th>
                             </tr>
                         </thead>
                         <tbody id="qlTableBody"></tbody>
@@ -9135,21 +9144,18 @@
             tbody.innerHTML = filtered.map(function(l) {
                 var date = l.createdAt ? l.createdAt.substring(0, 16).replace('T', ' ') : '';
                 var checked = qlSelected.indexOf(l.id) !== -1 ? ' checked' : '';
-                var hasAudio = !!(l.recordingUrl);
-                var audioBtn = hasAudio
-                    ? '<span class="ql-name-link" onclick="qlToggleAudio(\'' + l.id + '\')" style="cursor:pointer;color:#6c5ce7;" title="Прослушать запись"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" style="vertical-align:-3px;"><polygon points="5 3 19 12 5 21 5 3"/></svg></span>'
-                    : '<span style="color:var(--text-muted);">—</span>';
-                return '<tr>' +
-                    '<td><input type="checkbox" class="ql-cb" data-id="' + l.id + '"' + checked + ' onchange="qlToggleSelect(\'' + l.id + '\',this.checked)"></td>' +
+                var agrShort = (l.agreements || '').length > 40 ? l.agreements.substring(0, 40) + '…' : (l.agreements || '—');
+                var factsShort = (l.clientFacts || '').length > 40 ? l.clientFacts.substring(0, 40) + '…' : (l.clientFacts || '—');
+                return '<tr style="cursor:pointer;" onclick="qlShowDetail(\'' + l.id + '\')">' +
+                    '<td onclick="event.stopPropagation();"><input type="checkbox" class="ql-cb" data-id="' + l.id + '"' + checked + ' onchange="qlToggleSelect(\'' + l.id + '\',this.checked)"></td>' +
                     '<td style="font-family:monospace;font-size:.85rem;">' + clEsc(l.phone || '') + '</td>' +
                     '<td>' + clEsc(l.name || '—') + '</td>' +
                     '<td>' + clEsc(l.company || '—') + '</td>' +
-                    '<td>' + clEsc(l.dialogName || '—') + '</td>' +
                     '<td>' + (l.callDuration || 0) + ' сек</td>' +
-                    '<td>' + audioBtn + '</td>' +
                     '<td style="white-space:nowrap;">' + date + '</td>' +
-                    '</tr>' +
-                    (hasAudio ? '<tr class="ql-audio-row" id="qlAudio_' + l.id + '"><td colspan="8"><div style="display:flex;align-items:center;gap:12px;"><audio class="ql-audio-player" controls preload="none"><source src="' + clEsc(l.recordingUrl) + '" type="audio/mpeg"></audio></div></td></tr>' : '');
+                    '<td>' + clEsc(agrShort) + '</td>' +
+                    '<td>' + clEsc(factsShort) + '</td>' +
+                    '</tr>';
             }).join('');
         }
 
@@ -9248,12 +9254,13 @@
         }
 
         function qlDoExport(data, format) {
-            var headers = ['Телефон', 'Имя', 'Компания', 'Диалог', 'Длительность (сек)', 'Дата'];
+            var headers = ['Телефон', 'Имя', 'Компания', 'Длительность (сек)', 'Дата', 'Договорённости', 'Факты о клиенте'];
             var rows = data.map(function(l) {
                 return [
                     l.phone || '', l.name || '', l.company || '',
-                    l.dialogName || '', l.callDuration || 0,
-                    l.createdAt ? l.createdAt.substring(0, 16).replace('T', ' ') : ''
+                    l.callDuration || 0,
+                    l.createdAt ? l.createdAt.substring(0, 16).replace('T', ' ') : '',
+                    l.agreements || '', l.clientFacts || ''
                 ];
             });
             if (format === 'csv') {
@@ -9299,6 +9306,34 @@
             qlDoExport(data, format);
         }
 
+        function qlShowDetail(id) {
+            var lead = qlLeads.find(function(l) { return l.id === id; });
+            if (!lead) return;
+            var date = lead.createdAt ? lead.createdAt.substring(0, 16).replace('T', ' ') : '—';
+            var dur = (lead.callDuration || 0);
+            var durMin = Math.floor(dur / 60);
+            var durSec = dur % 60;
+            var durStr = durMin + ':' + (durSec < 10 ? '0' : '') + durSec;
+            var html =
+                '<div style="display:flex;flex-direction:column;gap:14px;">' +
+                    '<div><span style="color:var(--text-muted);font-size:.85rem;">Телефон</span><div style="font-family:monospace;font-size:1rem;margin-top:2px;">' + clEsc(lead.phone || '—') + '</div></div>' +
+                    '<div><span style="color:var(--text-muted);font-size:.85rem;">Имя</span><div style="margin-top:2px;">' + clEsc(lead.name || '—') + '</div></div>' +
+                    '<div><span style="color:var(--text-muted);font-size:.85rem;">Компания</span><div style="margin-top:2px;">' + clEsc(lead.company || '—') + '</div></div>' +
+                    '<div style="display:flex;gap:24px;">' +
+                        '<div><span style="color:var(--text-muted);font-size:.85rem;">Дата звонка</span><div style="margin-top:2px;">' + date + '</div></div>' +
+                        '<div><span style="color:var(--text-muted);font-size:.85rem;">Длительность</span><div style="margin-top:2px;">' + durStr + '</div></div>' +
+                    '</div>' +
+                    '<div><span style="color:var(--text-muted);font-size:.85rem;">Договорённости</span><div style="margin-top:2px;white-space:pre-wrap;">' + clEsc(lead.agreements || '—') + '</div></div>' +
+                    '<div><span style="color:var(--text-muted);font-size:.85rem;">Факты о клиенте</span><div style="margin-top:2px;white-space:pre-wrap;">' + clEsc(lead.clientFacts || '—') + '</div></div>' +
+                '</div>';
+            document.getElementById('qlDetailContent').innerHTML = html;
+            document.getElementById('qlDetailModal').classList.add('active');
+        }
+
+        function closeQlDetail() {
+            document.getElementById('qlDetailModal').classList.remove('active');
+        }
+
         // Load qualified leads from backend
         function qlLoadFromAPI() {
             if (!esHasToken()) return;
@@ -9319,7 +9354,9 @@
                         createdAt: l.created_at || '',
                         status: l.qualified ? 'new' : 'downloaded',
                         callDuration: l.call_duration || 0,
-                        recordingUrl: recUrl
+                        recordingUrl: recUrl,
+                        agreements: cd.agreements || '',
+                        clientFacts: cd.clientFacts || cd.client_facts || ''
                     };
                 });
                 qlPersist(); qlPopulateFilters(); qlRender();
