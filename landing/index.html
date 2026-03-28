@@ -636,134 +636,122 @@
             color: var(--text); font-weight: 600;
         }
 
-        /* Mission section */
-        .mission-section {
+        /* Founder section */
+        .founder-section {
             padding: 100px 40px;
-            max-width: 900px;
+            max-width: 1100px;
             margin: 0 auto;
-            text-align: center;
             position: relative;
         }
-        .mission-section .section-label {
-            display: inline-flex; align-items: center; gap: 8px;
-            padding: 6px 16px; border-radius: 100px;
-            background: rgba(108,92,231,0.1); color: #a78bfa;
-            font-size: 12px; font-weight: 700; text-transform: uppercase; letter-spacing: 1.5px;
-            margin-bottom: 16px;
-        }
-        .mission-title {
+        .founder-title {
             font-size: clamp(28px, 4vw, 42px);
             font-weight: 900;
             color: var(--text);
-            margin-bottom: 48px;
+            margin-bottom: 56px;
             letter-spacing: -1px;
+            text-align: center;
             transition: color 0.4s;
         }
-        .mission-body {
-            text-align: left;
-            position: relative;
+        .founder-grid {
+            display: grid;
+            grid-template-columns: 280px 1fr;
+            gap: 56px;
+            align-items: start;
         }
-        .mission-body p {
+        .founder-left {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 24px;
+            position: sticky;
+            top: 100px;
+        }
+        .founder-photo {
+            width: 200px;
+            height: 200px;
+            border-radius: 50%;
+            overflow: hidden;
+            border: 3px solid rgba(108, 92, 231, 0.3);
+            box-shadow: 0 8px 32px rgba(108, 92, 231, 0.2);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            background: linear-gradient(135deg, #6c5ce7, #a855f7);
+        }
+        .founder-photo img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+            display: none;
+        }
+        .founder-photo .founder-initials {
+            font-size: 64px;
+            font-weight: 900;
+            color: #fff;
+            letter-spacing: 2px;
+            user-select: none;
+        }
+        .founder-photo.has-photo img {
+            display: block;
+        }
+        .founder-photo.has-photo .founder-initials {
+            display: none;
+        }
+        .founder-name {
+            font-size: 20px;
+            font-weight: 700;
+            color: var(--text);
+            text-align: center;
+            transition: color 0.4s;
+        }
+        .founder-role {
+            font-size: 14px;
+            color: var(--text-muted);
+            text-align: center;
+            transition: color 0.4s;
+        }
+        .founder-tg-btn {
+            display: inline-flex;
+            align-items: center;
+            gap: 10px;
+            padding: 12px 28px;
+            border-radius: 14px;
+            background: linear-gradient(135deg, #6c5ce7, #a855f7);
+            color: #fff;
+            font-size: 14px;
+            font-weight: 600;
+            text-decoration: none;
+            transition: transform 0.2s, box-shadow 0.2s;
+            box-shadow: 0 4px 16px rgba(108, 92, 231, 0.3);
+        }
+        .founder-tg-btn:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 6px 24px rgba(108, 92, 231, 0.45);
+        }
+        .founder-tg-btn svg {
+            width: 18px;
+            height: 18px;
+            fill: #fff;
+        }
+        .founder-body p {
             font-size: 16px;
-            line-height: 1.85;
+            line-height: 1.9;
             color: var(--text-secondary);
-            margin-bottom: 24px;
+            margin-bottom: 20px;
             transition: color 0.4s;
         }
-        .mission-body p:last-of-type {
+        .founder-body p:last-of-type {
             margin-bottom: 0;
         }
-        .mission-highlight {
+        .founder-body p.founder-accent {
             color: var(--text);
             font-weight: 600;
-        }
-        .mission-signature {
-            margin-top: 48px;
-            padding-top: 32px;
-            border-top: 1px solid var(--border-color);
-            font-size: 15px;
-            color: var(--text-muted);
-            font-style: italic;
-            text-align: center;
-            transition: color 0.4s, border-color 0.4s;
-        }
-
-        /* Mission visual elements */
-        .mission-visuals {
-            display: flex;
-            justify-content: center;
-            gap: 48px;
-            margin-top: 48px;
-            margin-bottom: 8px;
-        }
-        .mission-visual-item {
-            width: 80px;
-            height: 80px;
-            position: relative;
-            opacity: 0.5;
-            transition: opacity 0.4s;
-        }
-        .mission-visual-item:hover {
-            opacity: 0.8;
-        }
-        .mv-neural {
-            display: flex;
-            align-items: center;
-            justify-content: center;
-        }
-        .mv-neural svg {
-            width: 64px;
-            height: 64px;
-        }
-        .mv-neural svg circle {
-            fill: rgba(108, 92, 231, 0.6);
-            transition: fill 0.3s;
-        }
-        .mv-neural svg line {
-            stroke: rgba(108, 92, 231, 0.25);
-            stroke-width: 1;
-        }
-        .mv-grid {
-            display: flex;
-            align-items: center;
-            justify-content: center;
-        }
-        .mv-grid svg {
-            width: 64px;
-            height: 64px;
-        }
-        .mv-grid svg rect {
-            fill: none;
-            stroke: rgba(168, 85, 247, 0.3);
-            stroke-width: 0.8;
-            rx: 2;
-        }
-        .mv-grid svg circle {
-            fill: rgba(168, 85, 247, 0.5);
-        }
-        .mv-circuit {
-            display: flex;
-            align-items: center;
-            justify-content: center;
-        }
-        .mv-circuit svg {
-            width: 64px;
-            height: 64px;
-        }
-        .mv-circuit svg path {
-            fill: none;
-            stroke: rgba(108, 92, 231, 0.3);
-            stroke-width: 1;
-        }
-        .mv-circuit svg circle {
-            fill: rgba(108, 92, 231, 0.5);
-        }
-
-        .mission-divider-line {
-            width: 1px;
-            height: 60px;
-            background: linear-gradient(180deg, transparent, rgba(108,92,231,0.2), transparent);
-            align-self: center;
+            font-size: 17px;
+            line-height: 1.8;
+            padding: 20px 24px;
+            border-left: 3px solid #a855f7;
+            background: rgba(108, 92, 231, 0.05);
+            border-radius: 0 12px 12px 0;
         }
 
         /* Footer */
@@ -973,23 +961,19 @@
             .pricing-card, .pricing-card-rival { padding: 28px 24px; }
             .pricing-controls { padding: 24px; }
             .faq-section { padding: 60px 24px; }
-            .mission-section { padding: 60px 24px; }
-            .mission-body p { font-size: 15px; }
-            .mission-visual-item { width: 64px; height: 64px; }
+            .founder-section { padding: 60px 24px; }
+            .founder-grid { grid-template-columns: 1fr; gap: 40px; }
+            .founder-left { position: static; flex-direction: row; gap: 20px; }
+            .founder-photo { width: 120px; height: 120px; }
+            .founder-photo .founder-initials { font-size: 40px; }
+            .founder-body p { font-size: 15px; }
             .cta-banner { margin: 60px 24px; padding: 40px 32px; border-radius: 24px; }
         }
         @media (max-width: 600px) {
-            .mission-visuals {
-                gap: 24px;
-            }
-            .mission-visual-item {
-                width: 56px;
-                height: 56px;
-            }
-            .mission-visual-item svg {
-                width: 48px !important;
-                height: 48px !important;
-            }
+            .founder-left { flex-direction: column; }
+            .founder-photo { width: 140px; height: 140px; }
+            .founder-photo .founder-initials { font-size: 48px; }
+            .founder-tg-btn { width: 100%; justify-content: center; }
         }
 
         @media (max-width: 480px) {
@@ -1024,9 +1008,9 @@
             .faq-question span { font-size: 14px; }
             .faq-answer-inner { padding: 0 20px 16px; font-size: 13px; }
             .faq-item { border-radius: 14px; }
-            .mission-section { padding: 48px 20px; }
-            .mission-body p { font-size: 14px; line-height: 1.75; }
-            .mission-visuals { gap: 20px; }
+            .founder-section { padding: 48px 20px; }
+            .founder-body p { font-size: 14px; line-height: 1.75; }
+            .founder-body p.founder-accent { font-size: 15px; padding: 16px 20px; }
             .cta-banner { margin: 60px 20px; padding: 40px 24px; border-radius: 20px; }
             .cta-banner p { font-size: 14px; }
             .land-footer { padding: 24px 20px; font-size: 12px; }
@@ -1040,10 +1024,9 @@
             .hero p { font-size: 14px; }
             .hero-cta { width: 100%; justify-content: center; }
             .feat-card { padding: 16px; border-radius: 14px; }
-            .mission-visuals { flex-wrap: wrap; gap: 16px; }
-            .mission-divider-line { display: none; }
-            .mission-visual-item { width: 48px; height: 48px; }
-            .mission-visual-item svg { width: 40px !important; height: 40px !important; }
+            .founder-photo { width: 120px; height: 120px; }
+            .founder-photo .founder-initials { font-size: 36px; }
+            .founder-title { font-size: 24px; margin-bottom: 32px; }
             .cta-banner { margin: 48px 16px; padding: 32px 20px; }
         }
 
@@ -1172,7 +1155,7 @@
             </div>
             <div class="land-topbar-right">
                 <nav class="land-nav">
-                    <a href="#mission" data-i18n="mission">Миссия</a>
+                    <a href="#mission" data-i18n="mission">О нас</a>
                     <a href="#pricing" data-i18n="pricing">Тарифы</a>
                     <a href="#cases" data-i18n="cases_nav">Кейсы</a>
                     <a href="#faq" data-i18n="faq_nav">FAQ</a>
@@ -1196,7 +1179,7 @@
 
         <!-- Mobile menu -->
         <div class="mobile-menu" id="mobileMenu">
-            <a href="#mission" onclick="closeMobileMenu()">Миссия</a>
+            <a href="#mission" onclick="closeMobileMenu()">О нас</a>
             <a href="#pricing" onclick="closeMobileMenu()">Тарифы</a>
             <a href="#cases" onclick="closeMobileMenu()">Кейсы</a>
             <a href="#faq" onclick="closeMobileMenu()">FAQ</a>
@@ -1295,21 +1278,46 @@
         </div>
 
 
-        <!-- Mission -->
-        <div class="mission-section" id="mission">
-            <div class="mission-title" data-i18n="missionTitle">Миссия EasySale</div>
+        <!-- About Founder -->
+        <div class="founder-section" id="mission">
+            <div class="founder-title">Кто стоит за EasySale</div>
 
-            <div class="mission-body">
-                <p data-i18n="missionP1">Миссия EasySale — помогать компаниям расти быстрее рынка, превращая привлечение клиентов в системный и предсказуемый процесс. Мы устраняем зависимость первичных продаж от человеческого фактора и переводим холодный поиск клиентов в технологическую систему.</p>
+            <div class="founder-grid">
+                <div class="founder-left">
+                    <div class="founder-photo" id="founderPhoto">
+                        <img src="" alt="Вячеслав Максимов">
+                        <span class="founder-initials">ВМ</span>
+                    </div>
+                    <div>
+                        <div class="founder-name">Вячеслав Максимов</div>
+                        <div class="founder-role">Основатель EasySale</div>
+                    </div>
+                    <a href="https://t.me/maksimov_ofc" target="_blank" rel="noopener" class="founder-tg-btn">
+                        <svg viewBox="0 0 24 24"><path d="M11.944 0A12 12 0 0 0 0 12a12 12 0 0 0 12 12 12 12 0 0 0 12-12A12 12 0 0 0 12 0a12 12 0 0 0-.056 0zm4.962 7.224c.1-.002.321.023.465.14a.506.506 0 0 1 .171.325c.016.093.036.306.02.472-.18 1.898-.962 6.502-1.36 8.627-.168.9-.499 1.201-.82 1.23-.696.065-1.225-.46-1.9-.902-1.056-.693-1.653-1.124-2.678-1.8-1.185-.78-.417-1.21.258-1.91.177-.184 3.247-2.977 3.307-3.23.007-.032.014-.15-.056-.212s-.174-.041-.249-.024c-.106.024-1.793 1.14-5.061 3.345-.479.33-.913.49-1.302.48-.428-.008-1.252-.241-1.865-.44-.752-.245-1.349-.374-1.297-.789.027-.216.325-.437.893-.663 3.498-1.524 5.83-2.529 6.998-3.014 3.332-1.386 4.025-1.627 4.476-1.635z"/></svg>
+                        Написать основателю
+                    </a>
+                </div>
 
-                <p data-i18n="missionP2">EasySale берёт на себя поиск, первичный контакт и квалификацию потенциальных клиентов. Это позволяет бизнесу получать стабильный поток заинтересованных компаний, а не случайные лиды.</p>
+                <div class="founder-body">
+                    <p>Меня зовут Вячеслав. Я из Миасса — небольшого города на Урале.</p>
 
-                <p data-i18n="missionP3">Мы убираем хаос на входе воронки и создаём управляемый источник новых возможностей для продаж.</p>
+                    <p>Свой первый заработок я помню хорошо: мне было 15, и я расклеивал объявления по подъездам. Никакой романтики — просто работа. Но именно тогда я понял, что не боюсь начинать с нуля.</p>
 
-                <p data-i18n="missionP4">Благодаря этому компании могут сосредоточиться на главном — заключении сделок и стратегическом росте.</p>
+                    <p>В продажи я попал в 2014 году — устроился в компанию, которая работала с B2B-клиентами в сфере командировок. Там я разобрался, как на самом деле устроены продажи: живые звонки, настоящие отказы, первые сделки.</p>
+
+                    <p>В 2019 году переехал в Москву и открыл свой бизнес. Всё сам: первые клиенты, процессы, команда. В 2025 году бизнес купили — и это стало точкой, с которой началась новая история.</p>
+
+                    <p>Но между этим был ещё один проект — Бот-самолёт. Телеграм-сервис для быстрой покупки авиабилетов. Я верил в идею, вложил силы — но он не взлетел. Пришлось закрыть. Это был важный урок: хорошей идеи недостаточно, нужен правильный рынок и правильное время.</p>
+
+                    <p>Пока я строил компанию, меня не отпускали две боли. Первая — где постоянно брать новых клиентов. Вторая — холодные звонки, которые выматывают людей и убивают мотивацию в отделе продаж.</p>
+
+                    <p>Я не нашёл инструмента, который решал бы это по-настоящему. Поэтому создал его сам.</p>
+
+                    <p class="founder-accent">EasySale — это сервис, который берёт на себя самое неприятное в продажах и приводит вам реальных новых клиентов. Без выгорания команды. Без страха отказа. Без лишней суеты.</p>
+
+                    <p>Я верю, что малый и средний бизнес может расти легче. Именно для этого и существует EasySale.</p>
+                </div>
             </div>
-
-            <div class="mission-signature" data-i18n="missionSign">С любовью и легкостью, команда EasySale ❤️</div>
         </div>
 
         <!-- Pricing -->
@@ -1795,17 +1803,10 @@
 
         var i18n = {
             // Landing nav
-            mission: { ru:'Миссия', en:'Mission' },
+            mission: { ru:'О нас', en:'About' },
             pricing: { ru:'Тарифы', en:'Pricing' },
             cases_nav: { ru:'Кейсы', en:'Cases' },
             faq_nav: { ru:'FAQ', en:'FAQ' },
-            missionLabel: { ru:'Миссия', en:'Mission' },
-            missionTitle: { ru:'Миссия EasySale', en:'EasySale Mission' },
-            missionP1: { ru:'Миссия EasySale — помогать компаниям расти быстрее рынка, превращая привлечение клиентов в системный и предсказуемый процесс. Мы устраняем зависимость первичных продаж от человеческого фактора и переводим холодный поиск клиентов в технологическую систему.', en:'EasySale\'s mission is to help companies grow faster than the market by turning customer acquisition into a systematic and predictable process. We eliminate the dependency of initial sales on the human factor and transform cold prospecting into a technology system.' },
-            missionP2: { ru:'EasySale берёт на себя поиск, первичный контакт и квалификацию потенциальных клиентов. Это позволяет бизнесу получать стабильный поток заинтересованных компаний, а не случайные лиды.', en:'EasySale handles prospecting, initial contact, and qualification of potential clients. This allows businesses to receive a steady stream of interested companies, not random leads.' },
-            missionP3: { ru:'Мы убираем хаос на входе воронки и создаём управляемый источник новых возможностей для продаж.', en:'We remove chaos at the top of the funnel and create a manageable source of new sales opportunities.' },
-            missionP4: { ru:'Благодаря этому компании могут сосредоточиться на главном — заключении сделок и стратегическом росте.', en:'This allows companies to focus on what matters most — closing deals and strategic growth.' },
-            missionSign: { ru:'С любовью и легкостью, команда EasySale ❤️', en:'With love and ease, the EasySale team ❤️' },
             contacts: { ru:'Контакты', en:'Contacts' },
             login: { ru:'Войти', en:'Sign In' },
             // Hero
