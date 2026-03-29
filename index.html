@@ -2780,10 +2780,6 @@
                         <label>Домен АМО CRM</label>
                         <input type="text" id="intgAmoDomain" placeholder="mycompany.amocrm.ru">
                     </div>
-                    <div class="form-group">
-                        <label>API ключ</label>
-                        <input type="text" id="intgAmoApiKey" placeholder="Вставьте API ключ">
-                    </div>
                     <button class="intg-submit-btn" onclick="saveIntegrationAmo()">Подключить</button>
                     <div class="intg-result" id="intgResultAmo"></div>
                 </div>
@@ -9442,9 +9438,6 @@
                 if (intgData.amocrm && intgData.amocrm.domain) {
                     document.getElementById('intgAmoDomain').value = intgData.amocrm.domain;
                 }
-                if (intgData.amocrm && intgData.amocrm.api_key) {
-                    document.getElementById('intgAmoApiKey').value = intgData.amocrm.api_key;
-                }
             }
         }
 
@@ -9484,28 +9477,21 @@
 
         function saveIntegrationAmo() {
             var domain = document.getElementById('intgAmoDomain').value.trim();
-            var apiKey = document.getElementById('intgAmoApiKey').value.trim();
             var resultEl = document.getElementById('intgResultAmo');
-            if (!domain || !apiKey) { resultEl.textContent = 'Заполните все поля'; resultEl.style.color = '#e74c3c'; return; }
+            if (!domain) { resultEl.textContent = 'Укажите домен'; resultEl.style.color = '#e74c3c'; return; }
 
             var btn = document.querySelector('#integrationFormAmo .intg-submit-btn');
-            btn.disabled = true; btn.textContent = 'Подключение...';
+            btn.disabled = true; btn.textContent = 'Перенаправление...';
 
-            fetch(ES_API + '/api/integrations/amocrm', {
-                method: 'POST',
-                headers: esApiHeaders(),
-                body: JSON.stringify({ domain: domain, api_key: apiKey })
+            fetch(ES_API + '/api/integrations/amocrm/connect?domain=' + encodeURIComponent(domain), {
+                headers: esApiHeaders()
             })
             .then(function(r) { return r.json(); })
             .then(function(data) {
-                btn.disabled = false; btn.textContent = 'Подключить';
-                if (data.success) {
-                    resultEl.textContent = 'АМО CRM подключён ✅';
-                    resultEl.style.color = '#00b894';
-                    intgData.amocrm = { connected: true, domain: domain, api_key: apiKey };
-                    updateIntegrationStatuses();
-                    clToast('АМО CRM подключён');
+                if (data.url) {
+                    window.location.href = data.url;
                 } else {
+                    btn.disabled = false; btn.textContent = 'Подключить';
                     resultEl.textContent = data.error || 'Ошибка подключения';
                     resultEl.style.color = '#e74c3c';
                 }
@@ -9515,6 +9501,15 @@
                 resultEl.textContent = 'Ошибка сети'; resultEl.style.color = '#e74c3c';
             });
         }
+
+        // Check AMO CRM connection status on page load (after OAuth redirect)
+        (function() {
+            var params = new URLSearchParams(window.location.search);
+            if (params.get('amo_connected') === '1') {
+                window.history.replaceState({}, '', window.location.pathname);
+                setTimeout(function() { loadIntegrations(); clToast('АМО CRM подключён'); }, 500);
+            }
+        })();
 
         function qlShowDetail(id) {
             var lead = qlLeads.find(function(l) { return l.id === id; });
