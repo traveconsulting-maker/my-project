@@ -1970,7 +1970,7 @@
         .ql-count { font-size:.82rem; color:var(--text-muted); margin-left:8px; }
         .ql-integration-btn { background:linear-gradient(135deg,#00b894,#00cec9); color:#fff; border:none; padding:9px 18px; border-radius:10px; font-weight:700; font-size:.82rem; cursor:pointer; transition:all .2s; }
         .ql-integration-btn:hover { transform:translateY(-1px); box-shadow:0 6px 20px rgba(0,184,148,0.3); }
-        .intg-card { flex:1; padding:24px 16px; border-radius:14px; border:1px solid var(--input-border); background:var(--input-bg); text-align:center; cursor:pointer; transition:all .2s; }
+        .intg-card { flex:1; padding:24px 16px; border-radius:14px; border:1px solid var(--input-border); background:var(--input-bg); text-align:center; cursor:pointer; transition:all .2s; color:#fff; }
         .intg-card:hover { border-color:#6c5ce7; transform:translateY(-2px); box-shadow:0 8px 24px rgba(108,92,231,0.15); }
         .intg-status { font-size:.75rem; margin-top:8px; min-height:18px; }
         .intg-status.connected { color:#00b894; font-weight:600; }
@@ -2737,8 +2737,8 @@
     <div class="modal-overlay" id="integrationModal" onclick="if(event.target===this)closeIntegrationModal()">
         <div class="modal" style="max-width:520px;text-align:left;padding:32px 28px;">
             <button class="modal-close" onclick="closeIntegrationModal()">&times;</button>
-            <div style="font-size:1.1rem;font-weight:700;margin-bottom:6px;">Интеграции с CRM</div>
-            <div style="font-size:.85rem;color:var(--text-muted);margin-bottom:20px;">Подключите CRM для автоматической передачи квал лидов</div>
+            <div style="font-size:1.1rem;font-weight:700;margin-bottom:6px;color:#fff;">Интеграции с CRM</div>
+            <div style="font-size:.85rem;color:rgba(255,255,255,0.6);margin-bottom:20px;">Подключите CRM для автоматической передачи квал лидов</div>
             <div id="integrationContent">
                 <!-- CRM selection cards -->
                 <div id="integrationSelect" style="display:flex;gap:12px;">
@@ -2760,7 +2760,7 @@
                 <!-- Bitrix24 form -->
                 <div id="integrationFormBitrix" style="display:none;">
                     <button class="intg-back" onclick="showIntegrationSelect()">&larr; Назад</button>
-                    <div style="font-weight:700;margin-bottom:16px;">Подключение Битрикс24</div>
+                    <div style="font-weight:700;margin-bottom:16px;color:#fff;">Подключение Битрикс24</div>
                     <div class="form-group">
                         <label>Домен Битрикс24</label>
                         <input type="text" id="intgBitrixDomain" placeholder="mycompany.bitrix24.ru">
@@ -2775,7 +2775,7 @@
                 <!-- AMO CRM form -->
                 <div id="integrationFormAmo" style="display:none;">
                     <button class="intg-back" onclick="showIntegrationSelect()">&larr; Назад</button>
-                    <div style="font-weight:700;margin-bottom:16px;">Подключение АМО CRM</div>
+                    <div style="font-weight:700;margin-bottom:16px;color:#fff;">Подключение АМО CRM</div>
                     <div class="form-group">
                         <label>Домен АМО CRM</label>
                         <input type="text" id="intgAmoDomain" placeholder="mycompany.amocrm.ru">
