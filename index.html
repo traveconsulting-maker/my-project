@@ -9489,7 +9489,7 @@
             .then(function(r) { return r.json(); })
             .then(function(data) {
                 if (data.url) {
-                    window.location.href = data.url;
+                    window.open(data.url, '_blank');
                 } else {
                     btn.disabled = false; btn.textContent = 'Подключить';
                     resultEl.textContent = data.error || 'Ошибка подключения';
