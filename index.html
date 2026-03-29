@@ -1970,6 +1970,16 @@
         .ql-count { font-size:.82rem; color:var(--text-muted); margin-left:8px; }
         .ql-integration-btn { background:linear-gradient(135deg,#00b894,#00cec9); color:#fff; border:none; padding:9px 18px; border-radius:10px; font-weight:700; font-size:.82rem; cursor:pointer; transition:all .2s; }
         .ql-integration-btn:hover { transform:translateY(-1px); box-shadow:0 6px 20px rgba(0,184,148,0.3); }
+        .intg-card { flex:1; padding:24px 16px; border-radius:14px; border:1px solid var(--input-border); background:var(--input-bg); text-align:center; cursor:pointer; transition:all .2s; }
+        .intg-card:hover { border-color:#6c5ce7; transform:translateY(-2px); box-shadow:0 8px 24px rgba(108,92,231,0.15); }
+        .intg-status { font-size:.75rem; margin-top:8px; min-height:18px; }
+        .intg-status.connected { color:#00b894; font-weight:600; }
+        .intg-back { background:none; border:none; color:var(--text-muted); cursor:pointer; font-size:.85rem; padding:0; margin-bottom:16px; font-family:inherit; }
+        .intg-back:hover { color:var(--text); }
+        .intg-submit-btn { width:100%; padding:12px; border:none; border-radius:12px; background:linear-gradient(135deg,#6c5ce7,#a29bfe); color:#fff; font-weight:700; font-size:.9rem; cursor:pointer; transition:all .2s; margin-top:8px; }
+        .intg-submit-btn:hover { transform:translateY(-1px); box-shadow:0 6px 20px rgba(108,92,231,0.3); }
+        .intg-submit-btn:disabled { opacity:.6; cursor:not-allowed; transform:none; box-shadow:none; }
+        .intg-result { margin-top:12px; font-size:.85rem; text-align:center; min-height:20px; }
         .ql-export-btn { background:var(--input-bg); color:var(--text); border:1px solid var(--input-border); padding:8px 16px; border-radius:10px; font-weight:600; font-size:.82rem; cursor:pointer; transition:all .2s; }
         .ql-export-btn:hover { border-color:#6c5ce7; color:#6c5ce7; }
 
@@ -2723,6 +2733,64 @@
         </div>
     </div>
 
+    <!-- ===== CRM INTEGRATION MODAL ===== -->
+    <div class="modal-overlay" id="integrationModal" onclick="if(event.target===this)closeIntegrationModal()">
+        <div class="modal" style="max-width:520px;text-align:left;padding:32px 28px;">
+            <button class="modal-close" onclick="closeIntegrationModal()">&times;</button>
+            <div style="font-size:1.1rem;font-weight:700;margin-bottom:6px;">Интеграции с CRM</div>
+            <div style="font-size:.85rem;color:var(--text-muted);margin-bottom:20px;">Подключите CRM для автоматической передачи квал лидов</div>
+            <div id="integrationContent">
+                <!-- CRM selection cards -->
+                <div id="integrationSelect" style="display:flex;gap:12px;">
+                    <div class="intg-card" onclick="showIntegrationForm('bitrix24')" id="intgCardBitrix">
+                        <div style="font-size:28px;margin-bottom:8px;">
+                            <svg width="32" height="32" viewBox="0 0 24 24" fill="none"><rect width="24" height="24" rx="6" fill="#00aeef"/><text x="12" y="16" text-anchor="middle" fill="#fff" font-size="10" font-weight="700">B24</text></svg>
+                        </div>
+                        <div style="font-weight:700;font-size:.9rem;">Битрикс24</div>
+                        <div class="intg-status" id="intgStatusBitrix"></div>
+                    </div>
+                    <div class="intg-card" onclick="showIntegrationForm('amocrm')" id="intgCardAmo">
+                        <div style="font-size:28px;margin-bottom:8px;">
+                            <svg width="32" height="32" viewBox="0 0 24 24" fill="none"><rect width="24" height="24" rx="6" fill="#ffa726"/><text x="12" y="16" text-anchor="middle" fill="#fff" font-size="9" font-weight="700">AMO</text></svg>
+                        </div>
+                        <div style="font-weight:700;font-size:.9rem;">АМО CRM</div>
+                        <div class="intg-status" id="intgStatusAmo"></div>
+                    </div>
+                </div>
+                <!-- Bitrix24 form -->
+                <div id="integrationFormBitrix" style="display:none;">
+                    <button class="intg-back" onclick="showIntegrationSelect()">&larr; Назад</button>
+                    <div style="font-weight:700;margin-bottom:16px;">Подключение Битрикс24</div>
+                    <div class="form-group">
+                        <label>Домен Битрикс24</label>
+                        <input type="text" id="intgBitrixDomain" placeholder="mycompany.bitrix24.ru">
+                    </div>
+                    <div class="form-group">
+                        <label>Webhook URL</label>
+                        <input type="text" id="intgBitrixWebhook" placeholder="https://mycompany.bitrix24.ru/rest/1/abc123/">
+                    </div>
+                    <button class="intg-submit-btn" onclick="saveIntegrationBitrix()">Подключить</button>
+                    <div class="intg-result" id="intgResultBitrix"></div>
+                </div>
+                <!-- AMO CRM form -->
+                <div id="integrationFormAmo" style="display:none;">
+                    <button class="intg-back" onclick="showIntegrationSelect()">&larr; Назад</button>
+                    <div style="font-weight:700;margin-bottom:16px;">Подключение АМО CRM</div>
+                    <div class="form-group">
+                        <label>Домен АМО CRM</label>
+                        <input type="text" id="intgAmoDomain" placeholder="mycompany.amocrm.ru">
+                    </div>
+                    <div class="form-group">
+                        <label>API ключ</label>
+                        <input type="text" id="intgAmoApiKey" placeholder="Вставьте API ключ">
+                    </div>
+                    <button class="intg-submit-btn" onclick="saveIntegrationAmo()">Подключить</button>
+                    <div class="intg-result" id="intgResultAmo"></div>
+                </div>
+            </div>
+        </div>
+    </div>
+
     <!-- ===== QUICK START WIZARD ===== -->
     <div class="qs-overlay" id="qsWizard" onclick="if(event.target===this)closeQsWizard()">
         <div class="qs-modal">
@@ -3386,6 +3454,10 @@
                         <button class="ql-export-btn" onclick="qlExport('excel')">
                             <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" style="vertical-align:-2px;margin-right:3px;"><path d="M21 15v4a2 2 0 01-2 2H5a2 2 0 01-2-2v-4"/><polyline points="7 10 12 15 17 10"/><line x1="12" y1="15" x2="12" y2="3"/></svg>
                             Excel
+                        </button>
+                        <button class="ql-integration-btn" onclick="openIntegrationModal()">
+                            <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" style="vertical-align:-2px;margin-right:3px;"><path d="M10 13a5 5 0 007.54.54l3-3a5 5 0 00-7.07-7.07l-1.72 1.71"/><path d="M14 11a5 5 0 00-7.54-.54l-3 3a5 5 0 007.07 7.07l1.71-1.71"/></svg>
+                            Добавить интеграцию
                         </button>
                     </div>
                 </div>
@@ -9301,6 +9373,147 @@
             });
             if (data.length === 0) { clToast('Нет данных для выгрузки'); return; }
             qlDoExport(data, format);
+        }
+
+        // ===== CRM INTEGRATION MODAL =====
+        var intgData = { bitrix24: { connected: false }, amocrm: { connected: false } };
+
+        function openIntegrationModal() {
+            document.getElementById('integrationModal').classList.add('active');
+            showIntegrationSelect();
+            loadIntegrations();
+        }
+
+        function closeIntegrationModal() {
+            document.getElementById('integrationModal').classList.remove('active');
+        }
+
+        function loadIntegrations() {
+            if (!esHasToken()) return;
+            fetch(ES_API + '/api/integrations', { headers: esApiHeaders() })
+            .then(function(r) { return r.json(); })
+            .then(function(data) {
+                intgData = data;
+                updateIntegrationStatuses();
+            }).catch(function(err) { console.error('Load integrations error:', err); });
+        }
+
+        function updateIntegrationStatuses() {
+            var bEl = document.getElementById('intgStatusBitrix');
+            var aEl = document.getElementById('intgStatusAmo');
+            if (intgData.bitrix24 && intgData.bitrix24.connected) {
+                bEl.textContent = 'Подключён ✅';
+                bEl.className = 'intg-status connected';
+            } else {
+                bEl.textContent = 'Не подключён';
+                bEl.className = 'intg-status';
+            }
+            if (intgData.amocrm && intgData.amocrm.connected) {
+                aEl.textContent = 'Подключён ✅';
+                aEl.className = 'intg-status connected';
+            } else {
+                aEl.textContent = 'Не подключён';
+                aEl.className = 'intg-status';
+            }
+        }
+
+        function showIntegrationSelect() {
+            document.getElementById('integrationSelect').style.display = 'flex';
+            document.getElementById('integrationFormBitrix').style.display = 'none';
+            document.getElementById('integrationFormAmo').style.display = 'none';
+            document.getElementById('intgResultBitrix').textContent = '';
+            document.getElementById('intgResultAmo').textContent = '';
+        }
+
+        function showIntegrationForm(type) {
+            document.getElementById('integrationSelect').style.display = 'none';
+            if (type === 'bitrix24') {
+                document.getElementById('integrationFormBitrix').style.display = 'block';
+                document.getElementById('integrationFormAmo').style.display = 'none';
+                if (intgData.bitrix24 && intgData.bitrix24.domain) {
+                    document.getElementById('intgBitrixDomain').value = intgData.bitrix24.domain;
+                }
+                if (intgData.bitrix24 && intgData.bitrix24.webhook_url) {
+                    document.getElementById('intgBitrixWebhook').value = intgData.bitrix24.webhook_url;
+                }
+            } else {
+                document.getElementById('integrationFormAmo').style.display = 'block';
+                document.getElementById('integrationFormBitrix').style.display = 'none';
+                if (intgData.amocrm && intgData.amocrm.domain) {
+                    document.getElementById('intgAmoDomain').value = intgData.amocrm.domain;
+                }
+                if (intgData.amocrm && intgData.amocrm.api_key) {
+                    document.getElementById('intgAmoApiKey').value = intgData.amocrm.api_key;
+                }
+            }
+        }
+
+        function saveIntegrationBitrix() {
+            var domain = document.getElementById('intgBitrixDomain').value.trim();
+            var webhook = document.getElementById('intgBitrixWebhook').value.trim();
+            var resultEl = document.getElementById('intgResultBitrix');
+            if (!domain || !webhook) { resultEl.textContent = 'Заполните все поля'; resultEl.style.color = '#e74c3c'; return; }
+
+            var btn = document.querySelector('#integrationFormBitrix .intg-submit-btn');
+            btn.disabled = true; btn.textContent = 'Подключение...';
+
+            fetch(ES_API + '/api/integrations/bitrix24', {
+                method: 'POST',
+                headers: esApiHeaders(),
+                body: JSON.stringify({ domain: domain, webhook_url: webhook })
+            })
+            .then(function(r) { return r.json(); })
+            .then(function(data) {
+                btn.disabled = false; btn.textContent = 'Подключить';
+                if (data.success) {
+                    resultEl.textContent = 'Битрикс24 подключён ✅';
+                    resultEl.style.color = '#00b894';
+                    intgData.bitrix24 = { connected: true, domain: domain, webhook_url: webhook };
+                    updateIntegrationStatuses();
+                    clToast('Битрикс24 подключён');
+                } else {
+                    resultEl.textContent = data.error || 'Ошибка подключения';
+                    resultEl.style.color = '#e74c3c';
+                }
+            })
+            .catch(function(err) {
+                btn.disabled = false; btn.textContent = 'Подключить';
+                resultEl.textContent = 'Ошибка сети'; resultEl.style.color = '#e74c3c';
+            });
+        }
+
+        function saveIntegrationAmo() {
+            var domain = document.getElementById('intgAmoDomain').value.trim();
+            var apiKey = document.getElementById('intgAmoApiKey').value.trim();
+            var resultEl = document.getElementById('intgResultAmo');
+            if (!domain || !apiKey) { resultEl.textContent = 'Заполните все поля'; resultEl.style.color = '#e74c3c'; return; }
+
+            var btn = document.querySelector('#integrationFormAmo .intg-submit-btn');
+            btn.disabled = true; btn.textContent = 'Подключение...';
+
+            fetch(ES_API + '/api/integrations/amocrm', {
+                method: 'POST',
+                headers: esApiHeaders(),
+                body: JSON.stringify({ domain: domain, api_key: apiKey })
+            })
+            .then(function(r) { return r.json(); })
+            .then(function(data) {
+                btn.disabled = false; btn.textContent = 'Подключить';
+                if (data.success) {
+                    resultEl.textContent = 'АМО CRM подключён ✅';
+                    resultEl.style.color = '#00b894';
+                    intgData.amocrm = { connected: true, domain: domain, api_key: apiKey };
+                    updateIntegrationStatuses();
+                    clToast('АМО CRM подключён');
+                } else {
+                    resultEl.textContent = data.error || 'Ошибка подключения';
+                    resultEl.style.color = '#e74c3c';
+                }
+            })
+            .catch(function(err) {
+                btn.disabled = false; btn.textContent = 'Подключить';
+                resultEl.textContent = 'Ошибка сети'; resultEl.style.color = '#e74c3c';
+            });
         }
 
         function qlShowDetail(id) {
