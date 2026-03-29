@@ -9490,6 +9490,7 @@
             })
             .then(function(r) { return r.json(); })
             .then(function(data) {
+                console.log('[AMO] connect response:', JSON.stringify(data));
                 if (data.client_id) {
                     btn.style.display = 'none';
                     showAmoAuthButton(data);
@@ -9512,7 +9513,13 @@
 
             var script = document.createElement('script');
             script.src = 'https://www.amocrm.ru/auth/button.min.js';
+            script.onerror = function() {
+                console.error('[AMO] Failed to load button.min.js');
+                document.getElementById('intgResultAmo').textContent = 'Ошибка загрузки скрипта АМО';
+                document.getElementById('intgResultAmo').style.color = '#e74c3c';
+            };
             script.onload = function() {
+                console.log('[AMO] button.min.js loaded, amoSocialButton:', typeof window.amoSocialButton);
                 var el = document.getElementById('amocrm_oauth_button');
                 el.setAttribute('data-client-id', params.client_id);
                 el.setAttribute('data-state', params.state);
@@ -9527,6 +9534,7 @@
 
             // Listen for post_message callback from AMO
             window.addEventListener('message', function amoCallback(e) {
+                console.log('[AMO] postMessage received:', e.origin, JSON.stringify(e.data));
                 if (e.data && e.data.client_id && e.data.code) {
                     window.removeEventListener('message', amoCallback);
                     var resultEl = document.getElementById('intgResultAmo');
@@ -9555,6 +9563,7 @@
         }
 
         function handleOauthError(err) {
+            console.error('[AMO] OAuth error callback:', err);
             var resultEl = document.getElementById('intgResultAmo');
             resultEl.textContent = 'Ошибка авторизации АМО: ' + (err || 'unknown');
             resultEl.style.color = '#e74c3c';
