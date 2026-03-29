@@ -2780,7 +2780,10 @@
                         <label>Домен АМО CRM</label>
                         <input type="text" id="intgAmoDomain" placeholder="mycompany.amocrm.ru">
                     </div>
-                    <button class="intg-submit-btn" onclick="saveIntegrationAmo()">Подключить</button>
+                    <button class="intg-submit-btn" onclick="saveIntegrationAmo()">Загрузить кнопку авторизации</button>
+                    <div id="intgAmoButtonWrap" style="margin-top:16px;text-align:center;display:none;">
+                        <div class="button-amo-container"></div>
+                    </div>
                     <div class="intg-result" id="intgResultAmo"></div>
                 </div>
             </div>
@@ -9475,6 +9478,8 @@
             });
         }
 
+        var _amoState = null;
+
         function saveIntegrationAmo() {
             var domain = document.getElementById('intgAmoDomain').value.trim();
             var resultEl = document.getElementById('intgResultAmo');
@@ -9491,62 +9496,89 @@
             .then(function(data) {
                 console.log('[AMO] connect response:', JSON.stringify(data));
                 if (data.client_id) {
-                    var authUrl = 'https://' + data.domain + '/oauth2/authorize?' +
-                        'client_id=' + encodeURIComponent(data.client_id) +
-                        '&redirect_uri=' + encodeURIComponent(data.redirect_uri) +
-                        '&state=' + encodeURIComponent(data.state) +
-                        '&response_type=code&mode=post_message';
-                    console.log('[AMO] Opening popup:', authUrl);
-                    var popup = window.open(authUrl, 'amo_auth', 'width=600,height=700,scrollbars=yes');
+                    _amoState = data;
+                    btn.style.display = 'none';
 
-                    btn.disabled = false; btn.textContent = 'Подключить';
-                    resultEl.textContent = 'Авторизуйтесь в открывшемся окне...';
-                    resultEl.style.color = '#f39c12';
+                    // Insert AMO official auth button
+                    var wrap = document.getElementById('intgAmoButtonWrap');
+                    var container = wrap.querySelector('.button-amo-container');
+                    container.innerHTML = '';
+                    wrap.style.display = 'block';
 
-                    // Listen for postMessage from popup
-                    window.addEventListener('message', function amoCallback(e) {
-                        console.log('[AMO] postMessage received:', e.origin, JSON.stringify(e.data));
-                        if (e.data && e.data.code) {
-                            window.removeEventListener('message', amoCallback);
-                            if (popup && !popup.closed) popup.close();
-                            resultEl.textContent = 'Авторизация получена, сохранение...';
-                            fetch(ES_API + '/api/integrations/amocrm/callback?code=' + encodeURIComponent(e.data.code) + '&state=' + encodeURIComponent(data.state))
-                            .then(function(r) {
-                                if (r.ok) {
-                                    resultEl.textContent = 'АМО CRM подключён ✅';
-                                    resultEl.style.color = '#00b894';
-                                    intgData.amocrm = { connected: true, domain: data.domain };
-                                    updateIntegrationStatuses();
-                                    clToast('АМО CRM подключён');
-                                } else {
-                                    resultEl.textContent = 'Ошибка сохранения токенов';
-                                    resultEl.style.color = '#e74c3c';
-                                }
-                            })
-                            .catch(function() {
-                                resultEl.textContent = 'Ошибка сети';
-                                resultEl.style.color = '#e74c3c';
-                            });
-                        }
-                        if (e.data && e.data.error) {
-                            window.removeEventListener('message', amoCallback);
-                            if (popup && !popup.closed) popup.close();
-                            console.error('[AMO] OAuth error:', e.data.error);
-                            resultEl.textContent = 'Ошибка авторизации: ' + e.data.error;
-                            resultEl.style.color = '#e74c3c';
-                        }
-                    });
+                    var script = document.createElement('script');
+                    script.className = 'amocrm_oauth';
+                    script.charset = 'utf-8';
+                    script.setAttribute('data-client-id', data.client_id);
+                    script.setAttribute('data-title', 'Подключить АМО CRM');
+                    script.setAttribute('data-compact', 'false');
+                    script.setAttribute('data-color', 'red');
+                    script.setAttribute('data-state', data.state);
+                    script.src = 'https://www.amocrm.ru/auth/button.js';
+                    script.onload = function() {
+                        console.log('[AMO] button.js loaded');
+                    };
+                    script.onerror = function() {
+                        console.error('[AMO] Failed to load button.js');
+                        resultEl.textContent = 'Ошибка загрузки кнопки АМО';
+                        resultEl.style.color = '#e74c3c';
+                    };
+                    container.appendChild(script);
+
+                    resultEl.textContent = 'Нажмите кнопку для авторизации';
+                    resultEl.style.color = 'var(--text-muted)';
                 } else {
-                    btn.disabled = false; btn.textContent = 'Подключить';
+                    btn.disabled = false; btn.textContent = 'Загрузить кнопку авторизации';
                     resultEl.textContent = data.error || 'Ошибка подключения';
                     resultEl.style.color = '#e74c3c';
                 }
             })
             .catch(function(err) {
-                btn.disabled = false; btn.textContent = 'Подключить';
+                btn.disabled = false; btn.textContent = 'Загрузить кнопку авторизации';
                 resultEl.textContent = 'Ошибка сети'; resultEl.style.color = '#e74c3c';
             });
         }
+
+        // Global listener for AMO OAuth postMessage callback
+        window.addEventListener('message', function(e) {
+            if (!e.data || typeof e.data !== 'object') return;
+            if (!e.data.code && !e.data.error) return;
+            console.log('[AMO] postMessage received:', e.origin, JSON.stringify(e.data));
+
+            var resultEl = document.getElementById('intgResultAmo');
+            if (!resultEl) return;
+
+            if (e.data.error) {
+                console.error('[AMO] OAuth error:', e.data.error);
+                resultEl.textContent = 'Ошибка авторизации: ' + e.data.error;
+                resultEl.style.color = '#e74c3c';
+                return;
+            }
+
+            if (e.data.code) {
+                var state = _amoState ? _amoState.state : '';
+                var domain = e.data.referer || (_amoState ? _amoState.domain : '');
+                resultEl.textContent = 'Авторизация получена, сохранение...';
+                resultEl.style.color = '#f39c12';
+
+                fetch(ES_API + '/api/integrations/amocrm/callback?code=' + encodeURIComponent(e.data.code) + '&state=' + encodeURIComponent(state))
+                .then(function(r) {
+                    if (r.ok) {
+                        resultEl.textContent = 'АМО CRM подключён ✅';
+                        resultEl.style.color = '#00b894';
+                        intgData.amocrm = { connected: true, domain: domain };
+                        updateIntegrationStatuses();
+                        clToast('АМО CRM подключён');
+                    } else {
+                        resultEl.textContent = 'Ошибка сохранения токенов';
+                        resultEl.style.color = '#e74c3c';
+                    }
+                })
+                .catch(function() {
+                    resultEl.textContent = 'Ошибка сети';
+                    resultEl.style.color = '#e74c3c';
+                });
+            }
+        });
 
         function qlShowDetail(id) {
             var lead = qlLeads.find(function(l) { return l.id === id; });
