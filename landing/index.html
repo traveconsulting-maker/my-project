@@ -540,17 +540,15 @@
             height: 24px;
         }
 
-        .ic-coral { background: rgba(255, 87, 51, 0.1); }
-        .ic-coral svg { fill: #FF5733; }
+        .feat-icon { background: var(--accent-light); color: var(--accent); }
 
-        .ic-amber { background: rgba(255, 179, 71, 0.1); }
-        .ic-amber svg { fill: #FFB347; }
+        .ic-coral { background: rgba(255, 87, 51, 0.1); color: #FF5733; }
 
-        .ic-teal { background: rgba(45, 212, 191, 0.1); }
-        .ic-teal svg { fill: #2DD4BF; }
+        .ic-amber { background: rgba(255, 179, 71, 0.1); color: #FFB347; }
 
-        .ic-green { background: rgba(52, 211, 153, 0.1); }
-        .ic-green svg { fill: #34d399; }
+        .ic-teal { background: rgba(45, 212, 191, 0.1); color: #2DD4BF; }
+
+        .ic-green { background: rgba(52, 211, 153, 0.1); color: #34d399; }
 
         .feat-card h3 {
             font-family: var(--font-display);
@@ -563,9 +561,12 @@
 
         .feat-card p {
             font-size: 14px;
-            color: var(--text-muted);
+            color: rgba(255, 255, 255, 0.7);
             line-height: 1.7;
             transition: color 0.4s;
+        }
+        body.light .feat-card p {
+            color: rgba(0, 0, 0, 0.6);
         }
 
         /* ===== 7. STEPS ===== */
@@ -2402,6 +2403,31 @@
             .cta-banner-actions { flex-direction: column; }
             .cta-btn-white, .cta-btn-outline { width: 100%; justify-content: center; }
         }
+        /* ===== CUSTOM CURSOR ===== */
+        @media (pointer: fine) {
+            *, *::before, *::after { cursor: none !important; }
+            .custom-cursor {
+                position: fixed;
+                top: 0;
+                left: 0;
+                width: 16px;
+                height: 16px;
+                background: #FF6B6B;
+                border-radius: 50%;
+                pointer-events: none;
+                z-index: 99999;
+                transform: translate(-50%, -50%);
+                transition: width 0.25s cubic-bezier(0.16,1,0.3,1), height 0.25s cubic-bezier(0.16,1,0.3,1), background 0.25s, opacity 0.25s;
+                mix-blend-mode: exclusion;
+                opacity: 0;
+            }
+            .custom-cursor.visible { opacity: 1; }
+            .custom-cursor.hover {
+                width: 48px;
+                height: 48px;
+                background: rgba(255, 107, 107, 0.35);
+            }
+        }
     </style>
 </head>
 <body>
@@ -2484,28 +2510,28 @@
     <div class="feat-grid">
         <div class="feat-card reveal reveal-d1">
             <div class="feat-icon">
-                <svg viewBox="0 0 24 24"><path d="M21 11.5a8.38 8.38 0 01-.9 3.8 8.5 8.5 0 01-7.6 4.7 8.38 8.38 0 01-3.8-.9L3 21l1.9-5.7a8.38 8.38 0 01-.9-3.8 8.5 8.5 0 014.7-7.6 8.38 8.38 0 013.8-.9h.5a8.48 8.48 0 018 8v.5z"/></svg>
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="8" r="3"/><path d="M5 20v-1a5 5 0 0110 0v1"/><path d="M17 10l2 2 4-4"/></svg>
             </div>
             <h3 data-i18n="f1t">AI отдел продаж</h3>
             <p data-i18n="f1d">Самостоятельно формирует, прозванивает холодную базу и передает вашим менеджерам уже готовых клиентов.</p>
         </div>
         <div class="feat-card reveal reveal-d2">
             <div class="feat-icon ic-teal">
-                <svg viewBox="0 0 24 24"><path d="M13 3a9 9 0 00-9 9H1l3.89 3.89.07.14L9 12H6c0-3.87 3.13-7 7-7s7 3.13 7 7-3.13 7-7 7a6.99 6.99 0 01-4.95-2.05l-1.41 1.41A8.96 8.96 0 0013 21a9 9 0 000-18zm-1 5v5l4.28 2.54.72-1.21-3.5-2.08V8H12z"/></svg>
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><path d="M13 2L3 14h9l-1 8 10-12h-9l1-8z"/></svg>
             </div>
             <h3 data-i18n="f2t">Быстрая настройка</h3>
             <p data-i18n="f2d">Запуск отдела продаж за 2-5 минут.</p>
         </div>
         <div class="feat-card reveal reveal-d3">
             <div class="feat-icon ic-green">
-                <svg viewBox="0 0 24 24"><path d="M11 7h2v2h-2zm0 4h2v6h-2zm1-9C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm0 18c-4.41 0-8-3.59-8-8s3.59-8 8-8 8 3.59 8 8-3.59 8-8 8z"/></svg>
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><path d="M12 22c5.523 0 10-4.477 10-10S17.523 2 12 2 2 6.477 2 12s4.477 10 10 10z"/><path d="M12 6v6l4 2"/></svg>
             </div>
             <h3 data-i18n="f3t">Быстрый лид</h3>
             <p data-i18n="f3d">Получай теплые лиды в компанию уже на следующий день.</p>
         </div>
         <div class="feat-card reveal reveal-d4">
             <div class="feat-icon ic-amber">
-                <svg viewBox="0 0 24 24"><path d="M19.14 12.94a7.07 7.07 0 000-1.88l2.03-1.58a.49.49 0 00.12-.61l-1.92-3.32a.49.49 0 00-.59-.22l-2.39.96a7.04 7.04 0 00-1.62-.94l-.36-2.54a.48.48 0 00-.48-.41h-3.84a.48.48 0 00-.48.41l-.36 2.54c-.59.24-1.13.57-1.62.94l-2.39-.96a.48.48 0 00-.59.22L2.74 8.87a.48.48 0 00.12.61l2.03 1.58a7.07 7.07 0 000 1.88l-2.03 1.58a.49.49 0 00-.12.61l1.92 3.32c.12.22.37.29.59.22l2.39-.96c.5.38 1.04.7 1.62.94l.36 2.54c.05.24.26.41.48.41h3.84c.24 0 .44-.17.48-.41l.36-2.54a7.04 7.04 0 001.62-.94l2.39.96c.22.08.47 0 .59-.22l1.92-3.32c.12-.22.07-.49-.12-.61l-2.03-1.58zM12 15.6A3.6 3.6 0 1115.6 12 3.61 3.61 0 0112 15.6z"/></svg>
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><rect x="2" y="3" width="20" height="14" rx="2"/><path d="M8 21h8"/><path d="M12 17v4"/><path d="M7 8h2m2 0h4"/><path d="M7 11h6"/></svg>
             </div>
             <h3 data-i18n="f4t">Интеграция с СРМ системами</h3>
             <p data-i18n="f4d">Получай моментально теплые лиды сразу в вашу воронку СРМ.</p>
@@ -3664,6 +3690,47 @@
         });
     }, { threshold: 0.1, rootMargin: '0px 0px -40px 0px' });
     reveals.forEach(function(el) { observer.observe(el); });
+})();
+</script>
+
+<script>
+(function() {
+    if (!window.matchMedia('(pointer: fine)').matches) return;
+
+    var cursor = document.createElement('div');
+    cursor.className = 'custom-cursor';
+    document.body.appendChild(cursor);
+
+    var mx = -100, my = -100;
+    var cx = -100, cy = -100;
+
+    document.addEventListener('mousemove', function(e) {
+        mx = e.clientX;
+        my = e.clientY;
+        if (!cursor.classList.contains('visible')) cursor.classList.add('visible');
+    });
+
+    document.addEventListener('mouseleave', function() {
+        cursor.classList.remove('visible');
+    });
+
+    function tick() {
+        cx += (mx - cx) * 0.15;
+        cy += (my - cy) * 0.15;
+        cursor.style.left = cx + 'px';
+        cursor.style.top = cy + 'px';
+        requestAnimationFrame(tick);
+    }
+    tick();
+
+    var hoverTargets = 'a, button, .hero-cta, .reg-btn, .cases-tab, .faq-question, .pricing-select, input, .theme-toggle, .lang-btn, .founder-tg-btn, .sc-fab, .tg-fab, .max-fab';
+
+    document.addEventListener('mouseover', function(e) {
+        if (e.target.closest(hoverTargets)) cursor.classList.add('hover');
+    });
+    document.addEventListener('mouseout', function(e) {
+        if (e.target.closest(hoverTargets)) cursor.classList.remove('hover');
+    });
 })();
 </script>
 
