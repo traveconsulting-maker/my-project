@@ -4048,6 +4048,10 @@
                     document.getElementById('balCurrentBalance').textContent = bal + ' ₽';
                     userBalance = Math.round(parseFloat(data.balance || 0));
                     clUpdateBalance();
+                    if (data.price_per_lead !== undefined) {
+                        userPricePerLead = parseInt(data.price_per_lead) || 0;
+                        localStorage.setItem('user_price_per_lead', String(userPricePerLead));
+                    }
                 })
                 .catch(function(err) { console.error('balLoadPage balance error:', err); });
             balLoadHistory();
@@ -4752,6 +4756,10 @@
                     if (me && me.balance !== undefined) {
                         userBalance = Math.round(parseFloat(me.balance));
                         clUpdateBalance();
+                    }
+                    if (me && me.price_per_lead !== undefined) {
+                        userPricePerLead = parseInt(me.price_per_lead) || 0;
+                        localStorage.setItem('user_price_per_lead', String(userPricePerLead));
                     }
                     var login = localStorage.getItem('current_login');
                     var onboarded = (me && me.onboarded) || (login && localStorage.getItem('onboarded_' + login));
@@ -8235,17 +8243,9 @@
 
         // ===== BALANCE & PRICING =====
         var userBalance = parseInt(localStorage.getItem('user_balance') || '0');
+        var userPricePerLead = parseInt(localStorage.getItem('user_price_per_lead') || '0');
         function clGetPricePerLead() {
-            var login = localStorage.getItem('current_login') || '';
-            try {
-                var crmClients = JSON.parse(localStorage.getItem('crm_clients') || '[]');
-                for (var i = 0; i < crmClients.length; i++) {
-                    if (crmClients[i].login === login && crmClients[i].pricePerLead) {
-                        return parseInt(crmClients[i].pricePerLead) || 2000;
-                    }
-                }
-            } catch(e) {}
-            return 2000;
+            return userPricePerLead || 2000;
         }
         function clFormatMoney(n) {
             return n.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ' ') + ' ₽';
@@ -9667,6 +9667,14 @@
                 fetch(ES_API + '/api/clients/me', { headers: esApiHeaders() })
                 .then(function(r) { return r.ok ? r.json() : null; })
                 .then(function(me) {
+                    if (me && me.balance !== undefined) {
+                        userBalance = Math.round(parseFloat(me.balance));
+                        clUpdateBalance();
+                    }
+                    if (me && me.price_per_lead !== undefined) {
+                        userPricePerLead = parseInt(me.price_per_lead) || 0;
+                        localStorage.setItem('user_price_per_lead', String(userPricePerLead));
+                    }
                     var onboarded = (me && me.onboarded) || !!localStorage.getItem('onboarded_' + login);
                     if (me && me.onboarded) localStorage.setItem('onboarded_' + login, '1');
                     if (onboarded) {
