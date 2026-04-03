@@ -4048,9 +4048,11 @@
                     document.getElementById('balCurrentBalance').textContent = bal + ' ₽';
                     userBalance = Math.round(parseFloat(data.balance || 0));
                     clUpdateBalance();
+                    console.log('[PRICE] balLoadPage API response:', data.price_per_lead);
                     if (data.price_per_lead !== undefined) {
                         userPricePerLead = parseInt(data.price_per_lead) || 0;
                         localStorage.setItem('user_price_per_lead', String(userPricePerLead));
+                        console.log('[PRICE] Saved from balLoadPage:', userPricePerLead);
                     }
                 })
                 .catch(function(err) { console.error('balLoadPage balance error:', err); });
@@ -4757,9 +4759,11 @@
                         userBalance = Math.round(parseFloat(me.balance));
                         clUpdateBalance();
                     }
+                    console.log('[PRICE] Login API response:', me && me.price_per_lead);
                     if (me && me.price_per_lead !== undefined) {
                         userPricePerLead = parseInt(me.price_per_lead) || 0;
                         localStorage.setItem('user_price_per_lead', String(userPricePerLead));
+                        console.log('[PRICE] Saved from login:', userPricePerLead);
                     }
                     var login = localStorage.getItem('current_login');
                     var onboarded = (me && me.onboarded) || (login && localStorage.getItem('onboarded_' + login));
@@ -8245,6 +8249,7 @@
         var userBalance = parseInt(localStorage.getItem('user_balance') || '0');
         var userPricePerLead = parseInt(localStorage.getItem('user_price_per_lead') || '0');
         function clGetPricePerLead() {
+            console.log('[PRICE] clGetPricePerLead:', userPricePerLead);
             return userPricePerLead || 2000;
         }
         function clFormatMoney(n) {
@@ -9671,9 +9676,11 @@
                         userBalance = Math.round(parseFloat(me.balance));
                         clUpdateBalance();
                     }
+                    console.log('[PRICE] autoRestore API response:', me && me.price_per_lead);
                     if (me && me.price_per_lead !== undefined) {
                         userPricePerLead = parseInt(me.price_per_lead) || 0;
                         localStorage.setItem('user_price_per_lead', String(userPricePerLead));
+                        console.log('[PRICE] Saved from autoRestore:', userPricePerLead);
                     }
                     var onboarded = (me && me.onboarded) || !!localStorage.getItem('onboarded_' + login);
                     if (me && me.onboarded) localStorage.setItem('onboarded_' + login, '1');
