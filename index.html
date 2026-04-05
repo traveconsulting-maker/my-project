@@ -838,17 +838,17 @@
         .page-section.active { display: block; }
 
         .bot-header-title {
-            font-size: 24px; font-weight: 800; color: var(--text); margin-bottom: 4px;
+            font-size: 20px; font-weight: 800; color: var(--text); margin-bottom: 2px;
         }
         .bot-header-updated {
-            font-size: 13px; color: var(--text-muted); margin-bottom: 28px;
+            font-size: 12px; color: var(--text-muted); margin-bottom: 14px;
         }
         .bot-tabs {
             display: flex; gap: 0; border-bottom: 2px solid var(--border-color);
-            margin-bottom: 32px; overflow-x: auto;
+            margin-bottom: 16px; overflow-x: auto;
         }
         .bot-tab {
-            padding: 12px 20px; font-size: 14px; font-weight: 600;
+            padding: 8px 16px; font-size: 13px; font-weight: 600;
             color: var(--text-muted); cursor: pointer; border: none;
             background: none; font-family: inherit; white-space: nowrap;
             border-bottom: 2px solid transparent; margin-bottom: -2px;
@@ -867,21 +867,21 @@
 
         .bot-card {
             background: var(--card-bg); border: 1px solid var(--card-border);
-            border-radius: 20px; padding: 28px; margin-bottom: 20px;
+            border-radius: 14px; padding: 16px; margin-bottom: 10px;
             backdrop-filter: blur(10px); -webkit-backdrop-filter: blur(10px);
             transition: all 0.3s;
         }
         .bot-card-title {
-            font-size: 16px; font-weight: 700; color: var(--text); margin-bottom: 4px;
+            font-size: 14px; font-weight: 700; color: var(--text); margin-bottom: 2px;
         }
         .bot-card-desc {
-            font-size: 13px; color: var(--text-muted); margin-bottom: 16px; line-height: 1.5;
+            font-size: 12px; color: var(--text-muted); margin-bottom: 8px; line-height: 1.4;
         }
         .bot-textarea {
-            width: 100%; min-height: 120px; padding: 14px 18px;
-            border-radius: 14px; border: 1.5px solid var(--input-border);
+            width: 100%; min-height: 60px; max-height: 120px; padding: 10px 14px;
+            border-radius: 10px; border: 1.5px solid var(--input-border);
             background: var(--input-bg); color: var(--text);
-            font-family: inherit; font-size: 14px; line-height: 1.6;
+            font-family: inherit; font-size: 13px; line-height: 1.5;
             resize: vertical; transition: all 0.3s;
         }
         .bot-textarea:focus {
@@ -890,29 +890,29 @@
         }
         .bot-textarea::placeholder { color: var(--text-muted); }
         .bot-char-count {
-            text-align: right; font-size: 12px; color: var(--text-muted); margin-top: 6px;
+            text-align: right; font-size: 11px; color: var(--text-muted); margin-top: 2px;
         }
 
         .rule-item {
-            display: flex; align-items: flex-start; gap: 12px;
-            padding: 12px 0; border-bottom: 1px solid var(--border-color);
+            display: flex; align-items: flex-start; gap: 8px;
+            padding: 6px 0; border-bottom: 1px solid var(--border-color);
             transition: background 0.2s;
         }
         .rule-item.dragging { opacity: 0.4; }
         .rule-item.drag-over { border-top: 2px solid #FF4D00; }
         .rule-num {
-            min-width: 24px; height: 24px; border-radius: 8px; margin-top: 10px;
+            min-width: 20px; height: 20px; border-radius: 6px; margin-top: 7px;
             display: flex; align-items: center; justify-content: center;
-            font-size: 12px; font-weight: 700; color: var(--text-muted);
+            font-size: 11px; font-weight: 700; color: var(--text-muted);
             background: var(--nav-icon-bg);
         }
         .rule-body { flex: 1; }
         .rule-input {
-            width: 100%; padding: 10px 14px;
-            border-radius: 12px; border: 1.5px solid var(--input-border);
+            width: 100%; padding: 7px 10px;
+            border-radius: 8px; border: 1.5px solid var(--input-border);
             background: var(--input-bg); color: var(--text);
-            font-family: inherit; font-size: 14px; line-height: 1.5;
-            resize: none; min-height: 44px; transition: all 0.3s;
+            font-family: inherit; font-size: 13px; line-height: 1.4;
+            resize: none; min-height: 34px; transition: all 0.3s;
         }
         .rule-input:focus {
             outline: none; border-color: rgba(255,77,0,0.5);
@@ -920,13 +920,13 @@
         }
         .rule-input::placeholder { color: var(--text-muted); }
         .rule-char-count {
-            text-align: right; font-size: 11px; color: var(--text-muted); margin-top: 4px;
+            text-align: right; font-size: 10px; color: var(--text-muted); margin-top: 2px;
         }
         .rule-actions {
-            display: flex; gap: 4px; margin-top: 8px;
+            display: flex; gap: 2px; margin-top: 4px;
         }
         .rule-action-btn {
-            width: 32px; height: 32px; border-radius: 8px; border: none;
+            width: 28px; height: 28px; border-radius: 6px; border: none;
             background: none; color: var(--text-muted); cursor: pointer;
             display: flex; align-items: center; justify-content: center;
             transition: all 0.2s;
@@ -937,10 +937,10 @@
         .rule-drag:active { cursor: grabbing; }
 
         .add-rule-btn {
-            width: 100%; padding: 14px; margin-top: 12px;
-            border-radius: 14px; border: 1.5px dashed var(--input-border);
+            width: 100%; padding: 8px; margin-top: 6px;
+            border-radius: 10px; border: 1.5px dashed var(--input-border);
             background: none; color: var(--text-muted);
-            font-family: inherit; font-size: 14px; font-weight: 600;
+            font-family: inherit; font-size: 13px; font-weight: 600;
             cursor: pointer; transition: all 0.2s;
             display: flex; align-items: center; justify-content: center; gap: 8px;
         }
