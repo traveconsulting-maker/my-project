@@ -2154,6 +2154,12 @@ function fetchChatDialogsFromAPI() {
                     exists.status = apiChat.status === 'closed' ? 'closed' : 'open';
                     exists.clientId = apiChat.client_id ? apiChat.client_id.toString() : exists.clientId;
                     exists.clientName = apiChat.client_name || exists.clientName;
+                    // Detect new messages by updated_at change
+                    var newUpdated = apiChat.updated_at || exists.updated;
+                    if (newUpdated !== exists.updated) {
+                        exists.updated = newUpdated;
+                        if (exists.id !== activeConvId) exists.hasNewMessage = true;
+                    }
                 }
             });
             persist();
