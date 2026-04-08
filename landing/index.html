@@ -716,7 +716,7 @@
         /* ===== 9. PRICING SECTION ===== */
         .pricing-section {
             padding: 100px 40px;
-            max-width: 1100px;
+            max-width: 1260px;
             margin: 0 auto;
             text-align: center;
         }
@@ -737,233 +737,236 @@
             transition: color 0.4s;
         }
 
-        .pricing-calc {
+        .tariff-grid {
             display: grid;
-            grid-template-columns: 1fr 1fr;
-            gap: 24px;
+            grid-template-columns: repeat(4, 1fr);
+            gap: 20px;
             text-align: left;
+            align-items: stretch;
         }
 
-        .pricing-card {
-            background: var(--accent-light);
-            border: 1px solid var(--accent-border);
-            border-top: 3px solid var(--accent);
-            border-radius: 20px;
-            padding: 36px 32px;
-            position: relative;
-            overflow: hidden;
-            transition: background 0.4s, border-color 0.4s;
-        }
-
-        .pricing-card-rival {
+        .tariff-card {
             background: var(--card-bg);
             border: 1px solid var(--card-border);
-            border-top: 3px solid var(--card-border);
             border-radius: 20px;
-            padding: 36px 32px;
+            padding: 32px 24px 28px;
             position: relative;
-            overflow: hidden;
-            opacity: 0.85;
-            transition: background 0.4s, border-color 0.4s;
+            display: flex;
+            flex-direction: column;
+            transition: background 0.4s, border-color 0.4s, transform 0.3s;
         }
 
-        .pricing-card-label {
-            display: inline-flex;
-            align-items: center;
-            gap: 6px;
-            padding: 5px 14px;
-            border-radius: 100px;
-            font-size: 12px;
-            font-weight: 600;
-            margin-bottom: 20px;
+        .tariff-card:hover {
+            transform: translateY(-4px);
         }
 
-        .pricing-card-label.ours {
+        .tariff-card.recommended {
             background: var(--accent-light);
-            color: var(--accent);
+            border: 2px solid var(--accent);
+            box-shadow: 0 8px 40px var(--accent-glow);
         }
 
-        .pricing-card-label.rival {
-            background: rgba(107, 107, 107, 0.1);
-            color: var(--text-muted);
+        .tariff-badge {
+            position: absolute;
+            top: -13px;
+            left: 50%;
+            transform: translateX(-50%);
+            background: var(--accent);
+            color: #fff;
+            font-size: 11px;
+            font-weight: 700;
+            padding: 5px 16px;
+            border-radius: 100px;
+            white-space: nowrap;
+            letter-spacing: 0.3px;
+            text-transform: uppercase;
         }
 
-        .pricing-result-price {
-            font-size: clamp(32px, 4vw, 48px);
-            font-weight: 900;
-            line-height: 1.1;
-            margin-bottom: 6px;
-            transition: color 0.4s;
-        }
-
-        .pricing-result-price.ours {
-            color: var(--accent);
-        }
-
-        .pricing-result-price.rival {
-            color: var(--text-muted);
-        }
-
-        .pricing-result-sub {
-            font-size: 14px;
-            color: var(--text-muted);
-            margin-bottom: 20px;
-            transition: color 0.4s;
-        }
-
-        .pricing-result-per-lead {
-            font-size: 15px;
-            font-weight: 600;
-            color: var(--text-secondary);
+        .tariff-name {
+            font-family: var(--font-display);
+            font-size: 20px;
+            font-weight: 700;
+            color: var(--text);
             margin-bottom: 4px;
         }
 
-        .pricing-result-total-leads {
-            font-size: 13px;
+        .tariff-leads {
+            font-size: 14px;
             color: var(--text-muted);
+            margin-bottom: 20px;
         }
 
-        .pricing-savings {
-            margin-top: 16px;
-            padding: 10px 16px;
-            border-radius: 12px;
-            background: var(--success-bg);
-            color: var(--success);
-            font-size: 14px;
+        .tariff-niche-label {
+            font-size: 12px;
             font-weight: 600;
-            display: inline-block;
+            color: var(--text-muted);
+            margin-bottom: 6px;
         }
 
-        .pricing-rival-extra {
-            margin-top: 16px;
-            padding: 10px 16px;
-            border-radius: 12px;
-            background: rgba(231, 76, 60, 0.1);
-            color: var(--danger);
-            font-size: 14px;
-            font-weight: 600;
-            display: inline-block;
-        }
-
-        .pricing-controls {
-            margin-bottom: 40px;
-            text-align: left;
-            background: var(--card-bg);
-            border: 1px solid var(--border-color);
-            border-radius: 20px;
-            padding: 32px;
-            transition: background 0.4s, border-color 0.4s;
-        }
-
-        .pricing-control-row {
-            margin-bottom: 24px;
-        }
-
-        .pricing-control-row:last-child {
-            margin-bottom: 0;
-        }
-
-        .pricing-control-label {
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            margin-bottom: 10px;
-        }
-
-        .pricing-control-label span {
-            font-size: 14px;
-            font-weight: 500;
-            color: var(--text-secondary);
-            transition: color 0.4s;
-        }
-
-        .pricing-control-label strong {
-            font-size: 15px;
-            font-weight: 700;
-            color: var(--text);
-            transition: color 0.4s;
-        }
-
-        .pricing-select {
+        .tariff-select {
             width: 100%;
-            padding: 12px 16px;
-            border-radius: 12px;
+            padding: 10px 14px;
+            border-radius: 10px;
             border: 1px solid var(--border-color);
             background: var(--input-bg);
             color: var(--text);
             font-family: var(--font-body);
-            font-size: 14px;
+            font-size: 13px;
             font-weight: 500;
             cursor: pointer;
             appearance: none;
             -webkit-appearance: none;
-            background-image: url("data:image/svg+xml,%3Csvg width='12' height='8' viewBox='0 0 12 8' fill='none' xmlns='http://www.w3.org/2000/svg'%3E%3Cpath d='M1 1.5L6 6.5L11 1.5' stroke='%23FF5733' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'/%3E%3C/svg%3E");
+            background-image: url("data:image/svg+xml,%3Csvg width='10' height='6' viewBox='0 0 12 8' fill='none' xmlns='http://www.w3.org/2000/svg'%3E%3Cpath d='M1 1.5L6 6.5L11 1.5' stroke='%23FF5733' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'/%3E%3C/svg%3E");
             background-repeat: no-repeat;
-            background-position: right 16px center;
-            transition: border-color 0.3s, background 0.3s, color 0.3s;
+            background-position: right 12px center;
+            margin-bottom: 20px;
+            transition: border-color 0.3s, background 0.3s;
         }
 
-        .pricing-select:focus {
+        .tariff-select:focus {
             outline: none;
             border-color: var(--accent-border);
         }
 
-        .pricing-range {
-            -webkit-appearance: none;
-            appearance: none;
-            width: 100%;
-            height: 6px;
-            border-radius: 3px;
+        .tariff-divider {
+            height: 1px;
             background: var(--border-color);
-            outline: none;
-            cursor: pointer;
+            margin: 0 0 16px;
         }
 
-        .pricing-range::-webkit-slider-thumb {
-            -webkit-appearance: none;
-            appearance: none;
-            width: 22px;
-            height: 22px;
-            border-radius: 50%;
-            background: var(--accent);
-            border: 3px solid var(--bg);
-            cursor: pointer;
-            box-shadow: 0 2px 8px var(--accent-glow);
+        .tariff-price-row {
+            display: flex;
+            justify-content: space-between;
+            align-items: baseline;
+            margin-bottom: 4px;
         }
 
-        .pricing-range::-moz-range-thumb {
-            width: 22px;
-            height: 22px;
-            border-radius: 50%;
-            background: var(--accent);
-            border: 3px solid var(--bg);
-            cursor: pointer;
-            box-shadow: 0 2px 8px var(--accent-glow);
+        .tariff-price-label {
+            font-size: 13px;
+            color: var(--text-muted);
         }
 
-        .pricing-btn {
-            display: inline-flex;
+        .tariff-price-value {
+            font-size: 14px;
+            font-weight: 700;
+            color: var(--text-secondary);
+        }
+
+        .tariff-total {
+            margin-top: 12px;
+            padding: 14px 0;
+            border-top: 1px solid var(--border-color);
+            text-align: center;
+        }
+
+        .tariff-total-label {
+            font-size: 12px;
+            color: var(--text-muted);
+            margin-bottom: 4px;
+        }
+
+        .tariff-total-price {
+            font-size: clamp(26px, 3vw, 34px);
+            font-weight: 900;
+            color: var(--accent);
+            line-height: 1.1;
+        }
+
+        .tariff-total-price .currency {
+            font-size: 0.6em;
+            font-weight: 700;
+        }
+
+        .tariff-savings {
+            margin-top: 14px;
+            padding: 10px 12px;
+            border-radius: 10px;
+            background: var(--success-bg);
+            text-align: center;
+        }
+
+        .tariff-savings-title {
+            font-size: 11px;
+            font-weight: 600;
+            color: var(--text-muted);
+            margin-bottom: 4px;
+            text-transform: uppercase;
+            letter-spacing: 0.3px;
+        }
+
+        .tariff-savings-value {
+            font-size: 15px;
+            font-weight: 700;
+            color: var(--success);
+        }
+
+        .tariff-enterprise-text {
+            font-size: 15px;
+            color: var(--text-muted);
+            line-height: 1.6;
+            margin-bottom: 16px;
+            flex: 1;
+        }
+
+        .tariff-enterprise-features {
+            list-style: none;
+            padding: 0;
+            margin: 0 0 20px;
+        }
+
+        .tariff-enterprise-features li {
+            font-size: 13px;
+            color: var(--text-secondary);
+            padding: 6px 0;
+            display: flex;
             align-items: center;
             gap: 8px;
-            padding: 14px 32px;
+        }
+
+        .tariff-enterprise-features li::before {
+            content: '';
+            width: 6px;
+            height: 6px;
+            border-radius: 50%;
+            background: var(--accent);
+            flex-shrink: 0;
+        }
+
+        .tariff-btn {
+            display: block;
+            width: 100%;
+            padding: 13px 20px;
             background: var(--accent);
             border: none;
-            border-radius: 10px;
+            border-radius: 12px;
             color: #fff;
             font-family: var(--font-display);
-            font-size: 16px;
+            font-size: 15px;
             font-weight: 600;
             cursor: pointer;
             transition: all 0.3s cubic-bezier(0.16, 1, 0.3, 1);
-            box-shadow: 0 4px 20px var(--accent-glow);
+            box-shadow: 0 4px 16px var(--accent-glow);
             text-decoration: none;
-            margin-top: 24px;
+            text-align: center;
+            margin-top: auto;
         }
 
-        .pricing-btn:hover {
+        .tariff-btn:hover {
             transform: translateY(-2px);
-            box-shadow: 0 8px 30px var(--accent-glow);
+            box-shadow: 0 8px 28px var(--accent-glow);
             background: var(--accent-hover);
+        }
+
+        .tariff-btn.outline {
+            background: transparent;
+            border: 1px solid var(--accent);
+            color: var(--accent);
+            box-shadow: none;
+        }
+
+        .tariff-btn.outline:hover {
+            background: var(--accent-light);
+            box-shadow: none;
         }
 
         /* ===== 10. CASES SECTION ===== */
@@ -2404,9 +2407,8 @@
             .step p { font-size: 12px; }
 
             .pricing-section { padding: 60px 24px; }
-            .pricing-calc { grid-template-columns: 1fr 1fr; gap: 16px; }
-            .pricing-card, .pricing-card-rival { padding: 28px 24px; }
-            .pricing-controls { padding: 24px; }
+            .tariff-grid { grid-template-columns: repeat(2, 1fr); gap: 16px; }
+            .tariff-card { padding: 28px 20px; }
 
             .faq-section { padding: 60px 24px; }
 
@@ -2457,11 +2459,10 @@
             .step p { font-size: 12px; }
 
             .pricing-section { padding: 48px 20px; }
-            .pricing-calc { grid-template-columns: 1fr; }
-            .pricing-card, .pricing-card-rival { padding: 28px 20px; border-radius: 16px; }
-            .pricing-controls { padding: 20px; border-radius: 16px; }
-            .pricing-result-price { font-size: 28px; }
-            .pricing-btn { padding: 12px 28px; font-size: 15px; }
+            .tariff-grid { grid-template-columns: 1fr; max-width: 400px; margin: 0 auto; }
+            .tariff-card { padding: 28px 20px; border-radius: 16px; }
+            .tariff-total-price { font-size: 28px; }
+            .tariff-btn { padding: 12px 28px; font-size: 15px; }
 
             .faq-section { padding: 48px 20px; }
             .faq-question { padding: 16px 20px; }
@@ -2709,14 +2710,16 @@
 
 <!-- Pricing -->
 <div class="pricing-section reveal" id="pricing">
-    <div class="pricing-title" data-i18n="calcTitle">Рассчитайте стоимость</div>
-    <div class="pricing-subtitle" data-i18n="calcSubtitle">Выберите нишу и параметры — увидите цену мгновенно</div>
-    <div class="pricing-controls">
-        <div class="pricing-control-row">
-            <div class="pricing-control-label">
-                <span data-i18n="calcNicheLabel">Ваша ниша</span>
-            </div>
-            <select class="pricing-select" id="calcNiche" onchange="calcPrice()">
+    <div class="pricing-title" data-i18n="calcTitle">Тарифы</div>
+    <div class="pricing-subtitle" data-i18n="calcSubtitle">Выберите подходящий тариф и начните получать квалифицированные лиды</div>
+    <div class="tariff-grid">
+
+        <!-- Старт -->
+        <div class="tariff-card" id="tariffCard0">
+            <div class="tariff-name" data-i18n="tariffStart">Старт</div>
+            <div class="tariff-leads" data-i18n="tariffStartLeads">30 лидов / месяц</div>
+            <div class="tariff-niche-label" data-i18n="tariffNiche">Ваша ниша</div>
+            <select class="tariff-select" onchange="updateTariff(0)" id="tariffNiche0">
                 <option value="3000" selected data-i18n="nicheMarketing">Маркетинговые агентства</option>
                 <option value="4000" data-i18n="nicheRecruiting">Рекрутинговые агентства</option>
                 <option value="7000" data-i18n="nicheIT">IT-разработка / автоматизация</option>
@@ -2738,40 +2741,126 @@
                 <option value="5000" data-i18n="nicheWholesale">Оптовые компании</option>
                 <option value="3000" data-i18n="nicheEvents">Event-агентства</option>
             </select>
-        </div>
-        <div class="pricing-control-row">
-            <div class="pricing-control-label">
-                <span data-i18n="calcLeadsLabel">Лидов в день</span>
-                <strong id="calcLeadsVal">2</strong>
+            <div class="tariff-divider"></div>
+            <div class="tariff-price-row">
+                <span class="tariff-price-label" data-i18n="tariffPerLead">Цена за лид</span>
+                <span class="tariff-price-value" id="tariffPPL0">3 000 ₽</span>
             </div>
-            <input type="range" class="pricing-range" id="calcLeads" min="1" max="10" value="2" oninput="calcPrice()">
-        </div>
-        <div class="pricing-control-row">
-            <div class="pricing-control-label">
-                <span data-i18n="calcDaysLabel">Дней работы</span>
-                <strong id="calcDaysVal">6</strong>
+            <div class="tariff-total">
+                <div class="tariff-total-label" data-i18n="tariffMonthly">Итого в месяц</div>
+                <div class="tariff-total-price" id="tariffTotal0">90 000 <span class="currency">₽</span></div>
             </div>
-            <input type="range" class="pricing-range" id="calcDays" min="1" max="30" value="6" oninput="calcPrice()">
+            <div class="tariff-savings">
+                <div class="tariff-savings-title" data-i18n="tariffSavingsTitle">Экономия vs аутсорс</div>
+                <div class="tariff-savings-value" id="tariffSave0">+45 000 ₽</div>
+            </div>
+            <button class="tariff-btn" onclick="openAccessModal()" data-i18n="tariffCta">Начать</button>
         </div>
+
+        <!-- Базовый -->
+        <div class="tariff-card" id="tariffCard1">
+            <div class="tariff-name" data-i18n="tariffBase">Базовый</div>
+            <div class="tariff-leads" data-i18n="tariffBaseLeads">50 лидов / месяц</div>
+            <div class="tariff-niche-label" data-i18n="tariffNiche">Ваша ниша</div>
+            <select class="tariff-select" onchange="updateTariff(1)" id="tariffNiche1">
+                <option value="3000" selected data-i18n="nicheMarketing">Маркетинговые агентства</option>
+                <option value="4000" data-i18n="nicheRecruiting">Рекрутинговые агентства</option>
+                <option value="7000" data-i18n="nicheIT">IT-разработка / автоматизация</option>
+                <option value="4000" data-i18n="nicheSalesOut">Аутсорсинг продаж</option>
+                <option value="5000" data-i18n="nicheLegal">Юридические услуги (B2B)</option>
+                <option value="2500" data-i18n="nicheAccounting">Бухгалтерские услуги</option>
+                <option value="2000" data-i18n="nicheEducation">Образование / онлайн-школы</option>
+                <option value="6000" data-i18n="nicheManufacturing">Производственные компании</option>
+                <option value="3000" data-i18n="nicheLogistics">Логистика / грузоперевозки</option>
+                <option value="5000" data-i18n="nicheFranchise">Франшизы</option>
+                <option value="8000" data-i18n="nicheRealEstate">Коммерческая недвижимость</option>
+                <option value="5000" data-i18n="nicheConsulting">Консалтинг</option>
+                <option value="6000" data-i18n="nicheCRM">Внедрение CRM</option>
+                <option value="3000" data-i18n="nicheSaaS">SaaS сервисы</option>
+                <option value="3000" data-i18n="nicheHR">Кадровые агентства</option>
+                <option value="4000" data-i18n="nicheFinance">Финансовый аутсорсинг</option>
+                <option value="7000" data-i18n="nicheConstruction">Строительные компании</option>
+                <option value="8000" data-i18n="nicheEquipment">Поставщики оборудования</option>
+                <option value="5000" data-i18n="nicheWholesale">Оптовые компании</option>
+                <option value="3000" data-i18n="nicheEvents">Event-агентства</option>
+            </select>
+            <div class="tariff-divider"></div>
+            <div class="tariff-price-row">
+                <span class="tariff-price-label" data-i18n="tariffPerLead">Цена за лид</span>
+                <span class="tariff-price-value" id="tariffPPL1">3 000 ₽</span>
+            </div>
+            <div class="tariff-total">
+                <div class="tariff-total-label" data-i18n="tariffMonthly">Итого в месяц</div>
+                <div class="tariff-total-price" id="tariffTotal1">150 000 <span class="currency">₽</span></div>
+            </div>
+            <div class="tariff-savings">
+                <div class="tariff-savings-title" data-i18n="tariffSavingsTitle">Экономия vs аутсорс</div>
+                <div class="tariff-savings-value" id="tariffSave1">+75 000 ₽</div>
+            </div>
+            <button class="tariff-btn" onclick="openAccessModal()" data-i18n="tariffCta">Начать</button>
+        </div>
+
+        <!-- Стандартный (recommended) -->
+        <div class="tariff-card recommended" id="tariffCard2">
+            <div class="tariff-badge" data-i18n="tariffRecommended">Рекомендуемый</div>
+            <div class="tariff-name" data-i18n="tariffStandard">Стандартный</div>
+            <div class="tariff-leads" data-i18n="tariffStandardLeads">100 лидов / месяц</div>
+            <div class="tariff-niche-label" data-i18n="tariffNiche">Ваша ниша</div>
+            <select class="tariff-select" onchange="updateTariff(2)" id="tariffNiche2">
+                <option value="3000" selected data-i18n="nicheMarketing">Маркетинговые агентства</option>
+                <option value="4000" data-i18n="nicheRecruiting">Рекрутинговые агентства</option>
+                <option value="7000" data-i18n="nicheIT">IT-разработка / автоматизация</option>
+                <option value="4000" data-i18n="nicheSalesOut">Аутсорсинг продаж</option>
+                <option value="5000" data-i18n="nicheLegal">Юридические услуги (B2B)</option>
+                <option value="2500" data-i18n="nicheAccounting">Бухгалтерские услуги</option>
+                <option value="2000" data-i18n="nicheEducation">Образование / онлайн-школы</option>
+                <option value="6000" data-i18n="nicheManufacturing">Производственные компании</option>
+                <option value="3000" data-i18n="nicheLogistics">Логистика / грузоперевозки</option>
+                <option value="5000" data-i18n="nicheFranchise">Франшизы</option>
+                <option value="8000" data-i18n="nicheRealEstate">Коммерческая недвижимость</option>
+                <option value="5000" data-i18n="nicheConsulting">Консалтинг</option>
+                <option value="6000" data-i18n="nicheCRM">Внедрение CRM</option>
+                <option value="3000" data-i18n="nicheSaaS">SaaS сервисы</option>
+                <option value="3000" data-i18n="nicheHR">Кадровые агентства</option>
+                <option value="4000" data-i18n="nicheFinance">Финансовый аутсорсинг</option>
+                <option value="7000" data-i18n="nicheConstruction">Строительные компании</option>
+                <option value="8000" data-i18n="nicheEquipment">Поставщики оборудования</option>
+                <option value="5000" data-i18n="nicheWholesale">Оптовые компании</option>
+                <option value="3000" data-i18n="nicheEvents">Event-агентства</option>
+            </select>
+            <div class="tariff-divider"></div>
+            <div class="tariff-price-row">
+                <span class="tariff-price-label" data-i18n="tariffPerLead">Цена за лид</span>
+                <span class="tariff-price-value" id="tariffPPL2">3 000 ₽</span>
+            </div>
+            <div class="tariff-total">
+                <div class="tariff-total-label" data-i18n="tariffMonthly">Итого в месяц</div>
+                <div class="tariff-total-price" id="tariffTotal2">300 000 <span class="currency">₽</span></div>
+            </div>
+            <div class="tariff-savings">
+                <div class="tariff-savings-title" data-i18n="tariffSavingsTitle">Экономия vs аутсорс</div>
+                <div class="tariff-savings-value" id="tariffSave2">+150 000 ₽</div>
+            </div>
+            <button class="tariff-btn" onclick="openAccessModal()" data-i18n="tariffCta">Начать</button>
+        </div>
+
+        <!-- Энтерпрайз -->
+        <div class="tariff-card" id="tariffCard3">
+            <div class="tariff-name" data-i18n="tariffEnterprise">Энтерпрайз</div>
+            <div class="tariff-leads" data-i18n="tariffEnterpriseLeads">Под вашу задачу</div>
+            <div class="tariff-divider" style="margin-top:8px;"></div>
+            <div class="tariff-enterprise-text" data-i18n="tariffEnterpriseDesc">Индивидуальные условия для компаний с объёмом от 200 лидов в месяц</div>
+            <ul class="tariff-enterprise-features">
+                <li data-i18n="tariffEntF1">Персональный менеджер</li>
+                <li data-i18n="tariffEntF2">Кастомная интеграция</li>
+                <li data-i18n="tariffEntF3">SLA и приоритетная поддержка</li>
+                <li data-i18n="tariffEntF4">Гибкая ценовая модель</li>
+            </ul>
+            <a class="tariff-btn outline" href="https://t.me/easysale_support" target="_blank" data-i18n="tariffEntCta">Обсудить задачу</a>
+        </div>
+
     </div>
-    <div class="pricing-calc">
-        <div class="pricing-card">
-            <div class="pricing-card-label ours">EasySale</div>
-            <div class="pricing-result-price ours" id="calcOurPrice"></div>
-            <div class="pricing-result-sub" data-i18n="calcPeriodOurs">за выбранный период</div>
-            <div class="pricing-result-per-lead" id="calcOurPerLead"></div>
-            <div class="pricing-result-total-leads" id="calcOurTotal"></div>
-        </div>
-        <div class="pricing-card-rival">
-            <div class="pricing-card-label rival" data-i18n="calcRivalLabel">Аутсорсинг отдела продаж</div>
-            <div class="pricing-result-price rival" id="calcRivalPrice"></div>
-            <div class="pricing-result-sub" data-i18n="calcPeriodRival">за тот же период</div>
-            <div class="pricing-result-per-lead" id="calcRivalPerLead" style="color:var(--text-muted);"></div>
-            <div class="pricing-result-total-leads" id="calcRivalTotal" style="color:var(--text-muted);"></div>
-            <div class="pricing-rival-extra" id="calcOverpay"></div>
-        </div>
-    </div>
-    <div id="calcDisclaimer" style="margin-top:24px;text-align:center;font-size:13px;color:var(--text-muted);line-height:1.7;max-width:700px;margin-left:auto;margin-right:auto;" data-i18n="calcDisclaimer">
+    <div style="margin-top:24px;text-align:center;font-size:13px;color:var(--text-muted);line-height:1.7;max-width:700px;margin-left:auto;margin-right:auto;" data-i18n="calcDisclaimer">
         * Цены ориентировочные и могут меняться в зависимости от ваших задач. Стоимость за лид может быть значительно ниже при хорошем оффере и предложении.
     </div>
 </div>
@@ -3316,17 +3405,28 @@
         valPassShort: { ru:'Пароль — минимум 6 символов', en:'Password must be at least 6 characters' },
         valPassMismatch: { ru:'Пароли не совпадают', en:'Passwords do not match' },
         // Price calculator
-        calcTitle: { ru:'Рассчитайте стоимость', en:'Calculate the cost' },
-        calcSubtitle: { ru:'Выберите нишу и параметры — увидите цену мгновенно', en:'Choose a niche and parameters — see the price instantly' },
-        calcNicheLabel: { ru:'Ваша ниша', en:'Your niche' },
-        calcLeadsLabel: { ru:'Лидов в день', en:'Leads per day' },
-        calcDaysLabel: { ru:'Дней работы', en:'Working days' },
-        calcPeriodOurs: { ru:'за выбранный период', en:'for the selected period' },
-        calcRivalLabel: { ru:'Аутсорсинг отдела продаж', en:'Outsourced sales department' },
-        calcPeriodRival: { ru:'за тот же период', en:'for the same period' },
-        calcPerLead: { ru:'за лид', en:'per lead' },
-        calcLeadsForPeriod: { ru:'лидов за период', en:'leads for the period' },
-        calcOverpay: { ru:'Переплата', en:'Overpayment' },
+        calcTitle: { ru:'Тарифы', en:'Pricing' },
+        calcSubtitle: { ru:'Выберите подходящий тариф и начните получать квалифицированные лиды', en:'Choose the right plan and start getting qualified leads' },
+        tariffStart: { ru:'Старт', en:'Start' },
+        tariffStartLeads: { ru:'30 лидов / месяц', en:'30 leads / month' },
+        tariffBase: { ru:'Базовый', en:'Basic' },
+        tariffBaseLeads: { ru:'50 лидов / месяц', en:'50 leads / month' },
+        tariffStandard: { ru:'Стандартный', en:'Standard' },
+        tariffStandardLeads: { ru:'100 лидов / месяц', en:'100 leads / month' },
+        tariffEnterprise: { ru:'Энтерпрайз', en:'Enterprise' },
+        tariffEnterpriseLeads: { ru:'Под вашу задачу', en:'Custom volume' },
+        tariffEnterpriseDesc: { ru:'Индивидуальные условия для компаний с объёмом от 200 лидов в месяц', en:'Custom terms for companies with 200+ leads per month' },
+        tariffEntF1: { ru:'Персональный менеджер', en:'Dedicated manager' },
+        tariffEntF2: { ru:'Кастомная интеграция', en:'Custom integration' },
+        tariffEntF3: { ru:'SLA и приоритетная поддержка', en:'SLA & priority support' },
+        tariffEntF4: { ru:'Гибкая ценовая модель', en:'Flexible pricing model' },
+        tariffNiche: { ru:'Ваша ниша', en:'Your niche' },
+        tariffPerLead: { ru:'Цена за лид', en:'Price per lead' },
+        tariffMonthly: { ru:'Итого в месяц', en:'Total per month' },
+        tariffSavingsTitle: { ru:'Экономия vs аутсорс', en:'Savings vs outsource' },
+        tariffCta: { ru:'Начать', en:'Get started' },
+        tariffEntCta: { ru:'Обсудить задачу', en:'Contact us' },
+        tariffRecommended: { ru:'Рекомендуемый', en:'Recommended' },
         calcDisclaimer: { ru:'* Цены ориентировочные и могут меняться в зависимости от ваших задач. Стоимость за лид может быть значительно ниже при хорошем оффере и предложении.', en:'* Prices are approximate and may vary depending on your needs. Cost per lead can be significantly lower with a good offer.' },
         // Niche options
         nicheMarketing: { ru:'Маркетинговые агентства', en:'Marketing agencies' },
@@ -3523,33 +3623,26 @@
     var accessSuccess = document.getElementById('accessSuccess');
     var accessSubmitBtn = document.getElementById('accessSubmitBtn');
 
-    function calcPrice() {
-        var niche = document.getElementById('calcNiche');
-        var leads = document.getElementById('calcLeads');
-        var days = document.getElementById('calcDays');
+    var tariffLeads = [30, 50, 100];
 
-        document.getElementById('calcLeadsVal').textContent = leads.value;
-        document.getElementById('calcDaysVal').textContent = days.value;
-
-        var pricePerLead = parseInt(niche.value);
-        var leadsPerDay = parseInt(leads.value);
-        var numDays = parseInt(days.value);
-        var totalLeads = leadsPerDay * numDays;
-        var ourTotal = pricePerLead * totalLeads;
-        var rivalPerLead = pricePerLead + 1500;
-        var rivalTotal = rivalPerLead * totalLeads;
-        var savings = rivalTotal - ourTotal;
-
+    function updateTariff(idx) {
+        var sel = document.getElementById('tariffNiche' + idx);
+        var ppl = parseInt(sel.value);
+        var leads = tariffLeads[idx];
+        var total = ppl * leads;
+        var outsource = Math.round(total * 1.5);
+        var savings = outsource - total;
         var locale = currentLang === 'en' ? 'en-US' : 'ru-RU';
-        document.getElementById('calcOurPrice').textContent = ourTotal.toLocaleString(locale) + ' ₽';
-        document.getElementById('calcOurPerLead').textContent = pricePerLead.toLocaleString(locale) + ' ₽ ' + t('calcPerLead');
-        document.getElementById('calcOurTotal').textContent = totalLeads + ' ' + t('calcLeadsForPeriod');
-        document.getElementById('calcRivalPrice').textContent = rivalTotal.toLocaleString(locale) + ' ₽';
-        document.getElementById('calcRivalPerLead').textContent = rivalPerLead.toLocaleString(locale) + ' ₽ ' + t('calcPerLead');
-        document.getElementById('calcRivalTotal').textContent = totalLeads + ' ' + t('calcLeadsForPeriod');
-        document.getElementById('calcOverpay').textContent = t('calcOverpay') + ': +' + savings.toLocaleString(locale) + ' ₽';
+
+        document.getElementById('tariffPPL' + idx).textContent = ppl.toLocaleString(locale) + ' ₽';
+        document.getElementById('tariffTotal' + idx).innerHTML = total.toLocaleString(locale) + ' <span class="currency">₽</span>';
+        document.getElementById('tariffSave' + idx).textContent = '+' + savings.toLocaleString(locale) + ' ₽';
     }
-    calcPrice();
+
+    function updateAllTariffs() {
+        for (var i = 0; i < 3; i++) updateTariff(i);
+    }
+    updateAllTariffs();
 
     function switchCase(idx, el) {
         document.querySelectorAll('.cases-tab').forEach(function(t) { t.classList.remove('active'); });
