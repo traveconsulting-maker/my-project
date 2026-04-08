@@ -2360,7 +2360,7 @@
                         <label data-i18n="passLabel">Пароль</label>
                         <input type="password" id="loginPass" placeholder="Введите пароль" data-i18n-ph="phPass" required autocomplete="current-password">
                     </div>
-                    <div class="error-msg" id="loginError" data-i18n="loginErr">Неверный email или пароль</div>
+                    <div class="error-msg" id="loginError" data-i18n="loginErr">Неверный логин или пароль. Попробуйте войти через email — с недавнего времени логин это ваша почта.</div>
                     <button type="submit" class="submit-btn" data-i18n="loginBtn">Войти</button>
                 </form>
                 <div class="divider" data-i18n="orText">или</div>
@@ -4807,7 +4807,7 @@
                     user.classList.add('error');
                     setTimeout(() => { user.classList.remove('error'); }, 1500);
                 } else {
-                    error.textContent = i18n.loginErr?.[currentLang] || 'Неверный логин или пароль';
+                    error.textContent = i18n.loginErr?.[currentLang] || 'Неверный логин или пароль. Попробуйте войти через email — с недавнего времени логин это ваша почта.';
                     user.classList.add('error');
                     pass.classList.add('error');
                     error.classList.add('show');
@@ -6996,7 +6996,7 @@
             loginLabel: { ru:'Email', en:'Email' },
             passLabel: { ru:'Пароль', en:'Password' },
             loginBtn: { ru:'Войти', en:'Sign In' },
-            loginErr: { ru:'Неверный email или пароль', en:'Invalid email or password' },
+            loginErr: { ru:'Неверный логин или пароль. Попробуйте войти через email — с недавнего времени логин это ваша почта.', en:'Invalid login or password. Try signing in with your email — your login is now your email address.' },
             loginErrInactive: { ru:'Ваш аккаунт требует активации. Это может занять до 15 минут', en:'Your account requires activation. This may take up to 15 minutes' },
             orText: { ru:'или', en:'or' },
             registerBtn: { ru:'Зарегистрироваться', en:'Create Account' },
