@@ -504,6 +504,10 @@
                     <input type="checkbox" id="ql-agreed" style="width:18px;height:18px;accent-color:var(--accent);">
                     <label for="ql-agreed" style="font-size:.9rem;color:var(--text);">Согласие получено</label>
                 </div>
+                <div style="display:flex;align-items:center;gap:8px;">
+                    <input type="checkbox" id="ql-qualified" checked style="width:18px;height:18px;accent-color:#00b894;">
+                    <label for="ql-qualified" style="font-size:.9rem;color:var(--text);">Квалифицирован</label>
+                </div>
                 <div>
                     <label style="display:block;margin-bottom:4px;font-size:.85rem;color:var(--text-secondary);">Договорённости</label>
                     <textarea id="ql-agreements" rows="3" placeholder="О чём договорились..." style="width:100%;padding:10px 12px;border-radius:8px;border:1px solid var(--input-border);background:var(--input-bg);color:var(--text);font-size:.95rem;resize:vertical;"></textarea>
@@ -1062,10 +1066,23 @@
     function updateClientPricePerLead(clientId, value) {
         const c = getClient(clientId);
         if (!c) return;
-        c.pricePerLead = parseInt(value) || 2000;
+        const price = parseInt(value) || 2000;
+        c.pricePerLead = price;
         c.updated = now();
         persist();
-        toast('Цена за лид обновлена: ' + c.pricePerLead + ' ₽');
+        // Save to server
+        if (crmToken) {
+            fetch(API_BASE + '/api/admin/clients/' + clientId, {
+                method: 'PATCH',
+                headers: { ...apiHeaders(), 'Content-Type': 'application/json' },
+                body: JSON.stringify({ price_per_lead: price })
+            })
+            .then(r => r.json())
+            .then(() => toast('Цена за лид обновлена: ' + price + ' ₽'))
+            .catch(() => toast('Ошибка сохранения цены за лид'));
+        } else {
+            toast('Цена за лид обновлена: ' + price + ' ₽');
+        }
     }
 
     function toggleTask(id) {
@@ -1104,6 +1121,9 @@
                 c.referred_by = fresh.referred_by;
                 c.referral_bonus_leads = fresh.referral_bonus_leads;
                 c.balance = fresh.balance;
+                if (fresh.price_per_lead !== undefined) {
+                    c.pricePerLead = parseInt(fresh.price_per_lead) || c.pricePerLead || 2000;
+                }
             }
             _renderClientDetailWith(c);
         })
@@ -2219,7 +2239,7 @@
             company: document.getElementById('ql-company').value.trim() || null,
             call_time: document.getElementById('ql-call-time').value || null,
             call_duration: durationSec,
-            qualified: document.getElementById('ql-agreed').checked,
+            qualified: document.getElementById('ql-qualified').checked,
             agreements: document.getElementById('ql-agreements').value.trim(),
             client_facts: document.getElementById('ql-facts').value.trim()
         };
@@ -2241,6 +2261,7 @@
             document.getElementById('ql-call-time').value = '';
             document.getElementById('ql-duration').value = '';
             document.getElementById('ql-agreed').checked = false;
+            document.getElementById('ql-qualified').checked = true;
             document.getElementById('ql-agreements').value = '';
             document.getElementById('ql-facts').value = '';
             loadQualLeads(currentDetailClient);
