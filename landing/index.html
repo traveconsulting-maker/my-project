@@ -3606,13 +3606,14 @@
     if (currentLang === 'en') applyLang();
 
     // ===== Language Detection Modal =====
-    (function() {
-        if (savedLang) return; // already chosen
+    document.addEventListener('DOMContentLoaded', function() {
+        if (savedLang) return;
 
-        var modal = document.getElementById('langModal');
         var overlay = document.getElementById('langModalOverlay');
         var btnRu = document.getElementById('langBtnRu');
         var btnEn = document.getElementById('langBtnEn');
+
+        if (!overlay || !btnRu || !btnEn) return;
 
         function chooseLang(lang) {
             currentLang = lang;
@@ -3625,7 +3626,6 @@
         btnRu.addEventListener('click', function() { chooseLang('ru'); });
         btnEn.addEventListener('click', function() { chooseLang('en'); });
 
-        // Detect country by IP
         fetch('https://ipapi.co/json/')
             .then(function(r) { return r.json(); })
             .then(function(data) {
@@ -3637,14 +3637,13 @@
                 }
             })
             .catch(function() {
-                // fallback: highlight Russian
                 btnRu.classList.add('lang-recommended');
             })
             .finally(function() {
                 overlay.style.display = 'flex';
                 requestAnimationFrame(function() { overlay.style.opacity = '1'; });
             });
-    })();
+    });
 
     // ===== Theme =====
     function toggleTheme() {
