@@ -2448,31 +2448,6 @@
             .cta-banner-actions { flex-direction: column; }
             .cta-btn-white, .cta-btn-outline { width: 100%; justify-content: center; }
         }
-        /* ===== CUSTOM CURSOR ===== */
-        @media (pointer: fine) {
-            *, *::before, *::after { cursor: none !important; }
-            .custom-cursor {
-                position: fixed;
-                top: 0;
-                left: 0;
-                width: 16px;
-                height: 16px;
-                background: #FF6B6B;
-                border-radius: 50%;
-                pointer-events: none;
-                z-index: 99999;
-                transform: translate(-50%, -50%);
-                transition: width 0.25s cubic-bezier(0.16,1,0.3,1), height 0.25s cubic-bezier(0.16,1,0.3,1), background 0.25s, opacity 0.25s;
-                mix-blend-mode: exclusion;
-                opacity: 0;
-            }
-            .custom-cursor.visible { opacity: 1; }
-            .custom-cursor.hover {
-                width: 48px;
-                height: 48px;
-                background: rgba(255, 107, 107, 0.35);
-            }
-        }
 
         /* ===== Language Selection Modal ===== */
         .lang-overlay {
@@ -2481,7 +2456,8 @@
             background: rgba(0, 0, 0, 0.75);
             backdrop-filter: blur(8px);
             -webkit-backdrop-filter: blur(8px);
-            z-index: 100000;
+            z-index: 99999;
+            pointer-events: all;
             display: flex;
             align-items: center;
             justify-content: center;
@@ -4133,46 +4109,6 @@
 })();
 </script>
 
-<script>
-(function() {
-    if (!window.matchMedia('(pointer: fine)').matches) return;
-
-    var cursor = document.createElement('div');
-    cursor.className = 'custom-cursor';
-    document.body.appendChild(cursor);
-
-    var mx = -100, my = -100;
-    var cx = -100, cy = -100;
-
-    document.addEventListener('mousemove', function(e) {
-        mx = e.clientX;
-        my = e.clientY;
-        if (!cursor.classList.contains('visible')) cursor.classList.add('visible');
-    });
-
-    document.addEventListener('mouseleave', function() {
-        cursor.classList.remove('visible');
-    });
-
-    function tick() {
-        cx += (mx - cx) * 0.15;
-        cy += (my - cy) * 0.15;
-        cursor.style.left = cx + 'px';
-        cursor.style.top = cy + 'px';
-        requestAnimationFrame(tick);
-    }
-    tick();
-
-    var hoverTargets = 'a, button, .hero-cta, .reg-btn, .cases-tab, .faq-question, .pricing-select, input, .theme-toggle, .lang-btn, .founder-tg-btn, .sc-fab, .tg-fab, .max-fab';
-
-    document.addEventListener('mouseover', function(e) {
-        if (e.target.closest(hoverTargets)) cursor.classList.add('hover');
-    });
-    document.addEventListener('mouseout', function(e) {
-        if (e.target.closest(hoverTargets)) cursor.classList.remove('hover');
-    });
-})();
-</script>
 
 <!-- Low-poly funnel animation -->
 <script>
