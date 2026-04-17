@@ -2318,7 +2318,7 @@
             .land-topbar { padding: 12px 20px; }
             .land-topbar-right { gap: 8px; }
             .land-nav { display: none; }
-            .lang-btn { display: none; }
+            .land-topbar .lang-btn { display: none; }
             .burger-btn { display: flex !important; }
             .reg-btn { padding: 8px 18px; font-size: 13px; }
 
@@ -2444,7 +2444,7 @@
             .lang-modal { padding: 28px 20px 24px; border-radius: 16px; }
             .lang-modal-title { font-size: 1.05rem; margin-bottom: 20px; }
             .lang-modal-buttons { gap: 12px; }
-            .lang-modal-buttons .lang-btn { padding: 14px 16px; font-size: 0.9rem; border-radius: 12px; }
+            .lang-modal-buttons .lang-btn { padding: 14px 16px; min-height: 48px; font-size: 0.9rem; border-radius: 12px; }
 
             /* Case stats */
             .case-stats { flex-wrap: wrap; }
@@ -2480,11 +2480,14 @@
         /* ===== Language Selection Modal ===== */
         .lang-overlay {
             position: fixed;
-            top: 0; left: 0; right: 0; bottom: 0;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
             background: rgba(0, 0, 0, 0.75);
             backdrop-filter: blur(8px);
             -webkit-backdrop-filter: blur(8px);
-            z-index: 99999;
+            z-index: 999999;
             pointer-events: all;
             display: flex;
             align-items: center;
@@ -2499,6 +2502,8 @@
             text-align: center;
             max-width: 420px;
             width: 90%;
+            max-height: 90vh;
+            overflow-y: auto;
             box-shadow: 0 24px 64px rgba(0, 0, 0, 0.5);
         }
         .lang-modal-title {
@@ -2514,8 +2519,10 @@
             justify-content: center;
         }
         .lang-modal-buttons .lang-btn {
+            display: block !important;
             flex: 1;
             padding: 16px 20px;
+            min-height: 48px;
             font-family: var(--font-body);
             font-size: 1rem;
             font-weight: 600;
