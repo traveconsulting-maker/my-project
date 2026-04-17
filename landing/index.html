@@ -2473,6 +2473,64 @@
                 background: rgba(255, 107, 107, 0.35);
             }
         }
+
+        /* ===== Language Selection Modal ===== */
+        .lang-overlay {
+            position: fixed;
+            top: 0; left: 0; right: 0; bottom: 0;
+            background: rgba(0, 0, 0, 0.75);
+            backdrop-filter: blur(8px);
+            -webkit-backdrop-filter: blur(8px);
+            z-index: 100000;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            transition: opacity 0.3s ease;
+        }
+        .lang-modal {
+            background: var(--modal-bg);
+            border: 1px solid var(--card-border);
+            border-radius: 20px;
+            padding: 40px 36px 36px;
+            text-align: center;
+            max-width: 420px;
+            width: 90%;
+            box-shadow: 0 24px 64px rgba(0, 0, 0, 0.5);
+        }
+        .lang-modal-title {
+            font-family: var(--font-display);
+            font-size: 1.25rem;
+            font-weight: 600;
+            color: var(--text);
+            margin-bottom: 28px;
+        }
+        .lang-modal-buttons {
+            display: flex;
+            gap: 16px;
+            justify-content: center;
+        }
+        .lang-modal-buttons .lang-btn {
+            flex: 1;
+            padding: 16px 20px;
+            font-family: var(--font-body);
+            font-size: 1rem;
+            font-weight: 600;
+            border: 2px solid var(--card-border);
+            border-radius: 14px;
+            background: var(--card-bg);
+            color: var(--text);
+            cursor: pointer;
+            transition: all 0.2s ease;
+        }
+        .lang-modal-buttons .lang-btn:hover {
+            background: var(--card-hover);
+            border-color: var(--text-muted);
+            transform: translateY(-2px);
+        }
+        .lang-modal-buttons .lang-btn.lang-recommended {
+            border-color: var(--accent);
+            box-shadow: 0 0 20px rgba(255, 87, 51, 0.25);
+        }
     </style>
 </head>
 <body>
@@ -3283,7 +3341,8 @@
 
 <script>
     // ===== i18n =====
-    var currentLang = localStorage.getItem('lang') || 'ru';
+    var savedLang = localStorage.getItem('lang');
+    var currentLang = savedLang || 'ru';
 
     var i18n = {
         // Landing nav
@@ -3545,6 +3604,47 @@
     }
 
     if (currentLang === 'en') applyLang();
+
+    // ===== Language Detection Modal =====
+    (function() {
+        if (savedLang) return; // already chosen
+
+        var modal = document.getElementById('langModal');
+        var overlay = document.getElementById('langModalOverlay');
+        var btnRu = document.getElementById('langBtnRu');
+        var btnEn = document.getElementById('langBtnEn');
+
+        function chooseLang(lang) {
+            currentLang = lang;
+            localStorage.setItem('lang', lang);
+            applyLang();
+            overlay.style.opacity = '0';
+            setTimeout(function() { overlay.style.display = 'none'; }, 300);
+        }
+
+        btnRu.addEventListener('click', function() { chooseLang('ru'); });
+        btnEn.addEventListener('click', function() { chooseLang('en'); });
+
+        // Detect country by IP
+        fetch('https://ipapi.co/json/')
+            .then(function(r) { return r.json(); })
+            .then(function(data) {
+                var ruCountries = ['RU', 'BY', 'KZ', 'UA'];
+                if (ruCountries.indexOf(data.country_code) !== -1) {
+                    btnRu.classList.add('lang-recommended');
+                } else {
+                    btnEn.classList.add('lang-recommended');
+                }
+            })
+            .catch(function() {
+                // fallback: highlight Russian
+                btnRu.classList.add('lang-recommended');
+            })
+            .finally(function() {
+                overlay.style.display = 'flex';
+                requestAnimationFrame(function() { overlay.style.opacity = '1'; });
+            });
+    })();
 
     // ===== Theme =====
     function toggleTheme() {
@@ -4284,6 +4384,17 @@
     draw();
 })();
 </script>
+
+<!-- Language Selection Modal -->
+<div id="langModalOverlay" class="lang-overlay" style="display:none;opacity:0;">
+    <div id="langModal" class="lang-modal">
+        <div class="lang-modal-title">Выберите язык / Choose language</div>
+        <div class="lang-modal-buttons">
+            <button id="langBtnRu" class="lang-btn">Русский 🇷🇺</button>
+            <button id="langBtnEn" class="lang-btn">English 🇬🇧</button>
+        </div>
+    </div>
+</div>
 
 </body>
 </html>
