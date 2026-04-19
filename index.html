@@ -7131,9 +7131,13 @@
 
         // ===== i18n =====
         // Check URL param first (from landing page), then localStorage
+        console.log('[LANG] URL params:', window.location.search);
+        console.log('[LANG] lang param:', new URLSearchParams(window.location.search).get('lang'));
+        console.log('[LANG] localStorage before:', localStorage.getItem('lang'));
         (function() {
             var urlLang = new URLSearchParams(window.location.search).get('lang');
             if (urlLang === 'en' || urlLang === 'ru') {
+                console.log('[LANG] Applying URL lang:', urlLang);
                 localStorage.setItem('lang', urlLang);
                 // Clean URL param without reload
                 var url = new URL(window.location);
@@ -7142,6 +7146,7 @@
             }
         })();
         var currentLang = localStorage.getItem('lang') || 'ru';
+        console.log('[LANG] currentLang after init:', currentLang);
 
         var i18n = {
             // Landing nav
