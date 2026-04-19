@@ -2421,7 +2421,7 @@
                 <div class="divider" data-i18n="regDivider">или</div>
                 <button class="google-btn" onclick="showLoginForm()">
                     <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M15 3h4a2 2 0 0 1 2 2v14a2 2 0 0 1-2 2h-4"/><polyline points="10 17 15 12 10 7"/><line x1="15" y1="12" x2="3" y2="12"/></svg>
-                    Уже есть аккаунт? Войти
+                    <span data-i18n="haveAccount">Уже есть аккаунт? Войти</span>
                 </button>
             </div>
         </div>
@@ -2763,7 +2763,7 @@
                 </div>
                 <!-- Bitrix24 form -->
                 <div id="integrationFormBitrix" style="display:none;">
-                    <button class="intg-back" onclick="showIntegrationSelect()">&larr; Назад</button>
+                    <button class="intg-back" onclick="showIntegrationSelect()" data-i18n-html="intBack">&larr; Назад</button>
                     <div style="font-weight:700;margin-bottom:16px;color:#fff;" data-i18n="intBitrixTitle">Подключение Битрикс24</div>
                     <div class="form-group">
                         <label data-i18n="intBitrixLabel">Домен Битрикс24</label>
@@ -2778,7 +2778,7 @@
                 </div>
                 <!-- AMO CRM form -->
                 <div id="integrationFormAmo" style="display:none;">
-                    <button class="intg-back" onclick="showIntegrationSelect()">&larr; Назад</button>
+                    <button class="intg-back" onclick="showIntegrationSelect()" data-i18n-html="intBack">&larr; Назад</button>
                     <div style="font-weight:700;margin-bottom:16px;color:#fff;" data-i18n="intAmoTitle">Подключение АМО CRM</div>
                     <div class="form-group">
                         <label data-i18n="intAmoLabel">Домен АМО CRM</label>
@@ -3932,7 +3932,7 @@
     <div class="modal-overlay" id="taModal" onclick="if(event.target===this)taCloseModal()">
         <div class="modal" style="max-width:540px;">
             <button class="modal-close" onclick="taCloseModal()">&times;</button>
-            <h2 id="taModalTitle" style="margin-bottom:4px;color:var(--text);">Создать ЦА</h2>
+            <h2 id="taModalTitle" style="margin-bottom:4px;color:var(--text);" data-i18n="taCreate">Создать ЦА</h2>
             <p style="font-size:.82rem;color:var(--text-muted);margin-bottom:20px;" data-i18n="taModalSub">Настройте параметры целевой аудитории</p>
             <form onsubmit="taSave(event)">
                 <div class="cl-form-group">
@@ -4075,14 +4075,14 @@
                     html += '<th style="padding:12px 16px;text-align:left;font-size:13px;font-weight:600;color:var(--text-muted);">' + t('balThDate') + '</th>';
                     html += '<th style="padding:12px 16px;text-align:left;font-size:13px;font-weight:600;color:var(--text-muted);">' + t('balThAmount') + '</th>';
                     html += '<th style="padding:12px 16px;text-align:left;font-size:13px;font-weight:600;color:var(--text-muted);">' + t('balThStatus') + '</th>';
-                    html += '<th style="padding:12px 16px;text-align:left;font-size:13px;font-weight:600;color:var(--text-muted);">Источник</th>';
+                    html += '<th style="padding:12px 16px;text-align:left;font-size:13px;font-weight:600;color:var(--text-muted);">' + t('balThSource') + '</th>';
                     html += '<th style="padding:12px 16px;text-align:left;font-size:13px;font-weight:600;color:var(--text-muted);"></th>';
                     html += '</tr></thead><tbody>';
                     rows.forEach(function(p) {
-                        var date = new Date(p.created_at).toLocaleString('ru-RU');
+                        var date = new Date(p.created_at).toLocaleString(currentLang === 'en' ? 'en-US' : 'ru-RU');
                         var statusLabel = p.status === 'paid' ? t('balPaid') : p.status === 'completed' ? t('balPaid') : p.status === 'pending' ? t('balPendingStatus') : p.status === 'failed' ? t('balRejected') : p.status;
                         var statusColor = (p.status === 'paid' || p.status === 'completed') ? '#10b981' : p.status === 'failed' ? '#ef4444' : '#f59e0b';
-                        var sourceLabel = p.source === 'sbp' ? 'СБП' : p.source === 'acquiring' ? 'Карта/СБП' : p.source === 'manual' ? 'Начисление' : p.source === 'invoice' ? 'Счёт' : p.source;
+                        var sourceLabel = p.source === 'sbp' ? t('srcSbp') : p.source === 'acquiring' ? t('srcCard') : p.source === 'manual' ? t('srcManual') : p.source === 'invoice' ? t('srcInvoice') : p.source;
                         html += '<tr style="border-bottom:1px solid var(--card-border);">';
                         html += '<td style="padding:12px 16px;font-size:14px;color:var(--text);">' + date + '</td>';
                         html += '<td style="padding:12px 16px;font-size:14px;font-weight:600;color:var(--text);">' + parseFloat(p.amount).toFixed(2) + ' ₽</td>';
@@ -4090,7 +4090,7 @@
                         html += '<td style="padding:12px 16px;font-size:14px;color:var(--text-muted);">' + sourceLabel + '</td>';
                         html += '<td style="padding:12px 16px;">';
                         if (p.source === 'invoice' && p.id) {
-                            html += '<button onclick="balDownloadInvoice(' + p.id + ', \'' + (p.invoice_number || p.id) + '\')" style="display:inline-flex;align-items:center;gap:6px;padding:4px 12px;border-radius:8px;background:#FF4D0022;color:#FF4D00;font-size:12px;font-weight:600;border:none;cursor:pointer;">📄 Скачать счёт</button>';
+                            html += '<button onclick="balDownloadInvoice(' + p.id + ', \'' + (p.invoice_number || p.id) + '\')" style="display:inline-flex;align-items:center;gap:6px;padding:4px 12px;border-radius:8px;background:#FF4D0022;color:#FF4D00;font-size:12px;font-weight:600;border:none;cursor:pointer;">' + t('balDownloadInvoice') + '</button>';
                         }
                         html += '</td>';
                         html += '</tr>';
@@ -4117,7 +4117,7 @@
         function balCreatePayment() {
             var amount = document.getElementById('balAmountInput').value;
             if (!amount || parseFloat(amount) < 100) {
-                showTtsToast('Минимальная сумма 100 ₽');
+                showTtsToast(t('toastMinAmount'));
                 return;
             }
             var btn = document.getElementById('balPayBtn');
@@ -4167,7 +4167,7 @@
                     if (data.status === 'APPROVED') {
                         if (balPollingTimer) { clearInterval(balPollingTimer); balPollingTimer = null; }
                         document.getElementById('balStatusIndicator').innerHTML = '<span style="color:#10b981;font-weight:600;">' + t('balPayReceived') + '</span>';
-                        showTtsToast('Оплата прошла успешно!');
+                        showTtsToast(t('toastPaySuccess'));
                         balLoadPage();
                     } else if (data.status === 'REJECTED' || data.status === 'EXPIRED') {
                         if (balPollingTimer) { clearInterval(balPollingTimer); balPollingTimer = null; }
@@ -4222,24 +4222,24 @@
             .then(function(r) { return r.json(); })
             .then(function(data) {
                 if (data.error) { showTtsToast(data.error); return; }
-                showTtsToast('Реквизиты сохранены');
+                showTtsToast(t('toastReqSaved'));
             })
-            .catch(function() { showTtsToast('Ошибка сохранения'); });
+            .catch(function() { showTtsToast(t('toastSaveError')); });
         }
 
         function balGenerateInvoice(e) {
             e.preventDefault();
             var amount = document.getElementById('invAmount').value;
-            if (!amount || parseFloat(amount) <= 0) { showTtsToast('Введите сумму'); return; }
+            if (!amount || parseFloat(amount) <= 0) { showTtsToast(t('toastEnterAmount')); return; }
             // Save requisites first, then generate
             balSaveRequisites();
             fetch(ES_API + '/api/payments/invoice', {
                 method: 'POST',
                 headers: esApiHeaders(),
-                body: JSON.stringify({ amount: parseFloat(amount), purpose: 'Пополнение баланса EaseSale' })
+                body: JSON.stringify({ amount: parseFloat(amount), purpose: t('balTopUpPurpose') })
             })
             .then(function(r) {
-                if (!r.ok) return r.json().then(function(d) { throw new Error(d.error || 'Ошибка'); });
+                if (!r.ok) return r.json().then(function(d) { throw new Error(d.error || t('errorGeneric')); });
                 return r.blob();
             })
             .then(function(blob) {
@@ -4250,11 +4250,11 @@
                 a.click();
                 URL.revokeObjectURL(url);
                 balCloseInvoiceModal();
-                showTtsToast('Счёт сгенерирован');
+                showTtsToast(t('toastInvoiceGenerated'));
                 balLoadHistory();
             })
             .catch(function(err) {
-                showTtsToast(err.message || 'Ошибка генерации счёта');
+                showTtsToast(err.message || t('toastInvoiceError'));
             });
         }
 
@@ -5822,7 +5822,7 @@
 
         function openDeleteDialogModal(id) {
             var dlg = dialogs.find(function(d) { return d.id === id; });
-            if (dlg && dlg.serverId && isSkillbaseLocked(dlg.serverId)) { clToast('Диалог используется в активном запуске. Остановите звонки для редактирования.'); closeAllContextMenus(); return; }
+            if (dlg && dlg.serverId && isSkillbaseLocked(dlg.serverId)) { clToast(t('toastDlgLocked')); closeAllContextMenus(); return; }
             deleteTargetId = id;
             document.getElementById('deleteDialogModal').classList.add('active');
             document.body.style.overflow = 'hidden';
@@ -5967,7 +5967,7 @@
             closeAllContextMenus();
             var dlg = dialogs.find(function(d) { return d.id === id; });
             if (!dlg) return;
-            if (dlg.serverId && isSkillbaseLocked(dlg.serverId)) { clToast('Диалог используется в активном запуске. Остановите звонки для редактирования.'); return; }
+            if (dlg.serverId && isSkillbaseLocked(dlg.serverId)) { clToast(t('toastDlgLocked')); return; }
             var cell = document.getElementById('namecell_' + id);
             if (!cell) return;
             cell.innerHTML = '<input class="dlg-name-input" id="renameinp_' + id + '" value="' + escapeHtml(dlg.name) + '" maxlength="100" onclick="event.stopPropagation()" onkeydown="if(event.key===\'Enter\'){finishRename(\'' + id + '\',this.value);event.preventDefault();}if(event.key===\'Escape\'){renderDialogTable();}" onblur="finishRename(\'' + id + '\',this.value)">';
@@ -7814,6 +7814,89 @@
             // Settings / other
             settingsTariff: { ru:'Стандарт', en:'Standard' },
             loading: { ru:'Загрузка...', en:'Loading...' },
+            // Registration: have account link
+            haveAccount: { ru:'Уже есть аккаунт? Войти', en:'Already have an account? Sign In' },
+            // Integration back button
+            intBack: { ru:'&larr; Назад', en:'&larr; Back' },
+            // Toast messages
+            toastDlgLocked: { ru:'Диалог используется в активном запуске. Остановите звонки для редактирования.', en:'Dialog is used in an active launch. Stop calls to edit.' },
+            toastCllCreated: { ru:'Колл-лист создан', en:'Call list created' },
+            toastCllDeleted: { ru:'Колл-лист удалён', en:'Call list deleted' },
+            toastNoContacts: { ru:'Нет контактов для импорта', en:'No contacts to import' },
+            toastImported: { ru:'Импортировано', en:'Imported' },
+            toastContactsWord: { ru:'контактов', en:'contacts' },
+            toastFillRequired: { ru:'Заполните все обязательные поля', en:'Fill in all required fields' },
+            toastDuplicateLaunch: { ru:'Запуск с таким диалогом и целевой аудиторией уже создан. Измените параметры.', en:'A launch with this dialog and target audience already exists. Change the parameters.' },
+            toastLaunchUpdated: { ru:'Запуск обновлён', en:'Launch updated' },
+            toastLaunchCreated: { ru:'Запуск создан', en:'Launch created' },
+            toastLaunchDeleted: { ru:'Запуск удалён', en:'Launch deleted' },
+            toastDeleteError: { ru:'Ошибка удаления', en:'Delete error' },
+            toastNetworkError: { ru:'Ошибка сети', en:'Network error' },
+            toastNoFunds: { ru:'Недостаточно средств на балансе', en:'Insufficient balance' },
+            toastEmptyCallList: { ru:'Колл-лист пуст! Добавьте контакты.', en:'Call list is empty! Add contacts.' },
+            toastLaunchStarted: { ru:'Обзвон запущен!', en:'Calling started!' },
+            toastStartError: { ru:'Ошибка запуска', en:'Launch error' },
+            toastLaunchPaused: { ru:'Обзвон приостановлен', en:'Calling paused' },
+            toastPauseError: { ru:'Ошибка паузы обзвона', en:'Pause error' },
+            toastCantStop24h: { ru:'Запуск нельзя остановить в течение 24 часов после старта', en:'Launch cannot be stopped within 24 hours of start' },
+            toastLaunchStopped: { ru:'Обзвон остановлен', en:'Calling stopped' },
+            toastLaunchResumed: { ru:'Обзвон возобновлён', en:'Calling resumed' },
+            toastResumeError: { ru:'Ошибка возобновления обзвона', en:'Resume error' },
+            toastLaunchDone: { ru:'все контакты обработаны!', en:'all contacts processed!' },
+            toastGoalReached: { ru:'цель достигнута', en:'goal reached' },
+            toastLeadsWord: { ru:'лидов', en:'leads' },
+            toastBalanceOut: { ru:'баланс исчерпан!', en:'balance exhausted!' },
+            toastTaNameRequired: { ru:'Введите название ЦА', en:'Enter target audience name' },
+            toastMinSites: { ru:'Укажите минимум 5 сайтов конкурентов', en:'Specify at least 5 competitor websites' },
+            toastMaxSites: { ru:'Максимум 10 сайтов конкурентов', en:'Maximum 10 competitor websites' },
+            toastTaUpdated: { ru:'ЦА обновлена', en:'Target audience updated' },
+            toastTaCreated: { ru:'ЦА создана', en:'Target audience created' },
+            toastTaLocked: { ru:'ЦА используется в активном запуске. Остановите звонки для редактирования.', en:'Target audience is used in an active launch. Stop calls to edit.' },
+            toastTaDeleted: { ru:'ЦА удалена', en:'Target audience deleted' },
+            toastParsingStop: { ru:'Формирование остановлено', en:'Formation stopped' },
+            toastBaseFormed: { ru:'База сформирована:', en:'Base formed:' },
+            toastNumbersWord: { ru:'номеров', en:'numbers' },
+            toastSelectLeads: { ru:'Выберите лиды для выгрузки', en:'Select leads to export' },
+            toastNoExportData: { ru:'Нет данных для выгрузки', en:'No data to export' },
+            toastCsvExported: { ru:'CSV выгружен', en:'CSV exported' },
+            toastExcelExported: { ru:'Excel выгружен', en:'Excel exported' },
+            toastExportLeads: { ru:'лидов', en:'leads' },
+            // Validation hints
+            valNameRequired: { ru:'Укажите ваше имя', en:'Please enter your name' },
+            valNameLetters: { ru:'Укажите имя (только буквы)', en:'Enter name (letters only)' },
+            valPhoneRequired: { ru:'Укажите номер телефона', en:'Please enter phone number' },
+            valPhoneInvalid: { ru:'Введите корректный номер (минимум 10 цифр)', en:'Enter a valid number (at least 10 digits)' },
+            valEmailRequired: { ru:'Укажите Email или Telegram', en:'Please enter Email or Telegram' },
+            // Month/day i18n
+            monthsShort: { ru:'янв,фев,мар,апр,май,июн,июл,авг,сен,окт,ноя,дек', en:'Jan,Feb,Mar,Apr,May,Jun,Jul,Aug,Sep,Oct,Nov,Dec' },
+            monthsFull: { ru:'января,февраля,марта,апреля,мая,июня,июля,августа,сентября,октября,ноября,декабря', en:'January,February,March,April,May,June,July,August,September,October,November,December' },
+            monthsFullNom: { ru:'Январь,Февраль,Март,Апрель,Май,Июнь,Июль,Август,Сентябрь,Октябрь,Ноябрь,Декабрь', en:'January,February,March,April,May,June,July,August,September,October,November,December' },
+            daysShort: { ru:'Пн,Вт,Ср,Чт,Пт,Сб,Вс', en:'Mo,Tu,We,Th,Fr,Sa,Su' },
+            daysSun: { ru:'Вс,Пн,Вт,Ср,Чт,Пт,Сб', en:'Sun,Mon,Tue,Wed,Thu,Fri,Sat' },
+            // Conversion labels
+            convHigh: { ru:'Хорошая', en:'Good' },
+            convLow: { ru:'Низкая', en:'Low' },
+            convWord: { ru:'конверсия', en:'conversion' },
+            unknown: { ru:'Неизвестно', en:'Unknown' },
+            // Support chat
+            chatClient: { ru:'Клиент', en:'Client' },
+            chatManager: { ru:'Менеджер', en:'Manager' },
+            // Balance / Payment
+            balThSource: { ru:'Источник', en:'Source' },
+            srcSbp: { ru:'СБП', en:'SBP' },
+            srcCard: { ru:'Карта/СБП', en:'Card/SBP' },
+            srcManual: { ru:'Начисление', en:'Top-up' },
+            srcInvoice: { ru:'Счёт', en:'Invoice' },
+            balDownloadInvoice: { ru:'📄 Скачать счёт', en:'📄 Download invoice' },
+            toastReqSaved: { ru:'Реквизиты сохранены', en:'Requisites saved' },
+            toastSaveError: { ru:'Ошибка сохранения', en:'Save error' },
+            toastEnterAmount: { ru:'Введите сумму', en:'Enter amount' },
+            toastInvoiceGenerated: { ru:'Счёт сгенерирован', en:'Invoice generated' },
+            toastInvoiceError: { ru:'Ошибка генерации счёта', en:'Invoice generation error' },
+            balTopUpPurpose: { ru:'Пополнение баланса EaseSale', en:'EaseSale balance top-up' },
+            errorGeneric: { ru:'Ошибка', en:'Error' },
+            toastMinAmount: { ru:'Минимальная сумма 100 ₽', en:'Minimum amount is 100 ₽' },
+            toastPaySuccess: { ru:'Оплата прошла успешно!', en:'Payment successful!' },
         };
 
         function t(key) {
@@ -7856,6 +7939,8 @@
             renderGreetings();
             renderPlanItems();
             renderDialogTable();
+            // Update dynamic label maps
+            if (typeof getQlStatusLabels === 'function') qlStatusLabels = getQlStatusLabels();
         }
 
         // Init with one example dialog
@@ -7997,13 +8082,13 @@
 
             let valid = true;
 
-            if (!name) { showHint('hintName', 'Укажите ваше имя'); valid = false; }
-            else if (!validateName(name)) { showHint('hintName', 'Укажите имя (только буквы)'); valid = false; }
+            if (!name) { showHint('hintName', t('valNameRequired')); valid = false; }
+            else if (!validateName(name)) { showHint('hintName', t('valNameLetters')); valid = false; }
 
-            if (!phone) { showHint('hintPhone', 'Укажите номер телефона'); valid = false; }
-            else if (!validatePhone(phone)) { showHint('hintPhone', 'Введите корректный номер (минимум 10 цифр)'); valid = false; }
+            if (!phone) { showHint('hintPhone', t('valPhoneRequired')); valid = false; }
+            else if (!validatePhone(phone)) { showHint('hintPhone', t('valPhoneInvalid')); valid = false; }
 
-            if (!emailTg) { showHint('hintEmailTg', 'Укажите Email или Telegram'); valid = false; }
+            if (!emailTg) { showHint('hintEmailTg', t('valEmailRequired')); valid = false; }
 
             if (!valid) {
                 // Show phone error on submit attempt
@@ -8052,8 +8137,8 @@
 
         // ===================== STATS PAGE =====================
         (function() {
-            const ST_MONTHS_RU = ['Январь','Февраль','Март','Апрель','Май','Июнь','Июль','Август','Сентябрь','Октябрь','Ноябрь','Декабрь'];
-            const ST_DAYS_RU = ['Пн','Вт','Ср','Чт','Пт','Сб','Вс'];
+            const ST_MONTHS_RU = t('monthsFullNom').split(',');
+            const ST_DAYS_RU = t('daysShort').split(',');
 
             var _stNow = new Date();
             var _stLeftMonth = _stNow.getMonth() === 0 ? 11 : _stNow.getMonth() - 1;
@@ -8067,7 +8152,7 @@
 
             // Set initial date label
             (function() {
-                var shortMonths = ['янв','фев','мар','апр','май','июн','июл','авг','сен','окт','ноя','дек'];
+                var shortMonths = t('monthsShort').split(',');
                 var el = document.getElementById('st-date-label');
                 if (el) el.textContent = _stNow.getDate() + ' ' + shortMonths[_stNow.getMonth()] + ' ' + _stNow.getFullYear();
             })();
@@ -8187,7 +8272,7 @@
             };
 
             window.stApplyDate = function() {
-                var shortMonths = ['янв','фев','мар','апр','май','июн','июл','авг','сен','окт','ноя','дек'];
+                var shortMonths = t('monthsShort').split(',');
                 if (stCalState.start) {
                     var fmt = function(d) { return d.getDate() + ' ' + shortMonths[d.getMonth()]; };
                     var label = fmt(stCalState.start);
@@ -8257,7 +8342,7 @@
                     '<div class="st-stat-card">' +
                         '<div class="st-stat-label">Конверсия</div>' +
                         '<div class="st-stat-value">' + conv + '%</div>' +
-                        '<div class="st-stat-sub"><span style="color:' + (convVal >= 10 ? '#2ecc71' : '#e74c3c') + '">' + (convVal >= 10 ? 'Хорошая' : 'Низкая') + ' конверсия</span></div>' +
+                        '<div class="st-stat-sub"><span style="color:' + (convVal >= 10 ? '#2ecc71' : '#e74c3c') + '">' + (convVal >= 10 ? t('convHigh') : t('convLow')) + ' ' + t('convWord') + '</span></div>' +
                     '</div>' +
                     '<div class="st-stat-card">' +
                         '<div class="st-stat-label">Запуски</div>' +
@@ -8269,7 +8354,7 @@
             function stGroupBy(leads, key) {
                 var groups = {};
                 leads.forEach(function(l) {
-                    var k = l[key] || 'Неизвестно';
+                    var k = l[key] || t('unknown');
                     var name = l[key.replace('Id', 'Name')] || k;
                     if (!groups[k]) groups[k] = { name: name, count: 0 };
                     groups[k].count++;
@@ -8317,7 +8402,7 @@
                 var groups = {};
                 leads.forEach(function(l) {
                     var k = l[key] || 'unknown';
-                    if (!groups[k]) groups[k] = { name: l[nameKey] || 'Неизвестно', leads: 0 };
+                    if (!groups[k]) groups[k] = { name: l[nameKey] || t('unknown'), leads: 0 };
                     groups[k].leads++;
                 });
                 var rows = Object.keys(groups).map(function(k) { return groups[k]; })
@@ -8355,7 +8440,7 @@
             // Override stApplyDate to also re-render stats
             var _origStApplyDate = window.stApplyDate;
             window.stApplyDate = function() {
-                var shortMonths = ['янв','фев','мар','апр','май','июн','июл','авг','сен','окт','ноя','дек'];
+                var shortMonths = t('monthsShort').split(',');
                 if (stCalState.start) {
                     var fmt = function(d) { return d.getDate() + ' ' + shortMonths[d.getMonth()]; };
                     var label = fmt(stCalState.start);
@@ -8457,14 +8542,14 @@
             if (!name) return;
             clCallLists.push({ id: clGenId(), name: name, description: desc, contacts: [], created: clNow(), updated: clNow() });
             clPersist(); cllCloseCreate(); cllRenderList();
-            clToast('Колл-лист «' + name + '» создан');
+            clToast(t('toastCllCreated') + ' «' + name + '»');
         }
 
         function cllDelete(id) {
             if (!confirm(t('cllDeleteConfirm'))) return;
             clCallLists = clCallLists.filter(function(c) { return c.id !== id; });
             clPersist(); cllRenderList();
-            clToast('Колл-лист удалён');
+            clToast(t('toastCllDeleted'));
         }
 
         function cllOpenDetail(id) {
@@ -8490,7 +8575,7 @@
             if (!confirm(t('cllDeleteAllConfirm'))) return;
             clCallLists = clCallLists.filter(function(c) { return c.id !== cllCurrentId; });
             clPersist(); cllBackToList();
-            clToast('Колл-лист удалён');
+            clToast(t('toastCllDeleted'));
         }
 
         function cllRenderContacts(cl) {
@@ -8591,13 +8676,13 @@
                     if (phone) contacts.push({ phone: phone, name: name });
                 });
             }
-            if (contacts.length === 0) { clToast('Нет контактов для импорта'); return; }
+            if (contacts.length === 0) { clToast(t('toastNoContacts')); return; }
             cl.contacts = cl.contacts.concat(contacts);
             cl.updated = clNow();
             clPersist();
             cllCloseImport();
             cllRenderContacts(cl);
-            clToast('Импортировано ' + contacts.length + ' контактов');
+            clToast(t('toastImported') + ' ' + contacts.length + ' ' + t('toastContactsWord'));
         }
 
         // Drag & drop for CSV
@@ -8678,7 +8763,7 @@
                 var dlg = dialogs.find(function(d) { return d.id === l.dialogId; });
                 if (dlg) dialogName = dlg.name;
             }
-            var dayNames = ['Вс','Пн','Вт','Ср','Чт','Пт','Сб'];
+            var dayNames = t('daysSun').split(',');
             var daysHtml = '';
             for (var d = 1; d <= 7; d++) {
                 var dayIdx = d === 7 ? 0 : d;
@@ -8802,11 +8887,11 @@
             for (var d = 1; d <= 7; d++) {
                 if (document.getElementById('clDay' + d).checked) days.push(d === 7 ? 0 : d);
             }
-            if (!name || !dialogId || !audienceId) { clToast('Заполните все обязательные поля'); return; }
+            if (!name || !dialogId || !audienceId) { clToast(t('toastFillRequired')); return; }
             var duplicate = clLaunches.find(function(x) {
                 return x.dialogId === dialogId && x.audienceId === audienceId && x.id !== clEditId;
             });
-            if (duplicate) { clToast('Запуск с таким диалогом и целевой аудиторией уже создан. Измените параметры.'); return; }
+            if (duplicate) { clToast(t('toastDuplicateLaunch')); return; }
             // Find latest call list for this audience
             var audienceCallLists = clCallLists.filter(function(c) { return c.audienceId === audienceId; });
             var callListId = audienceCallLists.length > 0 ? audienceCallLists[audienceCallLists.length - 1].id : '';
@@ -8829,7 +8914,7 @@
             var newId = clEditId ? clEditId : clLaunches[clLaunches.length - 1].id;
             var wasEditLaunch = !!clEditId;
             clPersist(); clCloseLaunchModal(); clRenderLaunches();
-            clToast(wasEditLaunch ? 'Запуск обновлён' : 'Запуск «' + name + '» создан');
+            clToast(wasEditLaunch ? t('toastLaunchUpdated') : t('toastLaunchCreated') + ' «' + name + '»');
 
             // Sync to backend
             if (esHasToken()) {
@@ -8916,16 +9001,16 @@
                     method: 'DELETE', headers: esApiHeaders()
                 }).then(function(r) {
                     if (r.ok) {
-                        clToast('Запуск удалён');
+                        clToast(t('toastLaunchDeleted'));
                         clLoadFromAPI();
                     } else {
-                        r.json().then(function(d) { clToast(d.error || 'Ошибка удаления'); }).catch(function() { clToast('Ошибка удаления'); });
+                        r.json().then(function(d) { clToast(d.error || t('toastDeleteError')); }).catch(function() { clToast(t('toastDeleteError')); });
                     }
-                }).catch(function() { clToast('Ошибка сети'); });
+                }).catch(function() { clToast(t('toastNetworkError')); });
             } else {
                 clLaunches = clLaunches.filter(function(x) { return x.id !== id; });
                 clPersist(); clRenderLaunches();
-                clToast('Запуск удалён');
+                clToast(t('toastLaunchDeleted'));
             }
         }
 
@@ -8934,7 +9019,7 @@
             var l = clLaunches.find(function(x) { return x.id === id; });
             if (!l) return;
             var price = clGetPricePerLead();
-            if (userBalance < price) { clToast('Недостаточно средств на балансе'); return; }
+            if (userBalance < price) { clToast(t('toastNoFunds')); return; }
             clPendingRunId = id;
             var cost = (l.goalLeads || 1) * price;
             clShowBalanceConfirm(cost);
@@ -8944,13 +9029,13 @@
             var l = clLaunches.find(function(x) { return x.id === id; });
             if (!l) return;
             var callList = clCallLists.find(function(c) { return c.id === l.callListId; });
-            if (!callList || callList.contacts.length === 0) { clToast('Колл-лист пуст! Добавьте контакты.'); return; }
+            if (!callList || callList.contacts.length === 0) { clToast(t('toastEmptyCallList')); return; }
             var price = clGetPricePerLead();
-            if (userBalance < price) { clToast('Недостаточно средств на балансе'); return; }
+            if (userBalance < price) { clToast(t('toastNoFunds')); return; }
             l.status = 'active';
             l.updated = clNow();
             clPersist(); clRenderLaunches();
-            clToast('Обзвон «' + l.name + '» запущен!');
+            clToast('«' + l.name + '» — ' + t('toastLaunchStarted'));
             clStartSimulation(id);
 
             // Launch on backend
@@ -8979,9 +9064,9 @@
             }).then(function(r) { return r.json(); })
             .then(function(data) {
                 if (data.error) { clToast(data.error); return; }
-                clToast('Обзвон запущен!');
+                clToast(t('toastLaunchStarted'));
                 clLoadFromAPI();
-            }).catch(function() { clToast('Ошибка запуска'); });
+            }).catch(function() { clToast(t('toastStartError')); });
         }
 
         function clPauseLaunch(id) {
@@ -8991,18 +9076,18 @@
                 fetch(ES_API + '/api/campaigns/' + l.serverId + '/pause', {
                     method: 'POST', headers: esApiHeaders()
                 }).then(function(r) {
-                    if (r.status === 403) { clToast('⏳ Запуск нельзя остановить в течение 24 часов после старта'); return; }
+                    if (r.status === 403) { clToast(t('toastCantStop24h')); return; }
                     if (!r.ok) throw r;
                     return r.json();
                 })
                 .then(function(data) {
-                    if (data) { clToast('Обзвон приостановлен'); clLoadFromAPI(); }
-                }).catch(function() { clToast('Ошибка паузы обзвона'); });
+                    if (data) { clToast(t('toastLaunchPaused')); clLoadFromAPI(); }
+                }).catch(function() { clToast(t('toastPauseError')); });
             } else {
                 l.status = 'paused'; l.updated = clNow();
                 if (clSimTimers[id]) { clearInterval(clSimTimers[id]); delete clSimTimers[id]; }
                 clPersist(); clRenderLaunches();
-                clToast('Обзвон приостановлен');
+                clToast(t('toastLaunchPaused'));
             }
         }
 
@@ -9012,7 +9097,7 @@
             l.status = 'stopped'; l.updated = clNow();
             if (clSimTimers[id]) { clearInterval(clSimTimers[id]); delete clSimTimers[id]; }
             clPersist(); clRenderLaunches();
-            clToast('Обзвон остановлен');
+            clToast(t('toastLaunchStopped'));
         }
 
         function clResumeLaunch(id) {
@@ -9033,8 +9118,8 @@
             }).then(function(r) { if (!r.ok) throw r; return r.json(); })
             .then(function() {
                 clLoadFromAPI();
-                clToast('Обзвон возобновлён');
-            }).catch(function() { clToast('Ошибка возобновления обзвона'); });
+                clToast(t('toastLaunchResumed'));
+            }).catch(function() { clToast(t('toastResumeError')); });
         }
 
         // Simulation
@@ -9052,7 +9137,7 @@
                     l.status = 'done'; l.updated = clNow();
                     clearInterval(clSimTimers[id]); delete clSimTimers[id];
                     clPersist(); clRenderLaunches();
-                    clToast('Обзвон «' + l.name + '» завершён — все контакты обработаны!');
+                    clToast('«' + l.name + '» — ' + t('toastLaunchDone'));
                     return;
                 }
                 // Check daily goal
@@ -9060,7 +9145,7 @@
                     l.status = 'stopped'; l.updated = clNow();
                     clearInterval(clSimTimers[id]); delete clSimTimers[id];
                     clPersist(); clRenderLaunches();
-                    clToast('Обзвон «' + l.name + '» — цель достигнута (' + l.goalLeads + ' лидов)!');
+                    clToast('«' + l.name + '» — ' + t('toastGoalReached') + ' (' + l.goalLeads + ' ' + t('toastLeadsWord') + ')!');
                     return;
                 }
                 // Check balance before call
@@ -9069,7 +9154,7 @@
                     l.status = 'stopped'; l.updated = clNow();
                     clearInterval(clSimTimers[id]); delete clSimTimers[id];
                     clPersist(); clRenderLaunches();
-                    clToast('Обзвон «' + l.name + '» остановлен — баланс исчерпан!');
+                    clToast('«' + l.name + '» — ' + t('toastBalanceOut'));
                     return;
                 }
                 // Simulate one call
@@ -9139,7 +9224,7 @@
             });
 
             // Format date for name: "2 марта"
-            var monthNames = ['января','февраля','марта','апреля','мая','июня','июля','августа','сентября','октября','ноября','декабря'];
+            var monthNames = t('monthsFull').split(',');
             function formatDateName(dateStr) {
                 var parts = dateStr.split('-');
                 var day = parseInt(parts[2], 10);
@@ -9255,10 +9340,10 @@
             var niche = document.getElementById('taNiche').value.trim();
             var client = document.getElementById('taClient').value.trim();
             var sites = document.getElementById('taSites').value.trim();
-            if (!name) { clToast('Введите название ЦА'); return; }
+            if (!name) { clToast(t('toastTaNameRequired')); return; }
             var siteLines = sites.split('\n').filter(function(l) { return l.trim().length > 0; });
-            if (siteLines.length < 5) { clToast('Укажите минимум 5 сайтов конкурентов'); return; }
-            if (siteLines.length > 10) { clToast('Максимум 10 сайтов конкурентов'); return; }
+            if (siteLines.length < 5) { clToast(t('toastMinSites')); return; }
+            if (siteLines.length > 10) { clToast(t('toastMaxSites')); return; }
             if (taEditId) {
                 var ta = taAudiences.find(function(x) { return x.id === taEditId; });
                 if (ta) {
@@ -9277,7 +9362,7 @@
             taSyncAllToCRM();
             taCloseModal();
             taRenderCards();
-            clToast(wasEdit ? 'ЦА обновлена' : 'ЦА создана');
+            clToast(wasEdit ? t('toastTaUpdated') : t('toastTaCreated'));
 
             // Sync to backend
             if (esHasToken()) {
@@ -9301,7 +9386,7 @@
         function taEdit(id) {
             var ta = taAudiences.find(function(x) { return x.id === id; });
             if (!ta) return;
-            if (ta.serverId && isAudienceLocked(ta.serverId)) { clToast('ЦА используется в активном запуске. Остановите звонки для редактирования.'); return; }
+            if (ta.serverId && isAudienceLocked(ta.serverId)) { clToast(t('toastTaLocked')); return; }
             taEditId = id;
             document.getElementById('taModalTitle').textContent = t('taEdit');
             document.getElementById('taName').value = ta.name || '';
@@ -9313,14 +9398,14 @@
 
         function taDelete(id) {
             var ta = taAudiences.find(function(x) { return x.id === id; });
-            if (ta && ta.serverId && isAudienceLocked(ta.serverId)) { clToast('ЦА используется в активном запуске. Остановите звонки для редактирования.'); return; }
+            if (ta && ta.serverId && isAudienceLocked(ta.serverId)) { clToast(t('toastTaLocked')); return; }
             if (!confirm(t('taDeleteConfirm'))) return;
             var srvId = ta && ta.serverId;
             taAudiences = taAudiences.filter(function(x) { return x.id !== id; });
             taPersist();
             taSyncAllToCRM();
             taRenderCards();
-            clToast('ЦА удалена');
+            clToast(t('toastTaDeleted'));
 
             if (esHasToken() && srvId) {
                 fetch(ES_API + '/api/audiences/' + srvId, {
@@ -9417,7 +9502,7 @@
             ta._genContacts = [];
             taPersist();
             taRenderCards();
-            clToast('Формирование остановлено');
+            clToast(t('toastParsingStop'));
         }
 
         function taFinishGen(id) {
@@ -9433,7 +9518,7 @@
             ta._genContacts = [];
             taPersist();
             taRenderCards();
-            clToast('База сформирована: ' + contacts.length + ' номеров');
+            clToast(t('toastBaseFormed') + ' ' + contacts.length + ' ' + t('toastNumbersWord'));
         }
 
         function taCreateCallList(taId, contacts) {
@@ -9525,7 +9610,8 @@
 
         var qlSelected = [];
 
-        var qlStatusLabels = { 'new': 'Новый', 'downloaded': 'Скачанный', 'transferred': 'Переданный' };
+        function getQlStatusLabels() { return { 'new': t('qlNew'), 'downloaded': t('qlDownloaded'), 'transferred': t('qlTransferred') }; }
+        var qlStatusLabels = getQlStatusLabels();
         var qlStatusClass = { 'new': 'ql-badge-new', 'downloaded': 'ql-badge-downloaded', 'transferred': 'ql-badge-transferred' };
 
         function qlPopulateFilters() {
@@ -9675,7 +9761,7 @@
 
         function qlExportSelected(format) {
             var data = qlGetSelectedLeads();
-            if (data.length === 0) { clToast('Выберите лиды для выгрузки'); return; }
+            if (data.length === 0) { clToast(t('toastSelectLeads')); return; }
             qlDoExport(data, format);
         }
 
@@ -9709,7 +9795,7 @@
                 link.href = URL.createObjectURL(blob);
                 link.download = 'qual_leads_' + new Date().toISOString().substring(0, 10) + '.csv';
                 link.click();
-                clToast('CSV выгружен (' + data.length + ' лидов)');
+                clToast(t('toastCsvExported') + ' (' + data.length + ' ' + t('toastExportLeads') + ')');
             } else {
                 var xml = '<?xml version="1.0"?><?mso-application progid="Excel.Sheet"?>' +
                     '<Workbook xmlns="urn:schemas-microsoft-com:office:spreadsheet" xmlns:ss="urn:schemas-microsoft-com:office:spreadsheet">' +
@@ -9724,7 +9810,7 @@
                 link2.href = URL.createObjectURL(blob2);
                 link2.download = 'qual_leads_' + new Date().toISOString().substring(0, 10) + '.xls';
                 link2.click();
-                clToast('Excel выгружен (' + data.length + ' лидов)');
+                clToast(t('toastExcelExported') + ' (' + data.length + ' ' + t('toastExportLeads') + ')');
             }
         }
 
@@ -9740,7 +9826,7 @@
                 if (dialogF && (l.dialogId || l.dialogName) !== dialogF) return false;
                 return true;
             });
-            if (data.length === 0) { clToast('Нет данных для выгрузки'); return; }
+            if (data.length === 0) { clToast(t('toastNoExportData')); return; }
             qlDoExport(data, format);
         }
 
@@ -10203,7 +10289,7 @@
             method: 'POST',
             headers: scApiHeaders(),
             body: JSON.stringify({
-                author: author === 'client' ? 'Клиент' : 'Менеджер',
+                author: author === 'client' ? t('chatClient') : t('chatManager'),
                 text: text,
                 is_staff: author !== 'client'
             })
