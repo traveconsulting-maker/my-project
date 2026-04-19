@@ -2296,7 +2296,7 @@
                 <div class="onb-title" data-i18n="onbStep3Title">Сколько сейчас в среднем вы платите за входящую заявку?</div>
                 <div class="onb-subtitle" data-i18n="onbStep3Sub">Укажите примерную стоимость одной заявки в вашу компанию</div>
                 <div class="niche-grid" style="grid-template-columns:repeat(auto-fill,minmax(200px,1fr));">
-                    <div class="niche-item" onclick="selectLeadCost(this)">1 000 ₽</div>
+                    <div class="niche-item" onclick="selectLeadCost(this)" data-i18n="onbCost0">1 000 ₽</div>
                     <div class="niche-item" onclick="selectLeadCost(this)" data-i18n="onbCost1">Больше 1 500 ₽</div>
                     <div class="niche-item" onclick="selectLeadCost(this)" data-i18n="onbCost2">Больше 3 000 ₽</div>
                     <div class="niche-item" onclick="selectLeadCost(this)" data-i18n="onbCostDk">Не знаю</div>
@@ -2393,11 +2393,11 @@
                     </div>
                     <div class="form-group">
                         <label data-i18n="regPhoneLabel">Номер телефона</label>
-                        <input type="tel" id="regPhone" placeholder="+7 (999) 123-45-67" required>
+                        <input type="tel" id="regPhone" placeholder="+7 (999) 123-45-67" required data-i18n-ph="regPhonePh">
                     </div>
                     <div class="form-group">
-                        <label>Email</label>
-                        <input type="email" id="regEmail" placeholder="mail@company.ru" required>
+                        <label data-i18n="regEmailLabel">Email</label>
+                        <input type="email" id="regEmail" placeholder="mail@company.ru" required data-i18n-ph="regEmailPh">
                     </div>
                     <div class="form-group">
                         <label data-i18n-html="regLoginLabel">Логин <span style="color:var(--text-muted);font-weight:400;">(минимум 6 символов)</span></label>
@@ -4722,7 +4722,7 @@
             fetch(ES_API + '/api/auth/register', {
                 method: 'POST',
                 headers: { 'Content-Type': 'application/json' },
-                body: JSON.stringify({ name: company, company: company, phone: phone, email: email, login: login, password: password, ref_code: localStorage.getItem('referral_code') || '' })
+                body: JSON.stringify({ name: company, company: company, phone: phone, email: email, login: login, password: password, ref_code: localStorage.getItem('referral_code') || '', lang: currentLang })
             })
             .then(function(res) { return res.json().then(function(data) { return { status: res.status, data: data }; }); })
             .then(function(result) {
@@ -7858,6 +7858,7 @@
             // Onboarding step 3
             onbStep3Title: { ru:'Сколько сейчас в среднем вы платите за входящую заявку?', en:'How much do you currently pay per inbound lead on average?' },
             onbStep3Sub: { ru:'Укажите примерную стоимость одной заявки в вашу компанию', en:'Specify the approximate cost of one lead for your company' },
+            onbCost0: { ru:'1 000 ₽', en:'1,000 ₽' },
             onbCost1: { ru:'Больше 1 500 ₽', en:'Over 1,500 ₽' },
             onbCost2: { ru:'Больше 3 000 ₽', en:'Over 3,000 ₽' },
             onbCostDk: { ru:'Не знаю', en:'I don\'t know' },
@@ -7871,6 +7872,9 @@
             regCompanyLabel: { ru:'Название компании', en:'Company Name' },
             regCompanyPh: { ru:'ООО «Ваша компания»', en:'Your Company LLC' },
             regPhoneLabel: { ru:'Номер телефона', en:'Phone Number' },
+            regPhonePh: { ru:'+7 (999) 123-45-67', en:'+1 (555) 123-4567' },
+            regEmailLabel: { ru:'Email', en:'Email' },
+            regEmailPh: { ru:'mail@company.ru', en:'mail@company.com' },
             regLoginLabel: { ru:'Логин <span style="color:var(--text-muted);font-weight:400;">(минимум 6 символов)</span>', en:'Login <span style="color:var(--text-muted);font-weight:400;">(minimum 6 characters)</span>' },
             regLoginPh: { ru:'Придумайте логин', en:'Choose a login' },
             regLoginHintText: { ru:'Такой логин уже существует', en:'This login already exists' },
