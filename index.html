@@ -7131,22 +7131,14 @@
 
         // ===== i18n =====
         // Check URL param first (from landing page), then localStorage
-        console.log('[LANG] URL params:', window.location.search);
-        console.log('[LANG] lang param:', new URLSearchParams(window.location.search).get('lang'));
-        console.log('[LANG] localStorage before:', localStorage.getItem('lang'));
-        (function() {
-            var urlLang = new URLSearchParams(window.location.search).get('lang');
-            if (urlLang === 'en' || urlLang === 'ru') {
-                console.log('[LANG] Applying URL lang:', urlLang);
-                localStorage.setItem('lang', urlLang);
-                // Clean URL param without reload
-                var url = new URL(window.location);
-                url.searchParams.delete('lang');
-                history.replaceState(null, '', url.pathname + url.search + url.hash);
-            }
-        })();
+        var _urlLang = new URLSearchParams(window.location.search).get('lang');
+        if (_urlLang === 'en' || _urlLang === 'ru') {
+            localStorage.setItem('lang', _urlLang);
+            var _u = new URL(window.location);
+            _u.searchParams.delete('lang');
+            history.replaceState(null, '', _u.pathname + _u.search + _u.hash);
+        }
         var currentLang = localStorage.getItem('lang') || 'ru';
-        console.log('[LANG] currentLang after init:', currentLang);
 
         var i18n = {
             // Landing nav
@@ -8114,7 +8106,7 @@
         })();
 
         // Apply saved language on load
-        if (currentLang === 'en') applyLang();
+        applyLang();
 
         function toggleTheme() {
             document.body.classList.toggle('light');
