@@ -7130,6 +7130,17 @@
         }
 
         // ===== i18n =====
+        // Check URL param first (from landing page), then localStorage
+        (function() {
+            var urlLang = new URLSearchParams(window.location.search).get('lang');
+            if (urlLang === 'en' || urlLang === 'ru') {
+                localStorage.setItem('lang', urlLang);
+                // Clean URL param without reload
+                var url = new URL(window.location);
+                url.searchParams.delete('lang');
+                history.replaceState(null, '', url.pathname + url.search + url.hash);
+            }
+        })();
         var currentLang = localStorage.getItem('lang') || 'ru';
 
         var i18n = {
