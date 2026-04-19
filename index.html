@@ -2399,11 +2399,7 @@
                         <label data-i18n="regEmailLabel">Email</label>
                         <input type="email" id="regEmail" placeholder="mail@company.ru" required data-i18n-ph="regEmailPh">
                     </div>
-                    <div class="form-group">
-                        <label data-i18n-html="regLoginLabel">Логин <span style="color:var(--text-muted);font-weight:400;">(минимум 6 символов)</span></label>
-                        <input type="text" id="regLogin" placeholder="Придумайте логин" required minlength="6" data-i18n-ph="regLoginPh">
-                        <div class="field-hint" id="regLoginHint" data-i18n="regLoginHintText">Такой логин уже существует</div>
-                    </div>
+                    <div class="field-hint" id="regLoginHint" style="display:none;"></div>
                     <div class="password-row">
                         <div class="form-group">
                             <label data-i18n="regPwdLabel">Пароль</label>
@@ -2415,7 +2411,7 @@
                         </div>
                     </div>
                     <div class="error-msg" id="regError"></div>
-                    <div class="success-msg" id="regSuccess" data-i18n="regSuccessMsg">Регистрация прошла успешно!</div>
+                    <div class="success-msg" id="regSuccess" style="text-align:left;line-height:1.6;"></div>
                     <button type="submit" class="submit-btn" id="regSubmitBtn" data-i18n="regSubmitBtn">Зарегистрироваться</button>
                 </form>
                 <div class="divider" data-i18n="regDivider">или</div>
@@ -4685,22 +4681,19 @@
             var company = document.getElementById('regCompany').value.trim();
             var phone = document.getElementById('regPhone').value.trim();
             var email = document.getElementById('regEmail').value.trim();
-            var login = document.getElementById('regLogin').value.trim();
             var password = document.getElementById('regPassword').value;
             var passwordConfirm = document.getElementById('regPasswordConfirm').value;
             var errorEl = document.getElementById('regError');
             var successEl = document.getElementById('regSuccess');
-            var loginHint = document.getElementById('regLoginHint');
 
             errorEl.classList.remove('show');
             successEl.classList.remove('show');
-            loginHint.classList.remove('show');
             document.querySelectorAll('#registerForm input').forEach(function(i) { i.classList.remove('error'); });
 
-            if (login.length < 6) {
-                errorEl.textContent = t('regLoginMinLen');
+            if (!email) {
+                errorEl.textContent = t('regEmailRequired');
                 errorEl.classList.add('show');
-                document.getElementById('regLogin').classList.add('error');
+                document.getElementById('regEmail').classList.add('error');
                 return;
             }
             if (password !== passwordConfirm) {
@@ -4722,18 +4715,18 @@
             fetch(ES_API + '/api/auth/register', {
                 method: 'POST',
                 headers: { 'Content-Type': 'application/json' },
-                body: JSON.stringify({ name: company, company: company, phone: phone, email: email, login: login, password: password, ref_code: localStorage.getItem('referral_code') || '', lang: currentLang })
+                body: JSON.stringify({ name: company, company: company, phone: phone, email: email, login: email, password: password, ref_code: localStorage.getItem('referral_code') || '', lang: currentLang })
             })
             .then(function(res) { return res.json().then(function(data) { return { status: res.status, data: data }; }); })
             .then(function(result) {
                 if (result.status === 201) {
+                    successEl.innerHTML = t('regEmailSent').replace('{email}', '<strong>' + email + '</strong>');
                     successEl.classList.add('show');
-                    setTimeout(function() { showLoginForm(); }, 2000);
+                    document.getElementById('regSubmitBtn').disabled = false;
                 } else if (result.status === 409) {
-                    loginHint.classList.add('show');
-                    document.getElementById('regLogin').classList.add('error');
-                    errorEl.textContent = t('regLoginExists');
+                    errorEl.textContent = t('regEmailExists');
                     errorEl.classList.add('show');
+                    document.getElementById('regEmail').classList.add('error');
                 } else {
                     errorEl.textContent = result.data.error || t('regError');
                     errorEl.classList.add('show');
@@ -7732,10 +7725,11 @@
             balPayCreateError: { ru:'Ошибка создания платежа', en:'Payment creation error' },
             balPayReceived: { ru:'Оплата получена!', en:'Payment received!' },
             balPayRejected: { ru:'Платёж отклонён', en:'Payment rejected' },
-            regLoginMinLen: { ru:'Логин должен содержать минимум 6 символов', en:'Login must be at least 6 characters' },
             regPwdMismatch: { ru:'Пароли не совпадают', en:'Passwords do not match' },
             regPwdMinLen: { ru:'Пароль должен содержать минимум 6 символов', en:'Password must be at least 6 characters' },
-            regLoginExists: { ru:'Такой логин уже существует. Придумайте другой', en:'This login already exists. Please choose another' },
+            regEmailRequired: { ru:'Введите email', en:'Enter your email' },
+            regEmailExists: { ru:'Этот email уже зарегистрирован', en:'This email is already registered' },
+            regEmailSent: { ru:'Письмо отправлено! Проверьте почту {email} и перейдите по ссылке для подтверждения аккаунта.', en:'Email sent! Check your inbox at {email} and click the confirmation link to activate your account.' },
             regError: { ru:'Ошибка регистрации', en:'Registration error' },
             errServerConn: { ru:'Ошибка соединения с сервером', en:'Server connection error' },
             loginActivation: { ru:'Ваш аккаунт требует активации. Это может занять до 15 минут', en:'Your account requires activation. This may take up to 15 minutes' },
