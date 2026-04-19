@@ -4129,7 +4129,7 @@
             fetch(ES_API + '/api/payments/create', {
                 method: 'POST',
                 headers: esApiHeaders(),
-                body: JSON.stringify({ amount: parseFloat(amount), purpose: 'Пополнение баланса EasySale' })
+                body: JSON.stringify({ amount: parseFloat(amount), purpose: t('balTopUpPurpose') })
             })
             .then(function(r) { return r.json(); })
             .then(function(data) {
@@ -4764,6 +4764,13 @@
                     if (me && me.price_per_lead !== undefined) {
                         userPricePerLead = parseInt(me.price_per_lead) || 0;
                         localStorage.setItem('user_price_per_lead', String(userPricePerLead));
+                    }
+                    // Sync language: save current UI lang to server profile
+                    if (me && me.lang !== currentLang) {
+                        fetch(ES_API + '/api/clients/me', {
+                            method: 'PATCH', headers: esApiHeaders(),
+                            body: JSON.stringify({ lang: currentLang })
+                        }).catch(function() {});
                     }
                     var login = localStorage.getItem('current_login');
                     var onboarded = (me && me.onboarded) || (login && localStorage.getItem('onboarded_' + login));
@@ -8009,6 +8016,10 @@
             errorGeneric: { ru:'Ошибка', en:'Error' },
             toastMinAmount: { ru:'Минимальная сумма 100 ₽', en:'Minimum amount is 100 ₽' },
             toastPaySuccess: { ru:'Оплата прошла успешно!', en:'Payment successful!' },
+            // FAB buttons & integrations
+            fabMax: { ru:'Написать в MAX', en:'Message in MAX' },
+            fabTg: { ru:'Написать в Telegram', en:'Message in Telegram' },
+            intgConnectAmo: { ru:'Подключить АМО CRM', en:'Connect AMO CRM' },
         };
 
         function t(key) {
@@ -8021,6 +8032,13 @@
             currentLang = currentLang === 'ru' ? 'en' : 'ru';
             localStorage.setItem('lang', currentLang);
             applyLang();
+            // Persist language to server profile if logged in
+            if (esHasToken()) {
+                fetch(ES_API + '/api/clients/me', {
+                    method: 'PATCH', headers: esApiHeaders(),
+                    body: JSON.stringify({ lang: currentLang })
+                }).catch(function() {});
+            }
         }
 
         function applyLang() {
@@ -8042,6 +8060,11 @@
             document.querySelectorAll('[data-i18n-ph]').forEach(function(el) {
                 var key = el.getAttribute('data-i18n-ph');
                 if (i18n[key]) el.placeholder = i18n[key][currentLang];
+            });
+            // data-i18n-title (title attribute)
+            document.querySelectorAll('[data-i18n-title]').forEach(function(el) {
+                var key = el.getAttribute('data-i18n-title');
+                if (i18n[key]) el.title = i18n[key][currentLang];
             });
 
             // Re-render dynamic lists with correct placeholders
@@ -10076,7 +10099,7 @@
                         '<div class="button-amo-container"></div>' +
                         '<script class="amocrm_oauth" charset="utf-8"' +
                         ' data-client-id="' + data.client_id + '"' +
-                        ' data-title="Подключить АМО CRM"' +
+                        ' data-title="' + t('intgConnectAmo') + '"' +
                         ' data-compact="false"' +
                         ' data-color="red"' +
                         ' data-state="' + data.state + '"' +
@@ -10243,6 +10266,12 @@
                         userPricePerLead = parseInt(me.price_per_lead) || 0;
                         localStorage.setItem('user_price_per_lead', String(userPricePerLead));
                     }
+                    // Restore language from server profile
+                    if (me && me.lang && me.lang !== currentLang) {
+                        currentLang = me.lang;
+                        localStorage.setItem('lang', currentLang);
+                        applyLang();
+                    }
                     var onboarded = (me && me.onboarded) || !!localStorage.getItem('onboarded_' + login);
                     if (me && me.onboarded) localStorage.setItem('onboarded_' + login, '1');
                     if (onboarded) {
@@ -10309,10 +10338,10 @@
         <button class="sc-send-btn" onclick="scSend()">➤</button>
     </div>
 </div>
-<a class="max-fab" href="https://max.ru/id741517030858_bot" target="_blank" title="Написать в MAX">
+<a class="max-fab" href="https://max.ru/id741517030858_bot" target="_blank" title="Написать в MAX" data-i18n-title="fabMax">
     <span style="font-weight:900;font-size:18px;color:#fff;line-height:1;">M</span>
 </a>
-<a class="tg-fab" href="https://t.me/easesale_support_bot" target="_blank" title="Написать в Telegram">
+<a class="tg-fab" href="https://t.me/easesale_support_bot" target="_blank" title="Написать в Telegram" data-i18n-title="fabTg">
     <svg width="24" height="24" viewBox="0 0 24 24" fill="white"><path d="M11.944 0A12 12 0 0 0 0 12a12 12 0 0 0 12 12 12 12 0 0 0 12-12A12 12 0 0 0 12 0h-.056zm4.962 7.224c.1-.002.321.023.465.14a.506.506 0 0 1 .171.325c.016.093.036.306.02.472-.18 1.898-.962 6.502-1.36 8.627-.168.9-.499 1.201-.82 1.23-.696.065-1.225-.46-1.9-.902-1.056-.693-1.653-1.124-2.678-1.8-1.185-.78-.417-1.21.258-1.91.177-.184 3.247-2.977 3.307-3.23.007-.032.014-.15-.056-.212s-.174-.041-.249-.024c-.106.024-1.793 1.14-5.061 3.345-.479.33-.913.49-1.302.48-.428-.008-1.252-.241-1.865-.44-.752-.245-1.349-.374-1.297-.789.027-.216.325-.437.893-.663 3.498-1.524 5.83-2.529 6.998-3.014 3.332-1.386 4.025-1.627 4.476-1.635z"/></svg>
 </a>
 <button class="sc-fab" id="scFab" onclick="scToggle()">
