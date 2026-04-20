@@ -2601,6 +2601,19 @@
         </div>
     </div>
 
+    <!-- ===== UNSAVED CHANGES CONFIRM ===== -->
+    <div class="modal-overlay" id="unsavedModal" style="display:none;" onclick="if(event.target===this)unsavedCancel()">
+        <div class="modal" style="max-width:400px;text-align:center;">
+            <div class="modal-title" id="unsavedTitle" data-i18n="unsavedTitle">Несохранённые изменения</div>
+            <div class="modal-subtitle" id="unsavedMsg" data-i18n="unsavedMsg">У вас есть несохранённые изменения. Сохранить перед выходом?</div>
+            <div style="display:flex;gap:10px;margin-top:20px;">
+                <button onclick="unsavedSave()" class="submit-btn" style="flex:1;background:#FF4D00;" data-i18n="unsavedSave">Сохранить и выйти</button>
+                <button onclick="unsavedDiscard()" class="submit-btn" style="flex:1;background:var(--card-bg);color:var(--text);border:1px solid var(--card-border);" data-i18n="unsavedDiscard">Выйти</button>
+            </div>
+            <button onclick="unsavedCancel()" style="margin-top:10px;background:none;border:none;color:var(--text-muted);cursor:pointer;font-size:14px;" data-i18n="unsavedCancel">Отмена</button>
+        </div>
+    </div>
+
     <!-- ===== CUSTOM TEMPLATE MODAL ===== -->
     <div class="modal-overlay" id="customTplModal" onclick="if(event.target===this)closeCustomTplModal()">
         <div class="modal" style="max-width:560px;">
@@ -6224,6 +6237,7 @@
             var dlg = dialogs.find(function(d) { return d.id === id; });
             if (!dlg) return;
             currentDialogId = id;
+            isDirty = false;
             loadDialogIntoForm(dlg);
             document.getElementById('dialogListView').style.display = 'none';
             document.getElementById('dialogDetailView').style.display = '';
@@ -6277,10 +6291,11 @@
         }
 
         function showDialogList() {
-            if (currentDialogId) saveFormIntoDialog(currentDialogId);
-            currentDialogId = null;
-            document.getElementById('dialogDetailView').style.display = 'none';
-            document.getElementById('dialogListView').style.display = '';
+            if (currentDialogId && isDirty) {
+                confirmLeaveDialog(function() { renderDialogTable(); });
+                return;
+            }
+            if (currentDialogId) { saveFormIntoDialog(currentDialogId); _leaveDialogView(); }
             renderDialogTable();
         }
 
@@ -6330,6 +6345,7 @@
             dlg.planItems = JSON.parse(JSON.stringify(botPlanItems));
             dlg.updatedAt = new Date().toISOString();
             syncDialogsToCRM();
+            isDirty = false;
 
             // Sync to backend (PATCH if exists, skip POST — creation handled in createDialog)
             if (esHasToken() && dlg.serverId) {
@@ -6342,6 +6358,8 @@
             }
             return Promise.resolve();
         }
+
+        var isDirty = false;
 
         var _savingNow = false;
         function manualSave() {
@@ -6375,14 +6393,64 @@
                 });
         }
 
+        var _pendingLeaveAction = null;
+
+        function confirmLeaveDialog(onProceed) {
+            if (!currentDialogId || !isDirty) { onProceed(); return; }
+            // Cancel pending autosave
+            if (saveTimer) { clearTimeout(saveTimer); saveTimer = null; }
+            _pendingLeaveAction = onProceed;
+            document.getElementById('unsavedModal').style.display = '';
+            document.getElementById('unsavedModal').classList.add('active');
+        }
+
+        function unsavedSave() {
+            var action = _pendingLeaveAction;
+            _pendingLeaveAction = null;
+            document.getElementById('unsavedModal').style.display = 'none';
+            document.getElementById('unsavedModal').classList.remove('active');
+            if (currentDialogId) {
+                saveFormIntoDialog(currentDialogId).finally(function() {
+                    _leaveDialogView();
+                    if (action) action();
+                });
+            }
+        }
+
+        function unsavedDiscard() {
+            var action = _pendingLeaveAction;
+            _pendingLeaveAction = null;
+            document.getElementById('unsavedModal').style.display = 'none';
+            document.getElementById('unsavedModal').classList.remove('active');
+            isDirty = false;
+            _leaveDialogView();
+            if (action) action();
+        }
+
+        function unsavedCancel() {
+            _pendingLeaveAction = null;
+            document.getElementById('unsavedModal').style.display = 'none';
+            document.getElementById('unsavedModal').classList.remove('active');
+        }
+
+        function _leaveDialogView() {
+            currentDialogId = null;
+            isDirty = false;
+            document.getElementById('dialogDetailView').style.display = 'none';
+            document.getElementById('dialogListView').style.display = '';
+        }
+
         function setActive(el) {
             // Save current dialog before navigating away
-            if (currentDialogId) {
-                saveFormIntoDialog(currentDialogId);
-                currentDialogId = null;
-                document.getElementById('dialogDetailView').style.display = 'none';
-                document.getElementById('dialogListView').style.display = '';
+            if (currentDialogId && isDirty) {
+                confirmLeaveDialog(function() { _doSetActive(el); });
+                return;
             }
+            if (currentDialogId) { _leaveDialogView(); }
+            _doSetActive(el);
+        }
+
+        function _doSetActive(el) {
             document.querySelectorAll('.sidebar-nav a').forEach(a => a.classList.remove('active'));
             el.classList.add('active');
             var pageId = el.getAttribute('data-page');
@@ -6530,6 +6598,7 @@
         }
 
         function triggerAutoSave() {
+            isDirty = true;
             var status = document.getElementById('saveStatus');
             status.textContent = t('saving');
             status.className = 'save-status saving';
@@ -7338,6 +7407,11 @@
             saving: { ru:'Сохранение...', en:'Saving...' },
             saveFailed: { ru:'Ошибка сохранения', en:'Save failed' },
             saveBtn: { ru:'Сохранить', en:'Save' },
+            unsavedTitle: { ru:'Несохранённые изменения', en:'Unsaved changes' },
+            unsavedMsg: { ru:'У вас есть несохранённые изменения. Сохранить перед выходом?', en:'You have unsaved changes. Save before leaving?' },
+            unsavedSave: { ru:'Сохранить и выйти', en:'Save & leave' },
+            unsavedDiscard: { ru:'Выйти', en:'Leave' },
+            unsavedCancel: { ru:'Отмена', en:'Cancel' },
             tabContext: { ru:'Контекст', en:'Context' },
             tabPlan: { ru:'План разговора', en:'Conversation Plan' },
             tabKb: { ru:'База знаний', en:'Knowledge Base' },
