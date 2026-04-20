@@ -737,6 +737,15 @@
         document.querySelectorAll('#client-detail-tabs .tab').forEach(t => t.classList.remove('active'));
         el.classList.add('active');
         renderClientDetail();
+
+        const c = getClient(currentDetailClient);
+        if (!c) return;
+        if (tab === 'dialogs') loadClientSkillbases(c);
+        if (tab === 'audiences') loadClientAudiences(c);
+        if (tab === 'referrals') loadClientReferralsTab(c);
+        if (tab === 'qualleads') loadClientQualLeads(c);
+        if (tab === 'launches') loadClientLaunches(c);
+        if (tab === 'calls') loadClientCalls(c);
     }
 
     function editClientFromDetail() {
