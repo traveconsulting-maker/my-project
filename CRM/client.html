@@ -740,12 +740,10 @@
 
         const c = getClient(currentDetailClient);
         if (!c) return;
-        if (tab === 'dialogs') loadClientSkillbases(c);
+        if (tab === 'dialogs') { var container = document.getElementById('client-detail-content'); if (container) loadSkillbases(c.id, container); }
         if (tab === 'audiences') loadClientAudiences(c);
         if (tab === 'referrals') loadClientReferralsTab(c);
-        if (tab === 'qualleads') loadClientQualLeads(c);
-        if (tab === 'launches') loadClientLaunches(c);
-        if (tab === 'calls') loadClientCalls(c);
+        if (tab === 'balance') loadClientBalance();
     }
 
     function editClientFromDetail() {
