@@ -3181,7 +3181,7 @@
                     </div>
                     <div style="display:flex;align-items:center;gap:12px;">
                         <div class="dlg-toggle" id="botHeaderToggle"></div>
-                        <span class="save-status saved" id="saveStatus" data-i18n="saved">Сохранено</span>
+                        <span class="save-status" id="saveStatus"></span>
                         <button id="dlgSaveBtn" onclick="manualSave()" style="padding:8px 20px;background:#FF4D00;color:#fff;border:none;border-radius:10px;font-size:14px;font-weight:700;cursor:pointer;transition:opacity .2s;" data-i18n="saveBtn">Сохранить</button>
                     </div>
                 </div>
@@ -6242,6 +6242,11 @@
             document.getElementById('dialogListView').style.display = 'none';
             document.getElementById('dialogDetailView').style.display = '';
             document.getElementById('botHeaderTitle').textContent = dlg.name;
+            // Reset save status on open
+            var status = document.getElementById('saveStatus');
+            status.textContent = '';
+            status.className = 'save-status';
+            status.style.color = '';
             updateDetailRing();
         }
 
@@ -6365,7 +6370,7 @@
         function manualSave() {
             if (_savingNow || !currentDialogId) return;
             _savingNow = true;
-            if (saveTimer) { clearTimeout(saveTimer); saveTimer = null; }
+
             var btn = document.getElementById('dlgSaveBtn');
             var status = document.getElementById('saveStatus');
             btn.disabled = true;
@@ -6398,7 +6403,7 @@
         function confirmLeaveDialog(onProceed) {
             if (!currentDialogId || !isDirty) { onProceed(); return; }
             // Cancel pending autosave
-            if (saveTimer) { clearTimeout(saveTimer); saveTimer = null; }
+
             _pendingLeaveAction = onProceed;
             document.getElementById('unsavedModal').style.display = '';
             document.getElementById('unsavedModal').classList.add('active');
@@ -6579,7 +6584,6 @@
         // ===== BOT CONFIG =====
         var botRules = [];
         var ruleIdCounter = 0;
-        var saveTimer = null;
 
         function switchBotTab(tabId, btn) {
             document.querySelectorAll('.bot-tab').forEach(function(t) { t.classList.remove('active'); });
@@ -6599,17 +6603,7 @@
 
         function triggerAutoSave() {
             isDirty = true;
-            var status = document.getElementById('saveStatus');
-            status.textContent = t('saving');
-            status.className = 'save-status saving';
             updateDetailRing();
-            if (saveTimer) clearTimeout(saveTimer);
-            saveTimer = setTimeout(function() {
-                if (currentDialogId) saveFormIntoDialog(currentDialogId);
-                status.textContent = t('saved');
-                status.className = 'save-status saved';
-                document.getElementById('lastUpdated').textContent = t('botUpdated');
-            }, 1000);
         }
 
         function addRule() {
