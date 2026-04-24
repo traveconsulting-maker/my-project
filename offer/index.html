@@ -293,6 +293,141 @@
             transform: translateY(-2px);
         }
 
+        /* ===== PROCESS SECTION ===== */
+        .process-section {
+            padding: 0 0 120px;
+        }
+        .process-header {
+            text-align: center;
+            margin-bottom: 64px;
+        }
+        .process-title {
+            font-size: clamp(28px, 4vw, 44px);
+            font-weight: 900;
+            letter-spacing: -1.5px;
+            line-height: 1.2;
+            opacity: 0;
+            transform: translateY(20px);
+        }
+        .process-title.visible {
+            opacity: 1; transform: translateY(0);
+            transition: all 0.7s ease-out;
+        }
+        .process-title .accent {
+            background: linear-gradient(135deg, var(--orange), var(--orange-light));
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+        }
+        .process-grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 40px;
+            align-items: start;
+        }
+
+        /* Left column — numbered steps */
+        .process-steps {
+            display: flex;
+            flex-direction: column;
+            gap: 20px;
+        }
+        .process-step {
+            position: relative;
+            background: rgba(255,255,255,0.03);
+            border: 1px solid rgba(255,255,255,0.06);
+            border-radius: 20px;
+            padding: 28px 28px 28px 32px;
+            backdrop-filter: blur(20px);
+            display: flex;
+            gap: 20px;
+            align-items: flex-start;
+            transition: transform 0.4s cubic-bezier(0.16, 1, 0.3, 1), border-color 0.4s, box-shadow 0.4s;
+            opacity: 0;
+            transform: translateX(-30px);
+        }
+        .process-step.visible {
+            opacity: 1;
+            transform: translateX(0);
+            transition: opacity 0.6s ease-out, transform 0.6s cubic-bezier(0.16, 1, 0.3, 1), border-color 0.4s, box-shadow 0.4s;
+        }
+        .process-step:hover {
+            border-color: rgba(255,77,0,0.2);
+            box-shadow: 0 12px 40px rgba(255,77,0,0.06);
+            transform: translateX(4px);
+        }
+        .step-num {
+            flex-shrink: 0;
+            font-size: 28px;
+            font-weight: 900;
+            color: var(--orange);
+            opacity: 0.7;
+            line-height: 1.3;
+            font-variant-numeric: tabular-nums;
+        }
+        .step-text {
+            font-size: 15px;
+            color: rgba(255,255,255,0.65);
+            line-height: 1.7;
+        }
+
+        /* Right column — function cards */
+        .func-col {
+            opacity: 0;
+            transform: translateX(30px);
+        }
+        .func-col.visible {
+            opacity: 1;
+            transform: translateX(0);
+            transition: all 0.7s cubic-bezier(0.16, 1, 0.3, 1) 0.2s;
+        }
+        .func-col-title {
+            font-size: 18px;
+            font-weight: 800;
+            margin-bottom: 20px;
+            color: rgba(255,255,255,0.85);
+        }
+        .func-grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 16px;
+        }
+        .func-card {
+            background: rgba(255,255,255,0.03);
+            border: 1px solid rgba(255,255,255,0.06);
+            border-radius: 20px;
+            padding: 28px 22px;
+            backdrop-filter: blur(20px);
+            text-align: center;
+            transition: transform 0.4s cubic-bezier(0.16, 1, 0.3, 1), border-color 0.4s, box-shadow 0.4s;
+        }
+        .func-card:hover {
+            transform: translateY(-6px);
+            border-color: rgba(255,77,0,0.2);
+            box-shadow: 0 16px 48px rgba(255,77,0,0.08), 0 0 0 1px rgba(255,77,0,0.1);
+        }
+        .func-icon {
+            width: 52px; height: 52px;
+            background: rgba(255,77,0,0.1);
+            border: 1px solid rgba(255,77,0,0.15);
+            border-radius: 14px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin: 0 auto 16px;
+        }
+        .func-icon svg { width: 24px; height: 24px; }
+        .func-name {
+            font-size: 16px;
+            font-weight: 700;
+            margin-bottom: 6px;
+        }
+        .func-desc {
+            font-size: 13px;
+            color: rgba(255,255,255,0.4);
+            line-height: 1.6;
+        }
+
         /* ===== STATS BAR ===== */
         .stats-section {
             padding: 0 0 100px;
@@ -608,6 +743,7 @@
 
         /* ===== RESPONSIVE ===== */
         @media (max-width: 900px) {
+            .process-grid { grid-template-columns: 1fr; gap: 32px; }
             .cards-grid { grid-template-columns: 1fr; gap: 16px; }
             .stats-bar { grid-template-columns: 1fr; }
             .stat-item:not(:last-child)::after { display: none; }
@@ -623,6 +759,10 @@
         @media (max-width: 520px) {
             .hero { padding: 80px 0 60px; }
             .container { padding: 0 20px; }
+            .process-section { padding: 0 0 80px; }
+            .process-step { padding: 22px 20px; gap: 14px; }
+            .func-grid { grid-template-columns: 1fr; }
+            .func-card { padding: 24px 18px; }
             .feature-card { padding: 32px 24px 28px; }
             .card-watermark { font-size: 100px; }
             .cta-wrapper { padding: 36px 20px; border-radius: 24px; }
@@ -697,6 +837,79 @@
             <div class="hero-cta">
                 <button class="btn-primary" onclick="scrollToCta()">Записаться на экскурсию</button>
                 <button class="btn-ghost" onclick="openDemo()">Смотреть демо ▶</button>
+            </div>
+        </div>
+    </div>
+</section>
+
+<!-- ===== PROCESS ===== -->
+<section class="process-section">
+    <div class="container">
+        <div class="process-header">
+            <h2 class="process-title">Обработка заявок от клиентов с помощью<br><span class="accent">звонков и общения в мессенджерах</span></h2>
+        </div>
+        <div class="process-grid">
+            <!-- Left: numbered steps -->
+            <div class="process-steps">
+                <div class="process-step" data-delay="0">
+                    <div class="step-num">01/</div>
+                    <div class="step-text">AI МОП сам звонит и пишет клиентам: отвечает на заявки, задаёт уточняющие вопросы и квалифицирует клиентов.</div>
+                </div>
+                <div class="process-step" data-delay="150">
+                    <div class="step-num">02/</div>
+                    <div class="step-text">Он выявляет потребности, отсекает нецелевых и передаёт тёплых на следующий этап — вашим менеджерам.</div>
+                </div>
+                <div class="process-step" data-delay="300">
+                    <div class="step-num">03/</div>
+                    <div class="step-text">Работает по скрипту, звучит и пишет как человек, не упускает ни одного обращения.</div>
+                </div>
+            </div>
+            <!-- Right: function cards -->
+            <div class="func-col">
+                <div class="func-col-title">Функции AI МОП:</div>
+                <div class="func-grid">
+                    <div class="func-card">
+                        <div class="func-icon">
+                            <svg viewBox="0 0 24 24" fill="none" stroke="#FF4D00" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round">
+                                <path d="M22 16.92v3a2 2 0 0 1-2.18 2 19.79 19.79 0 0 1-8.63-3.07 19.5 19.5 0 0 1-6-6A19.79 19.79 0 0 1 2.12 4.18 2 2 0 0 1 4.11 2h3a2 2 0 0 1 2 1.72c.127.96.361 1.903.7 2.81a2 2 0 0 1-.45 2.11L8.09 9.91a16 16 0 0 0 6 6l1.27-1.27a2 2 0 0 1 2.11-.45c.907.339 1.85.573 2.81.7A2 2 0 0 1 22 16.92z"/>
+                            </svg>
+                        </div>
+                        <div class="func-name">Звонить</div>
+                        <div class="func-desc">по телефону, в WhatsApp, Telegram, Viber и др.</div>
+                    </div>
+                    <div class="func-card">
+                        <div class="func-icon">
+                            <svg viewBox="0 0 24 24" fill="none" stroke="#FF4D00" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round">
+                                <path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"/>
+                            </svg>
+                        </div>
+                        <div class="func-name">Переписываться</div>
+                        <div class="func-desc">в любых текстовых каналах</div>
+                    </div>
+                    <div class="func-card">
+                        <div class="func-icon">
+                            <svg viewBox="0 0 24 24" fill="none" stroke="#FF4D00" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round">
+                                <path d="M12 22c-4.97 0-9-1.79-9-4v-2"/>
+                                <path d="M3 12V8c0-2.21 4.03-4 9-4s9 1.79 9 4v8c0 2.21-4.03 4-9 4"/>
+                                <path d="M12 8l-1 6h2l-1 6"/>
+                            </svg>
+                        </div>
+                        <div class="func-name">Прогревать лиды</div>
+                        <div class="func-desc">с отложенным спросом</div>
+                    </div>
+                    <div class="func-card">
+                        <div class="func-icon">
+                            <svg viewBox="0 0 24 24" fill="none" stroke="#FF4D00" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round">
+                                <path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"/>
+                                <circle cx="9" cy="7" r="4"/>
+                                <path d="M23 21v-2a4 4 0 0 0-3-3.87"/>
+                                <path d="M16 3.13a4 4 0 0 1 0 7.75"/>
+                            </svg>
+                        </div>
+                        <div class="func-name">Реанимировать</div>
+                        <div class="func-desc">базу клиентов</div>
+                    </div>
+                </div>
             </div>
         </div>
     </div>
@@ -937,7 +1150,7 @@
         });
     }, { threshold: 0.15 });
 
-    document.querySelectorAll('.feature-card, .stats-bar, .cta-wrapper, .section-eyebrow, .section-title').forEach(function(el) {
+    document.querySelectorAll('.feature-card, .stats-bar, .cta-wrapper, .section-eyebrow, .section-title, .process-title, .process-step, .func-col').forEach(function(el) {
         observer.observe(el);
     });
 })();
