@@ -1009,7 +1009,6 @@
                 <form class="cta-form" id="ctaForm" onsubmit="submitCtaForm(event)">
                     <input type="text" id="ctaName" placeholder="Ваше имя" required>
                     <input type="tel" id="ctaPhone" placeholder="+7 (999) 123-45-67" required>
-                    <input type="email" id="ctaEmail" placeholder="Email">
                     <button type="submit" class="cta-submit" id="ctaSubmitBtn">
                         <span>Записаться</span>
                         <span class="burst" id="burstContainer"></span>
@@ -1229,7 +1228,6 @@ function submitCtaForm(e) {
     var data = {
         name: document.getElementById('ctaName').value.trim(),
         phone: document.getElementById('ctaPhone').value.trim(),
-        email: document.getElementById('ctaEmail').value.trim(),
         source: 'offer_landing'
     };
 
