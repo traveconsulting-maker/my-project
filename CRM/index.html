@@ -2245,6 +2245,42 @@ function fetchMaxDialogsFromAPI() {
         .catch(() => {});
 }
 
+function fetchOfferLeadsFromAPI() {
+    if (!crmToken) return;
+    fetch(API_BASE + '/api/leads/offer', { headers: apiHeaders() })
+        .then(r => { if (!r.ok) throw r; return r.json(); })
+        .then(data => {
+            if (!data.length) return;
+            data.forEach(lead => {
+                // Check if deal already exists for this phone
+                const exists = deals.find(d => d.offerLeadId === lead.id);
+                if (exists) return;
+                const newDeal = {
+                    id: genId(),
+                    title: lead.name + ' — заявка с лендинга',
+                    clientId: '',
+                    amount: '',
+                    stage: 'lead',
+                    description: 'Телефон: ' + lead.phone + (lead.email ? '\nEmail: ' + lead.email : '') + '\nИсточник: ' + (lead.source || 'offer_landing'),
+                    offerLeadId: lead.id,
+                    created: lead.created_at || now()
+                };
+                deals.push(newDeal);
+                addActivity('deal', 'Новая заявка с лендинга: ' + lead.name, '');
+                // Mark as synced
+                fetch(API_BASE + '/api/leads/offer/' + lead.id + '/sync', {
+                    method: 'PATCH',
+                    headers: apiHeaders()
+                }).catch(() => {});
+            });
+            persist();
+            renderKanban();
+            updateBadges();
+            toast('Новых заявок с лендинга: ' + data.length);
+        })
+        .catch(() => {});
+}
+
 function syncFromAPI() {
     fetchClientsFromAPI();
     fetchTicketsFromAPI();
@@ -2252,6 +2288,7 @@ function syncFromAPI() {
     fetchChatDialogsFromAPI();
     fetchTelegramDialogsFromAPI();
     fetchMaxDialogsFromAPI();
+    fetchOfferLeadsFromAPI();
 }
 
 // Автообновление каждые 30 секунд
