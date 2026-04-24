@@ -147,6 +147,19 @@
             background: rgba(5,5,8,0.6);
             backdrop-filter: blur(16px);
             border-bottom: 1px solid rgba(255,255,255,0.04);
+            display: flex;
+            align-items: center;
+            gap: 16px;
+        }
+        .top-bar-link {
+            font-size: 13px;
+            color: rgba(255,255,255,0.35);
+            text-decoration: none;
+            transition: color 0.2s;
+            white-space: nowrap;
+        }
+        .top-bar-link:hover {
+            color: var(--orange);
         }
 
         /* Badge */
@@ -830,10 +843,11 @@
 
 <!-- ===== TOP BAR ===== -->
 <div class="top-bar">
-    <div class="hero-badge">
+    <a href="https://easysale.tech" target="_blank" class="hero-badge" style="text-decoration:none;">
         <span class="badge-dot"></span>
         EasySale AI Platform
-    </div>
+    </a>
+    <a href="https://easysale.tech" target="_blank" class="top-bar-link">Перейти на основной сайт &rarr;</a>
 </div>
 
 <!-- ===== HERO ===== -->
