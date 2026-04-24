@@ -743,6 +743,91 @@
         .cta-msg.success { color: #34d399; }
         .cta-msg.error { color: #f87171; }
 
+        /* ===== FAQ ===== */
+        .faq-section {
+            padding: 0 0 100px;
+        }
+        .faq-title {
+            font-size: clamp(28px, 4vw, 40px);
+            font-weight: 900;
+            letter-spacing: -1px;
+            text-align: center;
+            margin-bottom: 48px;
+            opacity: 0;
+            transform: translateY(20px);
+        }
+        .faq-title.visible {
+            opacity: 1; transform: translateY(0);
+            transition: all 0.6s ease-out;
+        }
+        .faq-list {
+            max-width: 720px;
+            margin: 0 auto;
+            display: flex;
+            flex-direction: column;
+            gap: 12px;
+        }
+        .faq-item {
+            background: rgba(255,255,255,0.03);
+            border: 1px solid rgba(255,255,255,0.06);
+            border-radius: 16px;
+            overflow: hidden;
+            backdrop-filter: blur(20px);
+            transition: border-color 0.3s;
+            opacity: 0;
+            transform: translateY(20px);
+        }
+        .faq-item.visible {
+            opacity: 1; transform: translateY(0);
+            transition: opacity 0.5s ease-out, transform 0.5s ease-out, border-color 0.3s;
+        }
+        .faq-item.open {
+            border-color: rgba(255,77,0,0.2);
+        }
+        .faq-q {
+            padding: 20px 24px;
+            font-size: 16px;
+            font-weight: 700;
+            cursor: pointer;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            gap: 16px;
+            user-select: none;
+            transition: color 0.2s;
+        }
+        .faq-q:hover { color: var(--orange); }
+        .faq-arrow {
+            flex-shrink: 0;
+            width: 20px; height: 20px;
+            transition: transform 0.3s;
+        }
+        .faq-item.open .faq-arrow {
+            transform: rotate(45deg);
+        }
+        .faq-a {
+            max-height: 0;
+            overflow: hidden;
+            transition: max-height 0.35s ease, padding 0.35s ease;
+            padding: 0 24px;
+        }
+        .faq-item.open .faq-a {
+            max-height: 200px;
+            padding: 0 24px 20px;
+        }
+        .faq-a p {
+            font-size: 15px;
+            color: rgba(255,255,255,0.5);
+            line-height: 1.7;
+        }
+        .faq-a a {
+            color: var(--orange);
+            text-decoration: none;
+            border-bottom: 1px solid rgba(255,77,0,0.3);
+            transition: border-color 0.2s;
+        }
+        .faq-a a:hover { border-color: var(--orange); }
+
         /* ===== FOOTER ===== */
         .footer {
             text-align: center;
@@ -1020,6 +1105,50 @@
     </div>
 </section>
 
+<!-- ===== FAQ ===== -->
+<section class="faq-section">
+    <div class="container">
+        <h2 class="faq-title">Частые вопросы</h2>
+        <div class="faq-list">
+            <div class="faq-item" data-delay="0">
+                <div class="faq-q" onclick="toggleFaq(this)">
+                    А если AI будет плохо говорить?
+                    <svg class="faq-arrow" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/></svg>
+                </div>
+                <div class="faq-a"><p>Вы слушаете записи всех звонков в личном кабинете и настраиваете скрипт под себя. Мы помогаем с калибровкой до идеального результата.</p></div>
+            </div>
+            <div class="faq-item" data-delay="80">
+                <div class="faq-q" onclick="toggleFaq(this)">
+                    Законно ли это?
+                    <svg class="faq-arrow" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/></svg>
+                </div>
+                <div class="faq-a"><p>Да, работаем в полном соответствии с 152‑ФЗ «О персональных данных» и законом о рекламе.</p></div>
+            </div>
+            <div class="faq-item" data-delay="160">
+                <div class="faq-q" onclick="toggleFaq(this)">
+                    Что если база холодная?
+                    <svg class="faq-arrow" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/></svg>
+                </div>
+                <div class="faq-a"><p>AI отлично работает с холодными базами — прогревает, квалифицирует и реанимирует «спящих» клиентов. <a href="https://easysale.tech" target="_blank">Смотрите кейс реанимации базы</a>.</p></div>
+            </div>
+            <div class="faq-item" data-delay="240">
+                <div class="faq-q" onclick="toggleFaq(this)">
+                    Сколько времени на настройку?
+                    <svg class="faq-arrow" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/></svg>
+                </div>
+                <div class="faq-a"><p>2 дня — от заявки до первых звонков. Мы берём на себя настройку скрипта, загрузку базы и интеграцию с CRM.</p></div>
+            </div>
+            <div class="faq-item" data-delay="320">
+                <div class="faq-q" onclick="toggleFaq(this)">
+                    Какая минимальная сумма для старта?
+                    <svg class="faq-arrow" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/></svg>
+                </div>
+                <div class="faq-a"><p>Стоимость лида от 2 000 ₽. Вы платите только за квалифицированных клиентов, переданных в вашу CRM.</p></div>
+            </div>
+        </div>
+    </div>
+</section>
+
 <div class="footer">EasySale &copy; 2025–2026 &middot; easysale.tech &middot; <a href="/privacy" style="color:rgba(255,255,255,0.3);text-decoration:none;transition:color .2s;" onmouseover="this.style.color='#FF4D00'" onmouseout="this.style.color='rgba(255,255,255,0.3)'">Политика конфиденциальности</a></div>
 
 </div><!-- /page-content -->
@@ -1164,7 +1293,7 @@
         });
     }, { threshold: 0.15 });
 
-    document.querySelectorAll('.feature-card, .stats-bar, .cta-wrapper, .section-eyebrow, .section-title, .process-title, .process-step, .func-col').forEach(function(el) {
+    document.querySelectorAll('.feature-card, .stats-bar, .cta-wrapper, .section-eyebrow, .section-title, .process-title, .process-step, .func-col, .faq-title, .faq-item').forEach(function(el) {
         observer.observe(el);
     });
 })();
@@ -1275,6 +1404,18 @@ function triggerBurst() {
         container.appendChild(dot);
     }
     btn.classList.add('bursting');
+}
+
+/* ==========================================================
+   FAQ ACCORDION
+   ========================================================== */
+function toggleFaq(q) {
+    var item = q.parentElement;
+    var wasOpen = item.classList.contains('open');
+    // Close all
+    document.querySelectorAll('.faq-item.open').forEach(function(el) { el.classList.remove('open'); });
+    // Toggle clicked
+    if (!wasOpen) item.classList.add('open');
 }
 </script>
 </body>
