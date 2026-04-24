@@ -1368,7 +1368,7 @@ function submitCtaForm(e) {
     .then(function(r) { return r.json().then(function(d) { return { ok: r.ok, data: d }; }); })
     .then(function(res) {
         if (res.ok) {
-            msgEl.textContent = 'Заявка отправлена! Мы свяжемся в ближайшее время.';
+            msgEl.textContent = 'Заявка отправлена! Наш менеджер свяжется с вами как можно скорее.';
             msgEl.className = 'cta-msg success';
             document.getElementById('ctaForm').reset();
         } else {
