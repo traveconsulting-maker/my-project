@@ -3288,11 +3288,6 @@
                 <input type="email" id="regEmail" placeholder="mail@company.ru" oninput="checkRegForm()">
             </div>
             <div class="form-group">
-                <label data-i18n="regLoginLabel">Логин</label>
-                <input type="text" id="regLogin" placeholder="mylogin" oninput="checkRegForm()" autocomplete="username">
-                <div class="field-hint" id="hintLogin"></div>
-            </div>
-            <div class="form-group">
                 <label data-i18n="regPassLabel">Пароль</label>
                 <input type="password" id="regPassword" placeholder="Минимум 6 символов" oninput="checkRegForm()" autocomplete="new-password">
                 <div class="field-hint" id="hintPassword"></div>
@@ -3670,7 +3665,6 @@
         accessSuccess.classList.remove('show');
         document.getElementById('regPhone').value = '';
         document.getElementById('regEmail').value = '';
-        document.getElementById('regLogin').value = '';
         document.getElementById('regPassword').value = '';
         accessSubmitBtn.classList.remove('active');
         var errEl = document.getElementById('regError');
@@ -3701,19 +3695,20 @@
     }
 
     function checkRegForm() {
-        var login = document.getElementById('regLogin').value.trim();
+        var phone = document.getElementById('regPhone').value.trim();
+        var email = document.getElementById('regEmail').value.trim();
         var password = document.getElementById('regPassword').value;
 
-        hideHint('hintLogin');
         hideHint('hintPassword');
         document.querySelectorAll('#accessForm input').forEach(function(i) { i.classList.remove('error'); });
 
-        var ok = login.length >= 6 && password.length >= 6;
+        var phoneOk = /^\+?\d[\d\s\-()]{6,}$/.test(phone);
+        var emailOk = /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email);
+        var passOk = password.length >= 6;
 
-        if (login && login.length < 6) showHint('hintLogin', 'Минимум 6 символов');
         if (password && password.length < 6) showHint('hintPassword', 'Минимум 6 символов');
 
-        if (ok) {
+        if (phoneOk && emailOk && passOk) {
             accessSubmitBtn.classList.add('active');
         } else {
             accessSubmitBtn.classList.remove('active');
@@ -3723,7 +3718,6 @@
     function submitRegister() {
         var phone = document.getElementById('regPhone').value.trim();
         var email = document.getElementById('regEmail').value.trim();
-        var login = document.getElementById('regLogin').value.trim();
         var password = document.getElementById('regPassword').value;
         var btn = document.getElementById('accessSubmitBtn');
         var errEl = document.getElementById('regError');
@@ -3732,7 +3726,8 @@
         document.querySelectorAll('.field-hint').forEach(function(h) { h.classList.remove('show'); });
         document.querySelectorAll('#accessForm input').forEach(function(i) { i.classList.remove('error'); });
 
-        if (!login || login.length < 6) { showHint('hintLogin', 'Логин — минимум 6 символов'); document.getElementById('regLogin').classList.add('error'); return; }
+        if (!phone || !/^\+?\d[\d\s\-()]{6,}$/.test(phone)) { errEl.textContent = 'Введите корректный номер телефона'; errEl.classList.add('show'); document.getElementById('regPhone').classList.add('error'); return; }
+        if (!email || !/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email)) { errEl.textContent = 'Введите корректный email'; errEl.classList.add('show'); document.getElementById('regEmail').classList.add('error'); return; }
         if (!password || password.length < 6) { showHint('hintPassword', 'Пароль — минимум 6 символов'); document.getElementById('regPassword').classList.add('error'); return; }
 
         btn.disabled = true;
@@ -3743,11 +3738,11 @@
             method: 'POST',
             headers: { 'Content-Type': 'application/json' },
             body: JSON.stringify({
-                name: login,
+                name: email,
                 company: '',
                 phone: phone,
                 email: email,
-                login: login,
+                login: email,
                 password: password,
                 ref: localStorage.getItem('referral_code') || undefined
             })
@@ -3766,8 +3761,9 @@
                     desc.innerHTML = 'Укажите email при регистрации, чтобы получить письмо для активации.<br>Или свяжитесь с нами для активации аккаунта.';
                 }
             } else if (result.status === 409) {
-                showHint('hintLogin', 'Такой логин уже существует');
-                document.getElementById('regLogin').classList.add('error');
+                errEl.textContent = 'Пользователь с таким email уже существует';
+                errEl.classList.add('show');
+                document.getElementById('regEmail').classList.add('error');
                 btn.disabled = false; btn.style.opacity = ''; btn.textContent = 'Зарегистрироваться';
             } else {
                 errEl.textContent = result.data.error || 'Ошибка регистрации';
