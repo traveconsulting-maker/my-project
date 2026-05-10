@@ -2391,27 +2391,16 @@
                 <div class="modal-subtitle" data-i18n="regSub">Создайте аккаунт для доступа к платформе</div>
                 <form onsubmit="handleRegister(event)">
                     <div class="form-group">
-                        <label data-i18n="regCompanyLabel">Название компании</label>
-                        <input type="text" id="regCompany" placeholder="ООО «Ваша компания»" required data-i18n-ph="regCompanyPh">
-                    </div>
-                    <div class="form-group">
                         <label data-i18n="regPhoneLabel">Номер телефона</label>
                         <input type="tel" id="regPhone" placeholder="+7 (999) 123-45-67" required>
                     </div>
                     <div class="form-group">
                         <label>Email</label>
                         <input type="email" id="regEmail" placeholder="mail@company.ru" required>
-                        <div class="field-hint" id="regLoginHint" data-i18n="regLoginHintText">Такой email уже зарегистрирован</div>
                     </div>
-                    <div class="password-row">
-                        <div class="form-group">
-                            <label data-i18n="regPwdLabel">Пароль</label>
-                            <input type="password" id="regPassword" placeholder="Пароль" required minlength="6" data-i18n-ph="regPwdPh">
-                        </div>
-                        <div class="form-group">
-                            <label data-i18n="regConfirmLabel">Подтверждение</label>
-                            <input type="password" id="regPasswordConfirm" placeholder="Ещё раз" required minlength="6" data-i18n-ph="regConfirmPh">
-                        </div>
+                    <div class="form-group">
+                        <label data-i18n="regPwdLabel">Пароль</label>
+                        <input type="password" id="regPassword" placeholder="Минимум 6 символов" required minlength="6" data-i18n-ph="regPwdPh">
                     </div>
                     <div class="error-msg" id="regError"></div>
                     <div class="success-msg" id="regSuccess" data-i18n="regSuccessMsg">Регистрация прошла успешно!</div>
@@ -4670,7 +4659,6 @@
             // Reset register form
             document.getElementById('regError').classList.remove('show');
             document.getElementById('regSuccess').classList.remove('show');
-            document.getElementById('regLoginHint').classList.remove('show');
             document.querySelectorAll('#registerForm input').forEach(function(i) { i.classList.remove('error'); });
         }
 
@@ -4681,31 +4669,26 @@
 
         function handleRegister(e) {
             e.preventDefault();
-            var company = document.getElementById('regCompany').value.trim();
             var phone = document.getElementById('regPhone').value.trim();
             var email = document.getElementById('regEmail').value.trim();
             var password = document.getElementById('regPassword').value;
-            var passwordConfirm = document.getElementById('regPasswordConfirm').value;
             var errorEl = document.getElementById('regError');
             var successEl = document.getElementById('regSuccess');
-            var loginHint = document.getElementById('regLoginHint');
 
             errorEl.classList.remove('show');
             successEl.classList.remove('show');
-            loginHint.classList.remove('show');
             document.querySelectorAll('#registerForm input').forEach(function(i) { i.classList.remove('error'); });
 
-            if (!email || !/\S+@\S+\.\S+/.test(email)) {
+            if (!phone || !/^\+?\d[\d\s\-()]{6,}$/.test(phone)) {
+                errorEl.textContent = 'Введите корректный номер телефона';
+                errorEl.classList.add('show');
+                document.getElementById('regPhone').classList.add('error');
+                return;
+            }
+            if (!email || !/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email)) {
                 errorEl.textContent = 'Введите корректный email';
                 errorEl.classList.add('show');
                 document.getElementById('regEmail').classList.add('error');
-                return;
-            }
-            if (password !== passwordConfirm) {
-                errorEl.textContent = t('regPwdMismatch');
-                errorEl.classList.add('show');
-                document.getElementById('regPassword').classList.add('error');
-                document.getElementById('regPasswordConfirm').classList.add('error');
                 return;
             }
             if (password.length < 6) {
@@ -4720,7 +4703,7 @@
             fetch(ES_API + '/api/auth/register', {
                 method: 'POST',
                 headers: { 'Content-Type': 'application/json' },
-                body: JSON.stringify({ name: company, company: company, phone: phone, email: email, login: email, password: password, ref_code: localStorage.getItem('referral_code') || '' })
+                body: JSON.stringify({ name: email, company: '', phone: phone, email: email, login: email, password: password, ref_code: localStorage.getItem('referral_code') || '' })
             })
             .then(function(res) { return res.json().then(function(data) { return { status: res.status, data: data }; }); })
             .then(function(result) {
@@ -4728,7 +4711,6 @@
                     successEl.classList.add('show');
                     setTimeout(function() { showLoginForm(); }, 2000);
                 } else if (result.status === 409) {
-                    loginHint.classList.add('show');
                     document.getElementById('regEmail').classList.add('error');
                     errorEl.textContent = 'Такой email уже зарегистрирован';
                     errorEl.classList.add('show');
