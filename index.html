@@ -55,41 +55,41 @@
         }
 
         body.light {
-            --bg: #f0f2f5;
-            --card-bg: rgba(255, 255, 255, 0.85);
-            --card-border: rgba(0, 0, 0, 0.08);
-            --card-shadow: 0 30px 80px rgba(0, 0, 0, 0.08);
+            --bg: #FAF7F2;
+            --card-bg: rgba(255, 253, 251, 0.92);
+            --card-border: #EDE6DB;
+            --card-shadow: 0 30px 80px rgba(120, 100, 70, 0.07);
             --card-inset: inset 0 1px 0 rgba(255, 255, 255, 0.8);
-            --text: #1a1a1a;
-            --text-muted: rgba(0, 0, 0, 0.45);
-            --text-secondary: rgba(0, 0, 0, 0.75);
-            --text-dim: rgba(0, 0, 0, 0.5);
-            --text-label: rgba(0, 0, 0, 0.55);
-            --text-nav-header: rgba(0, 0, 0, 0.35);
-            --hover-bg: rgba(0, 0, 0, 0.04);
-            --link-bg: rgba(0, 0, 0, 0.05);
-            --link-border: rgba(0, 0, 0, 0.06);
-            --input-bg: rgba(0, 0, 0, 0.04);
-            --input-border: rgba(0, 0, 0, 0.12);
-            --modal-bg: #ffffff;
-            --topbar-bg: rgba(240, 242, 245, 0.85);
-            --sidebar-bg: rgba(255, 255, 255, 0.6);
-            --border-color: rgba(0, 0, 0, 0.08);
-            --nav-icon-bg: rgba(0, 0, 0, 0.05);
-            --nav-icon-fill: rgba(0, 0, 0, 0.4);
-            --link-icon-fill: rgba(0, 0, 0, 0.5);
-            --skill-card-bg: rgba(255, 255, 255, 0.7);
-            --skill-card-border: rgba(0, 0, 0, 0.06);
-            --skill-card-hover: rgba(255, 255, 255, 0.9);
-            --divider-color: rgba(0, 0, 0, 0.25);
-            --divider-line: rgba(0, 0, 0, 0.08);
+            --text: #1F1B16;
+            --text-muted: #7A7066;
+            --text-secondary: #3D362E;
+            --text-dim: #5A5147;
+            --text-label: #6B6159;
+            --text-nav-header: #8A7F73;
+            --hover-bg: rgba(120, 100, 70, 0.05);
+            --link-bg: rgba(120, 100, 70, 0.05);
+            --link-border: rgba(120, 100, 70, 0.08);
+            --input-bg: rgba(120, 100, 70, 0.04);
+            --input-border: rgba(120, 100, 70, 0.15);
+            --modal-bg: #FEFDFB;
+            --topbar-bg: rgba(250, 247, 242, 0.9);
+            --sidebar-bg: rgba(254, 252, 248, 0.7);
+            --border-color: #E8E1D4;
+            --nav-icon-bg: rgba(120, 100, 70, 0.06);
+            --nav-icon-fill: #8A7F73;
+            --link-icon-fill: #6B6159;
+            --skill-card-bg: rgba(255, 253, 251, 0.8);
+            --skill-card-border: #EDE6DB;
+            --skill-card-hover: rgba(255, 253, 251, 0.95);
+            --divider-color: #8A7F73;
+            --divider-line: #E8E1D4;
             --orb-opacity: 0;
             --orb3-opacity: 0;
-            --btn-bg: rgba(0, 0, 0, 0.05);
-            --btn-border: rgba(0, 0, 0, 0.1);
-            --logout-bg: rgba(0, 0, 0, 0.04);
-            --logout-border: rgba(0, 0, 0, 0.08);
-            --logout-color: rgba(0, 0, 0, 0.5);
+            --btn-bg: rgba(120, 100, 70, 0.06);
+            --btn-border: rgba(120, 100, 70, 0.12);
+            --logout-bg: rgba(120, 100, 70, 0.05);
+            --logout-border: #E8E1D4;
+            --logout-color: #6B6159;
             --step-line: rgba(255, 77, 0, 0.15);
         }
 
@@ -816,6 +816,7 @@
         }
         .nav-divider { height:1px; background:var(--input-border); margin:10px 16px; opacity:0.5; }
         .nav-label { padding:6px 16px 4px; font-size:.65rem; font-weight:700; text-transform:uppercase; letter-spacing:1.2px; color:var(--text-muted); opacity:0.6; }
+        body.light .nav-label { opacity:1;color:var(--text-nav-header); }
         .nav-icon svg { width: 18px; height: 18px; fill: var(--nav-icon-fill); transition: fill 0.2s; }
 
         .dash-content { flex: 1; margin-top: 64px; margin-right: 280px; padding: 40px; min-height: calc(100vh - 64px); }
@@ -969,6 +970,9 @@
         }
         .onb-step-card:hover { border-color:#FF4D00;background:rgba(255,77,0,0.1);transform:translateY(-2px); }
         .onb-step-card.done { border-color:#27ae60; }
+        body.light .onb-step-card { background:rgba(120,100,70,0.04);border-color:var(--card-border); }
+        body.light .onb-step-card:hover { background:rgba(255,77,0,0.07); }
+        body.light .onb-step-card.done { border-color:#27ae60;background:rgba(39,174,96,0.05); }
         .onb-step-header { display:flex;align-items:center;justify-content:space-between;width:100%;margin-bottom:12px; }
         .onb-check { color:#27ae60;font-size:20px;font-weight:700; }
         .onb-step-num-circle {
@@ -979,7 +983,9 @@
         .onb-step-num-circle.pending { background:var(--bg);border:2px solid var(--border);color:var(--text-muted); }
         .onb-step-num-circle.done { background:#27ae60;border:2px solid #27ae60;color:#fff; }
         .onb-step-title { font-size:1rem;font-weight:700;margin-bottom:6px;color:#fff; }
+        body.light .onb-step-title { color:var(--text); }
         .onb-step-desc { font-size:.82rem;color:rgba(255,255,255,0.7);line-height:1.5;min-height:40px; }
+        body.light .onb-step-desc { color:var(--text-dim); }
         .onb-step-btn {
             background:var(--accent);color:#fff;border:none;border-radius:8px;
             padding:8px 20px;font-size:.82rem;font-weight:600;cursor:pointer;transition:opacity .2s;
@@ -1524,6 +1530,40 @@
         .st-conv-high { background: rgba(46,204,113,.12); color: #2ecc71; }
         .st-conv-mid { background: rgba(241,196,15,.12); color: #f1c40f; }
         .st-conv-low { background: rgba(231,76,60,.12); color: #e74c3c; }
+
+        /* Stats — light theme overrides */
+        body.light .st-wrap { color:var(--text); }
+        body.light .st-header h2 { color:var(--text); }
+        body.light .st-tabs { background:rgba(120,100,70,0.06); }
+        body.light .st-tab { color:var(--text-dim); }
+        body.light .st-datepicker-btn { background:var(--input-bg);border-color:var(--input-border);color:var(--text); }
+        body.light .st-calendar-popup { background:var(--modal-bg);border-color:var(--card-border);box-shadow:0 20px 60px rgba(100,80,50,0.12); }
+        body.light .st-cal-header span { color:var(--text); }
+        body.light .st-cal-nav { border-color:var(--input-border);color:var(--text-dim); }
+        body.light .st-cal-day-name { color:var(--text-muted); }
+        body.light .st-cal-day { color:var(--text); }
+        body.light .st-cal-day:hover { background:rgba(120,100,70,0.08); }
+        body.light .st-cal-day.other-month { color:var(--text-muted); }
+        body.light .st-preset-btn { background:var(--input-bg);border-color:var(--input-border);color:var(--text-dim); }
+        body.light .st-stat-card { background:var(--card-bg);border-color:var(--card-border); }
+        body.light .st-stat-label { color:var(--text-dim); }
+        body.light .st-stat-value { color:var(--text); }
+        body.light .st-stat-sub { color:var(--text-muted); }
+        body.light .st-stat-sub strong { color:var(--text); }
+        body.light .st-chart-card { background:var(--card-bg);border-color:var(--card-border); }
+        body.light .st-chart-title { color:var(--text); }
+        body.light .st-bar-label { color:var(--text-secondary); }
+        body.light .st-bar-track { background:rgba(120,100,70,0.06); }
+        body.light .st-bar-val { color:var(--text); }
+        body.light .st-bar-empty { color:var(--text-muted); }
+        body.light .st-rank-other { background:rgba(120,100,70,0.06);color:var(--text-muted); }
+        body.light .st-breakdown-title { color:var(--text); }
+        body.light .st-breakdown-tabs { border-color:var(--border-color); }
+        body.light .st-breakdown-tab { color:var(--text-muted); }
+        body.light .st-breakdown-tab.active { color:var(--text); }
+        body.light .st-breakdown-table th { color:var(--text-muted);border-color:var(--border-color); }
+        body.light .st-breakdown-table td { color:var(--text);border-color:rgba(120,100,70,0.06); }
+        body.light .st-breakdown-table tr:hover td { background:rgba(120,100,70,0.03); }
 
         @media (max-width: 900px) {
             .st-stats-grid { grid-template-columns: 1fr 1fr; }
@@ -2752,7 +2792,7 @@
                 <!-- Bitrix24 form -->
                 <div id="integrationFormBitrix" style="display:none;">
                     <button class="intg-back" onclick="showIntegrationSelect()">&larr; Назад</button>
-                    <div style="font-weight:700;margin-bottom:16px;color:#fff;" data-i18n="intBitrixTitle">Подключение Битрикс24</div>
+                    <div style="font-weight:700;margin-bottom:16px;color:var(--text);" data-i18n="intBitrixTitle">Подключение Битрикс24</div>
                     <div class="form-group">
                         <label data-i18n="intBitrixLabel">Домен Битрикс24</label>
                         <input type="text" id="intgBitrixDomain" placeholder="mycompany.bitrix24.ru">
@@ -2767,7 +2807,7 @@
                 <!-- AMO CRM form -->
                 <div id="integrationFormAmo" style="display:none;">
                     <button class="intg-back" onclick="showIntegrationSelect()">&larr; Назад</button>
-                    <div style="font-weight:700;margin-bottom:16px;color:#fff;" data-i18n="intAmoTitle">Подключение АМО CRM</div>
+                    <div style="font-weight:700;margin-bottom:16px;color:var(--text);" data-i18n="intAmoTitle">Подключение АМО CRM</div>
                     <div class="form-group">
                         <label data-i18n="intAmoLabel">Домен АМО CRM</label>
                         <input type="text" id="intgAmoDomain" placeholder="mycompany.amocrm.ru">
@@ -3043,7 +3083,7 @@
                             <button class="onb-step-btn" style="padding:12px 32px;font-size:.95rem;" onclick="onbComplete()" data-i18n-html="homeDoneBtn">&#10004; Готово! Жду первых лидов</button>
                         </div>
                         <div style="background:var(--card);border:1px solid var(--border);border-radius:16px;padding:24px;">
-                            <h3 style="font-size:1rem;font-weight:700;margin-bottom:16px;color:#fff;" data-i18n="homeVideoTitle">Видео инструкция</h3>
+                            <h3 style="font-size:1rem;font-weight:700;margin-bottom:16px;color:var(--text);" data-i18n="homeVideoTitle">Видео инструкция</h3>
                             <div style="margin:0 auto 16px;max-width:100%;">
                                 <iframe src="https://vkvideo.ru/video_ext.php?oid=-236531187&id=456239017&hash=91a5ba5b0878359a&hd=3" width="100%" height="480" allow="autoplay; encrypted-media; fullscreen; picture-in-picture; screen-wake-lock;" frameborder="0" allowfullscreen style="border-radius: 12px;"></iframe>
                             </div>
@@ -8299,7 +8339,7 @@
                     '</div>' +
                     '<div class="st-stat-card">' +
                         '<div class="st-stat-label">Запуски</div>' +
-                        '<div class="st-stat-value">' + activeLaunches + ' <span style="font-size:16px;font-weight:500;color:rgba(255,255,255,0.5)">/ ' + totalLaunches + '</span></div>' +
+                        '<div class="st-stat-value">' + activeLaunches + ' <span style="font-size:16px;font-weight:500;color:var(--text-muted)">/ ' + totalLaunches + '</span></div>' +
                         '<div class="st-stat-sub">Активных / всего</div>' +
                     '</div>';
             }
