@@ -2411,6 +2411,9 @@
                     <div class="error-msg" id="loginError" data-i18n="loginErr">Неверный логин или пароль</div>
                     <button type="submit" class="submit-btn" data-i18n="loginBtn">Войти</button>
                 </form>
+                <div style="text-align:center;margin-top:12px;">
+                    <a href="#" onclick="event.preventDefault();openForgotPasswordModal();" style="font-size:13px;color:var(--accent,#6c5ce7);text-decoration:none;cursor:pointer;" data-i18n="forgotPwdLink">Забыли пароль?</a>
+                </div>
                 <div class="divider" data-i18n="orText">или</div>
                 <button class="google-btn" onclick="showRegisterForm()">
                     <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M16 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"/><circle cx="8.5" cy="7" r="4"/><line x1="20" y1="8" x2="20" y2="14"/><line x1="23" y1="11" x2="17" y2="11"/></svg>
@@ -2463,6 +2466,71 @@
                 <div class="error-msg" id="cpError"></div>
                 <button type="submit" class="submit-btn" data-i18n="chpwSubmit">Сменить пароль</button>
             </form>
+        </div>
+    </div>
+
+    <!-- ===== FORGOT PASSWORD MODAL ===== -->
+    <div class="modal-overlay" id="forgotPasswordModal" onclick="if(event.target===this)closeForgotPasswordModal()">
+        <div class="modal" style="max-width:420px;">
+            <button class="modal-close" onclick="closeForgotPasswordModal()">&times;</button>
+            <div id="fpFormBlock">
+                <div class="modal-title" data-i18n="fpTitle">Восстановление пароля</div>
+                <div class="modal-subtitle" data-i18n="fpSub">Введите email, на который зарегистрирован аккаунт. Мы отправим ссылку для сброса пароля.</div>
+                <form onsubmit="handleForgotPassword(event)">
+                    <div class="form-group">
+                        <label>Email</label>
+                        <input type="email" id="fpEmail" placeholder="mail@company.ru" required autocomplete="email">
+                    </div>
+                    <div class="error-msg" id="fpError"></div>
+                    <button type="submit" class="submit-btn" id="fpSubmitBtn" data-i18n="fpSubmit">Отправить ссылку</button>
+                </form>
+            </div>
+            <div id="fpSuccess" style="display:none;text-align:center;">
+                <div style="margin-bottom:16px;">
+                    <svg viewBox="0 0 24 24" style="width:48px;height:48px;fill:var(--accent,#6c5ce7);"><path d="M20 4H4c-1.1 0-2 .9-2 2v12c0 1.1.9 2 2 2h16c1.1 0 2-.9 2-2V6c0-1.1-.9-2-2-2zm0 4l-8 5-8-5V6l8 5 8-5v2z"/></svg>
+                </div>
+                <div class="modal-title" style="font-size:20px;" data-i18n="fpOkTitle">Проверьте почту</div>
+                <p style="font-size:14px;color:var(--text-muted);line-height:1.7;margin:12px 0 24px;" data-i18n="fpOkDesc">Если такой email зарегистрирован, мы отправили на него ссылку для восстановления пароля. Проверьте почту (включая папку «Спам»).</p>
+                <button class="submit-btn" onclick="closeForgotPasswordModal()" data-i18n="fpClose">Закрыть</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- ===== RESET PASSWORD MODAL ===== -->
+    <div class="modal-overlay" id="resetPasswordModal" onclick="if(event.target===this)closeResetPasswordModal()">
+        <div class="modal" style="max-width:420px;">
+            <button class="modal-close" onclick="closeResetPasswordModal()">&times;</button>
+            <div id="rpFormBlock">
+                <div class="modal-title" data-i18n="rpTitle">Установите новый пароль</div>
+                <div class="modal-subtitle" data-i18n="rpSub">Введите новый пароль для входа в EasySale.</div>
+                <form onsubmit="handleResetPassword(event)">
+                    <div class="form-group">
+                        <label data-i18n="rpNewLabel">Новый пароль</label>
+                        <input type="password" id="rpNewPass" placeholder="Минимум 6 символов" required minlength="6" autocomplete="new-password" data-i18n-ph="chpwNewPh">
+                    </div>
+                    <div class="form-group">
+                        <label data-i18n="rpConfirmLabel">Подтверждение пароля</label>
+                        <input type="password" id="rpConfirmPass" placeholder="Повторите пароль" required minlength="6" autocomplete="new-password" data-i18n-ph="chpwConfirmPh">
+                    </div>
+                    <div class="error-msg" id="rpError"></div>
+                    <button type="submit" class="submit-btn" id="rpSubmitBtn" data-i18n="rpSubmit">Сохранить и войти</button>
+                </form>
+            </div>
+            <div id="rpSuccess" style="display:none;text-align:center;">
+                <div style="margin-bottom:16px;">
+                    <svg viewBox="0 0 24 24" style="width:48px;height:48px;fill:#34d399;"><path d="M9 16.17L4.83 12l-1.42 1.41L9 19 21 7l-1.41-1.41L9 16.17z"/></svg>
+                </div>
+                <div class="modal-title" style="font-size:20px;" data-i18n="rpOkTitle">Пароль изменён!</div>
+                <p style="font-size:14px;color:var(--text-muted);line-height:1.7;margin:12px 0 0;" data-i18n="rpOkDesc">Выполняется вход...</p>
+            </div>
+            <div id="rpExpired" style="display:none;text-align:center;">
+                <div style="margin-bottom:16px;">
+                    <svg viewBox="0 0 24 24" style="width:48px;height:48px;fill:#f87171;"><path d="M12 2C6.47 2 2 6.47 2 12s4.47 10 10 10 10-4.47 10-10S17.53 2 12 2zm5 13.59L15.59 17 12 13.41 8.41 17 7 15.59 10.59 12 7 8.41 8.41 7 12 10.59 15.59 7 17 8.41 13.41 12 17 15.59z"/></svg>
+                </div>
+                <div class="modal-title" style="font-size:20px;" id="rpExpiredTitle"></div>
+                <p style="font-size:14px;color:var(--text-muted);line-height:1.7;margin:12px 0 24px;" data-i18n="rpExpiredDesc">Запросите восстановление пароля заново.</p>
+                <button class="submit-btn" onclick="closeResetPasswordModal();openForgotPasswordModal();" data-i18n="rpRequestNew">Запросить новую ссылку</button>
+            </div>
         </div>
     </div>
 
@@ -3667,6 +3735,12 @@
                             <span class="settings-info-label" data-i18n="setTarBal">Баланс</span>
                             <span class="settings-info-value" id="settingsBalance">0 ₽</span>
                         </div>
+                    </div>
+                    <!-- Card: Change Password -->
+                    <div class="settings-card">
+                        <div class="settings-card-title" data-i18n="setPwdT">Безопасность</div>
+                        <div class="settings-card-desc" data-i18n="setPwdD">Смена пароля учётной записи</div>
+                        <button class="settings-card-btn" onclick="openChangePasswordFromSettings()" data-i18n="setPwdBtn">Изменить пароль</button>
                     </div>
                 </div>
             </div>
@@ -4943,6 +5017,16 @@
             var confirmPass = document.getElementById('cpConfirmPass').value;
             var cpError = document.getElementById('cpError');
 
+            // Read old password from input field if opened from settings
+            var oldPassword = _cpOldPassword;
+            if (oldPassword === '__FROM_INPUT__') {
+                var oldPassInput = document.getElementById('cpOldPass');
+                oldPassword = oldPassInput ? oldPassInput.value : '';
+                if (!oldPassword) {
+                    cpError.textContent = t('chpwOldLabel'); cpError.classList.add('show'); return;
+                }
+            }
+
             if (newPass.length < 6) {
                 cpError.textContent = t('chpwMinLen');
                 cpError.classList.add('show');
@@ -4961,7 +5045,7 @@
                     'Content-Type': 'application/json',
                     'Authorization': 'Bearer ' + token
                 },
-                body: JSON.stringify({ old_password: _cpOldPassword, new_password: newPass })
+                body: JSON.stringify({ old_password: oldPassword, new_password: newPass })
             })
             .then(function(res) { return res.json().then(function(data) { return { status: res.status, data: data }; }); })
             .then(function(result) {
@@ -4987,6 +5071,177 @@
                 cpError.textContent = t('errServerConn');
                 cpError.classList.add('show');
             });
+        }
+
+        // ===== FORGOT PASSWORD =====
+        function openForgotPasswordModal() {
+            closeModal();
+            document.getElementById('fpFormBlock').style.display = '';
+            document.getElementById('fpSuccess').style.display = 'none';
+            document.getElementById('fpEmail').value = '';
+            var err = document.getElementById('fpError');
+            err.textContent = ''; err.classList.remove('show');
+            document.getElementById('fpSubmitBtn').disabled = false;
+            document.getElementById('fpSubmitBtn').textContent = t('fpSubmit');
+            document.getElementById('forgotPasswordModal').classList.add('active');
+            document.body.style.overflow = 'hidden';
+        }
+
+        function closeForgotPasswordModal() {
+            document.getElementById('forgotPasswordModal').classList.remove('active');
+            document.body.style.overflow = '';
+        }
+
+        function handleForgotPassword(e) {
+            e.preventDefault();
+            var email = document.getElementById('fpEmail').value.trim();
+            var err = document.getElementById('fpError');
+            var btn = document.getElementById('fpSubmitBtn');
+            err.textContent = ''; err.classList.remove('show');
+
+            if (!email || !/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email)) {
+                err.textContent = t('fpErrEmail'); err.classList.add('show'); return;
+            }
+
+            btn.disabled = true;
+            btn.textContent = t('fpSending');
+
+            fetch(ES_API + '/api/auth/forgot-password', {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({ email: email })
+            })
+            .then(function(r) { return r.json().then(function(d) { return { ok: r.ok, data: d }; }); })
+            .then(function(res) {
+                if (res.ok) {
+                    document.getElementById('fpFormBlock').style.display = 'none';
+                    document.getElementById('fpSuccess').style.display = '';
+                } else {
+                    err.textContent = res.data.error || t('fpErrServer');
+                    err.classList.add('show');
+                    btn.disabled = false;
+                    btn.textContent = t('fpSubmit');
+                }
+            })
+            .catch(function() {
+                err.textContent = t('fpErrServer');
+                err.classList.add('show');
+                btn.disabled = false;
+                btn.textContent = t('fpSubmit');
+            });
+        }
+
+        // ===== RESET PASSWORD (from URL token) =====
+        var _resetToken = '';
+
+        function openResetPasswordModal(token) {
+            _resetToken = token;
+            document.getElementById('rpFormBlock').style.display = '';
+            document.getElementById('rpSuccess').style.display = 'none';
+            document.getElementById('rpExpired').style.display = 'none';
+            document.getElementById('rpNewPass').value = '';
+            document.getElementById('rpConfirmPass').value = '';
+            var err = document.getElementById('rpError');
+            err.textContent = ''; err.classList.remove('show');
+            document.getElementById('rpSubmitBtn').disabled = false;
+            document.getElementById('rpSubmitBtn').textContent = t('rpSubmit');
+            document.getElementById('resetPasswordModal').classList.add('active');
+            document.body.style.overflow = 'hidden';
+        }
+
+        function closeResetPasswordModal() {
+            document.getElementById('resetPasswordModal').classList.remove('active');
+            document.body.style.overflow = '';
+            // Clean URL
+            if (window.location.search.indexOf('reset_token') !== -1) {
+                history.replaceState(null, '', window.location.pathname);
+            }
+        }
+
+        function handleResetPassword(e) {
+            e.preventDefault();
+            var newPass = document.getElementById('rpNewPass').value;
+            var confirmPass = document.getElementById('rpConfirmPass').value;
+            var err = document.getElementById('rpError');
+            var btn = document.getElementById('rpSubmitBtn');
+            err.textContent = ''; err.classList.remove('show');
+
+            if (newPass.length < 6) {
+                err.textContent = t('rpErrMinLen'); err.classList.add('show'); return;
+            }
+            if (newPass !== confirmPass) {
+                err.textContent = t('rpErrMismatch'); err.classList.add('show'); return;
+            }
+
+            btn.disabled = true;
+            btn.textContent = t('rpSending');
+
+            fetch(ES_API + '/api/auth/reset-password', {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({ token: _resetToken, new_password: newPass })
+            })
+            .then(function(r) { return r.json().then(function(d) { return { status: r.status, data: d }; }); })
+            .then(function(result) {
+                if (result.status === 200 && result.data.success) {
+                    document.getElementById('rpFormBlock').style.display = 'none';
+                    document.getElementById('rpSuccess').style.display = '';
+                    // Auto-login
+                    var loginKey = (result.data.user && result.data.user.login) || '';
+                    sessionStorage.setItem('jwt_token', result.data.token);
+                    localStorage.setItem('sc_login', loginKey);
+                    localStorage.setItem('current_login', loginKey);
+                    if (result.data.user && result.data.user.onboarded) {
+                        localStorage.setItem('onboarded_' + loginKey, '1');
+                    }
+                    applyUserSession(loginKey);
+                    history.replaceState(null, '', '/');
+                    setTimeout(function() {
+                        closeResetPasswordModal();
+                        showAfterLogin();
+                    }, 1500);
+                } else if (result.status === 400) {
+                    // Token invalid or expired
+                    document.getElementById('rpFormBlock').style.display = 'none';
+                    document.getElementById('rpExpired').style.display = '';
+                    document.getElementById('rpExpiredTitle').textContent = result.data.error || '';
+                } else {
+                    err.textContent = result.data.error || t('rpErrServer');
+                    err.classList.add('show');
+                    btn.disabled = false;
+                    btn.textContent = t('rpSubmit');
+                }
+            })
+            .catch(function() {
+                err.textContent = t('rpErrServer');
+                err.classList.add('show');
+                btn.disabled = false;
+                btn.textContent = t('rpSubmit');
+            });
+        }
+
+        // ===== CHANGE PASSWORD FROM SETTINGS =====
+        function openChangePasswordFromSettings() {
+            // Add old password field if not present
+            var modal = document.getElementById('changePasswordModal');
+            var form = modal.querySelector('form');
+            if (!document.getElementById('cpOldPass')) {
+                var group = document.createElement('div');
+                group.className = 'form-group';
+                group.id = 'cpOldPassGroup';
+                group.innerHTML = '<label data-i18n="chpwOldLabel">' + t('chpwOldLabel') + '</label>' +
+                    '<input type="password" id="cpOldPass" placeholder="' + t('chpwOldPh') + '" required autocomplete="current-password" data-i18n-ph="chpwOldPh">';
+                form.insertBefore(group, form.firstChild);
+            }
+            document.getElementById('cpOldPass').value = '';
+            document.getElementById('cpNewPass').value = '';
+            document.getElementById('cpConfirmPass').value = '';
+            var err = document.getElementById('cpError');
+            err.textContent = ''; err.classList.remove('show');
+            // Set flag to use old password from input field
+            _cpOldPassword = '__FROM_INPUT__';
+            modal.classList.add('active');
+            document.body.style.overflow = 'hidden';
         }
 
         // Onboarding
@@ -8069,6 +8324,37 @@
             chpwConfirmLabel: { ru:'Подтверждение пароля', en:'Confirm Password' },
             chpwConfirmPh: { ru:'Повторите пароль', en:'Repeat password' },
             chpwSubmit: { ru:'Сменить пароль', en:'Change Password' },
+            chpwOldLabel: { ru:'Текущий пароль', en:'Current Password' },
+            chpwOldPh: { ru:'Введите текущий пароль', en:'Enter current password' },
+            // Forgot password
+            forgotPwdLink: { ru:'Забыли пароль?', en:'Forgot password?' },
+            fpTitle: { ru:'Восстановление пароля', en:'Password Recovery' },
+            fpSub: { ru:'Введите email, на который зарегистрирован аккаунт. Мы отправим ссылку для сброса пароля.', en:'Enter the email associated with your account. We will send a password reset link.' },
+            fpSubmit: { ru:'Отправить ссылку', en:'Send link' },
+            fpSending: { ru:'Отправка...', en:'Sending...' },
+            fpOkTitle: { ru:'Проверьте почту', en:'Check your email' },
+            fpOkDesc: { ru:'Если такой email зарегистрирован, мы отправили на него ссылку для восстановления пароля. Проверьте почту (включая папку «Спам»).', en:'If this email is registered, we sent a password reset link. Check your inbox (including Spam folder).' },
+            fpClose: { ru:'Закрыть', en:'Close' },
+            fpErrEmail: { ru:'Введите корректный email', en:'Enter a valid email' },
+            fpErrServer: { ru:'Не удалось отправить запрос, попробуйте позже', en:'Failed to send request, please try later' },
+            // Reset password
+            rpTitle: { ru:'Установите новый пароль', en:'Set a New Password' },
+            rpSub: { ru:'Введите новый пароль для входа в EasySale.', en:'Enter a new password to sign in to EasySale.' },
+            rpNewLabel: { ru:'Новый пароль', en:'New Password' },
+            rpConfirmLabel: { ru:'Подтверждение пароля', en:'Confirm Password' },
+            rpSubmit: { ru:'Сохранить и войти', en:'Save & Sign In' },
+            rpSending: { ru:'Сохранение...', en:'Saving...' },
+            rpOkTitle: { ru:'Пароль изменён!', en:'Password changed!' },
+            rpOkDesc: { ru:'Выполняется вход...', en:'Signing in...' },
+            rpExpiredDesc: { ru:'Запросите восстановление пароля заново.', en:'Please request a new password reset link.' },
+            rpRequestNew: { ru:'Запросить новую ссылку', en:'Request a new link' },
+            rpErrMinLen: { ru:'Пароль должен быть не менее 6 символов', en:'Password must be at least 6 characters' },
+            rpErrMismatch: { ru:'Пароли не совпадают', en:'Passwords do not match' },
+            rpErrServer: { ru:'Ошибка соединения с сервером', en:'Server connection error' },
+            // Settings: password
+            setPwdT: { ru:'Безопасность', en:'Security' },
+            setPwdD: { ru:'Смена пароля учётной записи', en:'Change account password' },
+            setPwdBtn: { ru:'Изменить пароль', en:'Change Password' },
             // Dialog editor placeholders
             botNamePh: { ru:'Например: Агрессивный — дожим', en:'E.g.: Aggressive — closing' },
             botDescPh: { ru:'Краткое описание сценария', en:'Brief scenario description' },
@@ -10416,6 +10702,15 @@
 
         // ===== AUTO-RESTORE SESSION =====
         var isAppDomain = window.location.hostname === 'app.easysale.tech';
+
+        // Check for password reset token in URL
+        (function checkResetToken() {
+            var params = new URLSearchParams(window.location.search);
+            var resetToken = params.get('reset_token');
+            if (resetToken) {
+                openResetPasswordModal(resetToken);
+            }
+        })();
 
         (function autoRestore() {
             var token = sessionStorage.getItem('jwt_token');
