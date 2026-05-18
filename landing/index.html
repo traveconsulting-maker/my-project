@@ -1783,6 +1783,33 @@
             color: #fff;
         }
 
+        /* Consent checkbox */
+        .consent-label {
+            display: flex;
+            align-items: flex-start;
+            gap: 10px;
+            cursor: pointer;
+            font-size: 13px;
+            color: var(--text-muted);
+            line-height: 1.5;
+            text-align: left;
+        }
+        .consent-label input[type="checkbox"] {
+            width: 18px;
+            height: 18px;
+            min-width: 18px;
+            margin-top: 2px;
+            accent-color: var(--accent);
+            cursor: pointer;
+        }
+        .consent-text a {
+            color: var(--accent);
+            text-decoration: underline;
+        }
+        .consent-text a:hover {
+            text-decoration: none;
+        }
+
         .tg-divider {
             display: flex;
             align-items: center;
@@ -2607,7 +2634,7 @@
                 <div class="hero-offer-timer" id="heroOfferTimer"><span data-i18n="heroOfferTimer">⏳ Предложение исчезнет через</span> <span id="heroTimerValue">10:00</span></div>
             </div>
         </div>
-        <button class="hero-cta" onclick="openAccessModal()">
+        <button class="hero-cta" onclick="openLeadModal()">
             <span data-i18n="requestAccess">Получить первый лид бесплатно</span>
             <svg viewBox="0 0 24 24"><path d="M12 4l-1.41 1.41L16.17 11H4v2h12.17l-5.58 5.59L12 20l8-8-8-8z"/></svg>
         </button>
@@ -2679,7 +2706,7 @@
         </div>
     </div>
     <div style="text-align:center;margin-top:48px;">
-        <button class="hero-cta" onclick="openAccessModal()" style="font-size:15px;padding:14px 32px;">
+        <button class="hero-cta" onclick="openLeadModal()" style="font-size:15px;padding:14px 32px;">
             <span data-i18n="ctaStart">Зарегистрироваться бесплатно</span>
             <svg viewBox="0 0 24 24"><path d="M12 4l-1.41 1.41L16.17 11H4v2h12.17l-5.58 5.59L12 20l8-8-8-8z"/></svg>
         </button>
@@ -2764,7 +2791,7 @@
                 <div class="tariff-savings-title" data-i18n="tariffSavingsTitle">Экономия vs аутсорс</div>
                 <div class="tariff-savings-value" id="tariffSave0">+45 000 ₽</div>
             </div>
-            <button class="tariff-btn" onclick="openAccessModal()" data-i18n="tariffCta">Начать</button>
+            <button class="tariff-btn" onclick="openLeadModal()" data-i18n="tariffCta">Начать</button>
         </div>
 
         <!-- Базовый -->
@@ -2807,7 +2834,7 @@
                 <div class="tariff-savings-title" data-i18n="tariffSavingsTitle">Экономия vs аутсорс</div>
                 <div class="tariff-savings-value" id="tariffSave1">+75 000 ₽</div>
             </div>
-            <button class="tariff-btn" onclick="openAccessModal()" data-i18n="tariffCta">Начать</button>
+            <button class="tariff-btn" onclick="openLeadModal()" data-i18n="tariffCta">Начать</button>
         </div>
 
         <!-- Стандартный (recommended) -->
@@ -2851,7 +2878,7 @@
                 <div class="tariff-savings-title" data-i18n="tariffSavingsTitle">Экономия vs аутсорс</div>
                 <div class="tariff-savings-value" id="tariffSave2">+150 000 ₽</div>
             </div>
-            <button class="tariff-btn" onclick="openAccessModal()" data-i18n="tariffCta">Начать</button>
+            <button class="tariff-btn" onclick="openLeadModal()" data-i18n="tariffCta">Начать</button>
         </div>
 
         <!-- Энтерпрайз -->
@@ -3206,7 +3233,7 @@
     <h2 data-i18n-html="ctaBannerTitle">Готовы получать <span>новых клиентов</span>?</h2>
     <p data-i18n="ctaBannerDesc">Зарегистрируйтесь за 2 минуты и запустите AI-отдел продаж. Первые лиды — уже завтра.</p>
     <div style="display:flex;gap:12px;justify-content:center;flex-wrap:wrap;">
-        <button class="hero-cta cta-white" onclick="openAccessModal()" style="font-size:15px;padding:14px 32px;">
+        <button class="hero-cta cta-white" onclick="openLeadModal()" style="font-size:15px;padding:14px 32px;">
             <span data-i18n="ctaGetAccess">Зарегистрироваться</span>
             <svg viewBox="0 0 24 24"><path d="M12 4l-1.41 1.41L16.17 11H4v2h12.17l-5.58 5.59L12 20l8-8-8-8z"/></svg>
         </button>
@@ -3315,6 +3342,45 @@
     </div>
 </div>
 
+<!-- Lead Request Modal -->
+<div class="modal-overlay" id="leadModal" onclick="closeLeadOnOverlay(event)">
+    <div class="modal">
+        <button class="modal-close" onclick="closeLeadModal()">&times;</button>
+        <div id="leadFormBlock">
+            <div class="modal-title" data-i18n="leadTitle">Получите первый лид бесплатно</div>
+            <div class="modal-subtitle" data-i18n="leadSub">Оставьте контакты — менеджер свяжется и обсудит детали запуска.</div>
+            <div style="position:absolute;left:-9999px;" aria-hidden="true">
+                <input type="text" id="leadHoneypot" name="website" tabindex="-1" autocomplete="off">
+            </div>
+            <div class="form-group">
+                <label data-i18n="leadNameLabel">Имя</label>
+                <input type="text" id="leadName" name="name" maxlength="100" data-i18n-ph="leadNamePh" placeholder="Ваше имя">
+            </div>
+            <div class="form-group">
+                <label data-i18n="leadPhoneLabel">Телефон</label>
+                <input type="tel" id="leadPhone" name="phone" placeholder="+7 (___) ___-__-__" maxlength="18" inputmode="tel">
+            </div>
+            <div class="form-group" style="margin-bottom:20px;">
+                <label class="consent-label">
+                    <input type="checkbox" id="leadConsent">
+                    <span class="consent-text" data-i18n-html="leadConsentText">Я согласен на <a href="/privacy" target="_blank">обработку персональных данных</a></span>
+                </label>
+            </div>
+            <div class="error-msg" id="leadError"></div>
+            <button class="access-submit active" id="leadSubmitBtn" onclick="submitLeadForm()" data-i18n="leadSubmit">
+                Отправить заявку
+            </button>
+        </div>
+        <div class="access-success" id="leadSuccess">
+            <div class="access-success-icon">
+                <svg viewBox="0 0 24 24" style="width:36px;height:36px;fill:var(--accent);"><path d="M9 16.17L4.83 12l-1.42 1.41L9 19 21 7l-1.41-1.41L9 16.17z"/></svg>
+            </div>
+            <h3 data-i18n="leadOk">Заявка отправлена!</h3>
+            <p data-i18n="leadOkDesc">Наш менеджер свяжется как можно скорее.</p>
+        </div>
+    </div>
+</div>
+
 <!-- Support Chat -->
 <div class="sc-window" id="scWindow">
     <div class="sc-header">
@@ -3408,6 +3474,21 @@
         getAccess: { ru:'Зарегистрироваться', en:'Register' },
         accessOk: { ru:'Проверьте почту!', en:'Check your email!' },
         accessOkDesc: { ru:'Мы отправили письмо для подтверждения.<br>Нажмите ссылку в письме, чтобы активировать аккаунт.', en:'We sent a confirmation email.<br>Click the link in the email to activate your account.' },
+        // Lead request modal
+        leadTitle: { ru:'Получите первый лид бесплатно', en:'Get your first lead for free' },
+        leadSub: { ru:'Оставьте контакты — менеджер свяжется и обсудит детали запуска.', en:'Leave your contacts — a manager will reach out to discuss the launch details.' },
+        leadNameLabel: { ru:'Имя', en:'Name' },
+        leadNamePh: { ru:'Ваше имя', en:'Your name' },
+        leadPhoneLabel: { ru:'Телефон', en:'Phone' },
+        leadConsentText: { ru:'Я согласен на <a href="/privacy" target="_blank">обработку персональных данных</a>', en:'I agree to the <a href="/privacy" target="_blank">processing of personal data</a>' },
+        leadSubmit: { ru:'Отправить заявку', en:'Submit request' },
+        leadOk: { ru:'Заявка отправлена!', en:'Request submitted!' },
+        leadOkDesc: { ru:'Наш менеджер свяжется как можно скорее.', en:'Our manager will contact you as soon as possible.' },
+        leadErrName: { ru:'Введите ваше имя', en:'Please enter your name' },
+        leadErrPhone: { ru:'Введите корректный номер телефона', en:'Please enter a valid phone number' },
+        leadErrConsent: { ru:'Необходимо согласие на обработку данных', en:'You must agree to data processing' },
+        leadErrServer: { ru:'Ошибка соединения с сервером', en:'Server connection error' },
+        leadSending: { ru:'Отправка...', en:'Sending...' },
         // Validation
         valLoginShort: { ru:'Логин — минимум 6 символов', en:'Login must be at least 6 characters' },
         valPassShort: { ru:'Пароль — минимум 6 символов', en:'Password must be at least 6 characters' },
@@ -3745,6 +3826,136 @@
 
     function closeAccessOnOverlay(e) {
         if (e.target === accessModal) closeAccessModal();
+    }
+
+    // ===== Lead Request Modal =====
+    var leadModal = document.getElementById('leadModal');
+    var leadFormBlock = document.getElementById('leadFormBlock');
+    var leadSuccess = document.getElementById('leadSuccess');
+    var leadSubmitBtn = document.getElementById('leadSubmitBtn');
+    var _leadSending = false;
+
+    function openLeadModal() {
+        leadModal.classList.add('active');
+        document.body.style.overflow = 'hidden';
+        leadFormBlock.style.display = '';
+        leadSuccess.classList.remove('show');
+        document.getElementById('leadName').value = '';
+        document.getElementById('leadPhone').value = '';
+        document.getElementById('leadConsent').checked = false;
+        document.getElementById('leadHoneypot').value = '';
+        var errEl = document.getElementById('leadError');
+        errEl.classList.remove('show'); errEl.textContent = '';
+        leadSubmitBtn.disabled = false;
+        leadSubmitBtn.style.opacity = '';
+        leadSubmitBtn.textContent = t('leadSubmit');
+        _leadSending = false;
+    }
+
+    function closeLeadModal() {
+        leadModal.classList.remove('active');
+        document.body.style.overflow = '';
+    }
+
+    function closeLeadOnOverlay(e) {
+        if (e.target === leadModal) closeLeadModal();
+    }
+
+    // Phone mask +7 (XXX) XXX-XX-XX
+    (function() {
+        var phoneInput = document.getElementById('leadPhone');
+        phoneInput.addEventListener('input', function(e) {
+            var x = phoneInput.value.replace(/\D/g, '');
+            if (x.length === 0) { phoneInput.value = ''; return; }
+            if (x[0] === '8') x = '7' + x.substring(1);
+            if (x[0] !== '7') x = '7' + x;
+            var out = '+7';
+            if (x.length > 1) out += ' (' + x.substring(1, 4);
+            if (x.length >= 4) out += ') ' + x.substring(4, 7);
+            if (x.length >= 7) out += '-' + x.substring(7, 9);
+            if (x.length >= 9) out += '-' + x.substring(9, 11);
+            phoneInput.value = out;
+        });
+        phoneInput.addEventListener('keydown', function(e) {
+            if (e.key === 'Backspace' && phoneInput.value.length <= 3) {
+                phoneInput.value = '';
+                e.preventDefault();
+            }
+        });
+        phoneInput.addEventListener('focus', function() {
+            if (!phoneInput.value) phoneInput.value = '+7';
+        });
+        phoneInput.addEventListener('blur', function() {
+            if (phoneInput.value === '+7' || phoneInput.value === '+7 (') phoneInput.value = '';
+        });
+    })();
+
+    function submitLeadForm() {
+        if (_leadSending) return;
+        var nameVal = document.getElementById('leadName').value.trim();
+        var phoneVal = document.getElementById('leadPhone').value.trim();
+        var consent = document.getElementById('leadConsent').checked;
+        var honeypot = document.getElementById('leadHoneypot').value;
+        var errEl = document.getElementById('leadError');
+
+        errEl.classList.remove('show'); errEl.textContent = '';
+
+        // Honeypot check — pretend success
+        if (honeypot) {
+            leadFormBlock.style.display = 'none';
+            leadSuccess.classList.add('show');
+            return;
+        }
+
+        // Validation
+        if (!nameVal) {
+            errEl.textContent = t('leadErrName'); errEl.classList.add('show'); return;
+        }
+        var phoneDigits = phoneVal.replace(/\D/g, '');
+        if (phoneDigits.length < 11) {
+            errEl.textContent = t('leadErrPhone'); errEl.classList.add('show'); return;
+        }
+        if (!consent) {
+            errEl.textContent = t('leadErrConsent'); errEl.classList.add('show'); return;
+        }
+
+        _leadSending = true;
+        leadSubmitBtn.disabled = true;
+        leadSubmitBtn.style.opacity = '0.6';
+        leadSubmitBtn.textContent = t('leadSending');
+
+        fetch('https://api.easysale.tech/api/leads/offer', {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({
+                name: nameVal,
+                phone: phoneVal,
+                source: 'landing_main'
+            })
+        })
+        .then(function(r) { return r.json().then(function(d) { return { ok: r.ok, data: d }; }); })
+        .then(function(res) {
+            if (res.ok) {
+                if (typeof ym === 'function') ym(108141904, 'reachGoal', 'landing_lead_submit');
+                leadFormBlock.style.display = 'none';
+                leadSuccess.classList.add('show');
+            } else {
+                errEl.textContent = res.data.error || t('leadErrServer');
+                errEl.classList.add('show');
+                leadSubmitBtn.disabled = false;
+                leadSubmitBtn.style.opacity = '';
+                leadSubmitBtn.textContent = t('leadSubmit');
+                _leadSending = false;
+            }
+        })
+        .catch(function() {
+            errEl.textContent = t('leadErrServer');
+            errEl.classList.add('show');
+            leadSubmitBtn.disabled = false;
+            leadSubmitBtn.style.opacity = '';
+            leadSubmitBtn.textContent = t('leadSubmit');
+            _leadSending = false;
+        });
     }
 
     function showHint(id, msg) {
