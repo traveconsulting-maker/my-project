@@ -1745,6 +1745,14 @@
             margin-bottom: 32px;
         }
 
+        .lead-modal-heading {
+            font-size: 18px;
+            font-weight: 600;
+            color: var(--text);
+            line-height: 1.5;
+            margin-bottom: 28px;
+        }
+
         .form-group {
             margin-bottom: 16px;
             text-align: left;
@@ -3339,8 +3347,7 @@
     <div class="modal">
         <button class="modal-close" onclick="closeLeadModal()">&times;</button>
         <div id="leadFormBlock">
-            <div class="modal-title" data-i18n="leadTitle">Получите первый лид бесплатно</div>
-            <div class="modal-subtitle" data-i18n="leadSub">Оставьте контакты — менеджер свяжется и обсудит детали запуска.</div>
+            <div class="modal-subtitle lead-modal-heading" data-i18n="leadSub">Оставьте контакты — менеджер свяжется и обсудит детали запуска.</div>
             <div style="position:absolute;left:-9999px;" aria-hidden="true">
                 <input type="text" id="leadHoneypot" name="website" tabindex="-1" autocomplete="off">
             </div>
@@ -3423,7 +3430,7 @@
         heroBadge: { ru:'Платформа нового поколения', en:'Next-Generation Platform' },
         heroTitle: { ru:'Новые клиенты легче,<br>чем ты думаешь', en:'First sales are easier<br>than you think' },
         heroSub: { ru:'AI-платформа, которая сама находит клиентов, звонит им и передаёт вам только заинтересованных.', en:'AI platform that finds clients, calls them, and delivers only interested leads.' },
-        requestAccess: { ru:'Быстрая регистрация', en:'Quick Registration' },
+        requestAccess: { ru:'Получить первый лид бесплатно', en:'Get your first lead for free' },
         // Features
         featLabel: { ru:'Возможности', en:'Capabilities' },
         featTitle: { ru:'Комплексное решение', en:'Complete Solution' },
@@ -3466,7 +3473,6 @@
         accessOk: { ru:'Проверьте почту!', en:'Check your email!' },
         accessOkDesc: { ru:'Мы отправили письмо для подтверждения.<br>Нажмите ссылку в письме, чтобы активировать аккаунт.', en:'We sent a confirmation email.<br>Click the link in the email to activate your account.' },
         // Lead request modal
-        leadTitle: { ru:'Получите первый лид бесплатно', en:'Get your first lead for free' },
         leadSub: { ru:'Оставьте контакты — менеджер свяжется и обсудит детали запуска.', en:'Leave your contacts — a manager will reach out to discuss the launch details.' },
         leadNameLabel: { ru:'Имя', en:'Name' },
         leadNamePh: { ru:'Ваше имя', en:'Your name' },
