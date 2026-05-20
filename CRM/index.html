@@ -291,6 +291,9 @@
             font-weight:600;
             border-bottom:1px solid var(--border-color);
         }
+        #clients-thead th { cursor:pointer; user-select:none; transition:color .15s; }
+        #clients-thead th:hover { color:var(--text); }
+        #clients-thead th span { font-size:10px; opacity:.6; }
         td {
             padding:12px 14px;
             border-bottom:1px solid var(--border-color);
@@ -1163,7 +1166,16 @@
             </div>
             <div class="card" style="padding:0;overflow:hidden;">
                 <table>
-                    <thead><tr><th>Имя</th><th>Компания</th><th>Телефон</th><th>Email</th><th>Статус</th><th>Сделки</th><th>Создан</th></tr></thead>
+                    <thead><tr id="clients-thead">
+                        <th style="cursor:pointer;white-space:nowrap;width:50px;" onclick="sortClientsBy('id')">ID <span id="sort-ind-id">▼</span></th>
+                        <th style="cursor:pointer;" onclick="sortClientsBy('name')">Имя <span id="sort-ind-name"></span></th>
+                        <th style="cursor:pointer;" onclick="sortClientsBy('company')">Компания <span id="sort-ind-company"></span></th>
+                        <th style="cursor:pointer;" onclick="sortClientsBy('phone')">Телефон <span id="sort-ind-phone"></span></th>
+                        <th style="cursor:pointer;" onclick="sortClientsBy('email')">Email <span id="sort-ind-email"></span></th>
+                        <th style="cursor:pointer;" onclick="sortClientsBy('active')">Статус <span id="sort-ind-active"></span></th>
+                        <th style="cursor:pointer;" onclick="sortClientsBy('deals')">Сделки <span id="sort-ind-deals"></span></th>
+                        <th style="cursor:pointer;" onclick="sortClientsBy('created')">Создан <span id="sort-ind-created"></span></th>
+                    </tr></thead>
                     <tbody id="clients-table"></tbody>
                 </table>
             </div>
@@ -2843,23 +2855,77 @@ function renderDashboardNotifications() {
 }
 
 // ==================== CLIENTS ====================
+// Client table sorting state (default: by created DESC — newest first)
+var clientsSortCol = 'created';
+var clientsSortDir = 'desc';
+
+function sortClientsBy(col) {
+    if (clientsSortCol === col) {
+        clientsSortDir = clientsSortDir === 'asc' ? 'desc' : 'asc';
+    } else {
+        clientsSortCol = col;
+        clientsSortDir = (col === 'created' || col === 'id') ? 'desc' : 'asc';
+    }
+    renderClients();
+}
+
+function updateSortIndicators() {
+    var cols = ['id','name','company','phone','email','active','deals','created'];
+    cols.forEach(function(c) {
+        var el = document.getElementById('sort-ind-' + c);
+        if (el) el.textContent = clientsSortCol === c ? (clientsSortDir === 'asc' ? '▲' : '▼') : '';
+    });
+}
+
 function renderClients() {
     const search = (document.getElementById('clients-search')?.value || '').toLowerCase();
     const filtered = clients.filter(c =>
         c.name.toLowerCase().includes(search) ||
         (c.company||'').toLowerCase().includes(search) ||
         (c.phone||'').includes(search) ||
-        (c.email||'').toLowerCase().includes(search)
+        (c.email||'').toLowerCase().includes(search) ||
+        (String(c.id)).includes(search)
     );
+
+    // Sort filtered results
+    var col = clientsSortCol;
+    var dir = clientsSortDir === 'asc' ? 1 : -1;
+    filtered.sort(function(a, b) {
+        var va, vb;
+        if (col === 'id') {
+            va = parseInt(a.id) || 0; vb = parseInt(b.id) || 0;
+            return (va - vb) * dir;
+        } else if (col === 'deals') {
+            va = deals.filter(function(d) { return d.clientId === a.id; }).length;
+            vb = deals.filter(function(d) { return d.clientId === b.id; }).length;
+            return (va - vb) * dir;
+        } else if (col === 'created') {
+            va = a.created ? new Date(a.created).getTime() : (parseInt(a.id) || 0);
+            vb = b.created ? new Date(b.created).getTime() : (parseInt(b.id) || 0);
+            return (va - vb) * dir;
+        } else if (col === 'active') {
+            va = a.active !== false ? 'Активен' : 'Неактивен';
+            vb = b.active !== false ? 'Активен' : 'Неактивен';
+            return va.localeCompare(vb, 'ru') * dir;
+        } else {
+            va = (a[col] || '').toString().toLowerCase();
+            vb = (b[col] || '').toString().toLowerCase();
+            return va.localeCompare(vb, 'ru') * dir;
+        }
+    });
+
+    updateSortIndicators();
+
     const tbody = document.getElementById('clients-table');
     if (filtered.length === 0) {
-        tbody.innerHTML = '<tr><td colspan="7" style="text-align:center;color:var(--text-muted);padding:40px;">Нет клиентов</td></tr>';
+        tbody.innerHTML = '<tr><td colspan="8" style="text-align:center;color:var(--text-muted);padding:40px;">Нет клиентов</td></tr>';
         return;
     }
     tbody.innerHTML = filtered.map(c => {
         const dCount = deals.filter(d => d.clientId === c.id).length;
         const isActive = c.active !== false;
         return `<tr class="clickable-row">
+            <td onclick="openClientDetail('${c.id}')" style="color:var(--text-muted);font-size:12px;">${c.id}</td>
             <td onclick="openClientDetail('${c.id}')"><strong>${esc(c.name)}</strong></td>
             <td onclick="openClientDetail('${c.id}')">${esc(c.company||'—')}</td>
             <td onclick="openClientDetail('${c.id}')">${esc(c.phone||'—')}</td>
