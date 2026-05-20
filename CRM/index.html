@@ -1601,50 +1601,51 @@
             </div>
         </div>
 
-        <!-- Create User Modal -->
-        <div class="modal" id="create-user-modal">
-            <div class="modal-content" style="max-width:420px;">
-                <div class="modal-header">
-                    <h3>Создать сотрудника</h3>
-                    <button class="close-btn" onclick="closeModal('create-user-modal')">&times;</button>
-                </div>
-                <div style="padding:20px;display:flex;flex-direction:column;gap:16px;">
-                    <div><label style="display:block;font-size:13px;font-weight:600;color:var(--text-muted);margin-bottom:6px;">Логин</label>
-                    <input type="text" id="cu-login" placeholder="login" style="width:100%;padding:10px 14px;border-radius:10px;border:1px solid var(--border);background:var(--input-bg);color:var(--text);font-size:14px;outline:none;"></div>
-                    <div><label style="display:block;font-size:13px;font-weight:600;color:var(--text-muted);margin-bottom:6px;">Имя</label>
-                    <input type="text" id="cu-name" placeholder="Иван Иванов" style="width:100%;padding:10px 14px;border-radius:10px;border:1px solid var(--border);background:var(--input-bg);color:var(--text);font-size:14px;outline:none;"></div>
-                    <div><label style="display:block;font-size:13px;font-weight:600;color:var(--text-muted);margin-bottom:6px;">Пароль (мин. 6 символов)</label>
-                    <input type="password" id="cu-password" placeholder="******" style="width:100%;padding:10px 14px;border-radius:10px;border:1px solid var(--border);background:var(--input-bg);color:var(--text);font-size:14px;outline:none;"></div>
-                    <div><label style="display:block;font-size:13px;font-weight:600;color:var(--text-muted);margin-bottom:6px;">Роль</label>
-                    <input type="text" value="Саппорт" disabled style="width:100%;padding:10px 14px;border-radius:10px;border:1px solid var(--border);background:var(--card-bg);color:var(--text-muted);font-size:14px;"></div>
-                    <div id="cu-error" style="display:none;color:#e74c3c;font-size:13px;"></div>
-                    <button class="btn btn-primary" onclick="createUserSubmit()" style="width:100%;">Создать</button>
-                </div>
-            </div>
-        </div>
-
-        <!-- Reset Password Modal -->
-        <div class="modal" id="reset-pw-modal">
-            <div class="modal-content" style="max-width:380px;">
-                <div class="modal-header">
-                    <h3>Сброс пароля</h3>
-                    <button class="close-btn" onclick="closeModal('reset-pw-modal')">&times;</button>
-                </div>
-                <div style="padding:20px;display:flex;flex-direction:column;gap:16px;">
-                    <input type="hidden" id="rp-user-id">
-                    <div><label style="display:block;font-size:13px;font-weight:600;color:var(--text-muted);margin-bottom:6px;">Новый пароль (мин. 6 символов)</label>
-                    <input type="password" id="rp-password" placeholder="******" style="width:100%;padding:10px 14px;border-radius:10px;border:1px solid var(--border);background:var(--input-bg);color:var(--text);font-size:14px;outline:none;"></div>
-                    <div id="rp-error" style="display:none;color:#e74c3c;font-size:13px;"></div>
-                    <button class="btn btn-primary" onclick="resetPasswordSubmit()" style="width:100%;">Сохранить</button>
-                </div>
-            </div>
-        </div>
     </main>
 
     <!-- Toast container -->
     <div class="toast-container" id="toast-container"></div>
 
     <!-- Modals -->
+    <!-- Create User Modal -->
+    <div class="modal-overlay" id="create-user-modal">
+        <div class="modal" style="max-width:420px;">
+            <div class="modal-header">
+                <div class="modal-title">Создать сотрудника</div>
+                <button class="modal-close" onclick="closeModal('create-user-modal')">&times;</button>
+            </div>
+            <div style="display:flex;flex-direction:column;gap:16px;">
+                <div><label style="display:block;font-size:13px;font-weight:600;color:var(--text-muted);margin-bottom:6px;">Логин</label>
+                <input type="text" id="cu-login" placeholder="login" style="width:100%;padding:10px 14px;border-radius:10px;border:1px solid var(--border);background:var(--input-bg);color:var(--text);font-size:14px;outline:none;"></div>
+                <div><label style="display:block;font-size:13px;font-weight:600;color:var(--text-muted);margin-bottom:6px;">Имя</label>
+                <input type="text" id="cu-name" placeholder="Иван Иванов" style="width:100%;padding:10px 14px;border-radius:10px;border:1px solid var(--border);background:var(--input-bg);color:var(--text);font-size:14px;outline:none;"></div>
+                <div><label style="display:block;font-size:13px;font-weight:600;color:var(--text-muted);margin-bottom:6px;">Пароль (мин. 6 символов)</label>
+                <input type="password" id="cu-password" placeholder="******" style="width:100%;padding:10px 14px;border-radius:10px;border:1px solid var(--border);background:var(--input-bg);color:var(--text);font-size:14px;outline:none;"></div>
+                <div><label style="display:block;font-size:13px;font-weight:600;color:var(--text-muted);margin-bottom:6px;">Роль</label>
+                <input type="text" value="Саппорт" disabled style="width:100%;padding:10px 14px;border-radius:10px;border:1px solid var(--border);background:var(--card-bg);color:var(--text-muted);font-size:14px;"></div>
+                <div id="cu-error" style="display:none;color:#e74c3c;font-size:13px;"></div>
+                <button class="btn btn-primary" onclick="createUserSubmit()" style="width:100%;">Создать</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Reset Password Modal -->
+    <div class="modal-overlay" id="reset-pw-modal">
+        <div class="modal" style="max-width:380px;">
+            <div class="modal-header">
+                <div class="modal-title">Сброс пароля</div>
+                <button class="modal-close" onclick="closeModal('reset-pw-modal')">&times;</button>
+            </div>
+            <div style="display:flex;flex-direction:column;gap:16px;">
+                <input type="hidden" id="rp-user-id">
+                <div><label style="display:block;font-size:13px;font-weight:600;color:var(--text-muted);margin-bottom:6px;">Новый пароль (мин. 6 символов)</label>
+                <input type="password" id="rp-password" placeholder="******" style="width:100%;padding:10px 14px;border-radius:10px;border:1px solid var(--border);background:var(--input-bg);color:var(--text);font-size:14px;outline:none;"></div>
+                <div id="rp-error" style="display:none;color:#e74c3c;font-size:13px;"></div>
+                <button class="btn btn-primary" onclick="resetPasswordSubmit()" style="width:100%;">Сохранить</button>
+            </div>
+        </div>
+    </div>
+
     <!-- Client Modal -->
     <div class="modal-overlay" id="client-modal">
         <div class="modal">
