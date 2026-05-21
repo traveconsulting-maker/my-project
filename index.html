@@ -3,6 +3,9 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="Cache-Control" content="no-cache, no-store, must-revalidate">
+    <meta http-equiv="Pragma" content="no-cache">
+    <meta http-equiv="Expires" content="0">
     <title>EasySale — Первые продажи легче, чем ты думаешь</title>
     <link rel="icon" type="image/png" sizes="16x16" href="landing/favicon-16x16.png">
     <link rel="icon" type="image/png" sizes="32x32" href="landing/favicon-32x32.png">
@@ -813,6 +816,7 @@
         }
         .nav-divider { height:1px; background:var(--input-border); margin:10px 16px; opacity:0.5; }
         .nav-label { padding:6px 16px 4px; font-size:.65rem; font-weight:700; text-transform:uppercase; letter-spacing:1.2px; color:var(--text-muted); opacity:0.6; }
+        body.light .nav-label { opacity:1;color:var(--text-nav-header); }
         .nav-icon svg { width: 18px; height: 18px; fill: var(--nav-icon-fill); transition: fill 0.2s; }
 
         .dash-content { flex: 1; margin-top: 64px; margin-right: 280px; padding: 40px; min-height: calc(100vh - 64px); }
@@ -966,10 +970,9 @@
         }
         .onb-step-card:hover { border-color:#FF4D00;background:rgba(255,77,0,0.1);transform:translateY(-2px); }
         .onb-step-card.done { border-color:#27ae60; }
-        body.light .onb-step-card { background:var(--card-bg);border-color:var(--card-border); }
-        body.light .onb-step-card:hover { border-color:#FF4D00;background:rgba(255,77,0,0.06); }
-        body.light .onb-step-card.done { border-color:#27ae60;opacity:0.75; }
-        body.light .nav-label { opacity:1;color:var(--text-nav-header); }
+        body.light .onb-step-card { background:rgba(120,100,70,0.04);border-color:var(--card-border); }
+        body.light .onb-step-card:hover { background:rgba(255,77,0,0.07); }
+        body.light .onb-step-card.done { border-color:#27ae60;background:rgba(39,174,96,0.05); }
         .onb-step-header { display:flex;align-items:center;justify-content:space-between;width:100%;margin-bottom:12px; }
         .onb-check { color:#27ae60;font-size:20px;font-weight:700; }
         .onb-step-num-circle {
@@ -1477,22 +1480,6 @@
             cursor: pointer; transition: opacity .2s;
         }
         .st-cal-apply:hover { opacity: .85; }
-        /* Stats — light theme overrides */
-        body.light .st-wrap { color:var(--text); }
-        body.light .st-header h2 { color:var(--text); }
-        body.light .st-tabs { background:rgba(120,100,70,0.06); }
-        body.light .st-tab { color:var(--text-dim); }
-        body.light .st-datepicker-btn { background:var(--input-bg);border-color:var(--input-border);color:var(--text); }
-        body.light .st-calendar-popup { background:var(--modal-bg);border-color:var(--card-border);box-shadow:0 20px 60px rgba(100,80,50,0.12); }
-        body.light .st-cal-header span { color:var(--text); }
-        body.light .st-cal-nav { border-color:var(--input-border);color:var(--text-dim); }
-        body.light .st-cal-day-name { color:var(--text-muted); }
-        body.light .st-cal-day { color:var(--text); }
-        body.light .st-cal-day:hover { background:rgba(120,100,70,0.08); }
-        body.light .st-cal-day.other-month { color:var(--text-muted); }
-        body.light .st-preset-btn { background:var(--input-bg);border-color:var(--input-border);color:var(--text-dim); }
-        body.light .st-cal-popup::-webkit-scrollbar-track { background:rgba(120,100,70,0.04); }
-        body.light .st-cal-popup::-webkit-scrollbar-thumb { background:rgba(120,100,70,0.12); }
 
         .st-stats-grid {
             display: grid; grid-template-columns: repeat(4, 1fr); gap: 16px;
@@ -1507,11 +1494,6 @@
         .st-stat-value { font-size: 32px; font-weight: 700; letter-spacing: -1px; margin-bottom: 6px; color: #fff; }
         .st-stat-sub { font-size: 13px; color: rgba(255,255,255,0.7); }
         .st-stat-sub strong { color: #fff; }
-        body.light .st-stat-card { background:var(--card-bg);border-color:var(--card-border); }
-        body.light .st-stat-label { color:var(--text-dim); }
-        body.light .st-stat-value { color:var(--text); }
-        body.light .st-stat-sub { color:var(--text-muted); }
-        body.light .st-stat-sub strong { color:var(--text); }
 
         .st-charts-row { display: grid; grid-template-columns: 1fr 1fr; gap: 20px; margin-bottom: 28px; }
         .st-chart-card {
@@ -1533,13 +1515,6 @@
         .st-rank-2 { background: rgba(192,192,192,0.15); color: #bdc3c7; }
         .st-rank-3 { background: rgba(205,127,50,0.15); color: #e67e22; }
         .st-rank-other { background: rgba(255,255,255,0.06); color: rgba(255,255,255,0.5); }
-        body.light .st-chart-card { background:var(--card-bg);border-color:var(--card-border); }
-        body.light .st-chart-title { color:var(--text); }
-        body.light .st-bar-label { color:var(--text-secondary); }
-        body.light .st-bar-track { background:rgba(120,100,70,0.06); }
-        body.light .st-bar-val { color:var(--text); }
-        body.light .st-bar-empty { color:var(--text-muted); }
-        body.light .st-rank-other { background:rgba(120,100,70,0.06);color:var(--text-muted); }
 
         .st-breakdown { margin-top: 0; }
         .st-breakdown-title { font-size: 16px; font-weight: 700; color: #fff; margin-bottom: 16px; }
@@ -1555,6 +1530,40 @@
         .st-conv-high { background: rgba(46,204,113,.12); color: #2ecc71; }
         .st-conv-mid { background: rgba(241,196,15,.12); color: #f1c40f; }
         .st-conv-low { background: rgba(231,76,60,.12); color: #e74c3c; }
+
+        /* Stats — light theme overrides */
+        body.light .st-wrap { color:var(--text); }
+        body.light .st-header h2 { color:var(--text); }
+        body.light .st-tabs { background:rgba(120,100,70,0.06); }
+        body.light .st-tab { color:var(--text-dim); }
+        body.light .st-datepicker-btn { background:var(--input-bg);border-color:var(--input-border);color:var(--text); }
+        body.light .st-calendar-popup { background:var(--modal-bg);border-color:var(--card-border);box-shadow:0 20px 60px rgba(100,80,50,0.12); }
+        body.light .st-cal-header span { color:var(--text); }
+        body.light .st-cal-nav { border-color:var(--input-border);color:var(--text-dim); }
+        body.light .st-cal-day-name { color:var(--text-muted); }
+        body.light .st-cal-day { color:var(--text); }
+        body.light .st-cal-day:hover { background:rgba(120,100,70,0.08); }
+        body.light .st-cal-day.other-month { color:var(--text-muted); }
+        body.light .st-preset-btn { background:var(--input-bg);border-color:var(--input-border);color:var(--text-dim); }
+        body.light .st-stat-card { background:var(--card-bg);border-color:var(--card-border); }
+        body.light .st-stat-label { color:var(--text-dim); }
+        body.light .st-stat-value { color:var(--text); }
+        body.light .st-stat-sub { color:var(--text-muted); }
+        body.light .st-stat-sub strong { color:var(--text); }
+        body.light .st-chart-card { background:var(--card-bg);border-color:var(--card-border); }
+        body.light .st-chart-title { color:var(--text); }
+        body.light .st-bar-label { color:var(--text-secondary); }
+        body.light .st-bar-track { background:rgba(120,100,70,0.06); }
+        body.light .st-bar-val { color:var(--text); }
+        body.light .st-bar-empty { color:var(--text-muted); }
+        body.light .st-rank-other { background:rgba(120,100,70,0.06);color:var(--text-muted); }
+        body.light .st-breakdown-title { color:var(--text); }
+        body.light .st-breakdown-tabs { border-color:var(--border-color); }
+        body.light .st-breakdown-tab { color:var(--text-muted); }
+        body.light .st-breakdown-tab.active { color:var(--text); }
+        body.light .st-breakdown-table th { color:var(--text-muted);border-color:var(--border-color); }
+        body.light .st-breakdown-table td { color:var(--text);border-color:rgba(120,100,70,0.06); }
+        body.light .st-breakdown-table tr:hover td { background:rgba(120,100,70,0.03); }
 
         @media (max-width: 900px) {
             .st-stats-grid { grid-template-columns: 1fr 1fr; }
@@ -2330,7 +2339,7 @@
                 <div class="onb-title" data-i18n="onbStep3Title">Сколько сейчас в среднем вы платите за входящую заявку?</div>
                 <div class="onb-subtitle" data-i18n="onbStep3Sub">Укажите примерную стоимость одной заявки в вашу компанию</div>
                 <div class="niche-grid" style="grid-template-columns:repeat(auto-fill,minmax(200px,1fr));">
-                    <div class="niche-item" onclick="selectLeadCost(this)" data-i18n="onbCost0">1 000 ₽</div>
+                    <div class="niche-item" onclick="selectLeadCost(this)">1 000 ₽</div>
                     <div class="niche-item" onclick="selectLeadCost(this)" data-i18n="onbCost1">Больше 1 500 ₽</div>
                     <div class="niche-item" onclick="selectLeadCost(this)" data-i18n="onbCost2">Больше 3 000 ₽</div>
                     <div class="niche-item" onclick="selectLeadCost(this)" data-i18n="onbCostDk">Не знаю</div>
@@ -2398,17 +2407,17 @@
             <button class="modal-close" onclick="closeModal()">&times;</button>
             <div id="loginForm">
                 <div class="modal-title" data-i18n="loginTitle">Вход</div>
-                <div class="modal-subtitle" data-i18n="loginSub">Введите логин и пароль</div>
+                <div class="modal-subtitle" data-i18n="loginSub">Введите email и пароль</div>
                 <form onsubmit="handleLogin(event)">
                     <div class="form-group">
-                        <label data-i18n="loginLabel">Логин</label>
-                        <input type="text" id="loginUser" placeholder="Введите логин" data-i18n-ph="phLogin" required autocomplete="username">
+                        <label data-i18n="loginLabel">Email</label>
+                        <input type="email" id="loginUser" placeholder="mail@company.ru" data-i18n-ph="phLogin" required autocomplete="email">
                     </div>
                     <div class="form-group">
                         <label data-i18n="passLabel">Пароль</label>
                         <input type="password" id="loginPass" placeholder="Введите пароль" data-i18n-ph="phPass" required autocomplete="current-password">
                     </div>
-                    <div class="error-msg" id="loginError" data-i18n="loginErr">Неверный логин или пароль</div>
+                    <div class="error-msg" id="loginError" data-i18n="loginErr">Неверный логин или пароль. Попробуйте войти через email — с недавнего времени логин это ваша почта.</div>
                     <button type="submit" class="submit-btn" data-i18n="loginBtn">Войти</button>
                 </form>
                 <div style="text-align:center;margin-top:12px;">
@@ -2426,24 +2435,24 @@
                 <form onsubmit="handleRegister(event)">
                     <div class="form-group">
                         <label data-i18n="regPhoneLabel">Номер телефона</label>
-                        <input type="tel" id="regPhone" placeholder="+7 (999) 123-45-67" required data-i18n-ph="regPhonePh">
+                        <input type="tel" id="regPhone" placeholder="+7 (999) 123-45-67" required>
                     </div>
                     <div class="form-group">
-                        <label data-i18n="regEmailLabel">Email</label>
-                        <input type="email" id="regEmail" placeholder="mail@company.ru" required data-i18n-ph="regEmailPh">
+                        <label>Email</label>
+                        <input type="email" id="regEmail" placeholder="mail@company.ru" required>
                     </div>
                     <div class="form-group">
                         <label data-i18n="regPwdLabel">Пароль</label>
                         <input type="password" id="regPassword" placeholder="Минимум 6 символов" required minlength="6" data-i18n-ph="regPwdPh">
                     </div>
                     <div class="error-msg" id="regError"></div>
-                    <div class="success-msg" id="regSuccess" style="text-align:left;line-height:1.6;"></div>
+                    <div class="success-msg" id="regSuccess" data-i18n="regSuccessMsg">Регистрация прошла успешно!</div>
                     <button type="submit" class="submit-btn" id="regSubmitBtn" data-i18n="regSubmitBtn">Зарегистрироваться</button>
                 </form>
                 <div class="divider" data-i18n="regDivider">или</div>
                 <button class="google-btn" onclick="showLoginForm()">
                     <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M15 3h4a2 2 0 0 1 2 2v14a2 2 0 0 1-2 2h-4"/><polyline points="10 17 15 12 10 7"/><line x1="15" y1="12" x2="3" y2="12"/></svg>
-                    <span data-i18n="haveAccount">Уже есть аккаунт? Войти</span>
+                    Уже есть аккаунт? Войти
                 </button>
             </div>
         </div>
@@ -2692,19 +2701,6 @@
         </div>
     </div>
 
-    <!-- ===== UNSAVED CHANGES CONFIRM ===== -->
-    <div class="modal-overlay" id="unsavedModal" style="display:none;" onclick="if(event.target===this)unsavedCancel()">
-        <div class="modal" style="max-width:400px;text-align:center;">
-            <div class="modal-title" id="unsavedTitle" data-i18n="unsavedTitle">Несохранённые изменения</div>
-            <div class="modal-subtitle" id="unsavedMsg" data-i18n="unsavedMsg">У вас есть несохранённые изменения. Сохранить перед выходом?</div>
-            <div style="display:flex;gap:10px;margin-top:20px;">
-                <button onclick="unsavedSave()" class="submit-btn" style="flex:1;background:#FF4D00;" data-i18n="unsavedSave">Сохранить и выйти</button>
-                <button onclick="unsavedDiscard()" class="submit-btn" style="flex:1;background:var(--card-bg);color:var(--text);border:1px solid var(--card-border);" data-i18n="unsavedDiscard">Выйти</button>
-            </div>
-            <button onclick="unsavedCancel()" style="margin-top:10px;background:none;border:none;color:var(--text-muted);cursor:pointer;font-size:14px;" data-i18n="unsavedCancel">Отмена</button>
-        </div>
-    </div>
-
     <!-- ===== CUSTOM TEMPLATE MODAL ===== -->
     <div class="modal-overlay" id="customTplModal" onclick="if(event.target===this)closeCustomTplModal()">
         <div class="modal" style="max-width:560px;">
@@ -2841,8 +2837,8 @@
     <div class="modal-overlay" id="integrationModal" onclick="if(event.target===this)closeIntegrationModal()">
         <div class="modal" style="max-width:520px;text-align:left;padding:32px 28px;">
             <button class="modal-close" onclick="closeIntegrationModal()">&times;</button>
-            <div style="font-size:1.1rem;font-weight:700;margin-bottom:6px;color:var(--text);" data-i18n="intCrmTitle">Интеграции с CRM</div>
-            <div style="font-size:.85rem;color:var(--text-dim);margin-bottom:20px;" data-i18n="intCrmSub">Подключите CRM для автоматической передачи квал лидов</div>
+            <div style="font-size:1.1rem;font-weight:700;margin-bottom:6px;color:#fff;" data-i18n="intCrmTitle">Интеграции с CRM</div>
+            <div style="font-size:.85rem;color:rgba(255,255,255,0.6);margin-bottom:20px;" data-i18n="intCrmSub">Подключите CRM для автоматической передачи квал лидов</div>
             <div id="integrationContent">
                 <!-- CRM selection cards -->
                 <div id="integrationSelect" style="display:flex;gap:12px;">
@@ -2863,7 +2859,7 @@
                 </div>
                 <!-- Bitrix24 form -->
                 <div id="integrationFormBitrix" style="display:none;">
-                    <button class="intg-back" onclick="showIntegrationSelect()" data-i18n-html="intBack">&larr; Назад</button>
+                    <button class="intg-back" onclick="showIntegrationSelect()">&larr; Назад</button>
                     <div style="font-weight:700;margin-bottom:16px;color:var(--text);" data-i18n="intBitrixTitle">Подключение Битрикс24</div>
                     <div class="form-group">
                         <label data-i18n="intBitrixLabel">Домен Битрикс24</label>
@@ -2878,7 +2874,7 @@
                 </div>
                 <!-- AMO CRM form -->
                 <div id="integrationFormAmo" style="display:none;">
-                    <button class="intg-back" onclick="showIntegrationSelect()" data-i18n-html="intBack">&larr; Назад</button>
+                    <button class="intg-back" onclick="showIntegrationSelect()">&larr; Назад</button>
                     <div style="font-weight:700;margin-bottom:16px;color:var(--text);" data-i18n="intAmoTitle">Подключение АМО CRM</div>
                     <div class="form-group">
                         <label data-i18n="intAmoLabel">Домен АМО CRM</label>
@@ -3270,10 +3266,9 @@
                             <div class="dlg-status-hint" id="botHeaderStatus"></div>
                         </div>
                     </div>
-                    <div style="display:flex;align-items:center;gap:12px;">
+                    <div style="display:flex;align-items:center;gap:16px;">
                         <div class="dlg-toggle" id="botHeaderToggle"></div>
-                        <span class="save-status" id="saveStatus"></span>
-                        <button id="dlgSaveBtn" onclick="manualSave()" style="padding:8px 20px;background:#FF4D00;color:#fff;border:none;border-radius:10px;font-size:14px;font-weight:700;cursor:pointer;transition:opacity .2s;" data-i18n="saveBtn">Сохранить</button>
+                        <span class="save-status saved" id="saveStatus" data-i18n="saved">Сохранено</span>
                     </div>
                 </div>
                 <div class="bot-header-updated" id="lastUpdated" data-i18n="botUpdated">Последнее обновление: только что</div>
@@ -4039,7 +4034,7 @@
     <div class="modal-overlay" id="taModal" onclick="if(event.target===this)taCloseModal()">
         <div class="modal" style="max-width:540px;">
             <button class="modal-close" onclick="taCloseModal()">&times;</button>
-            <h2 id="taModalTitle" style="margin-bottom:4px;color:var(--text);" data-i18n="taCreate">Создать ЦА</h2>
+            <h2 id="taModalTitle" style="margin-bottom:4px;color:var(--text);">Создать ЦА</h2>
             <p style="font-size:.82rem;color:var(--text-muted);margin-bottom:20px;" data-i18n="taModalSub">Настройте параметры целевой аудитории</p>
             <form onsubmit="taSave(event)">
                 <div class="cl-form-group">
@@ -4182,14 +4177,14 @@
                     html += '<th style="padding:12px 16px;text-align:left;font-size:13px;font-weight:600;color:var(--text-muted);">' + t('balThDate') + '</th>';
                     html += '<th style="padding:12px 16px;text-align:left;font-size:13px;font-weight:600;color:var(--text-muted);">' + t('balThAmount') + '</th>';
                     html += '<th style="padding:12px 16px;text-align:left;font-size:13px;font-weight:600;color:var(--text-muted);">' + t('balThStatus') + '</th>';
-                    html += '<th style="padding:12px 16px;text-align:left;font-size:13px;font-weight:600;color:var(--text-muted);">' + t('balThSource') + '</th>';
+                    html += '<th style="padding:12px 16px;text-align:left;font-size:13px;font-weight:600;color:var(--text-muted);">Источник</th>';
                     html += '<th style="padding:12px 16px;text-align:left;font-size:13px;font-weight:600;color:var(--text-muted);"></th>';
                     html += '</tr></thead><tbody>';
                     rows.forEach(function(p) {
-                        var date = new Date(p.created_at).toLocaleString(currentLang === 'en' ? 'en-US' : 'ru-RU');
+                        var date = new Date(p.created_at).toLocaleString('ru-RU');
                         var statusLabel = p.status === 'paid' ? t('balPaid') : p.status === 'completed' ? t('balPaid') : p.status === 'pending' ? t('balPendingStatus') : p.status === 'failed' ? t('balRejected') : p.status;
                         var statusColor = (p.status === 'paid' || p.status === 'completed') ? '#10b981' : p.status === 'failed' ? '#ef4444' : '#f59e0b';
-                        var sourceLabel = p.source === 'sbp' ? t('srcSbp') : p.source === 'acquiring' ? t('srcCard') : p.source === 'manual' ? t('srcManual') : p.source === 'invoice' ? t('srcInvoice') : p.source;
+                        var sourceLabel = p.source === 'sbp' ? 'СБП' : p.source === 'acquiring' ? 'Карта/СБП' : p.source === 'manual' ? 'Начисление' : p.source === 'invoice' ? 'Счёт' : p.source;
                         html += '<tr style="border-bottom:1px solid var(--card-border);">';
                         html += '<td style="padding:12px 16px;font-size:14px;color:var(--text);">' + date + '</td>';
                         html += '<td style="padding:12px 16px;font-size:14px;font-weight:600;color:var(--text);">' + parseFloat(p.amount).toFixed(2) + ' ₽</td>';
@@ -4197,7 +4192,7 @@
                         html += '<td style="padding:12px 16px;font-size:14px;color:var(--text-muted);">' + sourceLabel + '</td>';
                         html += '<td style="padding:12px 16px;">';
                         if (p.source === 'invoice' && p.id) {
-                            html += '<button onclick="balDownloadInvoice(' + p.id + ', \'' + (p.invoice_number || p.id) + '\')" style="display:inline-flex;align-items:center;gap:6px;padding:4px 12px;border-radius:8px;background:#FF4D0022;color:#FF4D00;font-size:12px;font-weight:600;border:none;cursor:pointer;">' + t('balDownloadInvoice') + '</button>';
+                            html += '<button onclick="balDownloadInvoice(' + p.id + ', \'' + (p.invoice_number || p.id) + '\')" style="display:inline-flex;align-items:center;gap:6px;padding:4px 12px;border-radius:8px;background:#FF4D0022;color:#FF4D00;font-size:12px;font-weight:600;border:none;cursor:pointer;">📄 Скачать счёт</button>';
                         }
                         html += '</td>';
                         html += '</tr>';
@@ -4224,7 +4219,7 @@
         function balCreatePayment() {
             var amount = document.getElementById('balAmountInput').value;
             if (!amount || parseFloat(amount) < 100) {
-                showTtsToast(t('toastMinAmount'));
+                showTtsToast('Минимальная сумма 100 ₽');
                 return;
             }
             var btn = document.getElementById('balPayBtn');
@@ -4236,7 +4231,7 @@
             fetch(ES_API + '/api/payments/create', {
                 method: 'POST',
                 headers: esApiHeaders(),
-                body: JSON.stringify({ amount: parseFloat(amount), purpose: t('balTopUpPurpose') })
+                body: JSON.stringify({ amount: parseFloat(amount), purpose: 'Пополнение баланса EasySale' })
             })
             .then(function(r) { return r.json(); })
             .then(function(data) {
@@ -4274,7 +4269,7 @@
                     if (data.status === 'APPROVED') {
                         if (balPollingTimer) { clearInterval(balPollingTimer); balPollingTimer = null; }
                         document.getElementById('balStatusIndicator').innerHTML = '<span style="color:#10b981;font-weight:600;">' + t('balPayReceived') + '</span>';
-                        showTtsToast(t('toastPaySuccess'));
+                        showTtsToast('Оплата прошла успешно!');
                         balLoadPage();
                     } else if (data.status === 'REJECTED' || data.status === 'EXPIRED') {
                         if (balPollingTimer) { clearInterval(balPollingTimer); balPollingTimer = null; }
@@ -4329,24 +4324,24 @@
             .then(function(r) { return r.json(); })
             .then(function(data) {
                 if (data.error) { showTtsToast(data.error); return; }
-                showTtsToast(t('toastReqSaved'));
+                showTtsToast('Реквизиты сохранены');
             })
-            .catch(function() { showTtsToast(t('toastSaveError')); });
+            .catch(function() { showTtsToast('Ошибка сохранения'); });
         }
 
         function balGenerateInvoice(e) {
             e.preventDefault();
             var amount = document.getElementById('invAmount').value;
-            if (!amount || parseFloat(amount) <= 0) { showTtsToast(t('toastEnterAmount')); return; }
+            if (!amount || parseFloat(amount) <= 0) { showTtsToast('Введите сумму'); return; }
             // Save requisites first, then generate
             balSaveRequisites();
             fetch(ES_API + '/api/payments/invoice', {
                 method: 'POST',
                 headers: esApiHeaders(),
-                body: JSON.stringify({ amount: parseFloat(amount), purpose: t('balTopUpPurpose') })
+                body: JSON.stringify({ amount: parseFloat(amount), purpose: 'Пополнение баланса EaseSale' })
             })
             .then(function(r) {
-                if (!r.ok) return r.json().then(function(d) { throw new Error(d.error || t('errorGeneric')); });
+                if (!r.ok) return r.json().then(function(d) { throw new Error(d.error || 'Ошибка'); });
                 return r.blob();
             })
             .then(function(blob) {
@@ -4357,11 +4352,11 @@
                 a.click();
                 URL.revokeObjectURL(url);
                 balCloseInvoiceModal();
-                showTtsToast(t('toastInvoiceGenerated'));
+                showTtsToast('Счёт сгенерирован');
                 balLoadHistory();
             })
             .catch(function(err) {
-                showTtsToast(err.message || t('toastInvoiceError'));
+                showTtsToast(err.message || 'Ошибка генерации счёта');
             });
         }
 
@@ -4805,7 +4800,7 @@
                 return;
             }
             if (!email || !/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email)) {
-                errorEl.textContent = t('regEmailRequired');
+                errorEl.textContent = 'Введите корректный email';
                 errorEl.classList.add('show');
                 document.getElementById('regEmail').classList.add('error');
                 return;
@@ -4822,18 +4817,17 @@
             fetch(ES_API + '/api/auth/register', {
                 method: 'POST',
                 headers: { 'Content-Type': 'application/json' },
-                body: JSON.stringify({ name: email, company: '', phone: phone, email: email, login: email, password: password, ref_code: localStorage.getItem('referral_code') || '', lang: currentLang })
+                body: JSON.stringify({ name: email, company: '', phone: phone, email: email, login: email, password: password, ref_code: localStorage.getItem('referral_code') || '' })
             })
             .then(function(res) { return res.json().then(function(data) { return { status: res.status, data: data }; }); })
             .then(function(result) {
                 if (result.status === 201) {
-                    successEl.innerHTML = t('regEmailSent').replace('{email}', '<strong>' + email + '</strong>');
                     successEl.classList.add('show');
-                    document.getElementById('regSubmitBtn').disabled = false;
+                    setTimeout(function() { showLoginForm(); }, 2000);
                 } else if (result.status === 409) {
-                    errorEl.textContent = t('regEmailExists');
-                    errorEl.classList.add('show');
                     document.getElementById('regEmail').classList.add('error');
+                    errorEl.textContent = 'Такой email уже зарегистрирован';
+                    errorEl.classList.add('show');
                 } else {
                     errorEl.textContent = result.data.error || t('regError');
                     errorEl.classList.add('show');
@@ -4864,13 +4858,6 @@
                     if (me && me.price_per_lead !== undefined) {
                         userPricePerLead = parseInt(me.price_per_lead) || 0;
                         localStorage.setItem('user_price_per_lead', String(userPricePerLead));
-                    }
-                    // Sync language: save current UI lang to server profile
-                    if (me && me.lang !== currentLang) {
-                        fetch(ES_API + '/api/clients/me', {
-                            method: 'PATCH', headers: esApiHeaders(),
-                            body: JSON.stringify({ lang: currentLang })
-                        }).catch(function() {});
                     }
                     var login = localStorage.getItem('current_login');
                     var onboarded = (me && me.onboarded) || (login && localStorage.getItem('onboarded_' + login));
@@ -4972,19 +4959,25 @@
             .then(res => res.json().then(data => ({ status: res.status, data })))
             .then(result => {
                 if (result.status === 200) {
+                    var loginKey = (result.data.user && result.data.user.login) || user.value;
                     sessionStorage.setItem('jwt_token', result.data.token);
-                    localStorage.setItem('sc_login', user.value);
-                    applyUserSession(user.value);
+                    localStorage.setItem('sc_login', loginKey);
+                    applyUserSession(loginKey);
 
                     // Sync onboarded from server immediately
                     if (result.data.user && result.data.user.onboarded) {
-                        localStorage.setItem('onboarded_' + user.value, '1');
+                        localStorage.setItem('onboarded_' + loginKey, '1');
+                    }
+
+                    // Show email login toast
+                    if (result.data.user && result.data.user.email) {
+                        showTtsToast('Теперь ваш логин — это ваш email: ' + result.data.user.email);
                     }
 
                     // Check if password change is required
                     if (result.data.user && result.data.user.must_change_password) {
                         _cpOldPassword = pass.value;
-                        closeModal();
+                        closeModal(true);
                         document.getElementById('changePasswordModal').classList.add('active');
                         document.body.style.overflow = 'hidden';
                     } else {
@@ -4996,7 +4989,7 @@
                     user.classList.add('error');
                     setTimeout(() => { user.classList.remove('error'); }, 1500);
                 } else {
-                    error.textContent = t('loginWrongCreds');
+                    error.textContent = t('loginWrongCreds') || 'Неверный логин или пароль. Попробуйте войти через email — с недавнего времени логин это ваша почта.';
                     user.classList.add('error');
                     pass.classList.add('error');
                     error.classList.add('show');
@@ -5075,7 +5068,7 @@
 
         // ===== FORGOT PASSWORD =====
         function openForgotPasswordModal() {
-            closeModal();
+            closeModal(true);
             document.getElementById('fpFormBlock').style.display = '';
             document.getElementById('fpSuccess').style.display = 'none';
             document.getElementById('fpEmail').value = '';
@@ -5549,237 +5542,129 @@
 
         // ===== APPLY TEMPLATE =====
         function applyTemplate(templateId) {
-            var companyName = (settingsCompanyData && settingsCompanyData.name) || (currentLang === 'en' ? 'Company name' : 'Название компании');
-            var companyProduct = (settingsCompanyData && settingsCompanyData.product) || (currentLang === 'en' ? 'your product' : 'ваш продукт');
+            var companyName = (settingsCompanyData && settingsCompanyData.name) || 'Название компании';
+            var companyProduct = (settingsCompanyData && settingsCompanyData.product) || 'ваш продукт';
             var dlg;
 
             if (templateId === 1) {
                 // Шаблон 1: Дружелюбный — закрыть на встречу
-                dlg = createDialogObject(currentLang === 'en' ? 'Friendly — meeting' : 'Дружелюбный — встреча');
+                dlg = createDialogObject('Дружелюбный — встреча');
 
-                dlg.botRole = currentLang === 'en'
-                    ? 'Your name is Anna, you are a sales manager at ' + companyName + '. You work as a salesperson qualifying leads. You communicate in a friendly, human way, with pauses and reflection. The company specializes in ' + companyProduct + '. You are calling a potential client to introduce yourself, offer a solution, and most importantly — schedule a meeting.'
-                    : 'Тебя зовут Аня, ты менеджер по продажам компании ' + companyName + '. Ты работаешь в этой компании на позиции продажника и квалифицируешь лиды. Ты общаешься дружелюбно и по-человечески, с паузами и осмыслением. Компания занимается ' + companyProduct + '. Ты звонишь потенциальному клиенту, чтобы познакомиться и предложить решение и самое главное назначить ему встречу.';
+                dlg.botRole = 'Тебя зовут Аня, ты менеджер по продажам компании ' + companyName + '. Ты работаешь в этой компании на позиции продажника и квалифицируешь лиды. Ты общаешься дружелюбно и по-человечески, с паузами и осмыслением. Компания занимается ' + companyProduct + '. Ты звонишь потенциальному клиенту, чтобы познакомиться и предложить решение и самое главное назначить ему встречу.';
 
-                dlg.botStyle = currentLang === 'en'
-                    ? 'Speak briefly, clearly, and very specifically. No empty filler words. Only lively, meaningful substance.\nShow an attentive, consistent thought process — as if you are carefully analyzing the request, weighing details, and reaching a precise conclusion.\nSpeech — natural, conversational, slightly fragmented. Incomplete phrases are fine. Short pauses. Slight roughness in wording — neat, appropriate, without harsh extremes.\nNo clichés, dry templates, or heavy bureaucratic language.\nAddress — respectful, calm, formal "you".\nNumbers — spelled out only.\nQuestions — simple, short, concise. Clear.'
-                    : 'Говори коротко, чётко и предельно конкретно. Без лишних, пустых слов. Только живая, содержательная суть.\nПоказывай внимательный, последовательный ход своих мыслей — как вы вдумчиво анализируете запрос, взвешиваете детали и приходите к точному выводу.\nРечь — естественная, разговорная, немного прерывистая. Можно неполные фразы. Короткие паузы. Лёгкая рваность формулировок — аккуратная, уместная, без грубых перегибов.\nБез заезженных клише, сухих шаблонов и тяжёлых канцеляризмов.\nОбращение — уважительное, спокойное, на «вы».\nЧисла — исключительно прописью.\nВопросы — простые, короткие, односложные. Чёткие.';
+                dlg.botStyle = 'Говори коротко, чётко и предельно конкретно. Без лишних, пустых слов. Только живая, содержательная суть.\nПоказывай внимательный, последовательный ход своих мыслей — как вы вдумчиво анализируете запрос, взвешиваете детали и приходите к точному выводу.\nРечь — естественная, разговорная, немного прерывистая. Можно неполные фразы. Короткие паузы. Лёгкая рваность формулировок — аккуратная, уместная, без грубых перегибов.\nБез заезженных клише, сухих шаблонов и тяжёлых канцеляризмов.\nОбращение — уважительное, спокойное, на «вы».\nЧисла — исключительно прописью.\nВопросы — простые, короткие, односложные. Чёткие.';
 
-                dlg.rules = currentLang === 'en'
-                    ? [
-                        { id: 'rule_1', text: 'Don\'t give up. If the client refuses — creatively handle the objection.' },
-                        { id: 'rule_2', text: 'Respond based on the client\'s last statement.' },
-                        { id: 'rule_3', text: 'Focus on scheduling a meeting, not on service details.' }
-                    ]
-                    : [
-                        { id: 'rule_1', text: 'Не сдавайся. Если клиент отказывает — креативно отработай возражение.' },
-                        { id: 'rule_2', text: 'Отвечай опираясь на последнюю речь клиента.' },
-                        { id: 'rule_3', text: 'Фокусируйся на назначении встречи, а не на подробностях услуг.' }
-                    ];
+                dlg.rules = [
+                    { id: 'rule_1', text: 'Не сдавайся. Если клиент отказывает — креативно отработай возражение.' },
+                    { id: 'rule_2', text: 'Отвечай опираясь на последнюю речь клиента.' },
+                    { id: 'rule_3', text: 'Фокусируйся на назначении встречи, а не на подробностях услуг.' }
+                ];
 
-                dlg.facts = currentLang === 'en'
-                    ? [
-                        { id: 'fact_1', text: 'We specialize specifically in your field — this allows us to better understand the specifics.' },
-                        { id: 'fact_2', text: 'The meeting will take only 15–20 minutes — we\'ll show specific cases from your niche.' },
-                        { id: 'fact_3', text: 'No obligations — just an introduction and exchange of experience.' }
-                    ]
-                    : [
-                        { id: 'fact_1', text: 'Мы специализируемся именно на вашей сфере — это позволяет лучше понимать специфику.' },
-                        { id: 'fact_2', text: 'Встреча займёт всего 15–20 минут — покажем конкретные кейсы из вашей ниши.' },
-                        { id: 'fact_3', text: 'Никаких обязательств — просто знакомство и обмен опытом.' }
-                    ];
+                dlg.facts = [
+                    { id: 'fact_1', text: 'Мы специализируемся именно на вашей сфере — это позволяет лучше понимать специфику.' },
+                    { id: 'fact_2', text: 'Встреча займёт всего 15–20 минут — покажем конкретные кейсы из вашей ниши.' },
+                    { id: 'fact_3', text: 'Никаких обязательств — просто знакомство и обмен опытом.' }
+                ];
 
-                dlg.criteria = currentLang === 'en'
-                    ? [
-                        { id: 'crit_1', text: 'The client confirmed interest and agreed to a meeting.' },
-                        { id: 'crit_2', text: 'A specific date and time for the meeting has been set.' },
-                        { id: 'crit_3', text: 'Contact details have been obtained for confirmation.' }
-                    ]
-                    : [
-                        { id: 'crit_1', text: 'Клиент подтвердил интерес и согласился на встречу.' },
-                        { id: 'crit_2', text: 'Назначена конкретная дата и время встречи.' },
-                        { id: 'crit_3', text: 'Получены контактные данные для подтверждения.' }
-                    ];
+                dlg.criteria = [
+                    { id: 'crit_1', text: 'Клиент подтвердил интерес и согласился на встречу.' },
+                    { id: 'crit_2', text: 'Назначена конкретная дата и время встречи.' },
+                    { id: 'crit_3', text: 'Получены контактные данные для подтверждения.' }
+                ];
 
-                dlg.greetings = currentLang === 'en'
-                    ? [
-                        { id: 'greet_1', text: 'Hello! My name is Anna, I\'m from ' + companyName + '. Could you spare a couple of minutes to talk right now?' }
-                    ]
-                    : [
-                        { id: 'greet_1', text: 'Здравствуйте! Меня зовут Аня, я из компании ' + companyName + '. Скажите, удобно сейчас буквально пару минут поговорить?' }
-                    ];
+                dlg.greetings = [
+                    { id: 'greet_1', text: 'Здравствуйте! Меня зовут Аня, я из компании ' + companyName + '. Скажите, удобно сейчас буквально пару минут поговорить?' }
+                ];
 
-                dlg.planItems = currentLang === 'en'
-                    ? [
-                        { id: 'plan_1', text: 'Greeting and checking if it\'s a good time to talk' },
-                        { id: 'plan_2', text: 'Brief introduction — who we are and why we\'re calling' },
-                        { id: 'plan_3', text: 'One or two questions about the client\'s current situation' },
-                        { id: 'plan_4', text: 'Key benefit — one sentence' },
-                        { id: 'plan_5', text: 'Meeting proposal with a specific date' },
-                        { id: 'plan_6', text: 'Handling objections if needed' },
-                        { id: 'plan_7', text: 'Confirming the arrangement and saying goodbye' }
-                    ]
-                    : [
-                        { id: 'plan_1', text: 'Приветствие и проверка удобства разговора' },
-                        { id: 'plan_2', text: 'Короткое представление — кто мы и зачем звоним' },
-                        { id: 'plan_3', text: 'Один-два вопроса о текущей ситуации клиента' },
-                        { id: 'plan_4', text: 'Ключевая выгода — одно предложение' },
-                        { id: 'plan_5', text: 'Предложение встречи с конкретной датой' },
-                        { id: 'plan_6', text: 'Отработка возражений при необходимости' },
-                        { id: 'plan_7', text: 'Подтверждение договорённости и прощание' }
-                    ];
+                dlg.planItems = [
+                    { id: 'plan_1', text: 'Приветствие и проверка удобства разговора' },
+                    { id: 'plan_2', text: 'Короткое представление — кто мы и зачем звоним' },
+                    { id: 'plan_3', text: 'Один-два вопроса о текущей ситуации клиента' },
+                    { id: 'plan_4', text: 'Ключевая выгода — одно предложение' },
+                    { id: 'plan_5', text: 'Предложение встречи с конкретной датой' },
+                    { id: 'plan_6', text: 'Отработка возражений при необходимости' },
+                    { id: 'plan_7', text: 'Подтверждение договорённости и прощание' }
+                ];
 
             } else if (templateId === 2) {
                 // Шаблон 2: Деловой — квалификация лида
-                dlg = createDialogObject(currentLang === 'en' ? 'Business — qualification' : 'Деловой — квалификация');
+                dlg = createDialogObject('Деловой — квалификация');
 
-                dlg.botRole = currentLang === 'en'
-                    ? 'Your name is Igor, you are a senior sales manager at ' + companyName + '. You professionally qualify incoming leads — determining budget, timelines, decision-maker, and real need. You speak confidently, business-like, without fluff. The company specializes in ' + companyProduct + '. Your task — in a short call, determine if the client is a fit and pass the qualified lead further.'
-                    : 'Тебя зовут Игорь, ты старший менеджер отдела продаж компании ' + companyName + '. Ты профессионально квалифицируешь входящие лиды — определяешь бюджет, сроки, лицо принимающее решение и реальную потребность. Ты говоришь уверенно, по-деловому, без воды. Компания занимается ' + companyProduct + '. Твоя задача — за короткий звонок понять, подходит ли клиент, и передать квалифицированный лид дальше.';
+                dlg.botRole = 'Тебя зовут Игорь, ты старший менеджер отдела продаж компании ' + companyName + '. Ты профессионально квалифицируешь входящие лиды — определяешь бюджет, сроки, лицо принимающее решение и реальную потребность. Ты говоришь уверенно, по-деловому, без воды. Компания занимается ' + companyProduct + '. Твоя задача — за короткий звонок понять, подходит ли клиент, и передать квалифицированный лид дальше.';
 
-                dlg.botStyle = currentLang === 'en'
-                    ? 'Tone — business-like, confident, respectful. No familiarity or excessive softness.\nSpeak concisely. Every phrase carries meaning. No filler constructions or rambling.\nAsk direct, specific questions — one at a time. Don\'t overload the other person.\nListen to the answer, capture the essence, move on.\nAddress — strictly formal "you".\nNumbers — spelled out.\nIf the client goes off topic — gently but firmly bring them back to the point.'
-                    : 'Тон — деловой, уверенный, уважительный. Без панибратства и лишней мягкости.\nГоворишь сжато. Каждая фраза несёт смысл. Никаких вводных конструкций и «растекания».\nЗадаёшь прямые, конкретные вопросы — один за раз. Не перегружаешь собеседника.\nСлушаешь ответ, фиксируешь суть, двигаешься дальше.\nОбращение — строго на «вы».\nЧисла — прописью.\nЕсли клиент уходит от темы — мягко, но твёрдо возвращаешь к сути.';
+                dlg.botStyle = 'Тон — деловой, уверенный, уважительный. Без панибратства и лишней мягкости.\nГоворишь сжато. Каждая фраза несёт смысл. Никаких вводных конструкций и «растекания».\nЗадаёшь прямые, конкретные вопросы — один за раз. Не перегружаешь собеседника.\nСлушаешь ответ, фиксируешь суть, двигаешься дальше.\nОбращение — строго на «вы».\nЧисла — прописью.\nЕсли клиент уходит от темы — мягко, но твёрдо возвращаешь к сути.';
 
-                dlg.rules = currentLang === 'en'
-                    ? [
-                        { id: 'rule_1', text: 'Find out the budget, timelines, and who makes the decision — these are three key parameters.' },
-                        { id: 'rule_2', text: 'Don\'t sell at this stage. Your task is to qualify, not close the deal.' },
-                        { id: 'rule_3', text: 'If the client is clearly not a fit — politely end the conversation, don\'t waste their time or yours.' }
-                    ]
-                    : [
-                        { id: 'rule_1', text: 'Выясни бюджет, сроки и кто принимает решение — это три ключевых параметра.' },
-                        { id: 'rule_2', text: 'Не продавай на этом этапе. Твоя задача — квалифицировать, а не закрывать сделку.' },
-                        { id: 'rule_3', text: 'Если клиент явно не целевой — вежливо заверши разговор, не трать его и своё время.' }
-                    ];
+                dlg.rules = [
+                    { id: 'rule_1', text: 'Выясни бюджет, сроки и кто принимает решение — это три ключевых параметра.' },
+                    { id: 'rule_2', text: 'Не продавай на этом этапе. Твоя задача — квалифицировать, а не закрывать сделку.' },
+                    { id: 'rule_3', text: 'Если клиент явно не целевой — вежливо заверши разговор, не трать его и своё время.' }
+                ];
 
-                dlg.facts = currentLang === 'en'
-                    ? [
-                        { id: 'fact_1', text: 'We work with companies of your scale — we have relevant experience and understanding of your challenges.' },
-                        { id: 'fact_2', text: 'Average launch time is two to three weeks, including integration and setup.' },
-                        { id: 'fact_3', text: 'Over a hundred companies already use our solution in your industry.' }
-                    ]
-                    : [
-                        { id: 'fact_1', text: 'Мы работаем с компаниями вашего масштаба — есть релевантный опыт и понимание задач.' },
-                        { id: 'fact_2', text: 'Средний срок запуска — две-три недели, включая интеграцию и настройку.' },
-                        { id: 'fact_3', text: 'Более ста компаний уже используют наше решение в вашей отрасли.' }
-                    ];
+                dlg.facts = [
+                    { id: 'fact_1', text: 'Мы работаем с компаниями вашего масштаба — есть релевантный опыт и понимание задач.' },
+                    { id: 'fact_2', text: 'Средний срок запуска — две-три недели, включая интеграцию и настройку.' },
+                    { id: 'fact_3', text: 'Более ста компаний уже используют наше решение в вашей отрасли.' }
+                ];
 
-                dlg.criteria = currentLang === 'en'
-                    ? [
-                        { id: 'crit_1', text: 'Budget has been determined and it matches our price range.' },
-                        { id: 'crit_2', text: 'Timelines are known — the client plans a solution within the next one to two months.' },
-                        { id: 'crit_3', text: 'The decision-maker has been identified, or the contact is the decision-maker.' }
-                    ]
-                    : [
-                        { id: 'crit_1', text: 'Определён бюджет и он соответствует нашему ценовому диапазону.' },
-                        { id: 'crit_2', text: 'Известны сроки — клиент планирует решение в ближайшие один-два месяца.' },
-                        { id: 'crit_3', text: 'Выявлено лицо, принимающее решение, или контакт является ЛПР.' }
-                    ];
+                dlg.criteria = [
+                    { id: 'crit_1', text: 'Определён бюджет и он соответствует нашему ценовому диапазону.' },
+                    { id: 'crit_2', text: 'Известны сроки — клиент планирует решение в ближайшие один-два месяца.' },
+                    { id: 'crit_3', text: 'Выявлено лицо, принимающее решение, или контакт является ЛПР.' }
+                ];
 
-                dlg.greetings = currentLang === 'en'
-                    ? [
-                        { id: 'greet_1', text: 'Good afternoon! This is Igor from ' + companyName + '. You left a request — I\'d like to clarify a few points. Just a couple of minutes, is that convenient?' }
-                    ]
-                    : [
-                        { id: 'greet_1', text: 'Добрый день! Это Игорь, компания ' + companyName + '. Вы оставляли заявку — хочу уточнить несколько моментов. Буквально пару минут, удобно?' }
-                    ];
+                dlg.greetings = [
+                    { id: 'greet_1', text: 'Добрый день! Это Игорь, компания ' + companyName + '. Вы оставляли заявку — хочу уточнить несколько моментов. Буквально пару минут, удобно?' }
+                ];
 
-                dlg.planItems = currentLang === 'en'
-                    ? [
-                        { id: 'plan_1', text: 'Greeting and confirming the request' },
-                        { id: 'plan_2', text: 'Clarifying the current situation — what they use now' },
-                        { id: 'plan_3', text: 'Identifying the key task — what they want to change' },
-                        { id: 'plan_4', text: 'Question about budget and timelines' },
-                        { id: 'plan_5', text: 'Finding out — who makes the final decision' },
-                        { id: 'plan_6', text: 'Summary and agreeing on the next step' },
-                        { id: 'plan_7', text: 'Recording the agreement and saying goodbye' }
-                    ]
-                    : [
-                        { id: 'plan_1', text: 'Приветствие и подтверждение заявки' },
-                        { id: 'plan_2', text: 'Уточнение текущей ситуации — что используют сейчас' },
-                        { id: 'plan_3', text: 'Выявление ключевой задачи — что хотят изменить' },
-                        { id: 'plan_4', text: 'Вопрос о бюджете и сроках' },
-                        { id: 'plan_5', text: 'Выяснение — кто принимает финальное решение' },
-                        { id: 'plan_6', text: 'Резюме и согласование следующего шага' },
-                        { id: 'plan_7', text: 'Фиксация договорённости и прощание' }
-                    ];
+                dlg.planItems = [
+                    { id: 'plan_1', text: 'Приветствие и подтверждение заявки' },
+                    { id: 'plan_2', text: 'Уточнение текущей ситуации — что используют сейчас' },
+                    { id: 'plan_3', text: 'Выявление ключевой задачи — что хотят изменить' },
+                    { id: 'plan_4', text: 'Вопрос о бюджете и сроках' },
+                    { id: 'plan_5', text: 'Выяснение — кто принимает финальное решение' },
+                    { id: 'plan_6', text: 'Резюме и согласование следующего шага' },
+                    { id: 'plan_7', text: 'Фиксация договорённости и прощание' }
+                ];
 
             } else if (templateId === 3) {
                 // Шаблон 3: Мягкий — выявление потребности
-                dlg = createDialogObject(currentLang === 'en' ? 'Soft — needs discovery' : 'Мягкий — потребности');
+                dlg = createDialogObject('Мягкий — потребности');
 
-                dlg.botRole = currentLang === 'en'
-                    ? 'Your name is Lisa, you are a consultant at ' + companyName + '. You\'re calling to understand the client\'s tasks and pain points — not to sell, but to figure things out. You know how to listen, ask targeted questions, and create a sense of care. The company specializes in ' + companyProduct + '. Your goal — identify the real need and understand if we can be helpful.'
-                    : 'Тебя зовут Лиза, ты консультант компании ' + companyName + '. Ты звонишь, чтобы понять задачи и боли клиента — не продать, а разобраться. Ты умеешь слушать, задаёшь точечные вопросы и создаёшь ощущение заботы. Компания занимается ' + companyProduct + '. Твоя цель — выявить реальную потребность и понять, можем ли мы быть полезны.';
+                dlg.botRole = 'Тебя зовут Лиза, ты консультант компании ' + companyName + '. Ты звонишь, чтобы понять задачи и боли клиента — не продать, а разобраться. Ты умеешь слушать, задаёшь точечные вопросы и создаёшь ощущение заботы. Компания занимается ' + companyProduct + '. Твоя цель — выявить реальную потребность и понять, можем ли мы быть полезны.';
 
-                dlg.botStyle = currentLang === 'en'
-                    ? 'Tone — soft, empathetic, attentive. Like a conversation with a good acquaintance who knows the subject.\nSpeak calmly, without rushing. Give the other person space to respond.\nListen more, speak less. Follow-up questions — short and open-ended.\nDon\'t push, don\'t rush, don\'t impose. If the client isn\'t ready — accept it calmly.\nAddress — formal "you", warm and respectful.\nNumbers — spelled out.\nPauses are appropriate. Silence is also a tool.'
-                    : 'Тон — мягкий, участливый, внимательный. Как разговор с хорошим знакомым, который разбирается в теме.\nГоворишь спокойно, без спешки. Даёшь собеседнику пространство ответить.\nБольше слушаешь, меньше говоришь. Уточняющие вопросы — короткие и открытые.\nНе давишь, не торопишь, не навязываешь. Если клиент не готов — принимаешь это спокойно.\nОбращение — на «вы», тёплое и уважительное.\nЧисла — прописью.\nПаузы уместны. Тишина — тоже инструмент.';
+                dlg.botStyle = 'Тон — мягкий, участливый, внимательный. Как разговор с хорошим знакомым, который разбирается в теме.\nГоворишь спокойно, без спешки. Даёшь собеседнику пространство ответить.\nБольше слушаешь, меньше говоришь. Уточняющие вопросы — короткие и открытые.\nНе давишь, не торопишь, не навязываешь. Если клиент не готов — принимаешь это спокойно.\nОбращение — на «вы», тёплое и уважительное.\nЧисла — прописью.\nПаузы уместны. Тишина — тоже инструмент.';
 
-                dlg.rules = currentLang === 'en'
-                    ? [
-                        { id: 'rule_1', text: 'Don\'t sell. Your task is to listen and understand, not to offer a solution.' },
-                        { id: 'rule_2', text: 'Ask open-ended questions — let the client tell about their situation themselves.' },
-                        { id: 'rule_3', text: 'If the client shares a problem — show that you heard them, rephrase their thought.' }
-                    ]
-                    : [
-                        { id: 'rule_1', text: 'Не продавай. Твоя задача — слушать и понимать, а не предлагать решение.' },
-                        { id: 'rule_2', text: 'Задавай открытые вопросы — пусть клиент сам рассказывает о своей ситуации.' },
-                        { id: 'rule_3', text: 'Если клиент делится проблемой — покажи, что услышал, перефразируй его мысль.' }
-                    ];
+                dlg.rules = [
+                    { id: 'rule_1', text: 'Не продавай. Твоя задача — слушать и понимать, а не предлагать решение.' },
+                    { id: 'rule_2', text: 'Задавай открытые вопросы — пусть клиент сам рассказывает о своей ситуации.' },
+                    { id: 'rule_3', text: 'Если клиент делится проблемой — покажи, что услышал, перефразируй его мысль.' }
+                ];
 
-                dlg.facts = currentLang === 'en'
-                    ? [
-                        { id: 'fact_1', text: 'We don\'t offer template solutions — first we understand your situation.' },
-                        { id: 'fact_2', text: 'Many clients come with one task, and during the conversation realize that the key problem is something else.' },
-                        { id: 'fact_3', text: 'This call doesn\'t commit you to anything — we just want to understand if we can be helpful.' }
-                    ]
-                    : [
-                        { id: 'fact_1', text: 'Мы не предлагаем шаблонных решений — сначала разбираемся в вашей ситуации.' },
-                        { id: 'fact_2', text: 'Многие клиенты приходят с одной задачей, а в процессе разговора понимают, что ключевая проблема в другом.' },
-                        { id: 'fact_3', text: 'Этот звонок ни к чему не обязывает — просто хотим понять, можем ли быть полезны.' }
-                    ];
+                dlg.facts = [
+                    { id: 'fact_1', text: 'Мы не предлагаем шаблонных решений — сначала разбираемся в вашей ситуации.' },
+                    { id: 'fact_2', text: 'Многие клиенты приходят с одной задачей, а в процессе разговора понимают, что ключевая проблема в другом.' },
+                    { id: 'fact_3', text: 'Этот звонок ни к чему не обязывает — просто хотим понять, можем ли быть полезны.' }
+                ];
 
-                dlg.criteria = currentLang === 'en'
-                    ? [
-                        { id: 'crit_1', text: 'A specific pain point or task the client wants to solve has been identified.' },
-                        { id: 'crit_2', text: 'The client openly shared about their current situation and difficulties.' },
-                        { id: 'crit_3', text: 'There is an understanding of how our product can help — or an honest conclusion that it can\'t.' }
-                    ]
-                    : [
-                        { id: 'crit_1', text: 'Выявлена конкретная боль или задача, которую клиент хочет решить.' },
-                        { id: 'crit_2', text: 'Клиент открыто рассказал о текущей ситуации и сложностях.' },
-                        { id: 'crit_3', text: 'Есть понимание, как наш продукт может помочь — или честный вывод, что не можем.' }
-                    ];
+                dlg.criteria = [
+                    { id: 'crit_1', text: 'Выявлена конкретная боль или задача, которую клиент хочет решить.' },
+                    { id: 'crit_2', text: 'Клиент открыто рассказал о текущей ситуации и сложностях.' },
+                    { id: 'crit_3', text: 'Есть понимание, как наш продукт может помочь — или честный вывод, что не можем.' }
+                ];
 
-                dlg.greetings = currentLang === 'en'
-                    ? [
-                        { id: 'greet_1', text: 'Hello! My name is Lisa, I\'m from ' + companyName + '. I\'m calling to get acquainted and understand if we can be helpful to you. Is it convenient to talk for a couple of minutes now?' }
-                    ]
-                    : [
-                        { id: 'greet_1', text: 'Здравствуйте! Меня зовут Лиза, я из ' + companyName + '. Звоню, чтобы познакомиться и понять, можем ли мы быть вам полезны. Удобно сейчас пару минут поговорить?' }
-                    ];
+                dlg.greetings = [
+                    { id: 'greet_1', text: 'Здравствуйте! Меня зовут Лиза, я из ' + companyName + '. Звоню, чтобы познакомиться и понять, можем ли мы быть вам полезны. Удобно сейчас пару минут поговорить?' }
+                ];
 
-                dlg.planItems = currentLang === 'en'
-                    ? [
-                        { id: 'plan_1', text: 'Soft greeting and checking convenience' },
-                        { id: 'plan_2', text: 'Open question — how things are going in this area now' },
-                        { id: 'plan_3', text: 'Clarification — what works well and what they\'d like to improve' },
-                        { id: 'plan_4', text: 'Going deeper — what task is most important right now' },
-                        { id: 'plan_5', text: 'Rephrasing — confirming we understood correctly' },
-                        { id: 'plan_6', text: 'Light suggestion — telling how we solved a similar task' },
-                        { id: 'plan_7', text: 'Agreement on next step or warm goodbye' }
-                    ]
-                    : [
-                        { id: 'plan_1', text: 'Мягкое приветствие и проверка удобства' },
-                        { id: 'plan_2', text: 'Открытый вопрос — как сейчас обстоят дела в этой области' },
-                        { id: 'plan_3', text: 'Уточнение — что работает хорошо, а что хотелось бы улучшить' },
-                        { id: 'plan_4', text: 'Углубление — какая задача сейчас самая важная' },
-                        { id: 'plan_5', text: 'Перефразирование — подтвердить, что правильно поняли' },
-                        { id: 'plan_6', text: 'Лёгкое предложение — рассказать, как решали похожую задачу' },
-                        { id: 'plan_7', text: 'Договорённость о следующем шаге или тёплое прощание' }
-                    ];
+                dlg.planItems = [
+                    { id: 'plan_1', text: 'Мягкое приветствие и проверка удобства' },
+                    { id: 'plan_2', text: 'Открытый вопрос — как сейчас обстоят дела в этой области' },
+                    { id: 'plan_3', text: 'Уточнение — что работает хорошо, а что хотелось бы улучшить' },
+                    { id: 'plan_4', text: 'Углубление — какая задача сейчас самая важная' },
+                    { id: 'plan_5', text: 'Перефразирование — подтвердить, что правильно поняли' },
+                    { id: 'plan_6', text: 'Лёгкое предложение — рассказать, как решали похожую задачу' },
+                    { id: 'plan_7', text: 'Договорённость о следующем шаге или тёплое прощание' }
+                ];
 
             } else {
                 return;
@@ -6230,7 +6115,7 @@
 
         function openDeleteDialogModal(id) {
             var dlg = dialogs.find(function(d) { return d.id === id; });
-            if (dlg && dlg.serverId && isSkillbaseLocked(dlg.serverId)) { clToast(t('toastDlgLocked')); closeAllContextMenus(); return; }
+            if (dlg && dlg.serverId && isSkillbaseLocked(dlg.serverId)) { clToast('Диалог используется в активном запуске. Остановите звонки для редактирования.'); closeAllContextMenus(); return; }
             deleteTargetId = id;
             document.getElementById('deleteDialogModal').classList.add('active');
             document.body.style.overflow = 'hidden';
@@ -6380,7 +6265,7 @@
             closeAllContextMenus();
             var dlg = dialogs.find(function(d) { return d.id === id; });
             if (!dlg) return;
-            if (dlg.serverId && isSkillbaseLocked(dlg.serverId)) { clToast(t('toastDlgLocked')); return; }
+            if (dlg.serverId && isSkillbaseLocked(dlg.serverId)) { clToast('Диалог используется в активном запуске. Остановите звонки для редактирования.'); return; }
             var cell = document.getElementById('namecell_' + id);
             if (!cell) return;
             cell.innerHTML = '<input class="dlg-name-input" id="renameinp_' + id + '" value="' + escapeHtml(dlg.name) + '" maxlength="100" onclick="event.stopPropagation()" onkeydown="if(event.key===\'Enter\'){finishRename(\'' + id + '\',this.value);event.preventDefault();}if(event.key===\'Escape\'){renderDialogTable();}" onblur="finishRename(\'' + id + '\',this.value)">';
@@ -6528,16 +6413,10 @@
             var dlg = dialogs.find(function(d) { return d.id === id; });
             if (!dlg) return;
             currentDialogId = id;
-            isDirty = false;
             loadDialogIntoForm(dlg);
             document.getElementById('dialogListView').style.display = 'none';
             document.getElementById('dialogDetailView').style.display = '';
             document.getElementById('botHeaderTitle').textContent = dlg.name;
-            // Reset save status on open
-            var status = document.getElementById('saveStatus');
-            status.textContent = '';
-            status.className = 'save-status';
-            status.style.color = '';
             updateDetailRing();
         }
 
@@ -6587,11 +6466,10 @@
         }
 
         function showDialogList() {
-            if (currentDialogId && isDirty) {
-                confirmLeaveDialog(function() { renderDialogTable(); });
-                return;
-            }
-            if (currentDialogId) { saveFormIntoDialog(currentDialogId); _leaveDialogView(); }
+            if (currentDialogId) saveFormIntoDialog(currentDialogId);
+            currentDialogId = null;
+            document.getElementById('dialogDetailView').style.display = 'none';
+            document.getElementById('dialogListView').style.display = '';
             renderDialogTable();
         }
 
@@ -6641,7 +6519,6 @@
             dlg.planItems = JSON.parse(JSON.stringify(botPlanItems));
             dlg.updatedAt = new Date().toISOString();
             syncDialogsToCRM();
-            isDirty = false;
 
             if (!esHasToken()) return Promise.resolve();
 
@@ -6672,103 +6549,14 @@
             }
         }
 
-        var isDirty = false;
-
-        var _savingNow = false;
-        function manualSave() {
-            if (_savingNow || !currentDialogId) return;
-            _savingNow = true;
-
-            var btn = document.getElementById('dlgSaveBtn');
-            var status = document.getElementById('saveStatus');
-            btn.disabled = true;
-            btn.style.opacity = '0.6';
-            status.textContent = t('saving');
-            status.className = 'save-status saving';
-            saveFormIntoDialog(currentDialogId)
-                .then(function() {
-                    status.textContent = t('savedOk');
-                    status.className = 'save-status saved';
-                    status.style.color = '#10b981';
-                    document.getElementById('lastUpdated').textContent = t('botUpdated');
-                    setTimeout(function() { status.style.color = ''; }, 2000);
-                })
-                .catch(function(err) {
-                    var msg = t('saveFailed');
-                    if (err && err.status === 403) msg = t('dlgSaveErrCampaign');
-                    else if (err && err.status === 400) msg = t('dlgSaveErrDupName');
-                    else if (err && err.message && err.message !== 'Error') msg = err.message;
-                    status.textContent = msg;
-                    status.className = 'save-status';
-                    status.style.color = '#ef4444';
-                    isDirty = true;
-                    setTimeout(function() { status.style.color = ''; }, 5000);
-                })
-                .finally(function() {
-                    _savingNow = false;
-                    btn.disabled = false;
-                    btn.style.opacity = '';
-                });
-        }
-
-        var _pendingLeaveAction = null;
-
-        function confirmLeaveDialog(onProceed) {
-            if (!currentDialogId || !isDirty) { onProceed(); return; }
-            // Cancel pending autosave
-
-            _pendingLeaveAction = onProceed;
-            document.getElementById('unsavedModal').style.display = '';
-            document.getElementById('unsavedModal').classList.add('active');
-        }
-
-        function unsavedSave() {
-            var action = _pendingLeaveAction;
-            _pendingLeaveAction = null;
-            document.getElementById('unsavedModal').style.display = 'none';
-            document.getElementById('unsavedModal').classList.remove('active');
-            if (currentDialogId) {
-                saveFormIntoDialog(currentDialogId).finally(function() {
-                    _leaveDialogView();
-                    if (action) action();
-                });
-            }
-        }
-
-        function unsavedDiscard() {
-            var action = _pendingLeaveAction;
-            _pendingLeaveAction = null;
-            document.getElementById('unsavedModal').style.display = 'none';
-            document.getElementById('unsavedModal').classList.remove('active');
-            isDirty = false;
-            _leaveDialogView();
-            if (action) action();
-        }
-
-        function unsavedCancel() {
-            _pendingLeaveAction = null;
-            document.getElementById('unsavedModal').style.display = 'none';
-            document.getElementById('unsavedModal').classList.remove('active');
-        }
-
-        function _leaveDialogView() {
-            currentDialogId = null;
-            isDirty = false;
-            document.getElementById('dialogDetailView').style.display = 'none';
-            document.getElementById('dialogListView').style.display = '';
-        }
-
         function setActive(el) {
             // Save current dialog before navigating away
-            if (currentDialogId && isDirty) {
-                confirmLeaveDialog(function() { _doSetActive(el); });
-                return;
+            if (currentDialogId) {
+                saveFormIntoDialog(currentDialogId);
+                currentDialogId = null;
+                document.getElementById('dialogDetailView').style.display = 'none';
+                document.getElementById('dialogListView').style.display = '';
             }
-            if (currentDialogId) { _leaveDialogView(); }
-            _doSetActive(el);
-        }
-
-        function _doSetActive(el) {
             document.querySelectorAll('.sidebar-nav a').forEach(a => a.classList.remove('active'));
             el.classList.add('active');
             var pageId = el.getAttribute('data-page');
@@ -6897,6 +6685,7 @@
         // ===== BOT CONFIG =====
         var botRules = [];
         var ruleIdCounter = 0;
+        var saveTimer = null;
 
         function switchBotTab(tabId, btn) {
             document.querySelectorAll('.bot-tab').forEach(function(t) { t.classList.remove('active'); });
@@ -6915,8 +6704,29 @@
         }
 
         function triggerAutoSave() {
-            isDirty = true;
+            var status = document.getElementById('saveStatus');
+            status.textContent = t('saving');
+            status.className = 'save-status saving';
             updateDetailRing();
+            if (saveTimer) clearTimeout(saveTimer);
+            saveTimer = setTimeout(function() {
+                if (!currentDialogId) return;
+                saveFormIntoDialog(currentDialogId)
+                    .then(function() {
+                        status.textContent = t('saved');
+                        status.className = 'save-status saved';
+                        document.getElementById('lastUpdated').textContent = t('botUpdated');
+                    })
+                    .catch(function(err) {
+                        var msg = t('saveFailed');
+                        if (err && err.status === 403) msg = t('dlgSaveErrCampaign');
+                        else if (err && err.status === 400) msg = t('dlgSaveErrDupName');
+                        status.textContent = msg;
+                        status.className = 'save-status';
+                        status.style.color = '#ef4444';
+                        setTimeout(function() { status.style.color = ''; }, 5000);
+                    });
+            }, 1000);
         }
 
         function addRule() {
@@ -7541,14 +7351,6 @@
         }
 
         // ===== i18n =====
-        // Check URL param first (from landing page), then localStorage
-        var _urlLang = new URLSearchParams(window.location.search).get('lang');
-        if (_urlLang === 'en' || _urlLang === 'ru') {
-            localStorage.setItem('lang', _urlLang);
-            var _u = new URL(window.location);
-            _u.searchParams.delete('lang');
-            history.replaceState(null, '', _u.pathname + _u.search + _u.hash);
-        }
         var currentLang = localStorage.getItem('lang') || 'ru';
 
         var i18n = {
@@ -7601,11 +7403,11 @@
             accessOkDesc: { ru:'Мы свяжемся с вами<br>в течение 15 минут', en:'We\'ll contact you<br>within 15 minutes' },
             // Login modal
             loginTitle: { ru:'Вход', en:'Sign In' },
-            loginSub: { ru:'Введите логин и пароль', en:'Enter username and password' },
-            loginLabel: { ru:'Логин', en:'Username' },
+            loginSub: { ru:'Введите email и пароль', en:'Enter email and password' },
+            loginLabel: { ru:'Email', en:'Email' },
             passLabel: { ru:'Пароль', en:'Password' },
             loginBtn: { ru:'Войти', en:'Sign In' },
-            loginErr: { ru:'Неверный логин или пароль', en:'Invalid username or password' },
+            loginErr: { ru:'Неверный логин или пароль. Попробуйте войти через email — с недавнего времени логин это ваша почта.', en:'Invalid login or password. Try signing in with your email — your login is now your email address.' },
             loginErrInactive: { ru:'Ваш аккаунт требует активации. Это может занять до 15 минут', en:'Your account requires activation. This may take up to 15 minutes' },
             orText: { ru:'или', en:'or' },
             registerBtn: { ru:'Зарегистрироваться', en:'Create Account' },
@@ -7710,18 +7512,11 @@
             // Bot config
             botUpdated: { ru:'Последнее обновление: только что', en:'Last updated: just now' },
             saved: { ru:'Сохранено', en:'Saved' },
-            savedOk: { ru:'Сохранено ✓', en:'Saved ✓' },
             saving: { ru:'Сохранение...', en:'Saving...' },
             saveFailed: { ru:'Ошибка сохранения', en:'Save failed' },
             dlgSaveErrCampaign: { ru:'Диалог используется в активной кампании. Остановите кампанию, чтобы внести правки.', en:'Dialog is used in an active campaign. Stop the campaign to make changes.' },
             dlgSaveErrDupName: { ru:'Диалог с таким именем уже существует', en:'A dialog with this name already exists' },
             dlgCreateFailed: { ru:'Не удалось создать диалог', en:'Failed to create dialog' },
-            saveBtn: { ru:'Сохранить', en:'Save' },
-            unsavedTitle: { ru:'Несохранённые изменения', en:'Unsaved changes' },
-            unsavedMsg: { ru:'У вас есть несохранённые изменения. Сохранить перед выходом?', en:'You have unsaved changes. Save before leaving?' },
-            unsavedSave: { ru:'Сохранить и выйти', en:'Save & leave' },
-            unsavedDiscard: { ru:'Выйти', en:'Leave' },
-            unsavedCancel: { ru:'Отмена', en:'Cancel' },
             tabContext: { ru:'Контекст', en:'Context' },
             tabPlan: { ru:'План разговора', en:'Conversation Plan' },
             tabKb: { ru:'База знаний', en:'Knowledge Base' },
@@ -7762,7 +7557,7 @@
             phFio: { ru:'Иванов Иван Иванович', en:'John Smith' },
             phPhone: { ru:'+7 (999) 123-45-67', en:'+1 (555) 123-4567' },
             phEmailTg: { ru:'Email или @telegram', en:'Email or @telegram' },
-            phLogin: { ru:'Введите логин', en:'Enter username' },
+            phLogin: { ru:'mail@company.ru', en:'mail@company.ru' },
             phPass: { ru:'Введите пароль', en:'Enter password' },
             phSites: { ru:'Например:\ncompetitor1.ru\ncompetitor2.com\nsimilar-company.ru', en:'Example:\ncompetitor1.com\ncompetitor2.com\nsimilar-company.com' },
             phClient: { ru:'Например: владелец малого бизнеса, 30-50 лет, ищет способы увеличить продажи...', en:'Example: small business owner, 30-50 years old, looking for ways to increase sales...' },
@@ -8155,11 +7950,10 @@
             balPayCreateError: { ru:'Ошибка создания платежа', en:'Payment creation error' },
             balPayReceived: { ru:'Оплата получена!', en:'Payment received!' },
             balPayRejected: { ru:'Платёж отклонён', en:'Payment rejected' },
+            regLoginMinLen: { ru:'Логин должен содержать минимум 6 символов', en:'Login must be at least 6 characters' },
             regPwdMismatch: { ru:'Пароли не совпадают', en:'Passwords do not match' },
             regPwdMinLen: { ru:'Пароль должен содержать минимум 6 символов', en:'Password must be at least 6 characters' },
-            regEmailRequired: { ru:'Введите email', en:'Enter your email' },
-            regEmailExists: { ru:'Этот email уже зарегистрирован', en:'This email is already registered' },
-            regEmailSent: { ru:'Письмо отправлено! Проверьте почту {email} и перейдите по ссылке для подтверждения аккаунта.', en:'Email sent! Check your inbox at {email} and click the confirmation link to activate your account.' },
+            regLoginExists: { ru:'Такой логин уже существует. Придумайте другой', en:'This login already exists. Please choose another' },
             regError: { ru:'Ошибка регистрации', en:'Registration error' },
             errServerConn: { ru:'Ошибка соединения с сервером', en:'Server connection error' },
             loginActivation: { ru:'Ваш аккаунт требует активации. Это может занять до 15 минут', en:'Your account requires activation. This may take up to 15 minutes' },
@@ -8289,7 +8083,6 @@
             // Onboarding step 3
             onbStep3Title: { ru:'Сколько сейчас в среднем вы платите за входящую заявку?', en:'How much do you currently pay per inbound lead on average?' },
             onbStep3Sub: { ru:'Укажите примерную стоимость одной заявки в вашу компанию', en:'Specify the approximate cost of one lead for your company' },
-            onbCost0: { ru:'1 000 ₽', en:'1,000 ₽' },
             onbCost1: { ru:'Больше 1 500 ₽', en:'Over 1,500 ₽' },
             onbCost2: { ru:'Больше 3 000 ₽', en:'Over 3,000 ₽' },
             onbCostDk: { ru:'Не знаю', en:'I don\'t know' },
@@ -8303,9 +8096,6 @@
             regCompanyLabel: { ru:'Название компании', en:'Company Name' },
             regCompanyPh: { ru:'ООО «Ваша компания»', en:'Your Company LLC' },
             regPhoneLabel: { ru:'Номер телефона', en:'Phone Number' },
-            regPhonePh: { ru:'+7 (999) 123-45-67', en:'+1 (555) 123-4567' },
-            regEmailLabel: { ru:'Email', en:'Email' },
-            regEmailPh: { ru:'mail@company.ru', en:'mail@company.com' },
             regLoginLabel: { ru:'Логин <span style="color:var(--text-muted);font-weight:400;">(минимум 6 символов)</span>', en:'Login <span style="color:var(--text-muted);font-weight:400;">(minimum 6 characters)</span>' },
             regLoginPh: { ru:'Придумайте логин', en:'Choose a login' },
             regLoginHintText: { ru:'Такой логин уже существует', en:'This login already exists' },
@@ -8388,93 +8178,6 @@
             // Settings / other
             settingsTariff: { ru:'Стандарт', en:'Standard' },
             loading: { ru:'Загрузка...', en:'Loading...' },
-            // Registration: have account link
-            haveAccount: { ru:'Уже есть аккаунт? Войти', en:'Already have an account? Sign In' },
-            // Integration back button
-            intBack: { ru:'&larr; Назад', en:'&larr; Back' },
-            // Toast messages
-            toastDlgLocked: { ru:'Диалог используется в активном запуске. Остановите звонки для редактирования.', en:'Dialog is used in an active launch. Stop calls to edit.' },
-            toastCllCreated: { ru:'Колл-лист создан', en:'Call list created' },
-            toastCllDeleted: { ru:'Колл-лист удалён', en:'Call list deleted' },
-            toastNoContacts: { ru:'Нет контактов для импорта', en:'No contacts to import' },
-            toastImported: { ru:'Импортировано', en:'Imported' },
-            toastContactsWord: { ru:'контактов', en:'contacts' },
-            toastFillRequired: { ru:'Заполните все обязательные поля', en:'Fill in all required fields' },
-            toastDuplicateLaunch: { ru:'Запуск с таким диалогом и целевой аудиторией уже создан. Измените параметры.', en:'A launch with this dialog and target audience already exists. Change the parameters.' },
-            toastLaunchUpdated: { ru:'Запуск обновлён', en:'Launch updated' },
-            toastLaunchCreated: { ru:'Запуск создан', en:'Launch created' },
-            toastLaunchDeleted: { ru:'Запуск удалён', en:'Launch deleted' },
-            toastDeleteError: { ru:'Ошибка удаления', en:'Delete error' },
-            toastNetworkError: { ru:'Ошибка сети', en:'Network error' },
-            toastNoFunds: { ru:'Недостаточно средств на балансе', en:'Insufficient balance' },
-            toastEmptyCallList: { ru:'Колл-лист пуст! Добавьте контакты.', en:'Call list is empty! Add contacts.' },
-            toastLaunchStarted: { ru:'Обзвон запущен!', en:'Calling started!' },
-            toastStartError: { ru:'Ошибка запуска', en:'Launch error' },
-            toastLaunchPaused: { ru:'Обзвон приостановлен', en:'Calling paused' },
-            toastPauseError: { ru:'Ошибка паузы обзвона', en:'Pause error' },
-            toastCantStop24h: { ru:'Запуск нельзя остановить в течение 24 часов после старта', en:'Launch cannot be stopped within 24 hours of start' },
-            toastLaunchStopped: { ru:'Обзвон остановлен', en:'Calling stopped' },
-            toastLaunchResumed: { ru:'Обзвон возобновлён', en:'Calling resumed' },
-            toastResumeError: { ru:'Ошибка возобновления обзвона', en:'Resume error' },
-            toastLaunchDone: { ru:'все контакты обработаны!', en:'all contacts processed!' },
-            toastGoalReached: { ru:'цель достигнута', en:'goal reached' },
-            toastLeadsWord: { ru:'лидов', en:'leads' },
-            toastBalanceOut: { ru:'баланс исчерпан!', en:'balance exhausted!' },
-            toastTaNameRequired: { ru:'Введите название ЦА', en:'Enter target audience name' },
-            toastMinSites: { ru:'Укажите минимум 5 сайтов конкурентов', en:'Specify at least 5 competitor websites' },
-            toastMaxSites: { ru:'Максимум 10 сайтов конкурентов', en:'Maximum 10 competitor websites' },
-            toastTaUpdated: { ru:'ЦА обновлена', en:'Target audience updated' },
-            toastTaCreated: { ru:'ЦА создана', en:'Target audience created' },
-            toastTaLocked: { ru:'ЦА используется в активном запуске. Остановите звонки для редактирования.', en:'Target audience is used in an active launch. Stop calls to edit.' },
-            toastTaDeleted: { ru:'ЦА удалена', en:'Target audience deleted' },
-            toastParsingStop: { ru:'Формирование остановлено', en:'Formation stopped' },
-            toastBaseFormed: { ru:'База сформирована:', en:'Base formed:' },
-            toastNumbersWord: { ru:'номеров', en:'numbers' },
-            toastSelectLeads: { ru:'Выберите лиды для выгрузки', en:'Select leads to export' },
-            toastNoExportData: { ru:'Нет данных для выгрузки', en:'No data to export' },
-            toastCsvExported: { ru:'CSV выгружен', en:'CSV exported' },
-            toastExcelExported: { ru:'Excel выгружен', en:'Excel exported' },
-            toastExportLeads: { ru:'лидов', en:'leads' },
-            // Validation hints
-            valNameRequired: { ru:'Укажите ваше имя', en:'Please enter your name' },
-            valNameLetters: { ru:'Укажите имя (только буквы)', en:'Enter name (letters only)' },
-            valPhoneRequired: { ru:'Укажите номер телефона', en:'Please enter phone number' },
-            valPhoneInvalid: { ru:'Введите корректный номер (минимум 10 цифр)', en:'Enter a valid number (at least 10 digits)' },
-            valEmailRequired: { ru:'Укажите Email или Telegram', en:'Please enter Email or Telegram' },
-            // Month/day i18n
-            monthsShort: { ru:'янв,фев,мар,апр,май,июн,июл,авг,сен,окт,ноя,дек', en:'Jan,Feb,Mar,Apr,May,Jun,Jul,Aug,Sep,Oct,Nov,Dec' },
-            monthsFull: { ru:'января,февраля,марта,апреля,мая,июня,июля,августа,сентября,октября,ноября,декабря', en:'January,February,March,April,May,June,July,August,September,October,November,December' },
-            monthsFullNom: { ru:'Январь,Февраль,Март,Апрель,Май,Июнь,Июль,Август,Сентябрь,Октябрь,Ноябрь,Декабрь', en:'January,February,March,April,May,June,July,August,September,October,November,December' },
-            daysShort: { ru:'Пн,Вт,Ср,Чт,Пт,Сб,Вс', en:'Mo,Tu,We,Th,Fr,Sa,Su' },
-            daysSun: { ru:'Вс,Пн,Вт,Ср,Чт,Пт,Сб', en:'Sun,Mon,Tue,Wed,Thu,Fri,Sat' },
-            // Conversion labels
-            convHigh: { ru:'Хорошая', en:'Good' },
-            convLow: { ru:'Низкая', en:'Low' },
-            convWord: { ru:'конверсия', en:'conversion' },
-            unknown: { ru:'Неизвестно', en:'Unknown' },
-            // Support chat
-            chatClient: { ru:'Клиент', en:'Client' },
-            chatManager: { ru:'Менеджер', en:'Manager' },
-            // Balance / Payment
-            balThSource: { ru:'Источник', en:'Source' },
-            srcSbp: { ru:'СБП', en:'SBP' },
-            srcCard: { ru:'Карта/СБП', en:'Card/SBP' },
-            srcManual: { ru:'Начисление', en:'Top-up' },
-            srcInvoice: { ru:'Счёт', en:'Invoice' },
-            balDownloadInvoice: { ru:'📄 Скачать счёт', en:'📄 Download invoice' },
-            toastReqSaved: { ru:'Реквизиты сохранены', en:'Requisites saved' },
-            toastSaveError: { ru:'Ошибка сохранения', en:'Save error' },
-            toastEnterAmount: { ru:'Введите сумму', en:'Enter amount' },
-            toastInvoiceGenerated: { ru:'Счёт сгенерирован', en:'Invoice generated' },
-            toastInvoiceError: { ru:'Ошибка генерации счёта', en:'Invoice generation error' },
-            balTopUpPurpose: { ru:'Пополнение баланса EaseSale', en:'EaseSale balance top-up' },
-            errorGeneric: { ru:'Ошибка', en:'Error' },
-            toastMinAmount: { ru:'Минимальная сумма 100 ₽', en:'Minimum amount is 100 ₽' },
-            toastPaySuccess: { ru:'Оплата прошла успешно!', en:'Payment successful!' },
-            // FAB buttons & integrations
-            fabMax: { ru:'Написать в MAX', en:'Message in MAX' },
-            fabTg: { ru:'Написать в Telegram', en:'Message in Telegram' },
-            intgConnectAmo: { ru:'Подключить АМО CRM', en:'Connect AMO CRM' },
         };
 
         function t(key) {
@@ -8487,13 +8190,6 @@
             currentLang = currentLang === 'ru' ? 'en' : 'ru';
             localStorage.setItem('lang', currentLang);
             applyLang();
-            // Persist language to server profile if logged in
-            if (esHasToken()) {
-                fetch(ES_API + '/api/clients/me', {
-                    method: 'PATCH', headers: esApiHeaders(),
-                    body: JSON.stringify({ lang: currentLang })
-                }).catch(function() {});
-            }
         }
 
         function applyLang() {
@@ -8516,11 +8212,6 @@
                 var key = el.getAttribute('data-i18n-ph');
                 if (i18n[key]) el.placeholder = i18n[key][currentLang];
             });
-            // data-i18n-title (title attribute)
-            document.querySelectorAll('[data-i18n-title]').forEach(function(el) {
-                var key = el.getAttribute('data-i18n-title');
-                if (i18n[key]) el.title = i18n[key][currentLang];
-            });
 
             // Re-render dynamic lists with correct placeholders
             renderRules();
@@ -8529,8 +8220,6 @@
             renderGreetings();
             renderPlanItems();
             renderDialogTable();
-            // Update dynamic label maps
-            if (typeof getQlStatusLabels === 'function') qlStatusLabels = getQlStatusLabels();
         }
 
         // Init with one example dialog
@@ -8559,7 +8248,7 @@
         })();
 
         // Apply saved language on load
-        applyLang();
+        if (currentLang === 'en') applyLang();
 
         function toggleTheme() {
             document.body.classList.toggle('light');
@@ -8672,13 +8361,13 @@
 
             let valid = true;
 
-            if (!name) { showHint('hintName', t('valNameRequired')); valid = false; }
-            else if (!validateName(name)) { showHint('hintName', t('valNameLetters')); valid = false; }
+            if (!name) { showHint('hintName', 'Укажите ваше имя'); valid = false; }
+            else if (!validateName(name)) { showHint('hintName', 'Укажите имя (только буквы)'); valid = false; }
 
-            if (!phone) { showHint('hintPhone', t('valPhoneRequired')); valid = false; }
-            else if (!validatePhone(phone)) { showHint('hintPhone', t('valPhoneInvalid')); valid = false; }
+            if (!phone) { showHint('hintPhone', 'Укажите номер телефона'); valid = false; }
+            else if (!validatePhone(phone)) { showHint('hintPhone', 'Введите корректный номер (минимум 10 цифр)'); valid = false; }
 
-            if (!emailTg) { showHint('hintEmailTg', t('valEmailRequired')); valid = false; }
+            if (!emailTg) { showHint('hintEmailTg', 'Укажите Email или Telegram'); valid = false; }
 
             if (!valid) {
                 // Show phone error on submit attempt
@@ -8727,8 +8416,8 @@
 
         // ===================== STATS PAGE =====================
         (function() {
-            const ST_MONTHS_RU = t('monthsFullNom').split(',');
-            const ST_DAYS_RU = t('daysShort').split(',');
+            const ST_MONTHS_RU = ['Январь','Февраль','Март','Апрель','Май','Июнь','Июль','Август','Сентябрь','Октябрь','Ноябрь','Декабрь'];
+            const ST_DAYS_RU = ['Пн','Вт','Ср','Чт','Пт','Сб','Вс'];
 
             var _stNow = new Date();
             var _stLeftMonth = _stNow.getMonth() === 0 ? 11 : _stNow.getMonth() - 1;
@@ -8742,7 +8431,7 @@
 
             // Set initial date label
             (function() {
-                var shortMonths = t('monthsShort').split(',');
+                var shortMonths = ['янв','фев','мар','апр','май','июн','июл','авг','сен','окт','ноя','дек'];
                 var el = document.getElementById('st-date-label');
                 if (el) el.textContent = _stNow.getDate() + ' ' + shortMonths[_stNow.getMonth()] + ' ' + _stNow.getFullYear();
             })();
@@ -8862,7 +8551,7 @@
             };
 
             window.stApplyDate = function() {
-                var shortMonths = t('monthsShort').split(',');
+                var shortMonths = ['янв','фев','мар','апр','май','июн','июл','авг','сен','окт','ноя','дек'];
                 if (stCalState.start) {
                     var fmt = function(d) { return d.getDate() + ' ' + shortMonths[d.getMonth()]; };
                     var label = fmt(stCalState.start);
@@ -8932,7 +8621,7 @@
                     '<div class="st-stat-card">' +
                         '<div class="st-stat-label">Конверсия</div>' +
                         '<div class="st-stat-value">' + conv + '%</div>' +
-                        '<div class="st-stat-sub"><span style="color:' + (convVal >= 10 ? '#2ecc71' : '#e74c3c') + '">' + (convVal >= 10 ? t('convHigh') : t('convLow')) + ' ' + t('convWord') + '</span></div>' +
+                        '<div class="st-stat-sub"><span style="color:' + (convVal >= 10 ? '#2ecc71' : '#e74c3c') + '">' + (convVal >= 10 ? 'Хорошая' : 'Низкая') + ' конверсия</span></div>' +
                     '</div>' +
                     '<div class="st-stat-card">' +
                         '<div class="st-stat-label">Запуски</div>' +
@@ -8944,7 +8633,7 @@
             function stGroupBy(leads, key) {
                 var groups = {};
                 leads.forEach(function(l) {
-                    var k = l[key] || t('unknown');
+                    var k = l[key] || 'Неизвестно';
                     var name = l[key.replace('Id', 'Name')] || k;
                     if (!groups[k]) groups[k] = { name: name, count: 0 };
                     groups[k].count++;
@@ -8992,7 +8681,7 @@
                 var groups = {};
                 leads.forEach(function(l) {
                     var k = l[key] || 'unknown';
-                    if (!groups[k]) groups[k] = { name: l[nameKey] || t('unknown'), leads: 0 };
+                    if (!groups[k]) groups[k] = { name: l[nameKey] || 'Неизвестно', leads: 0 };
                     groups[k].leads++;
                 });
                 var rows = Object.keys(groups).map(function(k) { return groups[k]; })
@@ -9030,7 +8719,7 @@
             // Override stApplyDate to also re-render stats
             var _origStApplyDate = window.stApplyDate;
             window.stApplyDate = function() {
-                var shortMonths = t('monthsShort').split(',');
+                var shortMonths = ['янв','фев','мар','апр','май','июн','июл','авг','сен','окт','ноя','дек'];
                 if (stCalState.start) {
                     var fmt = function(d) { return d.getDate() + ' ' + shortMonths[d.getMonth()]; };
                     var label = fmt(stCalState.start);
@@ -9132,14 +8821,14 @@
             if (!name) return;
             clCallLists.push({ id: clGenId(), name: name, description: desc, contacts: [], created: clNow(), updated: clNow() });
             clPersist(); cllCloseCreate(); cllRenderList();
-            clToast(t('toastCllCreated') + ' «' + name + '»');
+            clToast('Колл-лист «' + name + '» создан');
         }
 
         function cllDelete(id) {
             if (!confirm(t('cllDeleteConfirm'))) return;
             clCallLists = clCallLists.filter(function(c) { return c.id !== id; });
             clPersist(); cllRenderList();
-            clToast(t('toastCllDeleted'));
+            clToast('Колл-лист удалён');
         }
 
         function cllOpenDetail(id) {
@@ -9165,7 +8854,7 @@
             if (!confirm(t('cllDeleteAllConfirm'))) return;
             clCallLists = clCallLists.filter(function(c) { return c.id !== cllCurrentId; });
             clPersist(); cllBackToList();
-            clToast(t('toastCllDeleted'));
+            clToast('Колл-лист удалён');
         }
 
         function cllRenderContacts(cl) {
@@ -9266,13 +8955,13 @@
                     if (phone) contacts.push({ phone: phone, name: name });
                 });
             }
-            if (contacts.length === 0) { clToast(t('toastNoContacts')); return; }
+            if (contacts.length === 0) { clToast('Нет контактов для импорта'); return; }
             cl.contacts = cl.contacts.concat(contacts);
             cl.updated = clNow();
             clPersist();
             cllCloseImport();
             cllRenderContacts(cl);
-            clToast(t('toastImported') + ' ' + contacts.length + ' ' + t('toastContactsWord'));
+            clToast('Импортировано ' + contacts.length + ' контактов');
         }
 
         // Drag & drop for CSV
@@ -9353,7 +9042,7 @@
                 var dlg = dialogs.find(function(d) { return d.id === l.dialogId; });
                 if (dlg) dialogName = dlg.name;
             }
-            var dayNames = t('daysSun').split(',');
+            var dayNames = ['Вс','Пн','Вт','Ср','Чт','Пт','Сб'];
             var daysHtml = '';
             for (var d = 1; d <= 7; d++) {
                 var dayIdx = d === 7 ? 0 : d;
@@ -9477,11 +9166,11 @@
             for (var d = 1; d <= 7; d++) {
                 if (document.getElementById('clDay' + d).checked) days.push(d === 7 ? 0 : d);
             }
-            if (!name || !dialogId || !audienceId) { clToast(t('toastFillRequired')); return; }
+            if (!name || !dialogId || !audienceId) { clToast('Заполните все обязательные поля'); return; }
             var duplicate = clLaunches.find(function(x) {
                 return x.dialogId === dialogId && x.audienceId === audienceId && x.id !== clEditId;
             });
-            if (duplicate) { clToast(t('toastDuplicateLaunch')); return; }
+            if (duplicate) { clToast('Запуск с таким диалогом и целевой аудиторией уже создан. Измените параметры.'); return; }
             // Find latest call list for this audience
             var audienceCallLists = clCallLists.filter(function(c) { return c.audienceId === audienceId; });
             var callListId = audienceCallLists.length > 0 ? audienceCallLists[audienceCallLists.length - 1].id : '';
@@ -9504,7 +9193,7 @@
             var newId = clEditId ? clEditId : clLaunches[clLaunches.length - 1].id;
             var wasEditLaunch = !!clEditId;
             clPersist(); clCloseLaunchModal(); clRenderLaunches();
-            clToast(wasEditLaunch ? t('toastLaunchUpdated') : t('toastLaunchCreated') + ' «' + name + '»');
+            clToast(wasEditLaunch ? 'Запуск обновлён' : 'Запуск «' + name + '» создан');
 
             // Sync to backend
             if (esHasToken()) {
@@ -9591,16 +9280,16 @@
                     method: 'DELETE', headers: esApiHeaders()
                 }).then(function(r) {
                     if (r.ok) {
-                        clToast(t('toastLaunchDeleted'));
+                        clToast('Запуск удалён');
                         clLoadFromAPI();
                     } else {
-                        r.json().then(function(d) { clToast(d.error || t('toastDeleteError')); }).catch(function() { clToast(t('toastDeleteError')); });
+                        r.json().then(function(d) { clToast(d.error || 'Ошибка удаления'); }).catch(function() { clToast('Ошибка удаления'); });
                     }
-                }).catch(function() { clToast(t('toastNetworkError')); });
+                }).catch(function() { clToast('Ошибка сети'); });
             } else {
                 clLaunches = clLaunches.filter(function(x) { return x.id !== id; });
                 clPersist(); clRenderLaunches();
-                clToast(t('toastLaunchDeleted'));
+                clToast('Запуск удалён');
             }
         }
 
@@ -9609,7 +9298,7 @@
             var l = clLaunches.find(function(x) { return x.id === id; });
             if (!l) return;
             var price = clGetPricePerLead();
-            if (userBalance < price) { clToast(t('toastNoFunds')); return; }
+            if (userBalance < price) { clToast('Недостаточно средств на балансе'); return; }
             clPendingRunId = id;
             var cost = (l.goalLeads || 1) * price;
             clShowBalanceConfirm(cost);
@@ -9619,13 +9308,13 @@
             var l = clLaunches.find(function(x) { return x.id === id; });
             if (!l) return;
             var callList = clCallLists.find(function(c) { return c.id === l.callListId; });
-            if (!callList || callList.contacts.length === 0) { clToast(t('toastEmptyCallList')); return; }
+            if (!callList || callList.contacts.length === 0) { clToast('Колл-лист пуст! Добавьте контакты.'); return; }
             var price = clGetPricePerLead();
-            if (userBalance < price) { clToast(t('toastNoFunds')); return; }
+            if (userBalance < price) { clToast('Недостаточно средств на балансе'); return; }
             l.status = 'active';
             l.updated = clNow();
             clPersist(); clRenderLaunches();
-            clToast('«' + l.name + '» — ' + t('toastLaunchStarted'));
+            clToast('Обзвон «' + l.name + '» запущен!');
             clStartSimulation(id);
 
             // Launch on backend
@@ -9654,9 +9343,9 @@
             }).then(function(r) { return r.json(); })
             .then(function(data) {
                 if (data.error) { clToast(data.error); return; }
-                clToast(t('toastLaunchStarted'));
+                clToast('Обзвон запущен!');
                 clLoadFromAPI();
-            }).catch(function() { clToast(t('toastStartError')); });
+            }).catch(function() { clToast('Ошибка запуска'); });
         }
 
         function clPauseLaunch(id) {
@@ -9666,18 +9355,18 @@
                 fetch(ES_API + '/api/campaigns/' + l.serverId + '/pause', {
                     method: 'POST', headers: esApiHeaders()
                 }).then(function(r) {
-                    if (r.status === 403) { clToast(t('toastCantStop24h')); return; }
+                    if (r.status === 403) { clToast('⏳ Запуск нельзя остановить в течение 24 часов после старта'); return; }
                     if (!r.ok) throw r;
                     return r.json();
                 })
                 .then(function(data) {
-                    if (data) { clToast(t('toastLaunchPaused')); clLoadFromAPI(); }
-                }).catch(function() { clToast(t('toastPauseError')); });
+                    if (data) { clToast('Обзвон приостановлен'); clLoadFromAPI(); }
+                }).catch(function() { clToast('Ошибка паузы обзвона'); });
             } else {
                 l.status = 'paused'; l.updated = clNow();
                 if (clSimTimers[id]) { clearInterval(clSimTimers[id]); delete clSimTimers[id]; }
                 clPersist(); clRenderLaunches();
-                clToast(t('toastLaunchPaused'));
+                clToast('Обзвон приостановлен');
             }
         }
 
@@ -9687,7 +9376,7 @@
             l.status = 'stopped'; l.updated = clNow();
             if (clSimTimers[id]) { clearInterval(clSimTimers[id]); delete clSimTimers[id]; }
             clPersist(); clRenderLaunches();
-            clToast(t('toastLaunchStopped'));
+            clToast('Обзвон остановлен');
         }
 
         function clResumeLaunch(id) {
@@ -9708,8 +9397,8 @@
             }).then(function(r) { if (!r.ok) throw r; return r.json(); })
             .then(function() {
                 clLoadFromAPI();
-                clToast(t('toastLaunchResumed'));
-            }).catch(function() { clToast(t('toastResumeError')); });
+                clToast('Обзвон возобновлён');
+            }).catch(function() { clToast('Ошибка возобновления обзвона'); });
         }
 
         // Simulation
@@ -9727,7 +9416,7 @@
                     l.status = 'done'; l.updated = clNow();
                     clearInterval(clSimTimers[id]); delete clSimTimers[id];
                     clPersist(); clRenderLaunches();
-                    clToast('«' + l.name + '» — ' + t('toastLaunchDone'));
+                    clToast('Обзвон «' + l.name + '» завершён — все контакты обработаны!');
                     return;
                 }
                 // Check daily goal
@@ -9735,7 +9424,7 @@
                     l.status = 'stopped'; l.updated = clNow();
                     clearInterval(clSimTimers[id]); delete clSimTimers[id];
                     clPersist(); clRenderLaunches();
-                    clToast('«' + l.name + '» — ' + t('toastGoalReached') + ' (' + l.goalLeads + ' ' + t('toastLeadsWord') + ')!');
+                    clToast('Обзвон «' + l.name + '» — цель достигнута (' + l.goalLeads + ' лидов)!');
                     return;
                 }
                 // Check balance before call
@@ -9744,7 +9433,7 @@
                     l.status = 'stopped'; l.updated = clNow();
                     clearInterval(clSimTimers[id]); delete clSimTimers[id];
                     clPersist(); clRenderLaunches();
-                    clToast('«' + l.name + '» — ' + t('toastBalanceOut'));
+                    clToast('Обзвон «' + l.name + '» остановлен — баланс исчерпан!');
                     return;
                 }
                 // Simulate one call
@@ -9814,7 +9503,7 @@
             });
 
             // Format date for name: "2 марта"
-            var monthNames = t('monthsFull').split(',');
+            var monthNames = ['января','февраля','марта','апреля','мая','июня','июля','августа','сентября','октября','ноября','декабря'];
             function formatDateName(dateStr) {
                 var parts = dateStr.split('-');
                 var day = parseInt(parts[2], 10);
@@ -9930,10 +9619,10 @@
             var niche = document.getElementById('taNiche').value.trim();
             var client = document.getElementById('taClient').value.trim();
             var sites = document.getElementById('taSites').value.trim();
-            if (!name) { clToast(t('toastTaNameRequired')); return; }
+            if (!name) { clToast('Введите название ЦА'); return; }
             var siteLines = sites.split('\n').filter(function(l) { return l.trim().length > 0; });
-            if (siteLines.length < 5) { clToast(t('toastMinSites')); return; }
-            if (siteLines.length > 10) { clToast(t('toastMaxSites')); return; }
+            if (siteLines.length < 5) { clToast('Укажите минимум 5 сайтов конкурентов'); return; }
+            if (siteLines.length > 10) { clToast('Максимум 10 сайтов конкурентов'); return; }
             if (taEditId) {
                 var ta = taAudiences.find(function(x) { return x.id === taEditId; });
                 if (ta) {
@@ -9952,7 +9641,7 @@
             taSyncAllToCRM();
             taCloseModal();
             taRenderCards();
-            clToast(wasEdit ? t('toastTaUpdated') : t('toastTaCreated'));
+            clToast(wasEdit ? 'ЦА обновлена' : 'ЦА создана');
 
             // Sync to backend
             if (esHasToken()) {
@@ -9976,7 +9665,7 @@
         function taEdit(id) {
             var ta = taAudiences.find(function(x) { return x.id === id; });
             if (!ta) return;
-            if (ta.serverId && isAudienceLocked(ta.serverId)) { clToast(t('toastTaLocked')); return; }
+            if (ta.serverId && isAudienceLocked(ta.serverId)) { clToast('ЦА используется в активном запуске. Остановите звонки для редактирования.'); return; }
             taEditId = id;
             document.getElementById('taModalTitle').textContent = t('taEdit');
             document.getElementById('taName').value = ta.name || '';
@@ -9988,14 +9677,14 @@
 
         function taDelete(id) {
             var ta = taAudiences.find(function(x) { return x.id === id; });
-            if (ta && ta.serverId && isAudienceLocked(ta.serverId)) { clToast(t('toastTaLocked')); return; }
+            if (ta && ta.serverId && isAudienceLocked(ta.serverId)) { clToast('ЦА используется в активном запуске. Остановите звонки для редактирования.'); return; }
             if (!confirm(t('taDeleteConfirm'))) return;
             var srvId = ta && ta.serverId;
             taAudiences = taAudiences.filter(function(x) { return x.id !== id; });
             taPersist();
             taSyncAllToCRM();
             taRenderCards();
-            clToast(t('toastTaDeleted'));
+            clToast('ЦА удалена');
 
             if (esHasToken() && srvId) {
                 fetch(ES_API + '/api/audiences/' + srvId, {
@@ -10092,7 +9781,7 @@
             ta._genContacts = [];
             taPersist();
             taRenderCards();
-            clToast(t('toastParsingStop'));
+            clToast('Формирование остановлено');
         }
 
         function taFinishGen(id) {
@@ -10108,7 +9797,7 @@
             ta._genContacts = [];
             taPersist();
             taRenderCards();
-            clToast(t('toastBaseFormed') + ' ' + contacts.length + ' ' + t('toastNumbersWord'));
+            clToast('База сформирована: ' + contacts.length + ' номеров');
         }
 
         function taCreateCallList(taId, contacts) {
@@ -10200,8 +9889,7 @@
 
         var qlSelected = [];
 
-        function getQlStatusLabels() { return { 'new': t('qlNew'), 'downloaded': t('qlDownloaded'), 'transferred': t('qlTransferred') }; }
-        var qlStatusLabels = getQlStatusLabels();
+        var qlStatusLabels = { 'new': 'Новый', 'downloaded': 'Скачанный', 'transferred': 'Переданный' };
         var qlStatusClass = { 'new': 'ql-badge-new', 'downloaded': 'ql-badge-downloaded', 'transferred': 'ql-badge-transferred' };
 
         function qlPopulateFilters() {
@@ -10351,7 +10039,7 @@
 
         function qlExportSelected(format) {
             var data = qlGetSelectedLeads();
-            if (data.length === 0) { clToast(t('toastSelectLeads')); return; }
+            if (data.length === 0) { clToast('Выберите лиды для выгрузки'); return; }
             qlDoExport(data, format);
         }
 
@@ -10385,7 +10073,7 @@
                 link.href = URL.createObjectURL(blob);
                 link.download = 'qual_leads_' + new Date().toISOString().substring(0, 10) + '.csv';
                 link.click();
-                clToast(t('toastCsvExported') + ' (' + data.length + ' ' + t('toastExportLeads') + ')');
+                clToast('CSV выгружен (' + data.length + ' лидов)');
             } else {
                 var xml = '<?xml version="1.0"?><?mso-application progid="Excel.Sheet"?>' +
                     '<Workbook xmlns="urn:schemas-microsoft-com:office:spreadsheet" xmlns:ss="urn:schemas-microsoft-com:office:spreadsheet">' +
@@ -10400,7 +10088,7 @@
                 link2.href = URL.createObjectURL(blob2);
                 link2.download = 'qual_leads_' + new Date().toISOString().substring(0, 10) + '.xls';
                 link2.click();
-                clToast(t('toastExcelExported') + ' (' + data.length + ' ' + t('toastExportLeads') + ')');
+                clToast('Excel выгружен (' + data.length + ' лидов)');
             }
         }
 
@@ -10416,7 +10104,7 @@
                 if (dialogF && (l.dialogId || l.dialogName) !== dialogF) return false;
                 return true;
             });
-            if (data.length === 0) { clToast(t('toastNoExportData')); return; }
+            if (data.length === 0) { clToast('Нет данных для выгрузки'); return; }
             qlDoExport(data, format);
         }
 
@@ -10554,7 +10242,7 @@
                         '<div class="button-amo-container"></div>' +
                         '<script class="amocrm_oauth" charset="utf-8"' +
                         ' data-client-id="' + data.client_id + '"' +
-                        ' data-title="' + t('intgConnectAmo') + '"' +
+                        ' data-title="Подключить АМО CRM"' +
                         ' data-compact="false"' +
                         ' data-color="red"' +
                         ' data-state="' + data.state + '"' +
@@ -10730,12 +10418,6 @@
                         userPricePerLead = parseInt(me.price_per_lead) || 0;
                         localStorage.setItem('user_price_per_lead', String(userPricePerLead));
                     }
-                    // Restore language from server profile
-                    if (me && me.lang && me.lang !== currentLang) {
-                        currentLang = me.lang;
-                        localStorage.setItem('lang', currentLang);
-                        applyLang();
-                    }
                     var onboarded = (me && me.onboarded) || !!localStorage.getItem('onboarded_' + login);
                     if (me && me.onboarded) localStorage.setItem('onboarded_' + login, '1');
                     if (onboarded) {
@@ -10802,10 +10484,10 @@
         <button class="sc-send-btn" onclick="scSend()">➤</button>
     </div>
 </div>
-<a class="max-fab" href="https://max.ru/id741517030858_bot" target="_blank" title="Написать в MAX" data-i18n-title="fabMax">
+<a class="max-fab" href="https://max.ru/id741517030858_bot" target="_blank" title="Написать в MAX">
     <span style="font-weight:900;font-size:18px;color:#fff;line-height:1;">M</span>
 </a>
-<a class="tg-fab" href="https://t.me/easesale_support_bot" target="_blank" title="Написать в Telegram" data-i18n-title="fabTg">
+<a class="tg-fab" href="https://t.me/easesale_support_bot" target="_blank" title="Написать в Telegram">
     <svg width="24" height="24" viewBox="0 0 24 24" fill="white"><path d="M11.944 0A12 12 0 0 0 0 12a12 12 0 0 0 12 12 12 12 0 0 0 12-12A12 12 0 0 0 12 0h-.056zm4.962 7.224c.1-.002.321.023.465.14a.506.506 0 0 1 .171.325c.016.093.036.306.02.472-.18 1.898-.962 6.502-1.36 8.627-.168.9-.499 1.201-.82 1.23-.696.065-1.225-.46-1.9-.902-1.056-.693-1.653-1.124-2.678-1.8-1.185-.78-.417-1.21.258-1.91.177-.184 3.247-2.977 3.307-3.23.007-.032.014-.15-.056-.212s-.174-.041-.249-.024c-.106.024-1.793 1.14-5.061 3.345-.479.33-.913.49-1.302.48-.428-.008-1.252-.241-1.865-.44-.752-.245-1.349-.374-1.297-.789.027-.216.325-.437.893-.663 3.498-1.524 5.83-2.529 6.998-3.014 3.332-1.386 4.025-1.627 4.476-1.635z"/></svg>
 </a>
 <button class="sc-fab" id="scFab" onclick="scToggle()">
@@ -10849,8 +10531,35 @@
     function scInitConversation() {
         var ticketId = localStorage.getItem('sc_ticket_id');
         if (ticketId) {
-            scConvId = ticketId;
-            scLoadMessages();
+            // Verify ticket still exists
+            fetch(SC_API + '/api/tickets/' + ticketId + '/messages', { headers: scApiHeaders() })
+            .then(function(r) {
+                if (r.ok) {
+                    scConvId = ticketId;
+                    return r.json();
+                } else {
+                    localStorage.removeItem('sc_ticket_id');
+                    return null;
+                }
+            })
+            .then(function(messages) {
+                if (!messages) return;
+                var msgs = document.getElementById('scMessages');
+                for (var j = 0; j < messages.length; j++) {
+                    var m = messages[j];
+                    scKnownMsgIds[m.id] = true;
+                    var div = document.createElement('div');
+                    div.innerHTML = scRenderBubble(m);
+                    msgs.appendChild(div.firstChild);
+                }
+                scLastApiMsgId = messages.length > 0 ? messages[messages.length - 1].id : 0;
+                scLastMsgCount = messages.length;
+                msgs.scrollTop = msgs.scrollHeight;
+                scStartPoll();
+            })
+            .catch(function() {
+                localStorage.removeItem('sc_ticket_id');
+            });
         }
     }
 
@@ -10894,14 +10603,23 @@
             method: 'POST',
             headers: scApiHeaders(),
             body: JSON.stringify({
-                author: author === 'client' ? t('chatClient') : t('chatManager'),
+                author: author === 'client' ? 'Клиент' : 'Менеджер',
                 text: text,
                 is_staff: author !== 'client'
             })
         })
-        .then(function(r) { return r.json(); })
+        .then(function(r) {
+            if (r.status === 404) {
+                scConvId = null;
+                localStorage.removeItem('sc_ticket_id');
+                scPendingMessages.push({ author: author, text: text, files: files });
+                scEnsureConversation(text);
+                return null;
+            }
+            return r.json();
+        })
         .then(function(data) {
-            if (data.id) {
+            if (data && data.id) {
                 scKnownMsgIds[data.id] = true;
                 scLastApiMsgId = data.id;
             }
