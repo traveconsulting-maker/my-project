@@ -628,11 +628,27 @@
 
     // ==================== API ====================
     const API_BASE = 'https://api.easysale.tech';
-    let crmToken = sessionStorage.getItem('crm_jwt_token') || '';
+    let crmToken = localStorage.getItem('crmToken') || '';
     var pendingDeleteClientId = null;
+
+    // Redirect to login if no token
+    if (!crmToken) { window.location.href = 'index.html'; }
 
     function apiHeaders() {
         return { 'Content-Type': 'application/json', 'Authorization': 'Bearer ' + crmToken };
+    }
+
+    // Handle 401 (expired/invalid token) — redirect to login
+    function handleApiResponse(r) {
+        if (r.status === 401) {
+            localStorage.removeItem('crmToken');
+            localStorage.removeItem('crmRole');
+            localStorage.removeItem('crmUserName');
+            localStorage.removeItem('crmUserId');
+            window.location.href = 'index.html';
+            throw new Error('unauthorized');
+        }
+        return r;
     }
 
     // ==================== HELPERS ====================
