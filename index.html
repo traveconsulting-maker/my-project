@@ -4977,7 +4977,7 @@
                     // Check if password change is required
                     if (result.data.user && result.data.user.must_change_password) {
                         _cpOldPassword = pass.value;
-                        closeModal();
+                        closeModal(true);
                         document.getElementById('changePasswordModal').classList.add('active');
                         document.body.style.overflow = 'hidden';
                     } else {
@@ -5068,7 +5068,7 @@
 
         // ===== FORGOT PASSWORD =====
         function openForgotPasswordModal() {
-            closeModal();
+            closeModal(true);
             document.getElementById('fpFormBlock').style.display = '';
             document.getElementById('fpSuccess').style.display = 'none';
             document.getElementById('fpEmail').value = '';
