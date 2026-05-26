@@ -913,33 +913,74 @@
             font-weight: 800;
             margin-bottom: 16px;
         }
-        .audio-card audio {
-            width: 100%;
-            max-width: 100%;
-            border-radius: 8px;
+        .audio-card audio { display: none; }
+
+        /* Custom player */
+        .custom-player {
+            display: flex;
+            align-items: center;
+            gap: 14px;
+            background: rgba(255,255,255,0.04);
+            border: 1px solid rgba(255,255,255,0.06);
+            border-radius: 14px;
+            padding: 12px 16px;
         }
-        .audio-card-icon {
+        .player-play-btn {
+            width: 42px; height: 42px;
+            min-width: 42px;
+            border-radius: 50%;
+            border: none;
+            background: var(--orange);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            cursor: pointer;
+            transition: background 0.2s, transform 0.15s;
+        }
+        .player-play-btn:hover { background: var(--orange-mid); transform: scale(1.07); }
+        .player-play-btn svg { width: 18px; height: 18px; fill: #fff; }
+        .player-play-btn .icon-pause { display: none; }
+        .audio-card.playing .player-play-btn .icon-play { display: none; }
+        .audio-card.playing .player-play-btn .icon-pause { display: block; }
+        .player-middle {
+            flex: 1;
+            min-width: 0;
+            display: flex;
+            flex-direction: column;
+            gap: 6px;
+        }
+        .player-progress {
             position: relative;
+            width: 100%;
+            height: 6px;
+            background: rgba(255,255,255,0.1);
+            border-radius: 3px;
+            cursor: pointer;
+            overflow: hidden;
         }
-        .audio-card-icon::before,
-        .audio-card-icon::after {
-            content: '';
+        .player-progress-fill {
             position: absolute;
-            inset: -6px;
-            border-radius: 20px;
-            border: 2px solid rgba(255,77,0,0.3);
-            opacity: 0;
-            pointer-events: none;
+            left: 0; top: 0; bottom: 0;
+            width: 0%;
+            background: var(--orange);
+            border-radius: 3px;
+            transition: width 0.15s linear;
         }
-        .audio-card.playing .audio-card-icon::before {
-            animation: audioPulse 1.8s ease-out infinite;
+        .player-time {
+            font-size: 13px;
+            color: rgba(255,255,255,0.5);
+            font-variant-numeric: tabular-nums;
+            white-space: nowrap;
         }
-        .audio-card.playing .audio-card-icon::after {
-            animation: audioPulse 1.8s ease-out 0.6s infinite;
+
+        /* Card glow when playing */
+        .audio-card.playing {
+            border-color: rgba(255,77,0,0.25);
+            animation: cardGlow 2s ease-in-out infinite;
         }
-        @keyframes audioPulse {
-            0% { opacity: 0.7; inset: -4px; }
-            100% { opacity: 0; inset: -20px; }
+        @keyframes cardGlow {
+            0%, 100% { box-shadow: 0 0 15px rgba(255,77,0,0.1), 0 0 0 1px rgba(255,77,0,0.15); }
+            50% { box-shadow: 0 0 30px rgba(255,77,0,0.2), 0 0 0 1px rgba(255,77,0,0.3); }
         }
 
         /* ===== SCROLLBAR ===== */
@@ -1154,7 +1195,17 @@
                     </svg>
                 </div>
                 <div class="audio-card-title">Звонок: таможенное оформление</div>
-                <audio controls preload="none" src="call-customs.mp3"></audio>
+                <audio preload="none" src="call-customs.mp3"></audio>
+                <div class="custom-player">
+                    <button class="player-play-btn" type="button">
+                        <svg class="icon-play" viewBox="0 0 18 18"><polygon points="4,2 16,9 4,16"/></svg>
+                        <svg class="icon-pause" viewBox="0 0 18 18"><rect x="3" y="2" width="4" height="14" rx="1"/><rect x="11" y="2" width="4" height="14" rx="1"/></svg>
+                    </button>
+                    <div class="player-middle">
+                        <div class="player-progress"><div class="player-progress-fill"></div></div>
+                    </div>
+                    <span class="player-time">0:00 / 0:00</span>
+                </div>
             </div>
             <div class="audio-card" data-delay="150">
                 <div class="audio-card-icon">
@@ -1166,7 +1217,17 @@
                     </svg>
                 </div>
                 <div class="audio-card-title">Логистика для маркетплейсов</div>
-                <audio controls preload="none" src="call-example.mp3"></audio>
+                <audio preload="none" src="call-example.mp3"></audio>
+                <div class="custom-player">
+                    <button class="player-play-btn" type="button">
+                        <svg class="icon-play" viewBox="0 0 18 18"><polygon points="4,2 16,9 4,16"/></svg>
+                        <svg class="icon-pause" viewBox="0 0 18 18"><rect x="3" y="2" width="4" height="14" rx="1"/><rect x="11" y="2" width="4" height="14" rx="1"/></svg>
+                    </button>
+                    <div class="player-middle">
+                        <div class="player-progress"><div class="player-progress-fill"></div></div>
+                    </div>
+                    <span class="player-time">0:00 / 0:00</span>
+                </div>
             </div>
         </div>
     </div>
@@ -1555,14 +1616,41 @@ function toggleFaq(q) {
 }
 
 /* ==========================================================
-   AUDIO CARD PULSE ANIMATION
+   CUSTOM AUDIO PLAYERS
    ========================================================== */
+function fmtTime(s) {
+    if (isNaN(s) || !isFinite(s)) return '0:00';
+    var m = Math.floor(s / 60);
+    var sec = Math.floor(s % 60);
+    return m + ':' + (sec < 10 ? '0' : '') + sec;
+}
 document.querySelectorAll('.audio-card').forEach(function(card) {
     var audio = card.querySelector('audio');
-    if (!audio) return;
+    var btn = card.querySelector('.player-play-btn');
+    var bar = card.querySelector('.player-progress');
+    var fill = card.querySelector('.player-progress-fill');
+    var time = card.querySelector('.player-time');
+    if (!audio || !btn) return;
+
+    btn.addEventListener('click', function() {
+        if (audio.paused) { audio.play(); } else { audio.pause(); }
+    });
     audio.addEventListener('play', function() { card.classList.add('playing'); });
     audio.addEventListener('pause', function() { card.classList.remove('playing'); });
-    audio.addEventListener('ended', function() { card.classList.remove('playing'); });
+    audio.addEventListener('ended', function() { card.classList.remove('playing'); fill.style.width = '0%'; });
+    audio.addEventListener('loadedmetadata', function() {
+        time.textContent = fmtTime(audio.currentTime) + ' / ' + fmtTime(audio.duration);
+    });
+    audio.addEventListener('timeupdate', function() {
+        var pct = audio.duration ? (audio.currentTime / audio.duration * 100) : 0;
+        fill.style.width = pct + '%';
+        time.textContent = fmtTime(audio.currentTime) + ' / ' + fmtTime(audio.duration);
+    });
+    bar.addEventListener('click', function(e) {
+        if (!audio.duration) return;
+        var rect = bar.getBoundingClientRect();
+        audio.currentTime = ((e.clientX - rect.left) / rect.width) * audio.duration;
+    });
 });
 </script>
 </body>
