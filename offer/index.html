@@ -866,6 +866,59 @@
             to { opacity: 1; transform: translateY(0); }
         }
 
+        /* ===== AUDIO DEMO SECTION ===== */
+        .audio-demo-section {
+            padding: 0 0 120px;
+        }
+        .audio-demo-grid {
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            gap: 24px;
+        }
+        .audio-card {
+            position: relative;
+            background: rgba(255,255,255,0.03);
+            border: 1px solid rgba(255,255,255,0.06);
+            border-radius: 24px;
+            padding: 36px 32px 32px;
+            backdrop-filter: blur(20px);
+            overflow: hidden;
+            transition: transform 0.4s cubic-bezier(0.16, 1, 0.3, 1), border-color 0.4s, box-shadow 0.4s;
+            opacity: 0;
+            transform: translateY(40px);
+        }
+        .audio-card.visible {
+            opacity: 1;
+            transform: translateY(0);
+            transition: opacity 0.7s ease-out, transform 0.7s cubic-bezier(0.16, 1, 0.3, 1), border-color 0.4s, box-shadow 0.4s;
+        }
+        .audio-card:hover {
+            transform: translateY(-8px);
+            border-color: rgba(255,77,0,0.2);
+            box-shadow: 0 20px 60px rgba(255,77,0,0.08), 0 0 0 1px rgba(255,77,0,0.1);
+        }
+        .audio-card-icon {
+            width: 56px; height: 56px;
+            background: rgba(255,77,0,0.1);
+            border: 1px solid rgba(255,77,0,0.15);
+            border-radius: 16px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin-bottom: 20px;
+        }
+        .audio-card-icon svg { width: 28px; height: 28px; }
+        .audio-card-title {
+            font-size: 20px;
+            font-weight: 800;
+            margin-bottom: 16px;
+        }
+        .audio-card audio {
+            width: 100%;
+            max-width: 100%;
+            border-radius: 8px;
+        }
+
         /* ===== SCROLLBAR ===== */
         ::-webkit-scrollbar { width: 6px; }
         ::-webkit-scrollbar-track { background: var(--bg); }
@@ -875,6 +928,7 @@
         @media (max-width: 900px) {
             .process-grid { grid-template-columns: 1fr; gap: 32px; }
             .cards-grid { grid-template-columns: 1fr; gap: 16px; }
+            .audio-demo-grid { grid-template-columns: 1fr; gap: 16px; }
             .stats-bar { grid-template-columns: 1fr; }
             .stat-item:not(:last-child)::after { display: none; }
             .stat-item:not(:last-child) { border-bottom: 1px solid rgba(255,255,255,0.04); }
@@ -894,6 +948,7 @@
             .func-grid { grid-template-columns: 1fr; }
             .func-card { padding: 24px 18px; }
             .feature-card { padding: 32px 24px 28px; }
+            .audio-card { padding: 28px 20px 24px; }
             .card-watermark { font-size: 100px; }
             .cta-wrapper { padding: 36px 20px; border-radius: 24px; }
         }
@@ -1056,6 +1111,39 @@
             <div class="stat-item">
                 <div class="stat-number" data-target="2000" data-prefix="от " data-suffix=" ₽">0</div>
                 <div class="stat-label">стоимость лида</div>
+            </div>
+        </div>
+    </div>
+</section>
+
+<!-- ===== AUDIO DEMO ===== -->
+<section class="audio-demo-section">
+    <div class="container">
+        <div class="section-header">
+            <h2 class="section-title">Послушайте, как работает<br>AI-менеджер</h2>
+            <p style="color: rgba(255,255,255,0.45); font-size: 17px; margin-top: 16px; font-weight: 400; letter-spacing: 0; opacity: 0; transform: translateY(20px);" class="section-title">Реальные примеры звонков вашего будущего виртуального менеджера</p>
+        </div>
+        <div class="audio-demo-grid">
+            <div class="audio-card" data-delay="0">
+                <div class="audio-card-icon">
+                    <svg viewBox="0 0 24 24" fill="none" stroke="#FF4D00" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round">
+                        <path d="M22 16.92v3a2 2 0 0 1-2.18 2 19.79 19.79 0 0 1-8.63-3.07 19.5 19.5 0 0 1-6-6A19.79 19.79 0 0 1 2.12 4.18 2 2 0 0 1 4.11 2h3a2 2 0 0 1 2 1.72c.127.96.361 1.903.7 2.81a2 2 0 0 1-.45 2.11L8.09 9.91a16 16 0 0 0 6 6l1.27-1.27a2 2 0 0 1 2.11-.45c.907.339 1.85.573 2.81.7A2 2 0 0 1 22 16.92z"/>
+                    </svg>
+                </div>
+                <div class="audio-card-title">Звонок: таможенное оформление</div>
+                <audio controls preload="none" src="call-customs.mp3"></audio>
+            </div>
+            <div class="audio-card" data-delay="150">
+                <div class="audio-card-icon">
+                    <svg viewBox="0 0 24 24" fill="none" stroke="#FF4D00" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round">
+                        <path d="M12 1a3 3 0 0 0-3 3v8a3 3 0 0 0 6 0V4a3 3 0 0 0-3-3z"/>
+                        <path d="M19 10v2a7 7 0 0 1-14 0v-2"/>
+                        <line x1="12" y1="19" x2="12" y2="23"/>
+                        <line x1="8" y1="23" x2="16" y2="23"/>
+                    </svg>
+                </div>
+                <div class="audio-card-title">Пример звонка</div>
+                <audio controls preload="none" src="call-example.mp3"></audio>
             </div>
         </div>
     </div>
@@ -1317,7 +1405,7 @@
         });
     }, { threshold: 0.15 });
 
-    document.querySelectorAll('.feature-card, .stats-bar, .cta-wrapper, .section-eyebrow, .section-title, .process-title, .process-step, .func-col, .faq-title, .faq-item').forEach(function(el) {
+    document.querySelectorAll('.feature-card, .audio-card, .stats-bar, .cta-wrapper, .section-eyebrow, .section-title, .process-title, .process-step, .func-col, .faq-title, .faq-item').forEach(function(el) {
         observer.observe(el);
     });
 })();
