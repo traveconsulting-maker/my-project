@@ -918,6 +918,29 @@
             max-width: 100%;
             border-radius: 8px;
         }
+        .audio-card-icon {
+            position: relative;
+        }
+        .audio-card-icon::before,
+        .audio-card-icon::after {
+            content: '';
+            position: absolute;
+            inset: -6px;
+            border-radius: 20px;
+            border: 2px solid rgba(255,77,0,0.3);
+            opacity: 0;
+            pointer-events: none;
+        }
+        .audio-card.playing .audio-card-icon::before {
+            animation: audioPulse 1.8s ease-out infinite;
+        }
+        .audio-card.playing .audio-card-icon::after {
+            animation: audioPulse 1.8s ease-out 0.6s infinite;
+        }
+        @keyframes audioPulse {
+            0% { opacity: 0.7; inset: -4px; }
+            100% { opacity: 0; inset: -20px; }
+        }
 
         /* ===== SCROLLBAR ===== */
         ::-webkit-scrollbar { width: 6px; }
@@ -1121,7 +1144,7 @@
     <div class="container">
         <div class="section-header">
             <h2 class="section-title">Послушайте, как работает<br>AI-менеджер</h2>
-            <p style="color: rgba(255,255,255,0.45); font-size: 17px; margin-top: 16px; font-weight: 400; letter-spacing: 0; opacity: 0; transform: translateY(20px);" class="section-title">Реальные примеры звонков вашего будущего виртуального менеджера</p>
+            <p style="color: rgba(255,255,255,0.45); font-size: 17px; margin-top: 16px; font-weight: 400; letter-spacing: 0; opacity: 0; transform: translateY(20px);" class="section-title">Реальные примеры звонков вашего будущего ИИ-менеджера</p>
         </div>
         <div class="audio-demo-grid">
             <div class="audio-card" data-delay="0">
@@ -1142,7 +1165,7 @@
                         <line x1="8" y1="23" x2="16" y2="23"/>
                     </svg>
                 </div>
-                <div class="audio-card-title">Пример звонка</div>
+                <div class="audio-card-title">Логистика для маркетплейсов</div>
                 <audio controls preload="none" src="call-example.mp3"></audio>
             </div>
         </div>
@@ -1530,6 +1553,17 @@ function toggleFaq(q) {
     // Toggle clicked
     if (!wasOpen) item.classList.add('open');
 }
+
+/* ==========================================================
+   AUDIO CARD PULSE ANIMATION
+   ========================================================== */
+document.querySelectorAll('.audio-card').forEach(function(card) {
+    var audio = card.querySelector('audio');
+    if (!audio) return;
+    audio.addEventListener('play', function() { card.classList.add('playing'); });
+    audio.addEventListener('pause', function() { card.classList.remove('playing'); });
+    audio.addEventListener('ended', function() { card.classList.remove('playing'); });
+});
 </script>
 </body>
 </html>
