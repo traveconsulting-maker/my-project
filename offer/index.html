@@ -1364,6 +1364,14 @@
 </div><!-- /page-content -->
 
 <script>
+document.addEventListener('DOMContentLoaded', function() {
+    var params = new URLSearchParams(window.location.search);
+    ['utm_source', 'utm_medium', 'utm_campaign', 'utm_content', 'utm_term'].forEach(function(key) {
+        var val = params.get(key);
+        if (val) sessionStorage.setItem(key, val);
+    });
+});
+
 /* ==========================================================
    PARTICLE SYSTEM
    ========================================================== */
@@ -1567,7 +1575,13 @@ function submitCtaForm(e) {
     var data = {
         name: document.getElementById('ctaName').value.trim(),
         phone: document.getElementById('ctaPhone').value.trim(),
-        source: 'offer_landing'
+        source: 'offer_landing',
+        utm_source: sessionStorage.getItem('utm_source') || '',
+        utm_medium: sessionStorage.getItem('utm_medium') || '',
+        utm_campaign: sessionStorage.getItem('utm_campaign') || '',
+        utm_content: sessionStorage.getItem('utm_content') || '',
+        utm_term: sessionStorage.getItem('utm_term') || '',
+        referrer: document.referrer || ''
     };
 
     fetch('https://api.easysale.tech/api/leads/offer', {
