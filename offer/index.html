@@ -1296,7 +1296,7 @@
 <!-- ===== CTA SECTION ===== -->
 <section class="cta-section" id="ctaSection">
     <div class="container">
-        <div class="cta-wrapper" id="ctaWrapper">
+        <div class="cta-wrapper" id="demo-form">
             <div class="cta-bg"></div>
             <div class="cta-content">
                 <h2 class="cta-title">Получите демо</h2>
@@ -1370,6 +1370,15 @@ document.addEventListener('DOMContentLoaded', function() {
         var val = params.get(key);
         if (val) sessionStorage.setItem(key, val);
     });
+
+    if (params.get('openform') === '1') {
+        var formSection = document.getElementById('demo-form');
+        if (formSection) {
+            formSection.scrollIntoView({ behavior: 'smooth' });
+            var nameInput = document.getElementById('ctaName');
+            if (nameInput) nameInput.focus({ preventScroll: true });
+        }
+    }
 });
 
 /* ==========================================================
@@ -1554,7 +1563,8 @@ document.addEventListener('DOMContentLoaded', function() {
    CTA FORM
    ========================================================== */
 function scrollToCta() {
-    document.getElementById('ctaSection').scrollIntoView({ behavior: 'smooth' });
+    var el = document.getElementById('demo-form') || document.getElementById('ctaSection');
+    if (el) el.scrollIntoView({ behavior: 'smooth' });
 }
 
 function openDemo() {
