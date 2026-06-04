@@ -2577,6 +2577,118 @@
             border-color: var(--accent);
             box-shadow: 0 0 20px rgba(255, 87, 51, 0.25);
         }
+        /* ===== AUDIO DEMO SECTION ===== */
+        .audio-demo-section {
+            padding: 80px 24px;
+            max-width: 1200px;
+            margin: 0 auto;
+        }
+        .audio-demo-grid {
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            gap: 24px;
+            margin-top: 32px;
+        }
+        .audio-card {
+            position: relative;
+            background: rgba(255,255,255,0.03);
+            border: 1px solid rgba(255,255,255,0.06);
+            border-radius: 24px;
+            padding: 36px 32px 32px;
+            backdrop-filter: blur(20px);
+            overflow: hidden;
+            transition: transform 0.4s cubic-bezier(0.16, 1, 0.3, 1), border-color 0.4s, box-shadow 0.4s;
+        }
+        .audio-card:hover {
+            transform: translateY(-8px);
+            border-color: rgba(255, 87, 51, 0.2);
+            box-shadow: 0 20px 60px rgba(255, 87, 51, 0.08), 0 0 0 1px rgba(255, 87, 51, 0.1);
+        }
+        .audio-card-icon {
+            width: 56px; height: 56px;
+            background: rgba(255, 87, 51, 0.1);
+            border: 1px solid rgba(255, 87, 51, 0.15);
+            border-radius: 16px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin-bottom: 20px;
+        }
+        .audio-card-icon svg { width: 28px; height: 28px; }
+        .audio-card-title {
+            font-size: 20px;
+            font-weight: 800;
+            margin-bottom: 16px;
+        }
+        .audio-card audio { display: none; }
+        .custom-player {
+            display: flex;
+            align-items: center;
+            gap: 14px;
+            background: rgba(255,255,255,0.04);
+            border: 1px solid rgba(255,255,255,0.06);
+            border-radius: 14px;
+            padding: 12px 16px;
+        }
+        .player-play-btn {
+            width: 42px; height: 42px;
+            min-width: 42px;
+            border-radius: 50%;
+            border: none;
+            background: var(--accent);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            cursor: pointer;
+            transition: background 0.2s, transform 0.15s;
+        }
+        .player-play-btn:hover { background: var(--accent-hover); transform: scale(1.07); }
+        .player-play-btn svg { width: 18px; height: 18px; fill: #fff; }
+        .player-play-btn .icon-pause { display: none; }
+        .audio-card.playing .player-play-btn .icon-play { display: none; }
+        .audio-card.playing .player-play-btn .icon-pause { display: block; }
+        .player-middle {
+            flex: 1;
+            min-width: 0;
+            display: flex;
+            flex-direction: column;
+            gap: 6px;
+        }
+        .player-progress {
+            position: relative;
+            width: 100%;
+            height: 6px;
+            background: rgba(255,255,255,0.1);
+            border-radius: 3px;
+            cursor: pointer;
+            overflow: hidden;
+        }
+        .player-progress-fill {
+            position: absolute;
+            left: 0; top: 0; bottom: 0;
+            width: 0%;
+            background: var(--accent);
+            border-radius: 3px;
+            transition: width 0.15s linear;
+        }
+        .player-time {
+            font-size: 13px;
+            color: rgba(255,255,255,0.5);
+            font-variant-numeric: tabular-nums;
+            white-space: nowrap;
+        }
+        .audio-card.playing {
+            border-color: rgba(255, 87, 51, 0.25);
+            animation: cardGlow 2s ease-in-out infinite;
+        }
+        @keyframes cardGlow {
+            0%, 100% { box-shadow: 0 0 15px rgba(255, 87, 51, 0.1), 0 0 0 1px rgba(255, 87, 51, 0.15); }
+            50% { box-shadow: 0 0 30px rgba(255, 87, 51, 0.2), 0 0 0 1px rgba(255, 87, 51, 0.3); }
+        }
+        @media (max-width: 768px) {
+            .audio-demo-grid { grid-template-columns: 1fr; gap: 16px; }
+        }
+
     </style>
 </head>
 <body>
@@ -2718,6 +2830,55 @@
             <span data-i18n="ctaStart">Зарегистрироваться бесплатно</span>
             <svg viewBox="0 0 24 24"><path d="M12 4l-1.41 1.41L16.17 11H4v2h12.17l-5.58 5.59L12 20l8-8-8-8z"/></svg>
         </button>
+    </div>
+</div>
+
+<!-- Audio Demo -->
+<div class="audio-demo-section section reveal">
+    <div class="section-title" style="text-align:center;" data-i18n="audioTitle">Послушайте, как работает AI-менеджер</div>
+    <div class="section-desc" style="text-align:center; margin-left:auto; margin-right:auto;" data-i18n="audioDesc">Реальные примеры звонков вашего будущего ИИ-менеджера</div>
+    <div class="audio-demo-grid">
+        <div class="audio-card reveal reveal-d1">
+            <div class="audio-card-icon">
+                <svg viewBox="0 0 24 24" fill="none" stroke="#FF5733" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round">
+                    <path d="M22 16.92v3a2 2 0 0 1-2.18 2 19.79 19.79 0 0 1-8.63-3.07 19.5 19.5 0 0 1-6-6A19.79 19.79 0 0 1 2.12 4.18 2 2 0 0 1 4.11 2h3a2 2 0 0 1 2 1.72c.127.96.361 1.903.7 2.81a2 2 0 0 1-.45 2.11L8.09 9.91a16 16 0 0 0 6 6l1.27-1.27a2 2 0 0 1 2.11-.45c.907.339 1.85.573 2.81.7A2 2 0 0 1 22 16.92z"/>
+                </svg>
+            </div>
+            <div class="audio-card-title" data-i18n="audioCard1">Звонок: таможенное оформление</div>
+            <audio preload="none" src="/offer/call-customs.mp3"></audio>
+            <div class="custom-player">
+                <button class="player-play-btn" type="button">
+                    <svg class="icon-play" viewBox="0 0 18 18"><polygon points="4,2 16,9 4,16"/></svg>
+                    <svg class="icon-pause" viewBox="0 0 18 18"><rect x="3" y="2" width="4" height="14" rx="1"/><rect x="11" y="2" width="4" height="14" rx="1"/></svg>
+                </button>
+                <div class="player-middle">
+                    <div class="player-progress"><div class="player-progress-fill"></div></div>
+                </div>
+                <span class="player-time">0:00 / 0:00</span>
+            </div>
+        </div>
+        <div class="audio-card reveal reveal-d2">
+            <div class="audio-card-icon">
+                <svg viewBox="0 0 24 24" fill="none" stroke="#FF5733" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round">
+                    <path d="M12 1a3 3 0 0 0-3 3v8a3 3 0 0 0 6 0V4a3 3 0 0 0-3-3z"/>
+                    <path d="M19 10v2a7 7 0 0 1-14 0v-2"/>
+                    <line x1="12" y1="19" x2="12" y2="23"/>
+                    <line x1="8" y1="23" x2="16" y2="23"/>
+                </svg>
+            </div>
+            <div class="audio-card-title" data-i18n="audioCard2">Логистика для маркетплейсов</div>
+            <audio preload="none" src="/offer/call-example.mp3"></audio>
+            <div class="custom-player">
+                <button class="player-play-btn" type="button">
+                    <svg class="icon-play" viewBox="0 0 18 18"><polygon points="4,2 16,9 4,16"/></svg>
+                    <svg class="icon-pause" viewBox="0 0 18 18"><rect x="3" y="2" width="4" height="14" rx="1"/><rect x="11" y="2" width="4" height="14" rx="1"/></svg>
+                </button>
+                <div class="player-middle">
+                    <div class="player-progress"><div class="player-progress-fill"></div></div>
+                </div>
+                <span class="player-time">0:00 / 0:00</span>
+            </div>
+        </div>
     </div>
 </div>
 
@@ -3464,6 +3625,11 @@
         s4t: { ru:'Получайте заявки', en:'Get Applications' },
         s4d: { ru:'Получайте входящие заявки и растите свой бизнес', en:'Receive incoming leads and grow your business' },
         ctaStart: { ru:'Зарегистрироваться бесплатно', en:'Register for Free' },
+        // Audio demo
+        audioTitle: { ru:'Послушайте, как работает AI-менеджер', en:'Hear how the AI manager works' },
+        audioDesc: { ru:'Реальные примеры звонков вашего будущего ИИ-менеджера', en:'Real call examples of your future AI manager' },
+        audioCard1: { ru:'Звонок: таможенное оформление', en:'Call: customs clearance' },
+        audioCard2: { ru:'Логистика для маркетплейсов', en:'Logistics for marketplaces' },
         ctaBannerTitle: { ru:'Готовы получать <span>новых клиентов</span>?', en:'Ready to get <span>new clients</span>?' },
         ctaBannerDesc: { ru:'Зарегистрируйтесь за 2 минуты и запустите AI-отдел продаж. Первые лиды — уже завтра.', en:'Register in 2 minutes and launch your AI sales department. First leads — tomorrow.' },
         ctaGetAccess: { ru:'Зарегистрироваться', en:'Register' },
@@ -4377,6 +4543,38 @@
 })();
 </script>
 
+<!-- Audio player logic -->
+<script>
+function fmtTime(s){ s=Math.floor(s||0); var m=Math.floor(s/60); var ss=s%60; return m+':'+(ss<10?'0':'')+ss; }
+document.querySelectorAll('.audio-card').forEach(function(card) {
+    var audio = card.querySelector('audio');
+    var btn = card.querySelector('.player-play-btn');
+    var bar = card.querySelector('.player-progress');
+    var fill = card.querySelector('.player-progress-fill');
+    var time = card.querySelector('.player-time');
+    if (!audio || !btn) return;
+
+    btn.addEventListener('click', function() {
+        if (audio.paused) { audio.play(); } else { audio.pause(); }
+    });
+    audio.addEventListener('play', function() { card.classList.add('playing'); });
+    audio.addEventListener('pause', function() { card.classList.remove('playing'); });
+    audio.addEventListener('ended', function() { card.classList.remove('playing'); fill.style.width = '0%'; });
+    audio.addEventListener('loadedmetadata', function() {
+        time.textContent = fmtTime(audio.currentTime) + ' / ' + fmtTime(audio.duration);
+    });
+    audio.addEventListener('timeupdate', function() {
+        var pct = audio.duration ? (audio.currentTime / audio.duration * 100) : 0;
+        fill.style.width = pct + '%';
+        time.textContent = fmtTime(audio.currentTime) + ' / ' + fmtTime(audio.duration);
+    });
+    bar.addEventListener('click', function(e) {
+        if (!audio.duration) return;
+        var rect = bar.getBoundingClientRect();
+        audio.currentTime = ((e.clientX - rect.left) / rect.width) * audio.duration;
+    });
+});
+</script>
 
 <!-- Low-poly funnel animation -->
 <script>
