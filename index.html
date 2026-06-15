@@ -2882,7 +2882,6 @@
                     </div>
                     <button class="intg-submit-btn" onclick="saveIntegrationAmo()" data-i18n="intAmoBtn">Подключить</button>
                     <div id="intgAmoButtonWrap" style="margin-top:16px;text-align:center;display:none;">
-                        <iframe id="intgAmoFrame" style="border:none;width:100%;height:60px;" scrolling="no"></iframe>
                     </div>
                     <div class="intg-result" id="intgResultAmo"></div>
                 </div>
@@ -10231,31 +10230,41 @@
                 console.log('[AMO] connect response:', JSON.stringify(data));
                 if (data.client_id) {
                     _amoState = data;
-                    btn.style.display = 'none';
 
-                    var wrap = document.getElementById('intgAmoButtonWrap');
-                    wrap.style.display = 'block';
-
-                    // Render AMO button inside iframe so button.js finds its script tag on parse
-                    var iframe = document.getElementById('intgAmoFrame');
-                    var html = '<!DOCTYPE html><html><head><style>body{margin:0;display:flex;justify-content:center;align-items:center;min-height:50px;background:transparent;}</style></head><body>' +
-                        '<div class="button-amo-container"></div>' +
-                        '<script class="amocrm_oauth" charset="utf-8"' +
-                        ' data-client-id="' + data.client_id + '"' +
-                        ' data-title="Подключить АМО CRM"' +
-                        ' data-compact="false"' +
-                        ' data-color="red"' +
-                        ' data-state="' + data.state + '"' +
-                        ' src="https://www.amocrm.ru/auth/button.js"><\/script>' +
-                        '</body></html>';
-                    var doc = iframe.contentDocument || iframe.contentWindow.document;
-                    doc.open();
-                    doc.write(html);
-                    doc.close();
-                    console.log('[AMO] iframe written with button.js');
+                    // Open amoCRM OAuth in a popup window (no iframe, no button.js)
+                    var authUrl = 'https://www.amocrm.ru/oauth?client_id=' + encodeURIComponent(data.client_id) +
+                        '&state=' + encodeURIComponent(data.state) +
+                        '&mode=popup';
+                    var authWin = window.open(authUrl, 'amoAuth', 'width=750,height=580');
+                    console.log('[AMO] OAuth popup opened');
 
                     resultEl.textContent = t('intClickAuth');
                     resultEl.style.color = 'var(--text-muted)';
+
+                    // Poll for popup close — backend handles code→token exchange on redirect
+                    var pollTimer = setInterval(function() {
+                        if (!authWin || authWin.closed) {
+                            clearInterval(pollTimer);
+                            btn.disabled = false; btn.textContent = t('intConnect');
+                            // Reload integrations to check if connection succeeded
+                            fetch(ES_API + '/api/integrations', { headers: esApiHeaders() })
+                            .then(function(r) { return r.json(); })
+                            .then(function(intg) {
+                                intgData = intg;
+                                updateIntegrationStatuses();
+                                if (intgData.amocrm && intgData.amocrm.connected) {
+                                    resultEl.textContent = t('intAmoOk');
+                                    resultEl.style.color = '#00b894';
+                                    clToast(t('intAmoOk'));
+                                } else {
+                                    resultEl.textContent = '';
+                                }
+                            })
+                            .catch(function() {
+                                resultEl.textContent = '';
+                            });
+                        }
+                    }, 500);
                 } else {
                     btn.disabled = false; btn.textContent = t('intConnect');
                     resultEl.textContent = data.error || t('intConnError');
@@ -10268,10 +10277,10 @@
             });
         }
 
-        // Global listener for AMO OAuth postMessage callback
+        // Global listener for AMO OAuth postMessage from callback page
         window.addEventListener('message', function(e) {
             if (!e.data || typeof e.data !== 'object') return;
-            if (!e.data.code && !e.data.error) return;
+            if (!e.data.code && !e.data.error && !e.data.success) return;
             console.log('[AMO] postMessage received:', e.origin, JSON.stringify(e.data));
 
             var resultEl = document.getElementById('intgResultAmo');
@@ -10284,29 +10293,17 @@
                 return;
             }
 
-            if (e.data.code) {
-                var state = _amoState ? _amoState.state : '';
-                var domain = e.data.referer || (_amoState ? _amoState.domain : '');
-                resultEl.textContent = t('intAuthSaving');
-                resultEl.style.color = '#f39c12';
-
-                fetch(ES_API + '/api/integrations/amocrm/callback?code=' + encodeURIComponent(e.data.code) + '&state=' + encodeURIComponent(state))
-                .then(function(r) {
-                    if (r.ok) {
-                        resultEl.textContent = t('intAmoOk');
-                        resultEl.style.color = '#00b894';
-                        intgData.amocrm = { connected: true, domain: domain };
-                        updateIntegrationStatuses();
-                        clToast(t('intAmoOk'));
-                    } else {
-                        resultEl.textContent = t('intTokenError');
-                        resultEl.style.color = '#e74c3c';
-                    }
-                })
-                .catch(function() {
-                    resultEl.textContent = t('intNetError');
-                    resultEl.style.color = '#e74c3c';
-                });
+            // Backend already exchanged code for tokens on the callback redirect,
+            // so just update UI (no need to call callback endpoint again)
+            if (e.data.success || e.data.code) {
+                var domain = _amoState ? _amoState.domain : '';
+                resultEl.textContent = t('intAmoOk');
+                resultEl.style.color = '#00b894';
+                intgData.amocrm = { connected: true, domain: domain };
+                updateIntegrationStatuses();
+                clToast(t('intAmoOk'));
+                var btn = document.querySelector('#integrationFormAmo .intg-submit-btn');
+                if (btn) { btn.disabled = false; btn.textContent = t('intConnect'); }
             }
         });
 
