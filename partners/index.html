@@ -202,18 +202,6 @@
             line-height:1;letter-spacing:-3px;
             color:var(--text);position:relative;
         }
-        .counter-value .digit-wrap{
-            display:inline-block;overflow:hidden;
-            height:1em;vertical-align:bottom;
-            position:relative;
-        }
-        .counter-value .digit-strip{
-            display:flex;flex-direction:column;
-            transition:transform 1.6s cubic-bezier(.22,1,.36,1);
-        }
-        .counter-value .digit-char{
-            display:block;height:1em;line-height:1;
-        }
         .counter-currency{
             font-family:'Space Grotesk',sans-serif;
             font-size:clamp(28px,4vw,48px);font-weight:500;
@@ -287,39 +275,41 @@
             font-size:14px;color:var(--text-muted);line-height:1.65;
         }
 
-        /* ===== STEPS — vertical path ===== */
+        /* ===== STEPS — vertical timeline ===== */
         .steps-section{padding:100px 48px;max-width:1200px;margin:0 auto}
-        .steps-wrap{
-            display:grid;grid-template-columns:60px 1fr;gap:0;
+        .steps-list{
+            display:flex;flex-direction:column;gap:0;
             margin-top:56px;position:relative;
         }
-        .steps-line-col{position:relative;display:flex;justify-content:center}
-        .steps-svg{position:absolute;top:0;left:50%;transform:translateX(-50%);width:2px;height:100%}
-        .steps-svg line{
-            stroke:rgba(255,77,0,0.15);stroke-width:2;
-        }
-        .steps-svg .line-progress{
-            stroke:var(--accent);stroke-width:2;
-            stroke-dasharray:var(--line-len,1000);
-            stroke-dashoffset:var(--line-len,1000);
-            transition:stroke-dashoffset .1s linear;
-        }
-        .steps-content{display:flex;flex-direction:column;gap:0}
-
         .step-item{
-            display:grid;grid-template-columns:60px 1fr;gap:0;
-            align-items:start;
+            display:flex;align-items:flex-start;position:relative;
         }
-        .step-dot-col{
-            display:flex;justify-content:center;
-            padding-top:4px;position:relative;z-index:2;
+        /* Vertical line through dot column via pseudo-element */
+        .step-item::before{
+            content:'';position:absolute;
+            left:20px;top:0;bottom:0;width:2px;
+            background:rgba(255,77,0,0.12);
+            transform:translateX(-50%);
         }
+        /* Progress overlay line */
+        .step-item::after{
+            content:'';position:absolute;
+            left:20px;top:0;width:2px;height:0;
+            background:var(--accent);
+            transform:translateX(-50%);
+            transition:height .6s cubic-bezier(.16,1,.3,1);
+        }
+        .step-item.active::after{height:100%}
+        .step-item:last-child::before,
+        .step-item:last-child::after{bottom:auto;height:40px}
+        .step-item:last-child.active::after{height:40px}
         .step-dot{
-            width:40px;height:40px;border-radius:50%;
+            flex-shrink:0;width:40px;height:40px;border-radius:50%;
             background:var(--surface);border:2px solid rgba(255,77,0,0.2);
             display:flex;align-items:center;justify-content:center;
             font-family:'Space Grotesk',sans-serif;
             font-size:15px;font-weight:700;color:var(--accent);
+            position:relative;z-index:2;
             transition:border-color .5s,background .5s,color .5s,box-shadow .5s;
         }
         .step-item.active .step-dot{
@@ -327,7 +317,7 @@
             box-shadow:0 0 24px rgba(255,77,0,0.3);
         }
         .step-body{
-            padding:0 0 64px 24px;
+            padding:4px 0 64px 24px;
         }
         .step-body h4{
             font-family:'Space Grotesk',sans-serif;
@@ -602,7 +592,6 @@
             .form-section{padding:80px 24px}
             .form-wrap{padding:32px 24px}
             .nav-links{display:none}
-            .step-body{padding-bottom:48px}
         }
         @media(max-width:600px){
             .topbar{padding:12px 16px}
@@ -620,8 +609,11 @@
             .form-section{padding:64px 16px}
             .form-wrap{padding:24px 16px;border-radius:18px}
             .footer{padding:32px 16px}
-            .steps-wrap{grid-template-columns:44px 1fr}
-            .step-item{grid-template-columns:44px 1fr}
+            .step-item::before{left:16px}
+            .step-item::after{left:16px}
+            .step-item:last-child::before,
+            .step-item:last-child::after{height:32px}
+            .step-item:last-child.active::after{height:32px}
             .step-dot{width:32px;height:32px;font-size:13px}
             .step-body{padding-left:16px;padding-bottom:40px}
         }
@@ -717,39 +709,30 @@
             <h2 class="section-title reveal">Четыре простых шага</h2>
             <p class="section-desc reveal">Никакой бюрократии — начните зарабатывать за минуты.</p>
 
-            <div class="steps-wrap">
-                <!-- SVG vertical line -->
-                <div class="steps-line-col">
-                    <svg class="steps-svg" id="stepsSvg" preserveAspectRatio="none">
-                        <line x1="1" y1="0" x2="1" y2="100%" />
-                        <line class="line-progress" id="lineProgress" x1="1" y1="0" x2="1" y2="100%" />
-                    </svg>
-                </div>
-                <div></div><!-- grid placeholder -->
-
+            <div class="steps-list" id="stepsList">
                 <div class="step-item reveal" data-step>
-                    <div class="step-dot-col"><div class="step-dot">1</div></div>
+                    <div class="step-dot">1</div>
                     <div class="step-body">
                         <h4>Регистрируетесь</h4>
                         <p>Заходите в личный кабинет и получаете персональную реферальную ссылку.</p>
                     </div>
                 </div>
                 <div class="step-item reveal" data-step>
-                    <div class="step-dot-col"><div class="step-dot">2</div></div>
+                    <div class="step-dot">2</div>
                     <div class="step-body">
                         <h4>Рекомендуете</h4>
                         <p>Делитесь EasySale со своими клиентами — лично, в презентации или в переписке.</p>
                     </div>
                 </div>
                 <div class="step-item reveal" data-step>
-                    <div class="step-dot-col"><div class="step-dot">3</div></div>
+                    <div class="step-dot">3</div>
                     <div class="step-body">
                         <h4>Клиент подключается</h4>
                         <p>Регистрируется по вашей ссылке и начинает пользоваться сервисом.</p>
                     </div>
                 </div>
                 <div class="step-item reveal" data-step>
-                    <div class="step-dot-col"><div class="step-dot">4</div></div>
+                    <div class="step-dot">4</div>
                     <div class="step-body">
                         <h4>Получаете доход</h4>
                         <p>Вам начисляется процент с платежей клиента — пожизненно, пока он пользуется EasySale.</p>
@@ -929,72 +912,51 @@
     });
 
     /* ========================================
-       COUNTER — rolling odometer digits
+       COUNTER — count-up animation
        ======================================== */
     var counterFired = false;
-    var TARGET_NUMBER = '500 000';
+    var COUNTER_TARGET = 500000;
+    var COUNTER_DURATION = 2000; // ms
 
-    function buildOdometer(){
-        var container = document.getElementById('counterValue');
-        if(!container) return;
-        container.innerHTML = '';
-        for(var i = 0; i < TARGET_NUMBER.length; i++){
-            var ch = TARGET_NUMBER[i];
-            if(ch === ' '){
-                var spacer = document.createElement('span');
-                spacer.style.width = '0.25em';
-                spacer.style.display = 'inline-block';
-                container.appendChild(spacer);
-                continue;
-            }
-            var wrap = document.createElement('span');
-            wrap.className = 'digit-wrap';
-            var strip = document.createElement('span');
-            strip.className = 'digit-strip';
-
-            var digit = parseInt(ch, 10);
-            // Build strip: digits 0 through target
-            for(var d = 0; d <= digit; d++){
-                var span = document.createElement('span');
-                span.className = 'digit-char';
-                span.textContent = d;
-                strip.appendChild(span);
-            }
-            // Start at 0
-            strip.style.transform = 'translateY(0)';
-            wrap.appendChild(strip);
-            container.appendChild(wrap);
-        }
+    function formatCounter(n){
+        return Math.round(n).toString().replace(/\B(?=(\d{3})+(?!\d))/g, ' ');
     }
 
-    function animateOdometer(){
-        if(counterFired || prefersReduced) return;
+    var counterEl = document.getElementById('counterValue');
+
+    // Show final value immediately for reduced motion
+    if(prefersReduced && counterEl){
+        counterEl.textContent = formatCounter(COUNTER_TARGET);
         counterFired = true;
-        var strips = document.querySelectorAll('#counterValue .digit-strip');
-        strips.forEach(function(strip, idx){
-            var chars = strip.querySelectorAll('.digit-char');
-            if(chars.length <= 1) return;
-            var offset = -((chars.length - 1) * 100 / chars.length);
-            // stagger each digit
-            var delay = idx * 80;
-            setTimeout(function(){
-                strip.style.transform = 'translateY(' + offset + '%)';
-            }, delay);
-        });
+    } else if(counterEl){
+        counterEl.textContent = '0';
     }
 
-    buildOdometer();
-
-    // If reduced motion, show final state immediately
-    if(prefersReduced){
-        var cv = document.getElementById('counterValue');
-        if(cv) cv.textContent = TARGET_NUMBER;
+    function animateCounter(){
+        if(counterFired || !counterEl) return;
+        counterFired = true;
+        var start = null;
+        function tick(ts){
+            if(!start) start = ts;
+            var elapsed = ts - start;
+            var progress = Math.min(elapsed / COUNTER_DURATION, 1);
+            // ease-out cubic: fast start, slow end
+            var eased = 1 - Math.pow(1 - progress, 3);
+            var current = eased * COUNTER_TARGET;
+            counterEl.textContent = formatCounter(current);
+            if(progress < 1){
+                requestAnimationFrame(tick);
+            } else {
+                counterEl.textContent = formatCounter(COUNTER_TARGET);
+            }
+        }
+        requestAnimationFrame(tick);
     }
 
     var counterObserver = new IntersectionObserver(function(entries){
         entries.forEach(function(entry){
             if(entry.isIntersecting){
-                animateOdometer();
+                animateCounter();
                 counterObserver.unobserve(entry.target);
             }
         });
@@ -1004,51 +966,32 @@
     if(counterBlock) counterObserver.observe(counterBlock);
 
     /* ========================================
-       STEPS — SVG line draw on scroll
+       STEPS — activate on scroll
        ======================================== */
-    function initStepsLine(){
-        var section = document.getElementById('stepsSection');
-        var line = document.getElementById('lineProgress');
-        var svg = document.getElementById('stepsSvg');
+    function initSteps(){
         var stepItems = document.querySelectorAll('[data-step]');
-        if(!section || !line || !svg || !stepItems.length) return;
+        if(!stepItems.length) return;
+
+        if(prefersReduced){
+            stepItems.forEach(function(s){ s.classList.add('active'); });
+            return;
+        }
 
         function update(){
-            var rect = section.getBoundingClientRect();
-            var svgRect = svg.getBoundingClientRect();
-            var lineLen = svgRect.height;
-            line.style.setProperty('--line-len', lineLen);
-            line.setAttribute('stroke-dasharray', lineLen);
-
-            // Calculate progress: 0 when section top hits viewport bottom, 1 when section bottom hits viewport top
             var viewH = window.innerHeight;
-            var progress = (viewH - rect.top) / (rect.height + viewH * 0.3);
-            progress = Math.max(0, Math.min(1, progress));
-
-            var dashOffset = lineLen * (1 - progress);
-            line.setAttribute('stroke-dashoffset', dashOffset);
-
-            // Activate step items based on scroll
-            stepItems.forEach(function(item, i){
-                var itemRect = item.getBoundingClientRect();
-                var itemCenter = itemRect.top + itemRect.height / 2;
-                if(itemCenter < viewH * 0.7){
+            stepItems.forEach(function(item){
+                var rect = item.getBoundingClientRect();
+                var center = rect.top + rect.height / 2;
+                if(center < viewH * 0.75){
                     item.classList.add('active');
                 }
             });
         }
 
-        if(prefersReduced){
-            line.setAttribute('stroke-dasharray', '0');
-            line.setAttribute('stroke-dashoffset', '0');
-            stepItems.forEach(function(s){ s.classList.add('active'); });
-        } else {
-            window.addEventListener('scroll', update, {passive:true});
-            window.addEventListener('resize', update, {passive:true});
-            update();
-        }
+        window.addEventListener('scroll', update, {passive:true});
+        update();
     }
-    initStepsLine();
+    initSteps();
 
     /* ========================================
        CALCULATOR
