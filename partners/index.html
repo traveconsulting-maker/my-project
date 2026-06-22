@@ -145,7 +145,11 @@
         .hero h1 em{font-style:normal;color:var(--accent)}
         .hero-sub{
             font-size:17px;line-height:1.7;color:var(--text-muted);
-            max-width:480px;margin-bottom:44px;
+            max-width:480px;margin-bottom:24px;
+        }
+        .hero-explain{
+            font-size:15px;line-height:1.7;color:var(--text-secondary);
+            max-width:520px;margin-bottom:40px;
         }
         .hero-cta{
             display:inline-flex;align-items:center;gap:10px;
@@ -181,6 +185,26 @@
             background:var(--accent);
             box-shadow:0 0 20px rgba(255,77,0,0.4);
             top:50%;left:0;transform:translate(-50%,-50%);
+        }
+
+        /* ===== HERO CHIPS BAR ===== */
+        .hero-chips{
+            max-width:1200px;margin:0 auto;
+            padding:0 48px 24px;
+            display:flex;gap:12px;flex-wrap:wrap;
+        }
+        .hero-chip{
+            display:flex;align-items:center;gap:8px;
+            padding:12px 20px;border-radius:12px;
+            background:rgba(255,77,0,0.06);
+            border:1px solid rgba(255,77,0,0.1);
+            font-size:13px;font-weight:500;color:var(--text-secondary);
+            line-height:1.4;
+        }
+        .hero-chip::before{
+            content:'';flex-shrink:0;
+            width:6px;height:6px;border-radius:50%;
+            background:var(--accent);
         }
 
         /* ===== COUNTER SECTION ===== */
@@ -578,6 +602,7 @@
                 grid-template-columns:1fr;padding:140px 24px 60px;gap:0;
             }
             .hero-visual{display:none}
+            .hero-chips{padding:0 24px 24px}
             .counter-section{padding:60px 24px}
             .section{padding:80px 24px}
             .audience-grid{grid-template-columns:1fr;grid-template-rows:auto}
@@ -599,6 +624,7 @@
             .hero h1{letter-spacing:-1.5px}
             .hero-sub{font-size:15px}
             .hero-cta{padding:16px 32px;font-size:14px;width:100%;justify-content:center}
+            .hero-chips{padding:0 16px 20px;flex-direction:column}
             .counter-section{padding:48px 16px}
             .counter-value{letter-spacing:-2px}
             .section{padding:64px 16px}
@@ -650,6 +676,7 @@
                 <div class="hero-eyebrow reveal">Партнёрская программа</div>
                 <h1 class="reveal">Рекомендуйте.<br><em>Зарабатывайте.</em></h1>
                 <p class="hero-sub reveal">Пожизненные выплаты с каждого клиента, которого вы привели в&nbsp;EasySale. Пока он пользуется сервисом&nbsp;— вы получаете доход.</p>
+                <p class="hero-explain reveal">EasySale реанимирует клиентскую базу из CRM: AI&#8209;менеджер обзванивает контакты, квалифицирует их и возвращает горячих лидов&nbsp;— в&nbsp;3&nbsp;раза дешевле и быстрее живого менеджера.</p>
                 <div class="magnetic-wrap reveal">
                     <button class="hero-cta" onclick="scrollToForm(event)">
                         Стать партнёром
@@ -666,6 +693,13 @@
                 </div>
             </div>
         </section>
+
+        <!-- Hero chips -->
+        <div class="hero-chips stagger">
+            <div class="hero-chip reveal">Прямые интеграции с CRM уже готовы — без разработки</div>
+            <div class="hero-chip reveal">Продукт даёт измеримый результат — продавать легко</div>
+            <div class="hero-chip reveal">Клиент доволен: поток лидов из его же базы</div>
+        </div>
 
         <!-- ===== COUNTER ===== -->
         <section class="counter-section">
