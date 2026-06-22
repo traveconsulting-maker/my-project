@@ -72,8 +72,8 @@
         .topbar{
             position:fixed;top:0;left:0;right:0;z-index:50;
             display:flex;align-items:center;justify-content:space-between;
-            padding:16px 48px;
-            background:rgba(12,11,9,0.8);
+            padding:0 48px;height:60px;
+            background:rgba(12,11,9,0.82);
             backdrop-filter:blur(24px);-webkit-backdrop-filter:blur(24px);
             border-bottom:1px solid var(--border-color);
         }
@@ -81,13 +81,23 @@
             font-family:'Space Grotesk',sans-serif;
             font-size:19px;font-weight:700;color:var(--text);
             display:flex;align-items:center;gap:10px;text-decoration:none;
+            flex-shrink:0;
         }
         .logo-icon{
             width:34px;height:34px;border-radius:10px;background:var(--accent);
             display:flex;align-items:center;justify-content:center;
         }
         .logo-icon svg{width:18px;height:18px;fill:#fff}
-        .topbar-right{display:flex;align-items:center;gap:12px}
+        .topbar-center{display:flex;align-items:center;gap:2px}
+        .topbar-center a{
+            color:var(--text-dim);text-decoration:none;font-size:13px;font-weight:500;
+            padding:7px 13px;border-radius:8px;
+            transition:color .2s,background .2s;
+            white-space:nowrap;
+        }
+        .topbar-center a:hover{color:var(--text);background:var(--hover-bg)}
+        .topbar-center a.active{color:var(--text)}
+        .topbar-right{display:flex;align-items:center;gap:12px;flex-shrink:0}
         .nav-links{display:flex;align-items:center;gap:4px}
         .nav-links a{
             color:var(--text-dim);text-decoration:none;font-size:13px;font-weight:500;
@@ -103,6 +113,46 @@
             box-shadow:0 4px 20px rgba(255,77,0,0.25);
         }
         .btn-top:hover{transform:translateY(-2px);box-shadow:0 8px 30px rgba(255,77,0,0.4)}
+
+        /* Burger */
+        .burger{
+            display:none;width:40px;height:40px;border:none;background:none;
+            cursor:pointer;padding:8px;border-radius:8px;
+            flex-direction:column;justify-content:center;align-items:center;gap:5px;
+            transition:background .2s;
+        }
+        .burger:hover{background:var(--hover-bg)}
+        .burger span{
+            display:block;width:20px;height:2px;background:var(--text);
+            border-radius:1px;transition:transform .3s,opacity .3s;
+        }
+        .burger.open span:nth-child(1){transform:rotate(45deg) translate(3.5px,3.5px)}
+        .burger.open span:nth-child(2){opacity:0}
+        .burger.open span:nth-child(3){transform:rotate(-45deg) translate(3.5px,-3.5px)}
+
+        /* Mobile menu */
+        .mob-menu{
+            display:none;position:fixed;inset:0;z-index:49;
+            background:rgba(12,11,9,0.95);
+            backdrop-filter:blur(24px);-webkit-backdrop-filter:blur(24px);
+            padding:80px 24px 32px;
+            flex-direction:column;gap:4px;
+        }
+        .mob-menu.open{display:flex}
+        .mob-menu a{
+            color:var(--text);text-decoration:none;font-size:17px;font-weight:600;
+            padding:14px 20px;border-radius:12px;transition:background .2s;
+        }
+        .mob-menu a:hover{background:rgba(255,255,255,0.05)}
+        .mob-menu a.active{color:var(--accent)}
+        .mob-menu .mob-cta{
+            margin-top:auto;display:flex;justify-content:center;
+            padding:16px 28px;border-radius:12px;
+            background:var(--accent);color:#fff;font-weight:700;
+        }
+
+        /* Scroll offset for sticky header */
+        .scroll-target{scroll-margin-top:72px}
 
         /* ===== PAGE ===== */
         .page{position:relative;z-index:1}
@@ -656,7 +706,9 @@
 
         /* ===== RESPONSIVE ===== */
         @media(max-width:900px){
-            .topbar{padding:14px 24px}
+            .topbar{padding:0 24px}
+            .topbar-center{display:none}
+            .burger{display:flex}
             .hero{
                 grid-template-columns:1fr;padding:140px 24px 60px;gap:0;
             }
@@ -681,7 +733,7 @@
             .nav-links{display:none}
         }
         @media(max-width:600px){
-            .topbar{padding:12px 16px}
+            .topbar{padding:0 16px}
             .hero{padding:120px 16px 48px}
             .hero h1{letter-spacing:-1.5px}
             .hero-sub{font-size:15px}
@@ -715,23 +767,42 @@
     <div class="bg-glow"></div>
 
     <!-- Topbar -->
-    <header class="topbar">
-        <a href="/" class="logo">
+    <header class="topbar" id="topbar">
+        <a href="https://easysale.tech" class="logo">
             <div class="logo-icon">
                 <svg viewBox="0 0 24 24"><path d="M13 10V3L4 14h7v7l9-11h-7z"/></svg>
             </div>
             EasySale
         </a>
+        <nav class="topbar-center" id="topNav">
+            <a href="#sec-support" data-nav>Поддержка</a>
+            <a href="#sec-audience" data-nav>Кому подходит</a>
+            <a href="#sec-steps" data-nav>Как работает</a>
+            <a href="#sec-calc" data-nav>Вознаграждение</a>
+            <a href="#sec-why" data-nav>Преимущества</a>
+        </nav>
         <div class="topbar-right">
             <nav class="nav-links">
-                <a href="/">Главная</a>
-                <a href="https://app.easysale.tech">Войти</a>
+                <a href="https://easysale.tech">Главная</a>
             </nav>
             <div class="magnetic-wrap">
                 <a href="#partner-form" class="btn-top" onclick="scrollToForm(event)">Стать партнёром</a>
             </div>
+            <button class="burger" id="burgerBtn" aria-label="Меню">
+                <span></span><span></span><span></span>
+            </button>
         </div>
     </header>
+
+    <!-- Mobile menu -->
+    <div class="mob-menu" id="mobMenu">
+        <a href="#sec-support" data-mobnav onclick="closeMob()">Поддержка</a>
+        <a href="#sec-audience" data-mobnav onclick="closeMob()">Кому подходит</a>
+        <a href="#sec-steps" data-mobnav onclick="closeMob()">Как работает</a>
+        <a href="#sec-calc" data-mobnav onclick="closeMob()">Вознаграждение</a>
+        <a href="#sec-why" data-mobnav onclick="closeMob()">Преимущества</a>
+        <a href="#partner-form" class="mob-cta" onclick="closeMob()">Стать партнёром</a>
+    </div>
 
     <div class="page">
 
@@ -771,7 +842,7 @@
         </div>
 
         <!-- ===== BLOCK 2: Ведём клиента вместе ===== -->
-        <section class="support-section">
+        <section class="support-section scroll-target" id="sec-support">
             <div class="section-eyebrow reveal">Поддержка партнёра</div>
             <h2 class="section-title reveal">Мы ведём клиента<br>вместе с вами</h2>
             <p class="section-desc reveal">Вам не нужно быть экспертом по продукту и продавать в&nbsp;одиночку. Мы подключаемся к&nbsp;сделке и сопровождаем клиента на каждом этапе.</p>
@@ -802,7 +873,7 @@
         </section>
 
         <!-- ===== BLOCK 3: Всё для продажи ===== -->
-        <section class="support-section">
+        <section class="support-section scroll-target" id="sec-materials">
             <div class="section-eyebrow reveal">Материалы и помощь</div>
             <h2 class="section-title reveal">Всё для продажи —<br>на нашей стороне</h2>
             <p class="section-desc reveal">Даём готовые материалы и&nbsp;поддержку, чтобы рекомендовать было просто и&nbsp;комфортно.</p>
@@ -835,7 +906,7 @@
         </section>
 
         <!-- ===== КОМУ ПОДХОДИТ ===== -->
-        <section class="section">
+        <section class="section scroll-target" id="sec-audience">
             <div class="section-eyebrow reveal">Кому подходит</div>
             <h2 class="section-title reveal">Для тех, кто уже<br>работает с бизнесом</h2>
             <p class="section-desc reveal">Вы помогаете компаниям расти. EasySale усиливает вашу услугу и приносит пассивный доход.</p>
@@ -860,7 +931,7 @@
         </section>
 
         <!-- ===== КАК РАБОТАЕТ — vertical path ===== -->
-        <section class="steps-section" id="stepsSection">
+        <section class="steps-section scroll-target" id="sec-steps">
             <div class="section-eyebrow reveal">Как это работает</div>
             <h2 class="section-title reveal">Четыре простых шага</h2>
             <p class="section-desc reveal">Никакой бюрократии — начните зарабатывать за минуты.</p>
@@ -898,7 +969,7 @@
         </section>
 
         <!-- ===== КАЛЬКУЛЯТОР ===== -->
-        <section class="calc-section">
+        <section class="calc-section scroll-target" id="sec-calc">
             <div class="calc-card reveal">
                 <div class="calc-header">
                     <div class="section-eyebrow">Вознаграждение</div>
@@ -941,7 +1012,7 @@
         </section>
 
         <!-- ===== ПОЧЕМУ ЛЕГКО РЕКОМЕНДОВАТЬ ===== -->
-        <section class="section">
+        <section class="section scroll-target" id="sec-why">
             <div class="section-eyebrow reveal">Преимущества</div>
             <h2 class="section-title reveal">Почему легко<br>рекомендовать</h2>
             <p class="section-desc reveal">EasySale дополняет вашу услугу, а не конкурирует с ней.</p>
@@ -971,7 +1042,7 @@
         </section>
 
         <!-- ===== ФОРМА ===== -->
-        <section class="form-section" id="partner-form">
+        <section class="form-section scroll-target" id="partner-form">
             <div class="section-eyebrow reveal">Заявка</div>
             <h2 class="section-title reveal">Подключим вас<br>к программе</h2>
             <p class="section-desc reveal">Оставьте заявку — свяжемся в ближайшее время.</p>
@@ -1046,6 +1117,51 @@
 
     var prefersReduced = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
     var isTouchDevice = 'ontouchstart' in window;
+
+    /* ========================================
+       BURGER MENU
+       ======================================== */
+    var burgerBtn = document.getElementById('burgerBtn');
+    var mobMenu = document.getElementById('mobMenu');
+    if(burgerBtn && mobMenu){
+        burgerBtn.addEventListener('click', function(){
+            burgerBtn.classList.toggle('open');
+            mobMenu.classList.toggle('open');
+        });
+    }
+    window.closeMob = function(){
+        if(burgerBtn) burgerBtn.classList.remove('open');
+        if(mobMenu) mobMenu.classList.remove('open');
+    };
+
+    /* ========================================
+       ACTIVE NAV TRACKING (IntersectionObserver)
+       ======================================== */
+    var navLinks = document.querySelectorAll('[data-nav]');
+    var mobNavLinks = document.querySelectorAll('[data-mobnav]');
+    var sections = [];
+    navLinks.forEach(function(link){
+        var id = link.getAttribute('href').slice(1);
+        var el = document.getElementById(id);
+        if(el) sections.push({id:id, el:el});
+    });
+
+    if(sections.length){
+        var activeObserver = new IntersectionObserver(function(entries){
+            entries.forEach(function(entry){
+                if(entry.isIntersecting){
+                    var id = entry.target.id;
+                    navLinks.forEach(function(a){
+                        a.classList.toggle('active', a.getAttribute('href') === '#' + id);
+                    });
+                    mobNavLinks.forEach(function(a){
+                        a.classList.toggle('active', a.getAttribute('href') === '#' + id);
+                    });
+                }
+            });
+        },{rootMargin:'-30% 0px -60% 0px'});
+        sections.forEach(function(s){ activeObserver.observe(s.el); });
+    }
 
     /* ========================================
        SCROLL REVEAL (IntersectionObserver)
