@@ -209,6 +209,34 @@
             transform: scaleX(1);
         }
 
+        .partner-nav-btn {
+            color: #fff !important;
+            background: var(--accent);
+            border-radius: 8px;
+            padding: 7px 14px !important;
+            font-weight: 600 !important;
+            font-size: 13px !important;
+            transition: background 0.25s, box-shadow 0.25s, transform 0.25s;
+            box-shadow: 0 2px 12px rgba(255, 77, 0, 0.2);
+        }
+        .partner-nav-btn::after { display: none !important; }
+        .partner-nav-btn:hover {
+            background: #e64500;
+            box-shadow: 0 4px 20px rgba(255, 77, 0, 0.35);
+            transform: translateY(-1px);
+            color: #fff !important;
+        }
+
+        .mobile-menu .partner-mobile-btn {
+            background: rgba(255, 77, 0, 0.1);
+            color: var(--accent) !important;
+            font-weight: 700;
+            border-radius: 14px;
+        }
+        body.light .mobile-menu .partner-mobile-btn {
+            background: rgba(255, 77, 0, 0.08);
+        }
+
         .reg-btn {
             display: inline-flex;
             align-items: center;
@@ -2590,6 +2618,7 @@
             <a href="#cases" data-i18n="cases_nav">Кейсы</a>
             <a href="#faq" data-i18n="faq_nav">FAQ</a>
             <a href="#contacts" data-i18n="contacts">Контакты</a>
+            <a href="/partners/" class="partner-nav-btn" data-i18n="partners_nav">Партнёрская программа</a>
         </nav>
         <button class="lang-btn" onclick="switchLang()" id="landLangBtn">EN</button>
         <div class="theme-toggle" onclick="toggleTheme()">
@@ -2615,6 +2644,7 @@
     <a href="#cases" onclick="closeMobileMenu()" data-i18n="cases_nav">Кейсы</a>
     <a href="#faq" onclick="closeMobileMenu()" data-i18n="faq_nav">FAQ</a>
     <a href="#contacts" onclick="closeMobileMenu()" data-i18n="contacts">Контакты</a>
+    <a href="/partners/" onclick="closeMobileMenu()" class="partner-mobile-btn" data-i18n="partners_nav">Партнёрская программа</a>
     <a class="mobile-menu-cta" href="https://app.easysale.tech" data-i18n="login">Войти</a>
 </div>
 
@@ -3292,6 +3322,7 @@
                 <a href="#cases" data-i18n="cases_nav">Кейсы</a>
                 <a href="#faq" data-i18n="faq_nav">FAQ</a>
                 <a href="#contacts" data-i18n="contacts">Контакты</a>
+                <a href="/partners/" data-i18n="partners_nav">Партнёрская программа</a>
             </nav>
             <div class="footer-contacts">
                 <div class="footer-contact-item"><a href="mailto:info@easysale.tech">info@easysale.tech</a></div>
@@ -3425,6 +3456,7 @@
         cases_nav: { ru:'Кейсы', en:'Cases' },
         faq_nav: { ru:'FAQ', en:'FAQ' },
         contacts: { ru:'Контакты', en:'Contacts' },
+        partners_nav: { ru:'Партнёрская программа', en:'Partner Program' },
         login: { ru:'Войти', en:'Sign In' },
         // Hero
         heroBadge: { ru:'Платформа нового поколения', en:'Next-Generation Platform' },
