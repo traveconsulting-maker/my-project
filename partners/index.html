@@ -216,6 +216,56 @@
             background:var(--accent);
         }
 
+        /* ===== SUPPORT BLOCKS ===== */
+        .support-section{padding:100px 48px;max-width:1200px;margin:0 auto}
+        .support-grid{
+            display:grid;grid-template-columns:1fr 1fr 1fr;gap:16px;
+            margin-top:48px;
+        }
+        .support-item{
+            display:flex;flex-direction:column;gap:12px;
+            background:var(--card-bg);border:1px solid var(--card-border);
+            border-radius:20px;padding:32px 28px;
+            transition:transform .4s cubic-bezier(.16,1,.3,1),background .3s;
+        }
+        .support-item:hover{transform:translateY(-3px);background:rgba(255,255,255,0.04)}
+        .support-item-icon{
+            width:40px;height:40px;border-radius:12px;
+            background:rgba(255,77,0,0.1);
+            display:flex;align-items:center;justify-content:center;
+            flex-shrink:0;
+        }
+        .support-item-icon svg{width:20px;height:20px;fill:var(--accent-soft)}
+        .support-item h4{
+            font-family:'Space Grotesk',sans-serif;
+            font-size:16px;font-weight:700;color:var(--text);
+        }
+        .support-item p{font-size:14px;color:var(--text-muted);line-height:1.65}
+
+        /* Block B — mirrored: accent left border instead of icon */
+        .materials-grid{
+            display:grid;grid-template-columns:1fr 1fr 1fr;gap:16px;
+            margin-top:48px;
+        }
+        .materials-item{
+            display:flex;flex-direction:column;gap:10px;
+            padding:28px 28px 28px 32px;
+            border-radius:18px;
+            background:var(--surface);
+            border:1px solid var(--card-border);
+            border-left:3px solid rgba(255,77,0,0.35);
+            transition:transform .4s cubic-bezier(.16,1,.3,1),border-left-color .3s;
+        }
+        .materials-item:hover{
+            transform:translateY(-3px);
+            border-left-color:var(--accent);
+        }
+        .materials-item h4{
+            font-family:'Space Grotesk',sans-serif;
+            font-size:15px;font-weight:700;color:var(--text);
+        }
+        .materials-item p{font-size:14px;color:var(--text-muted);line-height:1.65}
+
         /* ===== COUNTER SECTION ===== */
         .counter-section{
             padding:80px 48px;max-width:1200px;margin:0 auto;
@@ -612,6 +662,9 @@
             }
             .hero-visual{display:none}
             .hero-chips{padding:0 24px 24px}
+            .support-section{padding:80px 24px}
+            .support-grid{grid-template-columns:1fr}
+            .materials-grid{grid-template-columns:1fr}
             .counter-section{padding:60px 24px}
             .section{padding:80px 24px}
             .audience-grid{grid-template-columns:1fr;grid-template-rows:auto}
@@ -634,6 +687,9 @@
             .hero-sub{font-size:15px}
             .hero-cta{padding:16px 32px;font-size:14px;width:100%;justify-content:center}
             .hero-chips{padding:0 16px 20px;flex-direction:column}
+            .support-section{padding:64px 16px}
+            .support-item{padding:24px 20px}
+            .materials-item{padding:24px 20px 24px 24px}
             .counter-section{padding:48px 16px}
             .counter-value{letter-spacing:-2px}
             .section{padding:64px 16px}
@@ -713,6 +769,59 @@
             <div class="hero-chip reveal">Продукт даёт измеримый результат — продавать легко</div>
             <div class="hero-chip reveal">Клиент доволен: поток лидов из его же базы</div>
         </div>
+
+        <!-- ===== BLOCK 2: Ведём клиента вместе ===== -->
+        <section class="support-section">
+            <div class="section-eyebrow reveal">Поддержка партнёра</div>
+            <h2 class="section-title reveal">Мы ведём клиента<br>вместе с вами</h2>
+            <p class="section-desc reveal">Вам не нужно быть экспертом по продукту и продавать в&nbsp;одиночку. Мы подключаемся к&nbsp;сделке и сопровождаем клиента на каждом этапе.</p>
+
+            <div class="support-grid stagger">
+                <div class="support-item reveal">
+                    <div class="support-item-icon">
+                        <svg viewBox="0 0 24 24"><path d="M16 11c1.66 0 2.99-1.34 2.99-3S17.66 5 16 5c-1.66 0-3 1.34-3 3s1.34 3 3 3zm-8 0c1.66 0 2.99-1.34 2.99-3S9.66 5 8 5C6.34 5 5 6.34 5 8s1.34 3 3 3zm0 2c-2.33 0-7 1.17-7 3.5V19h14v-2.5c0-2.33-4.67-3.5-7-3.5zm8 0c-.29 0-.62.02-.97.05 1.16.84 1.97 1.97 1.97 3.45V19h6v-2.5c0-2.33-4.67-3.5-7-3.5z"/></svg>
+                    </div>
+                    <h4>Участвуем во встречах с вашим клиентом</h4>
+                    <p>Подключаемся к звонку или встрече, чтобы клиент видел экспертизу команды EasySale за вашей рекомендацией.</p>
+                </div>
+                <div class="support-item reveal">
+                    <div class="support-item-icon">
+                        <svg viewBox="0 0 24 24"><path d="M20 2H4c-1.1 0-2 .9-2 2v18l4-4h14c1.1 0 2-.9 2-2V4c0-1.1-.9-2-2-2zm0 14H5.17L4 17.17V4h16v12zM7 9h2v2H7zm4 0h2v2h-2zm4 0h2v2h-2z"/></svg>
+                    </div>
+                    <h4>Презентуем EasySale и отвечаем на все вопросы</h4>
+                    <p>Берём на себя продуктовую презентацию — вам не нужно изучать каждую деталь, мы всё объясним клиенту.</p>
+                </div>
+                <div class="support-item reveal">
+                    <div class="support-item-icon">
+                        <svg viewBox="0 0 24 24"><path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm-2 15l-5-5 1.41-1.41L10 14.17l7.59-7.59L19 8l-9 9z"/></svg>
+                    </div>
+                    <h4>Сопровождаем сделку от первого контакта до запуска</h4>
+                    <p>Не бросаем после подписания — помогаем с онбордингом клиента, чтобы он быстрее получил результат.</p>
+                </div>
+            </div>
+        </section>
+
+        <!-- ===== BLOCK 3: Всё для продажи ===== -->
+        <section class="support-section">
+            <div class="section-eyebrow reveal">Материалы и помощь</div>
+            <h2 class="section-title reveal">Всё для продажи —<br>на нашей стороне</h2>
+            <p class="section-desc reveal">Даём готовые материалы и&nbsp;поддержку, чтобы рекомендовать было просто и&nbsp;комфортно.</p>
+
+            <div class="materials-grid stagger">
+                <div class="materials-item reveal">
+                    <h4>Презентации, кейсы и расчёты под вашего клиента</h4>
+                    <p>Готовим индивидуальные материалы — от слайдов до прогнозов окупаемости. Вам остаётся только переслать.</p>
+                </div>
+                <div class="materials-item reveal">
+                    <h4>Помогаем с коммуникацией и отработкой вопросов</h4>
+                    <p>Подскажем, как ответить на возражения клиента, или ответим сами — напрямую или через вас.</p>
+                </div>
+                <div class="materials-item reveal">
+                    <h4>Рядом на связи на любом этапе сделки</h4>
+                    <p>Персональный менеджер для партнёров — пишите в чат, и мы подключимся в течение часа.</p>
+                </div>
+            </div>
+        </section>
 
         <!-- ===== COUNTER ===== -->
         <section class="counter-section">
