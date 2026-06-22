@@ -1,0 +1,801 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Партнёрская программа — EasySale</title>
+    <meta name="description" content="Зарабатывайте, рекомендуя AI-менеджера EasySale своим клиентам. Пожизненные выплаты — пока клиент пользуется сервисом.">
+    <link rel="icon" type="image/png" sizes="16x16" href="../landing/favicon-16x16.png">
+    <link rel="icon" type="image/png" sizes="32x32" href="../landing/favicon-32x32.png">
+    <link rel="icon" type="image/png" sizes="256x256" href="../landing/favicon-256.png">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@500;600;700&family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --bg: #0D0D0D;
+            --card-bg: rgba(255, 255, 255, 0.03);
+            --card-border: rgba(255, 255, 255, 0.07);
+            --card-shadow: 0 30px 80px rgba(0, 0, 0, 0.5);
+            --text: #fff;
+            --text-muted: rgba(255, 255, 255, 0.45);
+            --text-secondary: rgba(255, 255, 255, 0.85);
+            --text-dim: rgba(255, 255, 255, 0.5);
+            --hover-bg: rgba(255, 255, 255, 0.04);
+            --input-bg: rgba(255, 255, 255, 0.05);
+            --input-border: rgba(255, 255, 255, 0.1);
+            --border-color: rgba(255, 255, 255, 0.06);
+            --accent: #FF4D00;
+            --accent-rgb: 255, 77, 0;
+            --step-line: rgba(255, 77, 0, 0.3);
+        }
+
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+
+        body {
+            font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
+            min-height: 100vh;
+            background: var(--bg);
+            overflow-x: hidden;
+            color: var(--text);
+        }
+
+        /* BG orbs */
+        .bg { position: fixed; inset: 0; z-index: 0; pointer-events: none; }
+        .bg-orb {
+            position: absolute; border-radius: 50%; filter: blur(80px);
+            opacity: 0.12; animation: float 8s ease-in-out infinite;
+        }
+        .bg-orb:nth-child(1) { width: 400px; height: 400px; background: #FF4D00; top: -10%; left: -5%; }
+        .bg-orb:nth-child(2) { width: 350px; height: 350px; background: #FF4D00; bottom: -10%; right: -5%; animation-delay: -3s; }
+        .bg-orb:nth-child(3) { width: 250px; height: 250px; background: #FF4D00; top: 50%; left: 50%; transform: translate(-50%,-50%); animation-delay: -5s; opacity: 0.06; }
+        @keyframes float {
+            0%,100% { transform: translate(0,0) scale(1); }
+            33% { transform: translate(30px,-20px) scale(1.05); }
+            66% { transform: translate(-20px,20px) scale(0.95); }
+        }
+
+        /* Top bar */
+        .topbar {
+            position: fixed; top: 0; left: 0; right: 0; z-index: 20;
+            display: flex; align-items: center; justify-content: space-between;
+            padding: 16px 40px;
+            background: rgba(13, 13, 13, 0.85);
+            backdrop-filter: blur(20px); -webkit-backdrop-filter: blur(20px);
+            border-bottom: 1px solid var(--border-color);
+        }
+        .logo {
+            font-family: 'Space Grotesk', sans-serif;
+            font-size: 20px; font-weight: 700; color: var(--text);
+            display: flex; align-items: center; gap: 10px;
+            text-decoration: none;
+        }
+        .logo-icon {
+            width: 36px; height: 36px; border-radius: 12px;
+            background: #FF4D00;
+            display: flex; align-items: center; justify-content: center;
+        }
+        .logo-icon svg { width: 20px; height: 20px; fill: #fff; }
+        .topbar-right { display: flex; align-items: center; gap: 12px; }
+        .nav-links { display: flex; align-items: center; gap: 8px; }
+        .nav-links a {
+            color: var(--text-dim); text-decoration: none; font-size: 14px; font-weight: 500;
+            padding: 8px 14px; border-radius: 10px; transition: color 0.2s, background 0.2s;
+        }
+        .nav-links a:hover { color: var(--text); background: var(--hover-bg); }
+        .btn-cta-sm {
+            display: inline-flex; align-items: center; gap: 8px;
+            padding: 10px 22px;
+            background: #FF4D00;
+            border: none; border-radius: 12px; color: #fff;
+            font-family: inherit; font-size: 14px; font-weight: 600;
+            cursor: pointer; transition: all 0.3s cubic-bezier(0.16,1,0.3,1);
+            box-shadow: 0 4px 20px rgba(255,77,0,0.3);
+            text-decoration: none;
+        }
+        .btn-cta-sm:hover { transform: translateY(-2px); box-shadow: 0 8px 30px rgba(255,77,0,0.45); }
+
+        /* Page wrapper */
+        .page { position: relative; z-index: 1; }
+
+        /* Hero */
+        .hero {
+            padding: 160px 40px 80px; text-align: center; max-width: 900px; margin: 0 auto;
+        }
+        .hero-badge {
+            display: inline-flex; align-items: center; gap: 8px;
+            padding: 8px 20px; border-radius: 100px;
+            background: rgba(255,77,0,0.12); color: #FF6B2B;
+            font-size: 13px; font-weight: 600; margin-bottom: 28px;
+        }
+        .hero h1 {
+            font-family: 'Space Grotesk', sans-serif;
+            font-size: clamp(36px, 5.5vw, 60px); font-weight: 700; line-height: 1.1;
+            color: var(--text); margin-bottom: 24px; letter-spacing: -1.5px;
+        }
+        .hero h1 span { color: #FF4D00; }
+        .hero p {
+            font-size: 18px; line-height: 1.7; color: var(--text-muted);
+            max-width: 640px; margin: 0 auto 40px;
+        }
+        .hero-cta {
+            display: inline-flex; align-items: center; gap: 10px;
+            padding: 18px 44px; border-radius: 16px;
+            background: #FF4D00;
+            color: #fff; text-decoration: none; font-size: 16px; font-weight: 700;
+            box-shadow: 0 8px 30px rgba(255,77,0,0.35);
+            transition: all 0.3s cubic-bezier(0.16,1,0.3,1); cursor: pointer; border: none;
+            font-family: inherit;
+        }
+        .hero-cta:hover { transform: translateY(-3px); box-shadow: 0 14px 40px rgba(255,77,0,0.5); }
+
+        /* Section generic */
+        .section { padding: 80px 40px; max-width: 1200px; margin: 0 auto; }
+        .section-label {
+            display: inline-flex; align-items: center; gap: 8px;
+            padding: 6px 16px; border-radius: 100px;
+            background: rgba(255,77,0,0.1); color: #FF6B2B;
+            font-size: 12px; font-weight: 700; text-transform: uppercase; letter-spacing: 1.5px;
+            margin-bottom: 16px;
+        }
+        .section-title {
+            font-family: 'Space Grotesk', sans-serif;
+            font-size: clamp(28px, 4vw, 42px); font-weight: 700; color: var(--text);
+            margin-bottom: 12px; letter-spacing: -0.5px;
+        }
+        .section-desc {
+            font-size: 16px; color: var(--text-muted); max-width: 600px;
+            line-height: 1.7; margin-bottom: 48px;
+        }
+
+        /* Cards grid (for "Кому подходит") */
+        .cards-grid {
+            display: grid; grid-template-columns: repeat(3, 1fr); gap: 20px;
+        }
+        .card {
+            background: var(--card-bg); border: 1px solid var(--card-border);
+            border-radius: 24px; padding: 32px;
+            transition: all 0.3s cubic-bezier(0.16,1,0.3,1);
+            backdrop-filter: blur(20px); -webkit-backdrop-filter: blur(20px);
+        }
+        .card:hover {
+            background: rgba(255, 255, 255, 0.05); transform: translateY(-6px);
+            box-shadow: 0 20px 50px rgba(0,0,0,0.15);
+        }
+        .card-icon {
+            width: 52px; height: 52px; border-radius: 16px;
+            display: flex; align-items: center; justify-content: center;
+            margin-bottom: 20px;
+            background: rgba(255,77,0,0.12);
+        }
+        .card-icon svg { width: 24px; height: 24px; fill: #FF6B2B; }
+        .card h3 {
+            font-family: 'Space Grotesk', sans-serif;
+            font-size: 18px; font-weight: 700; color: var(--text);
+            margin-bottom: 10px;
+        }
+        .card p {
+            font-size: 14px; color: var(--text-muted); line-height: 1.7;
+        }
+
+        /* Steps */
+        .steps {
+            display: grid; grid-template-columns: repeat(4, 1fr); gap: 0;
+            position: relative; margin-top: 48px;
+        }
+        .steps::before {
+            content: ''; position: absolute; top: 36px; left: 10%; right: 10%;
+            height: 2px; background: var(--step-line);
+        }
+        .step {
+            text-align: center; position: relative; padding: 0 12px;
+        }
+        .step-num {
+            width: 72px; height: 72px; border-radius: 50%; margin: 0 auto 20px;
+            display: flex; align-items: center; justify-content: center;
+            font-family: 'Space Grotesk', sans-serif;
+            font-size: 24px; font-weight: 700; color: #fff;
+            background: #FF4D00;
+            box-shadow: 0 8px 30px rgba(255,77,0,0.3);
+            position: relative; z-index: 1;
+        }
+        .step h4 {
+            font-family: 'Space Grotesk', sans-serif;
+            font-size: 16px; font-weight: 700; color: var(--text);
+            margin-bottom: 8px;
+        }
+        .step p {
+            font-size: 13px; color: var(--text-muted); line-height: 1.6;
+        }
+
+        /* Reward table */
+        .reward-cards {
+            display: grid; grid-template-columns: repeat(3, 1fr); gap: 20px;
+            margin-top: 48px;
+        }
+        .reward-card {
+            background: var(--card-bg); border: 1px solid var(--card-border);
+            border-radius: 24px; padding: 32px; text-align: center;
+            backdrop-filter: blur(20px); -webkit-backdrop-filter: blur(20px);
+            transition: all 0.3s cubic-bezier(0.16,1,0.3,1);
+        }
+        .reward-card:hover {
+            background: rgba(255, 255, 255, 0.05); transform: translateY(-4px);
+            box-shadow: 0 20px 50px rgba(0,0,0,0.15);
+        }
+        .reward-card.special {
+            background: rgba(255,77,0,0.06);
+            border-color: rgba(255,77,0,0.15);
+        }
+        .reward-percent {
+            font-family: 'Space Grotesk', sans-serif;
+            font-size: 48px; font-weight: 700; color: #FF4D00;
+            line-height: 1; margin-bottom: 12px;
+        }
+        .reward-card.special .reward-percent {
+            font-size: 28px; color: #FF6B2B;
+        }
+        .reward-range {
+            font-size: 14px; font-weight: 600; color: var(--text);
+            margin-bottom: 8px;
+        }
+        .reward-note {
+            font-size: 13px; color: var(--text-muted); line-height: 1.5;
+        }
+        .reward-accent {
+            margin-top: 32px; text-align: center;
+            padding: 20px 32px; border-radius: 16px;
+            background: rgba(255,77,0,0.08); border: 1px solid rgba(255,77,0,0.15);
+            font-size: 16px; font-weight: 600; color: #FF6B2B;
+            line-height: 1.5;
+        }
+
+        /* Why easy */
+        .why-list {
+            display: grid; grid-template-columns: 1fr 1fr; gap: 20px;
+            margin-top: 48px;
+        }
+        .why-item {
+            display: flex; gap: 16px; align-items: flex-start;
+            background: var(--card-bg); border: 1px solid var(--card-border);
+            border-radius: 20px; padding: 24px;
+            backdrop-filter: blur(20px); -webkit-backdrop-filter: blur(20px);
+            transition: all 0.3s;
+        }
+        .why-item:hover {
+            background: rgba(255, 255, 255, 0.05);
+        }
+        .why-icon {
+            flex-shrink: 0;
+            width: 44px; height: 44px; border-radius: 12px;
+            background: rgba(255,77,0,0.12);
+            display: flex; align-items: center; justify-content: center;
+        }
+        .why-icon svg { width: 20px; height: 20px; fill: #FF6B2B; }
+        .why-text h4 {
+            font-family: 'Space Grotesk', sans-serif;
+            font-size: 15px; font-weight: 700; color: var(--text);
+            margin-bottom: 6px;
+        }
+        .why-text p {
+            font-size: 13px; color: var(--text-muted); line-height: 1.6;
+        }
+
+        /* Form section */
+        .form-section {
+            padding: 80px 40px; max-width: 640px; margin: 0 auto;
+        }
+        .form-section .section-title { text-align: center; }
+        .form-section .section-desc { text-align: center; margin: 0 auto 48px; max-width: 500px; }
+
+        .form-wrap {
+            background: var(--card-bg); border: 1px solid var(--card-border);
+            border-radius: 28px; padding: 40px;
+            backdrop-filter: blur(20px); -webkit-backdrop-filter: blur(20px);
+        }
+        .form-fields {
+            display: flex; flex-direction: column; gap: 18px;
+        }
+        .form-field { display: flex; flex-direction: column; gap: 6px; }
+        .form-label {
+            font-size: 14px; font-weight: 600; color: var(--text-secondary);
+        }
+        .form-input {
+            width: 100%; padding: 14px 18px; border-radius: 14px;
+            border: 2px solid var(--input-border); background: var(--input-bg);
+            color: var(--text); font-family: inherit; font-size: 14px;
+            transition: all 0.3s;
+            backdrop-filter: blur(10px); -webkit-backdrop-filter: blur(10px);
+        }
+        .form-input:focus {
+            outline: none; border-color: rgba(255,77,0,0.5);
+            box-shadow: 0 0 0 4px rgba(255,77,0,0.1);
+        }
+        .form-input::placeholder { color: var(--text-muted); }
+        .form-input.error { border-color: #f87171; }
+
+        .field-error {
+            font-size: 12px; color: #f87171; margin-top: 4px; display: none;
+        }
+        .field-error.show { display: block; }
+
+        .form-optional {
+            font-size: 12px; color: var(--text-muted); font-weight: 400;
+        }
+
+        .checkbox-row {
+            display: flex; align-items: flex-start; gap: 10px;
+            margin-top: 4px; cursor: pointer;
+        }
+        .checkbox-row input[type="checkbox"] {
+            width: 18px; height: 18px; margin-top: 2px;
+            accent-color: #FF4D00; cursor: pointer; flex-shrink: 0;
+        }
+        .checkbox-row span {
+            font-size: 13px; color: var(--text-muted); line-height: 1.5;
+        }
+        .checkbox-row a { color: #FF6B2B; }
+
+        .form-submit {
+            width: 100%; padding: 16px; margin-top: 8px;
+            background: #FF4D00; color: #fff;
+            border: none; border-radius: 14px; font-family: inherit;
+            font-size: 15px; font-weight: 700; cursor: pointer;
+            transition: all 0.3s cubic-bezier(0.16,1,0.3,1);
+            box-shadow: 0 6px 24px rgba(255,77,0,0.3);
+        }
+        .form-submit:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 10px 32px rgba(255,77,0,0.45);
+        }
+        .form-submit:disabled {
+            opacity: 0.6; cursor: not-allowed; transform: none;
+            box-shadow: 0 4px 16px rgba(255,77,0,0.2);
+        }
+
+        .form-error-msg {
+            display: none; margin-top: 12px; padding: 12px 16px;
+            background: rgba(248,113,113,0.1); border: 1px solid rgba(248,113,113,0.2);
+            border-radius: 12px; color: #f87171; font-size: 13px; font-weight: 500; text-align: center;
+        }
+        .form-error-msg.show { display: block; }
+
+        /* Success state */
+        .form-success {
+            display: none; flex-direction: column; align-items: center; gap: 16px; padding: 20px 0;
+        }
+        .form-success.show { display: flex; }
+        .success-icon {
+            width: 72px; height: 72px; border-radius: 50%;
+            background: rgba(52,211,153,0.12);
+            display: flex; align-items: center; justify-content: center;
+        }
+        .success-icon svg { width: 36px; height: 36px; fill: #34d399; }
+        .form-success h3 {
+            font-family: 'Space Grotesk', sans-serif;
+            font-size: 22px; font-weight: 700; color: var(--text);
+        }
+        .form-success p { font-size: 14px; color: var(--text-muted); line-height: 1.6; text-align: center; }
+
+        /* Secondary link */
+        .secondary-link {
+            text-align: center; padding: 24px 40px 0;
+            max-width: 640px; margin: 0 auto;
+        }
+        .secondary-link p {
+            font-size: 14px; color: var(--text-muted); line-height: 1.6;
+        }
+        .secondary-link a { color: #FF6B2B; text-decoration: none; font-weight: 500; }
+        .secondary-link a:hover { text-decoration: underline; }
+
+        /* Footer */
+        .footer {
+            padding: 40px; text-align: center;
+            color: var(--text-muted); font-size: 13px;
+            border-top: 1px solid var(--border-color);
+            margin-top: 80px;
+        }
+        .footer a { color: var(--text-dim); text-decoration: none; margin: 0 12px; }
+        .footer a:hover { color: var(--text); }
+        .footer-copy { margin-top: 12px; }
+
+        /* Honeypot */
+        .ohnohoney { position: absolute; left: -9999px; opacity: 0; height: 0; width: 0; }
+
+        /* ===== RESPONSIVE ===== */
+        @media (max-width: 900px) {
+            .cards-grid { grid-template-columns: 1fr; }
+            .steps { grid-template-columns: repeat(2, 1fr); gap: 32px; }
+            .steps::before { display: none; }
+            .reward-cards { grid-template-columns: 1fr; }
+            .why-list { grid-template-columns: 1fr; }
+            .nav-links { display: none; }
+        }
+        @media (max-width: 600px) {
+            .topbar { padding: 12px 20px; }
+            .hero { padding: 120px 20px 60px; }
+            .hero h1 { font-size: 32px; letter-spacing: -1px; }
+            .hero p { font-size: 16px; }
+            .hero-cta { padding: 16px 32px; font-size: 15px; }
+            .section { padding: 60px 20px; }
+            .section-title { font-size: 26px; }
+            .steps { grid-template-columns: 1fr; gap: 24px; }
+            .step-num { width: 56px; height: 56px; font-size: 20px; }
+            .form-section { padding: 60px 20px; }
+            .form-wrap { padding: 28px 20px; }
+            .footer { padding: 32px 20px; }
+        }
+    </style>
+</head>
+<body>
+    <!-- BG -->
+    <div class="bg">
+        <div class="bg-orb"></div>
+        <div class="bg-orb"></div>
+        <div class="bg-orb"></div>
+    </div>
+
+    <!-- Top bar -->
+    <header class="topbar">
+        <a href="/" class="logo">
+            <div class="logo-icon">
+                <svg viewBox="0 0 24 24"><path d="M13 10V3L4 14h7v7l9-11h-7z"/></svg>
+            </div>
+            EasySale
+        </a>
+        <div class="topbar-right">
+            <nav class="nav-links">
+                <a href="/">Главная</a>
+                <a href="https://app.easysale.tech">Войти</a>
+            </nav>
+            <a href="#partner-form" class="btn-cta-sm" onclick="scrollToForm(event)">Стать партнёром</a>
+        </div>
+    </header>
+
+    <div class="page">
+
+        <!-- 1. Hero -->
+        <section class="hero">
+            <div class="hero-badge">Партнёрская программа</div>
+            <h1>Партнёрская программа <span>EasySale</span></h1>
+            <p>Зарабатывайте, рекомендуя AI&#8209;менеджера своим клиентам. Пожизненные выплаты&nbsp;— пока клиент пользуется сервисом.</p>
+            <button class="hero-cta" onclick="scrollToForm(event)">Стать партнёром</button>
+        </section>
+
+        <!-- 2. Кому подходит -->
+        <section class="section">
+            <div class="section-label">Кому подходит</div>
+            <h2 class="section-title">Идеально для тех, кто уже работает с бизнесом</h2>
+            <p class="section-desc">Вы уже помогаете компаниям расти — EasySale усиливает вашу услугу и приносит пассивный доход.</p>
+
+            <div class="cards-grid">
+                <!-- CRM -->
+                <div class="card">
+                    <div class="card-icon">
+                        <svg viewBox="0 0 24 24"><path d="M3 13h2v-2H3v2zm0 4h2v-2H3v2zm0-8h2V7H3v2zm4 4h14v-2H7v2zm0 4h14v-2H7v2zM7 7v2h14V7H7z"/></svg>
+                    </div>
+                    <h3>CRM-интеграторам</h3>
+                    <p>Вы настраиваете CRM-системы и знаете боль клиентов — нехватка заявок. EasySale решает эту задачу, а вы получаете доход с каждого подключённого клиента.</p>
+                </div>
+                <!-- Agencies -->
+                <div class="card">
+                    <div class="card-icon">
+                        <svg viewBox="0 0 24 24"><path d="M12 7V3H2v18h20V7H12zM6 19H4v-2h2v2zm0-4H4v-2h2v2zm0-4H4V9h2v2zm0-4H4V5h2v2zm4 12H8v-2h2v2zm0-4H8v-2h2v2zm0-4H8V9h2v2zm0-4H8V5h2v2zm10 12h-8v-2h2v-2h-2v-2h2v-2h-2V9h8v10zm-2-8h-2v2h2v-2zm0 4h-2v2h2v-2z"/></svg>
+                    </div>
+                    <h3>Агентствам автоматизации продаж</h3>
+                    <p>Ваши клиенты хотят больше продаж при меньших затратах. Рекомендуйте AI-менеджера как часть комплексного решения — и зарабатывайте на этом постоянно.</p>
+                </div>
+                <!-- Consultants -->
+                <div class="card">
+                    <div class="card-icon">
+                        <svg viewBox="0 0 24 24"><path d="M16 11c1.66 0 2.99-1.34 2.99-3S17.66 5 16 5c-1.66 0-3 1.34-3 3s1.34 3 3 3zm-8 0c1.66 0 2.99-1.34 2.99-3S9.66 5 8 5C6.34 5 5 6.34 5 8s1.34 3 3 3zm0 2c-2.33 0-7 1.17-7 3.5V19h14v-2.5c0-2.33-4.67-3.5-7-3.5zm8 0c-.29 0-.62.02-.97.05 1.16.84 1.97 1.97 1.97 3.45V19h6v-2.5c0-2.33-4.67-3.5-7-3.5z"/></svg>
+                    </div>
+                    <h3>Консультантам и интеграторам бизнес-процессов</h3>
+                    <p>Вы выстраиваете процессы в компаниях и видите, где теряются клиенты. EasySale — готовый инструмент, который закрывает эту задачу, а вам приносит пассивный доход.</p>
+                </div>
+            </div>
+        </section>
+
+        <!-- 3. Как работает -->
+        <section class="section">
+            <div class="section-label">Как это работает</div>
+            <h2 class="section-title">Четыре простых шага</h2>
+            <p class="section-desc">Никакой бюрократии — начните зарабатывать за минуты.</p>
+
+            <div class="steps">
+                <div class="step">
+                    <div class="step-num">1</div>
+                    <h4>Регистрируетесь</h4>
+                    <p>Заходите в личный кабинет и получаете персональную реферальную ссылку.</p>
+                </div>
+                <div class="step">
+                    <div class="step-num">2</div>
+                    <h4>Рекомендуете</h4>
+                    <p>Делитесь EasySale со своими клиентами — лично, в презентации или в переписке.</p>
+                </div>
+                <div class="step">
+                    <div class="step-num">3</div>
+                    <h4>Клиент подключается</h4>
+                    <p>Регистрируется по вашей ссылке и начинает пользоваться сервисом.</p>
+                </div>
+                <div class="step">
+                    <div class="step-num">4</div>
+                    <h4>Получаете доход</h4>
+                    <p>Вам начисляется % с платежей клиента — пожизненно, пока он пользуется EasySale.</p>
+                </div>
+            </div>
+        </section>
+
+        <!-- 4. Сколько зарабатываете -->
+        <section class="section">
+            <div class="section-label">Вознаграждение</div>
+            <h2 class="section-title">Сколько вы зарабатываете</h2>
+            <p class="section-desc">Процент зависит от объёма платежей приведённого клиента.</p>
+
+            <div class="reward-cards">
+                <div class="reward-card">
+                    <div class="reward-percent">15%</div>
+                    <div class="reward-range">до 200 000 ₽</div>
+                    <div class="reward-note">Платежи клиента за весь период</div>
+                </div>
+                <div class="reward-card">
+                    <div class="reward-percent">10%</div>
+                    <div class="reward-range">200 000 — 1 000 000 ₽</div>
+                    <div class="reward-note">Платежи клиента за весь период</div>
+                </div>
+                <div class="reward-card special">
+                    <div class="reward-percent">Индивидуально</div>
+                    <div class="reward-range">свыше 1 000 000 ₽</div>
+                    <div class="reward-note">Обсудим условия лично — напишите нам</div>
+                </div>
+            </div>
+
+            <div class="reward-accent">
+                Выплаты — пожизненно, пока клиент пользуется EasySale.
+            </div>
+        </section>
+
+        <!-- 5. Почему легко рекомендовать -->
+        <section class="section">
+            <div class="section-label">Преимущества</div>
+            <h2 class="section-title">Почему легко рекомендовать</h2>
+            <p class="section-desc">EasySale дополняет вашу услугу, а не конкурирует с ней.</p>
+
+            <div class="why-list">
+                <div class="why-item">
+                    <div class="why-icon">
+                        <svg viewBox="0 0 24 24"><path d="M19 3H5c-1.1 0-2 .9-2 2v14c0 1.1.9 2 2 2h14c1.1 0 2-.9 2-2V5c0-1.1-.9-2-2-2zm-5 14H7v-2h7v2zm3-4H7v-2h10v2zm0-4H7V7h10v2z"/></svg>
+                    </div>
+                    <div class="why-text">
+                        <h4>Усиливает любую CRM</h4>
+                        <p>EasySale не конкурирует с вашей услугой — он дополняет её, обрабатывая заявки в уже настроенной CRM клиента.</p>
+                    </div>
+                </div>
+                <div class="why-item">
+                    <div class="why-icon">
+                        <svg viewBox="0 0 24 24"><path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm-2 15l-5-5 1.41-1.41L10 14.17l7.59-7.59L19 8l-9 9z"/></svg>
+                    </div>
+                    <div class="why-text">
+                        <h4>Реальный работающий продукт</h4>
+                        <p>Не стартап на стадии идеи — EasySale уже работает и приносит результаты платящим клиентам.</p>
+                    </div>
+                </div>
+                <div class="why-item">
+                    <div class="why-icon">
+                        <svg viewBox="0 0 24 24"><path d="M19 3H5c-1.1 0-2 .9-2 2v14c0 1.1.9 2 2 2h14c1.1 0 2-.9 2-2V5c0-1.1-.9-2-2-2zM9 17H7v-7h2v7zm4 0h-2V7h2v10zm4 0h-2v-4h2v4z"/></svg>
+                    </div>
+                    <div class="why-text">
+                        <h4>Прозрачные начисления</h4>
+                        <p>Реферальная ссылка, статистика переходов и начислений — всё в вашем личном кабинете, без чёрных ящиков.</p>
+                    </div>
+                </div>
+                <div class="why-item">
+                    <div class="why-icon">
+                        <svg viewBox="0 0 24 24"><path d="M11.8 10.9c-2.27-.59-3-1.2-3-2.15 0-1.09 1.01-1.85 2.7-1.85 1.78 0 2.44.85 2.5 2.1h2.21c-.07-1.72-1.12-3.3-3.21-3.81V3h-3v2.16c-1.94.42-3.5 1.68-3.5 3.61 0 2.31 1.91 3.46 4.7 4.13 2.5.6 3 1.48 3 2.41 0 .69-.49 1.79-2.7 1.79-2.06 0-2.87-.92-2.98-2.1h-2.2c.12 2.19 1.76 3.42 3.68 3.83V21h3v-2.15c1.95-.37 3.5-1.5 3.5-3.55 0-2.84-2.43-3.81-4.7-4.4z"/></svg>
+                    </div>
+                    <div class="why-text">
+                        <h4>Минимум усилий</h4>
+                        <p>Рекомендовали — получаете доход постоянно. Не нужно продавать, вести переговоры или закрывать сделки.</p>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- 6. Форма -->
+        <section class="form-section" id="partner-form">
+            <div class="section-label">Заявка</div>
+            <h2 class="section-title">Оставьте заявку — подключим вас к программе</h2>
+            <p class="section-desc">Заполните форму, и мы свяжемся с вами в ближайшее время.</p>
+
+            <div class="form-wrap">
+                <form id="partnerForm" novalidate>
+                    <!-- Honeypot -->
+                    <div class="ohnohoney">
+                        <label>Не заполняйте</label>
+                        <input type="text" name="website_url" tabindex="-1" autocomplete="off">
+                    </div>
+
+                    <div class="form-fields">
+                        <div class="form-field">
+                            <label class="form-label" for="pName">Имя</label>
+                            <input class="form-input" type="text" id="pName" placeholder="Как вас зовут" required>
+                            <div class="field-error" id="errName">Укажите ваше имя</div>
+                        </div>
+
+                        <div class="form-field">
+                            <label class="form-label" for="pPhone">Телефон</label>
+                            <input class="form-input" type="tel" id="pPhone" placeholder="+7 (___) ___-__-__" required>
+                            <div class="field-error" id="errPhone">Введите корректный номер телефона</div>
+                        </div>
+
+                        <div class="form-field">
+                            <label class="form-label" for="pEmail">Email</label>
+                            <input class="form-input" type="email" id="pEmail" placeholder="you@company.ru" required>
+                            <div class="field-error" id="errEmail">Введите корректный email</div>
+                        </div>
+
+                        <div class="form-field">
+                            <label class="form-label" for="pCompany">Компания / сайт <span class="form-optional">(необязательно)</span></label>
+                            <input class="form-input" type="text" id="pCompany" placeholder="Название или URL">
+                        </div>
+
+                        <label class="checkbox-row">
+                            <input type="checkbox" id="pConsent">
+                            <span>Даю согласие на обработку <a href="/landing/privacy.html" target="_blank">персональных данных</a></span>
+                        </label>
+                        <div class="field-error" id="errConsent">Необходимо ваше согласие</div>
+
+                        <button type="submit" class="form-submit" id="submitBtn">Отправить заявку</button>
+                    </div>
+
+                    <div class="form-error-msg" id="formError"></div>
+                </form>
+
+                <div class="form-success" id="formSuccess">
+                    <div class="success-icon">
+                        <svg viewBox="0 0 24 24"><path d="M9 16.17L4.83 12l-1.42 1.41L9 19 21 7l-1.41-1.41z"/></svg>
+                    </div>
+                    <h3>Заявка отправлена!</h3>
+                    <p>Свяжемся с вами и подключим к&nbsp;партнёрской программе.</p>
+                </div>
+            </div>
+        </section>
+
+        <!-- 7. Secondary link -->
+        <div class="secondary-link">
+            <p>Уже работаете с EasySale? <a href="https://app.easysale.tech">Зайдите в личный кабинет</a> за реферальной ссылкой.</p>
+        </div>
+
+        <!-- 8. Footer -->
+        <footer class="footer">
+            <div>
+                <a href="/">Главная</a>
+                <a href="https://app.easysale.tech">Личный кабинет</a>
+                <a href="/landing/privacy.html">Политика конфиденциальности</a>
+            </div>
+            <div class="footer-copy">EasySale &copy; 2025–2026</div>
+        </footer>
+    </div>
+
+    <script>
+    (function() {
+        var _sending = false;
+
+        // Phone mask
+        var phoneInput = document.getElementById('pPhone');
+        phoneInput.addEventListener('input', function() {
+            var digits = this.value.replace(/\D/g, '');
+            if (digits.length === 0) { this.value = ''; return; }
+            if (digits[0] === '8') digits = '7' + digits.slice(1);
+            if (digits[0] !== '7') digits = '7' + digits;
+            var formatted = '+7';
+            if (digits.length > 1) formatted += ' (' + digits.slice(1, 4);
+            if (digits.length >= 4) formatted += ')';
+            if (digits.length > 4) formatted += ' ' + digits.slice(4, 7);
+            if (digits.length > 7) formatted += '-' + digits.slice(7, 9);
+            if (digits.length > 9) formatted += '-' + digits.slice(9, 11);
+            this.value = formatted;
+        });
+
+        // Scroll to form
+        window.scrollToForm = function(e) {
+            e.preventDefault();
+            document.getElementById('partner-form').scrollIntoView({ behavior: 'smooth' });
+        };
+
+        // Clear errors on input
+        var inputs = document.querySelectorAll('.form-input');
+        inputs.forEach(function(input) {
+            input.addEventListener('input', function() {
+                this.classList.remove('error');
+                var err = this.parentElement.querySelector('.field-error');
+                if (err) err.classList.remove('show');
+            });
+        });
+        document.getElementById('pConsent').addEventListener('change', function() {
+            document.getElementById('errConsent').classList.remove('show');
+        });
+
+        // Submit
+        document.getElementById('partnerForm').addEventListener('submit', function(e) {
+            e.preventDefault();
+            if (_sending) return;
+
+            var honeypot = document.querySelector('input[name="website_url"]');
+            if (honeypot && honeypot.value) return;
+
+            var name = document.getElementById('pName').value.trim();
+            var phone = document.getElementById('pPhone').value.trim();
+            var email = document.getElementById('pEmail').value.trim();
+            var consent = document.getElementById('pConsent').checked;
+            var valid = true;
+
+            // Reset
+            document.getElementById('formError').classList.remove('show');
+
+            if (!name) {
+                document.getElementById('pName').classList.add('error');
+                document.getElementById('errName').classList.add('show');
+                valid = false;
+            }
+
+            var phoneDigits = phone.replace(/\D/g, '');
+            if (phoneDigits.length < 10) {
+                document.getElementById('pPhone').classList.add('error');
+                document.getElementById('errPhone').classList.add('show');
+                valid = false;
+            }
+
+            var emailRe = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+            if (!emailRe.test(email)) {
+                document.getElementById('pEmail').classList.add('error');
+                document.getElementById('errEmail').classList.add('show');
+                valid = false;
+            }
+
+            if (!consent) {
+                document.getElementById('errConsent').classList.add('show');
+                valid = false;
+            }
+
+            if (!valid) return;
+
+            _sending = true;
+            var btn = document.getElementById('submitBtn');
+            btn.disabled = true;
+            btn.textContent = 'Отправляем...';
+
+            var company = document.getElementById('pCompany').value.trim();
+            var body = {
+                name: name,
+                phone: phone,
+                email: email,
+                source: 'partners'
+            };
+            if (company) body.company = company;
+
+            fetch('https://api.easysale.tech/api/leads/offer', {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify(body)
+            })
+            .then(function(res) {
+                if (!res.ok) throw new Error('Ошибка сервера (' + res.status + ')');
+                return res.json();
+            })
+            .then(function() {
+                document.getElementById('partnerForm').style.display = 'none';
+                document.getElementById('formSuccess').classList.add('show');
+            })
+            .catch(function(err) {
+                var errMsg = document.getElementById('formError');
+                errMsg.textContent = err.message || 'Произошла ошибка. Попробуйте ещё раз.';
+                errMsg.classList.add('show');
+                btn.disabled = false;
+                btn.textContent = 'Отправить заявку';
+                _sending = false;
+            });
+        });
+    })();
+    </script>
+</body>
+</html>
