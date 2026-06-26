@@ -3115,10 +3115,10 @@
                     <span class="nav-icon"><svg viewBox="0 0 24 24"><path d="M21 18v1a2 2 0 01-2 2H5a2 2 0 01-2-2V5a2 2 0 012-2h14a2 2 0 012 2v1"/><path d="M13 9h8v6h-8a3 3 0 010-6z"/><circle cx="18" cy="12" r="1"/></svg></span>
                     <span data-i18n="navBalance">Баланс</span>
                 </a></li>
-                <li><a href="#" onclick="openPartnerModal(); return false;" style="color:var(--accent);">
+                <li id="navPartnerItem"><a href="#" onclick="handlePartnerNavClick(event)" style="color:var(--accent);">
                     <span class="nav-icon" style="background:var(--accent);"><svg viewBox="0 0 24 24" style="fill:#fff;"><path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm-2 15l-5-5 1.41-1.41L10 14.17l7.59-7.59L19 8l-9 9z"/></svg></span>
                     <span data-i18n="navReferral">Партнёрская программа</span>
-                    <svg viewBox="0 0 24 24" style="width:14px;height:14px;fill:var(--accent);margin-left:6px;flex-shrink:0;"><path d="M18 8h-1V6c0-2.76-2.24-5-5-5S7 3.24 7 6v2H6c-1.1 0-2 .9-2 2v10c0 1.1.9 2 2 2h12c1.1 0 2-.9 2-2V10c0-1.1-.9-2-2-2zm-6 9c-1.1 0-2-.9-2-2s.9-2 2-2 2 .9 2 2-.9 2-2 2zm3.1-9H8.9V6c0-1.71 1.39-3.1 3.1-3.1s3.1 1.39 3.1 3.1v2z"/></svg>
+                    <svg id="partnerLockIcon" viewBox="0 0 24 24" style="width:14px;height:14px;fill:var(--accent);margin-left:6px;flex-shrink:0;"><path d="M18 8h-1V6c0-2.76-2.24-5-5-5S7 3.24 7 6v2H6c-1.1 0-2 .9-2 2v10c0 1.1.9 2 2 2h12c1.1 0 2-.9 2-2V10c0-1.1-.9-2-2-2zm-6 9c-1.1 0-2-.9-2-2s.9-2 2-2 2 .9 2 2-.9 2-2 2zm3.1-9H8.9V6c0-1.71 1.39-3.1 3.1-3.1s3.1 1.39 3.1 3.1v2z"/></svg>
                 </a></li>
             </ul>
         </div>
@@ -4869,6 +4869,7 @@
                         userPricePerLead = parseInt(me.price_per_lead) || 0;
                         localStorage.setItem('user_price_per_lead', String(userPricePerLead));
                     }
+                    if (me) applyPartnerEnabled(me.partner_enabled);
                     var login = localStorage.getItem('current_login');
                     var onboarded = (me && me.onboarded) || (login && localStorage.getItem('onboarded_' + login));
                     if (me && me.onboarded && login) localStorage.setItem('onboarded_' + login, '1');
@@ -8304,7 +8305,8 @@
             if (e.target === accessModal) closeAccessModal();
         }
 
-        // Partner Program modal
+        // Partner Program
+        var _partnerEnabled = false;
         const partnerModalEl = document.getElementById('partnerModal');
         function openPartnerModal() {
             partnerModalEl.classList.add('active');
@@ -8316,6 +8318,33 @@
         }
         function closePartnerOnOverlay(e) {
             if (e.target === partnerModalEl) closePartnerModal();
+        }
+        function handlePartnerNavClick(e) {
+            e.preventDefault();
+            if (_partnerEnabled) {
+                var link = document.querySelector('#navPartnerItem a');
+                if (link) { link.setAttribute('data-page', 'pageReferral'); setActive(link); link.removeAttribute('data-page'); }
+            } else {
+                openPartnerModal();
+            }
+        }
+        function applyPartnerEnabled(enabled) {
+            _partnerEnabled = !!enabled;
+            var lockIcon = document.getElementById('partnerLockIcon');
+            var navLink = document.querySelector('#navPartnerItem a');
+            var navIcon = navLink ? navLink.querySelector('.nav-icon') : null;
+            var navSvg = navIcon ? navIcon.querySelector('svg') : null;
+            if (_partnerEnabled) {
+                if (lockIcon) lockIcon.style.display = 'none';
+                if (navLink) navLink.style.color = '';
+                if (navIcon) navIcon.style.background = '';
+                if (navSvg) navSvg.style.fill = '';
+            } else {
+                if (lockIcon) lockIcon.style.display = '';
+                if (navLink) navLink.style.color = 'var(--accent)';
+                if (navIcon) navIcon.style.background = 'var(--accent)';
+                if (navSvg) navSvg.style.fill = '#fff';
+            }
         }
 
         function validateName(v) {
@@ -10443,6 +10472,7 @@
                         userPricePerLead = parseInt(me.price_per_lead) || 0;
                         localStorage.setItem('user_price_per_lead', String(userPricePerLead));
                     }
+                    if (me) applyPartnerEnabled(me.partner_enabled);
                     var onboarded = (me && me.onboarded) || !!localStorage.getItem('onboarded_' + login);
                     if (me && me.onboarded) localStorage.setItem('onboarded_' + login, '1');
                     if (onboarded) {
