@@ -2401,6 +2401,16 @@
         </div>
     </div>
 
+    <!-- ===== PARTNER PROGRAM MODAL ===== -->
+    <div class="modal-overlay" id="partnerModal" onclick="closePartnerOnOverlay(event)">
+        <div class="modal">
+            <button class="modal-close" onclick="closePartnerModal()">&times;</button>
+            <div class="modal-title" data-i18n="partnerModalTitle">Партнёрская программа</div>
+            <div class="modal-subtitle" data-i18n="partnerModalText">Чтобы стать партнёром, необходимо заключить с нами договор.</div>
+            <button class="onb-step-btn" id="partnerSignBtn" onclick="console.log('В разработке')" style="padding:14px 32px;font-size:15px;border-radius:14px;width:100%;" data-i18n="partnerModalBtn">Заключить договор</button>
+        </div>
+    </div>
+
     <!-- ===== LOGIN MODAL ===== -->
     <div class="modal-overlay" id="modal" onclick="closeOnOverlay(event)">
         <div class="modal">
@@ -3105,9 +3115,10 @@
                     <span class="nav-icon"><svg viewBox="0 0 24 24"><path d="M21 18v1a2 2 0 01-2 2H5a2 2 0 01-2-2V5a2 2 0 012-2h14a2 2 0 012 2v1"/><path d="M13 9h8v6h-8a3 3 0 010-6z"/><circle cx="18" cy="12" r="1"/></svg></span>
                     <span data-i18n="navBalance">Баланс</span>
                 </a></li>
-                <li><a href="#" data-page="pageReferral" onclick="setActive(this)">
-                    <span class="nav-icon"><svg viewBox="0 0 24 24"><path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm-2 15l-5-5 1.41-1.41L10 14.17l7.59-7.59L19 8l-9 9z"/></svg></span>
-                    <span data-i18n="navReferral">Реферальная программа</span>
+                <li><a href="#" onclick="openPartnerModal(); return false;" style="color:var(--accent);">
+                    <span class="nav-icon" style="background:var(--accent);"><svg viewBox="0 0 24 24" style="fill:#fff;"><path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm-2 15l-5-5 1.41-1.41L10 14.17l7.59-7.59L19 8l-9 9z"/></svg></span>
+                    <span data-i18n="navReferral">Партнёрская программа</span>
+                    <svg viewBox="0 0 24 24" style="width:14px;height:14px;fill:var(--accent);margin-left:6px;flex-shrink:0;"><path d="M18 8h-1V6c0-2.76-2.24-5-5-5S7 3.24 7 6v2H6c-1.1 0-2 .9-2 2v10c0 1.1.9 2 2 2h12c1.1 0 2-.9 2-2V10c0-1.1-.9-2-2-2zm-6 9c-1.1 0-2-.9-2-2s.9-2 2-2 2 .9 2 2-.9 2-2 2zm3.1-9H8.9V6c0-1.71 1.39-3.1 3.1-3.1s3.1 1.39 3.1 3.1v2z"/></svg>
                 </a></li>
             </ul>
         </div>
@@ -7787,7 +7798,10 @@
             navLaunches: { ru:'Запуск звонков', en:'Call Launches' },
             navQualLeads: { ru:'Квал лиды', en:'Qual Leads' },
             navBalance: { ru:'Баланс', en:'Balance' },
-            navReferral: { ru:'Реферальная программа', en:'Referral Program' },
+            navReferral: { ru:'Партнёрская программа', en:'Partner Program' },
+            partnerModalTitle: { ru:'Партнёрская программа', en:'Partner Program' },
+            partnerModalText: { ru:'Чтобы стать партнёром, необходимо заключить с нами договор.', en:'To become a partner, you need to sign a contract with us.' },
+            partnerModalBtn: { ru:'Заключить договор', en:'Sign a contract' },
             // Home page
             homeTitle: { ru:'3 шага до первых лидов', en:'3 steps to your first leads' },
             homeSub: { ru:'Следуйте инструкции и получите первые квалифицированные лиды', en:'Follow the instructions and get your first qualified leads' },
@@ -8288,6 +8302,20 @@
 
         function closeAccessOnOverlay(e) {
             if (e.target === accessModal) closeAccessModal();
+        }
+
+        // Partner Program modal
+        const partnerModalEl = document.getElementById('partnerModal');
+        function openPartnerModal() {
+            partnerModalEl.classList.add('active');
+            document.body.style.overflow = 'hidden';
+        }
+        function closePartnerModal() {
+            partnerModalEl.classList.remove('active');
+            document.body.style.overflow = '';
+        }
+        function closePartnerOnOverlay(e) {
+            if (e.target === partnerModalEl) closePartnerModal();
         }
 
         function validateName(v) {
