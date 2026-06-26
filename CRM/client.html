@@ -1144,6 +1144,7 @@
                 c.referred_by = fresh.referred_by;
                 c.referral_bonus_leads = fresh.referral_bonus_leads;
                 c.balance = fresh.balance;
+                if (fresh.partner_enabled !== undefined) c.partner_enabled = fresh.partner_enabled;
                 if (fresh.price_per_lead !== undefined) {
                     c.pricePerLead = parseInt(fresh.price_per_lead) || c.pricePerLead || 2000;
                 }
@@ -1168,6 +1169,12 @@
                             <div class="status-toggle-thumb"></div>
                         </div>
                         <span class="status-toggle-label ${isActive?'active':'inactive'}">${isActive?'Активен':'Неактивен'}</span>
+                    </label>
+                    <label class="status-toggle">
+                        <div class="status-toggle-track ${c.partner_enabled?'active':''}" onclick="togglePartnerEnabled('${c.id}',this)">
+                            <div class="status-toggle-thumb"></div>
+                        </div>
+                        <span class="status-toggle-label ${c.partner_enabled?'active':'inactive'}">${c.partner_enabled?'Партнёр':'Не партнёр'}</span>
                     </label>
                     ${c.source === 'registration' ? '<span class="status-badge" style="background:var(--accent-bg);color:var(--accent-light);">Самостоятельная регистрация</span>' : ''}
                 </div>
@@ -1345,6 +1352,28 @@
             }).catch(() => {});
         }
         if (currentDetailClient === id) renderClientDetail();
+    }
+
+    function togglePartnerEnabled(id, el) {
+        if (!crmToken) { toast('Нет доступа к API'); return; }
+        fetch(API_BASE + '/api/admin/clients/' + id + '/partner-toggle', {
+            method: 'POST',
+            headers: apiHeaders()
+        })
+        .then(function(r) { return r.json(); })
+        .then(function(data) {
+            var enabled = !!data.partner_enabled;
+            var idx = clients.findIndex(function(c) { return c.id === id; });
+            if (idx >= 0) { clients[idx].partner_enabled = enabled; persist(); }
+            el.classList.toggle('active', enabled);
+            var label = el.parentElement.querySelector('.status-toggle-label');
+            if (label) {
+                label.textContent = enabled ? 'Партнёр' : 'Не партнёр';
+                label.className = 'status-toggle-label ' + (enabled ? 'active' : 'inactive');
+            }
+            toast(enabled ? 'Партнёрский кабинет активирован' : 'Партнёрский кабинет заблокирован');
+        })
+        .catch(function() { toast('Ошибка переключения партнёрского доступа'); });
     }
 
     function toggleDialogActive(login, dialogId, el) {
