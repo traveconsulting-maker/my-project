@@ -3750,10 +3750,10 @@
                 </div>
             </div>
 
-            <!-- PAGE: Реферальная программа -->
+            <!-- PAGE: Партнёрская программа -->
             <div class="page-section" id="pageReferral">
-                <h1 data-i18n="refTitle">Реферальная программа</h1>
-                <p class="subtitle" data-i18n="refSub">Пригласите друга — получите клиентов бесплатно</p>
+                <h1 data-i18n="refTitle">Партнёрская программа</h1>
+                <p class="subtitle" data-i18n="refSub">Рекомендуйте. Зарабатывайте</p>
 
                 <div style="margin-top:24px;padding:24px;background:var(--card-bg);border:1px solid var(--card-border);border-radius:20px;">
                     <div style="font-size:14px;font-weight:600;color:var(--text-muted);margin-bottom:8px;" data-i18n="refLinkLabel">Ваша реферальная ссылка</div>
@@ -3765,20 +3765,24 @@
 
                 <div style="display:grid;grid-template-columns:1fr 1fr;gap:16px;margin-top:20px;">
                     <div style="padding:24px;background:var(--card-bg);border:1px solid var(--card-border);border-radius:20px;text-align:center;">
-                        <div style="font-size:36px;font-weight:800;background:#FF4D00;-webkit-background-clip:text;-webkit-text-fill-color:transparent;">5</div>
-                        <div style="font-size:15px;font-weight:600;color:var(--text);margin-top:4px;" data-i18n="refFreeClients">клиентов бесплатно</div>
-                        <div style="font-size:13px;color:var(--text-muted);margin-top:4px;" data-i18n="refPerInvite">Вам за каждого приглашённого</div>
+                        <div id="partnerClientsCount" style="font-size:36px;font-weight:800;background:#FF4D00;-webkit-background-clip:text;-webkit-text-fill-color:transparent;">0</div>
+                        <div style="font-size:15px;font-weight:600;color:var(--text);margin-top:4px;" data-i18n="partnerClients">ваших клиентов</div>
+                        <div style="font-size:13px;color:var(--text-muted);margin-top:4px;" data-i18n="partnerClientsDesc">Привлечено по вашей рекомендации</div>
                     </div>
                     <div style="padding:24px;background:var(--card-bg);border:1px solid var(--card-border);border-radius:20px;text-align:center;">
-                        <div style="font-size:36px;font-weight:800;background:#FF4D00;-webkit-background-clip:text;-webkit-text-fill-color:transparent;">20%</div>
-                        <div style="font-size:15px;font-weight:600;color:var(--text);margin-top:4px;" data-i18n="refDiscount">скидка для друга</div>
-                        <div style="font-size:13px;color:var(--text-muted);margin-top:4px;" data-i18n="refFirst10">На первые 10 лидов</div>
+                        <div id="partnerPayout" style="font-size:36px;font-weight:800;background:#FF4D00;-webkit-background-clip:text;-webkit-text-fill-color:transparent;">0 ₽</div>
+                        <div style="font-size:15px;font-weight:600;color:var(--text);margin-top:4px;" data-i18n="partnerPayoutLabel">к выводу</div>
+                        <div style="font-size:13px;color:var(--text-muted);margin-top:4px;" data-i18n="partnerPayoutDesc">На ваш расчётный счёт</div>
                     </div>
                 </div>
 
                 <div style="margin-top:24px;padding:20px 24px;background:var(--card-bg);border:1px solid var(--card-border);border-radius:20px;display:flex;align-items:center;gap:16px;">
-                    <div style="font-size:14px;color:var(--text-muted);" data-i18n="refBonusLabel">Ваши бонусные лиды:</div>
-                    <div id="refBonusLeads" style="font-size:24px;font-weight:800;background:#FF4D00;-webkit-background-clip:text;-webkit-text-fill-color:transparent;">0</div>
+                    <div style="font-size:14px;color:var(--text-muted);" data-i18n="partnerPaidLabel">Выплачено всего:</div>
+                    <div id="partnerPaidTotal" style="font-size:24px;font-weight:800;background:#FF4D00;-webkit-background-clip:text;-webkit-text-fill-color:transparent;">0 ₽</div>
+                </div>
+
+                <div style="margin-top:16px;">
+                    <button id="downloadContractBtn" onclick="console.log('Договор в подготовке')" style="padding:13px 24px;background:var(--card-bg);border:1px solid var(--card-border);border-radius:14px;font-family:inherit;font-size:14px;font-weight:600;color:var(--text);cursor:pointer;transition:all .3s;" data-i18n="partnerDownloadContract">Скачать договор</button>
                 </div>
 
                 <div style="margin-top:24px;">
@@ -7884,15 +7888,16 @@
             taLockWarning: { ru:'&#128274; Некоторые ЦА участвуют в активном обзвоне. Редактирование и удаление заблокировано. Чтобы изменить, сначала остановите звонки.', en:'&#128274; Some TAs are used in active calling. Editing and deletion are locked. To modify, stop the calls first.' },
             taEmpty: { ru:'Нет целевых аудиторий. Создайте первую!', en:'No target audiences. Create your first one!' },
             // Referral
-            refTitle: { ru:'Реферальная программа', en:'Referral Program' },
-            refSub: { ru:'Пригласите друга — получите клиентов бесплатно', en:'Invite a friend — get clients for free' },
+            refTitle: { ru:'Партнёрская программа', en:'Partner Program' },
+            refSub: { ru:'Рекомендуйте. Зарабатывайте', en:'Recommend. Earn' },
             refLinkLabel: { ru:'Ваша реферальная ссылка', en:'Your referral link' },
             refCopy: { ru:'Копировать', en:'Copy' },
-            refFreeClients: { ru:'клиентов бесплатно', en:'free clients' },
-            refPerInvite: { ru:'Вам за каждого приглашённого', en:'For each invited user' },
-            refDiscount: { ru:'скидка для друга', en:'discount for a friend' },
-            refFirst10: { ru:'На первые 10 лидов', en:'For the first 10 leads' },
-            refBonusLabel: { ru:'Ваши бонусные лиды:', en:'Your bonus leads:' },
+            partnerClients: { ru:'ваших клиентов', en:'your clients' },
+            partnerClientsDesc: { ru:'Привлечено по вашей рекомендации', en:'Attracted by your recommendation' },
+            partnerPayoutLabel: { ru:'к выводу', en:'to withdraw' },
+            partnerPayoutDesc: { ru:'На ваш расчётный счёт', en:'To your bank account' },
+            partnerPaidLabel: { ru:'Выплачено всего:', en:'Total paid:' },
+            partnerDownloadContract: { ru:'Скачать договор', en:'Download contract' },
             refInvitedTitle: { ru:'Приглашённые пользователи', en:'Invited Users' },
             // Balance
             balTitle: { ru:'Баланс', en:'Balance' },
