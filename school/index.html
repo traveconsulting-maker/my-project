@@ -225,6 +225,24 @@
         .hero {
             padding: 160px 48px 80px;
             max-width: 1200px; margin: 0 auto;
+            position: relative; z-index: 1;
+        }
+        /* Hero background photo — kept under a dark gradient so it reads at ~25-30% max */
+        .hero::before {
+            content: '';
+            position: absolute;
+            top: 0; left: 50%;
+            width: 100vw; height: 100%;
+            transform: translateX(-50%);
+            z-index: -1; pointer-events: none;
+            background-color: var(--bg);
+            background-image:
+                linear-gradient(180deg, rgba(13,13,15,0) 55%, var(--bg) 100%),
+                linear-gradient(105deg, rgba(13,13,15,0.96) 0%, rgba(13,13,15,0.86) 42%, rgba(13,13,15,0.72) 100%),
+                url('bg-hero.jpg');
+            background-repeat: no-repeat;
+            background-position: right center;
+            background-size: cover;
         }
         .hero-eyebrow {
             display: inline-flex; align-items: center; gap: 8px;
@@ -732,6 +750,12 @@
             .topbar-center { display: none; }
             .burger { display: flex; }
             .hero { padding: 140px 24px 60px; }
+            .hero::before {
+                background-image:
+                    linear-gradient(180deg, rgba(13,13,15,0.72) 0%, rgba(13,13,15,0.88) 62%, var(--bg) 100%),
+                    url('bg-hero.jpg');
+                background-position: 58% center;
+            }
             .section { padding: 80px 24px; }
             .stat-grid { grid-template-columns: repeat(2, 1fr); }
             .what-grid { grid-template-columns: 1fr; }
