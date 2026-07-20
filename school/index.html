@@ -1,0 +1,1533 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>EasySale для онлайн-школ — возвращаем учеников на оплату</title>
+    <meta name="description" content="AI-менеджер EasySale реанимирует базу «спящих» лидов вашей онлайн-школы: обзванивает, квалифицирует и возвращает тёплых учеников в воронку.">
+    <meta name="keywords" content="EasySale, онлайн-школа, AI менеджер, реанимация базы, обзвон лидов, возврат учеников, автоматизация продаж">
+    <meta name="robots" content="index, follow">
+    <meta property="og:title" content="EasySale для онлайн-школ — возвращаем учеников на оплату">
+    <meta property="og:description" content="AI-менеджер реанимирует «спящую» базу школы: обзванивает тех, кто не дошёл до оплаты, и возвращает тёплых лидов в вашу воронку.">
+    <meta property="og:url" content="https://easysale.tech/school/">
+    <meta property="og:type" content="website">
+    <link rel="canonical" href="https://easysale.tech/school/">
+    <link rel="icon" type="image/png" sizes="16x16" href="../landing/favicon-16x16.png">
+    <link rel="icon" type="image/png" sizes="32x32" href="../landing/favicon-32x32.png">
+    <link rel="icon" type="image/png" sizes="256x256" href="../landing/favicon-256.png">
+    <!-- Yandex.Metrika counter -->
+    <script type="text/javascript">
+        (function(m,e,t,r,i,k,a){
+            m[i]=m[i]||function(){(m[i].a=m[i].a||[]).push(arguments)};
+            m[i].l=1*new Date();
+            for (var j = 0; j < document.scripts.length; j++) {if (document.scripts[j].src === r) { return; }}
+            k=e.createElement(t),a=e.getElementsByTagName(t)[0],k.async=1,k.src=r,a.parentNode.insertBefore(k,a)
+        })(window, document,'script','https://mc.yandex.ru/metrika/tag.js?id=108141904', 'ym');
+        ym(108141904, 'init', {ssr:true, webvisor:true, clickmap:true, ecommerce:"dataLayer", referrer: document.referrer, url: location.href, accurateTrackBounce:true, trackLinks:true});
+    </script>
+    <noscript><div><img src="https://mc.yandex.ru/watch/108141904" style="position:absolute; left:-9999px;" alt="" /></div></noscript>
+    <!-- /Yandex.Metrika counter -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@400;500;600;700&family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <style>
+        /* ===== VARIABLES ===== */
+        :root {
+            --bg: #0d0d0f;
+            --bg-alt: #111111;
+            --surface: #141413;
+            --card-bg: rgba(255,255,255,0.025);
+            --card-border: rgba(255,255,255,0.06);
+            --text: #F5F0E8;
+            --text-secondary: rgba(245,240,232,0.7);
+            --text-muted: rgba(245,240,232,0.4);
+            --text-dim: rgba(245,240,232,0.5);
+            --hover-bg: rgba(255,255,255,0.04);
+            --input-bg: rgba(255,255,255,0.04);
+            --input-border: rgba(255,255,255,0.08);
+            --border-color: rgba(255,255,255,0.06);
+            --accent: #FF4D00;
+            --accent-soft: #FF6B2B;
+            --accent-glow: rgba(255,77,0,0.15);
+            --font-display: 'Space Grotesk', sans-serif;
+            --font-body: 'Inter', sans-serif;
+        }
+
+        /* ===== RESET ===== */
+        *, *::before, *::after { margin: 0; padding: 0; box-sizing: border-box; }
+        html { scroll-behavior: smooth; }
+        body {
+            font-family: var(--font-body);
+            min-height: 100vh;
+            background: var(--bg);
+            color: var(--text);
+            overflow-x: hidden;
+            -webkit-font-smoothing: antialiased;
+            -moz-osx-font-smoothing: grayscale;
+            line-height: 1.6;
+        }
+
+        /* Grain overlay */
+        body::after {
+            content: '';
+            position: fixed;
+            inset: 0;
+            z-index: 9999;
+            pointer-events: none;
+            opacity: 0.035;
+            background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 256 256' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)'/%3E%3C/svg%3E");
+            background-repeat: repeat;
+            background-size: 256px 256px;
+        }
+
+        /* BG glow */
+        .bg-glow {
+            position: fixed; inset: 0; z-index: 0; pointer-events: none;
+        }
+        .bg-glow::before {
+            content: '';
+            position: absolute;
+            width: 800px; height: 800px;
+            border-radius: 50%;
+            background: radial-gradient(circle, rgba(255,77,0,0.07) 0%, transparent 70%);
+            top: -20%; right: -10%;
+        }
+        .bg-glow::after {
+            content: '';
+            position: absolute;
+            width: 600px; height: 600px;
+            border-radius: 50%;
+            background: radial-gradient(circle, rgba(255,120,50,0.04) 0%, transparent 70%);
+            bottom: 10%; left: -5%;
+        }
+
+        .display { font-family: var(--font-display); }
+        .tabular { font-variant-numeric: tabular-nums; }
+
+        /* ===== TOPBAR ===== */
+        .topbar {
+            position: fixed; top: 0; left: 0; right: 0; z-index: 50;
+            display: flex; align-items: center; justify-content: space-between;
+            padding: 0 48px; height: 60px;
+            background: rgba(13,13,15,0.82);
+            backdrop-filter: blur(24px); -webkit-backdrop-filter: blur(24px);
+            border-bottom: 1px solid var(--border-color);
+        }
+        .logo {
+            font-family: var(--font-display);
+            font-size: 19px; font-weight: 700; color: var(--text);
+            display: flex; align-items: center; gap: 10px;
+            text-decoration: none; flex-shrink: 0;
+        }
+        .logo-icon {
+            width: 34px; height: 34px; border-radius: 10px;
+            background: var(--accent);
+            display: flex; align-items: center; justify-content: center;
+        }
+        .logo-icon svg { width: 18px; height: 18px; fill: #fff; }
+        .topbar-center { display: flex; align-items: center; gap: 2px; }
+        .topbar-center a {
+            color: var(--text-dim); text-decoration: none;
+            font-size: 13px; font-weight: 500;
+            padding: 7px 13px; border-radius: 8px;
+            transition: color .2s, background .2s;
+            white-space: nowrap;
+        }
+        .topbar-center a:hover { color: var(--text); background: var(--hover-bg); }
+        .topbar-right { display: flex; align-items: center; gap: 12px; flex-shrink: 0; }
+        .btn-top {
+            display: inline-flex; align-items: center; gap: 6px;
+            padding: 9px 20px; background: var(--accent); border: none;
+            border-radius: 10px; color: #fff; font-family: inherit;
+            font-size: 13px; font-weight: 600; cursor: pointer; text-decoration: none;
+            transition: transform .35s cubic-bezier(.16,1,.3,1), box-shadow .35s cubic-bezier(.16,1,.3,1);
+            box-shadow: 0 4px 20px rgba(255,77,0,0.25);
+        }
+        .btn-top:hover { transform: translateY(-2px); box-shadow: 0 8px 30px rgba(255,77,0,0.4); }
+
+        /* Burger */
+        .burger {
+            display: none; width: 40px; height: 40px; border: none; background: none;
+            cursor: pointer; padding: 8px; border-radius: 8px;
+            flex-direction: column; justify-content: center; align-items: center; gap: 5px;
+            transition: background .2s;
+        }
+        .burger:hover { background: var(--hover-bg); }
+        .burger span {
+            display: block; width: 20px; height: 2px; background: var(--text);
+            border-radius: 1px; transition: transform .3s, opacity .3s;
+        }
+        .burger.open span:nth-child(1) { transform: rotate(45deg) translate(3.5px,3.5px); }
+        .burger.open span:nth-child(2) { opacity: 0; }
+        .burger.open span:nth-child(3) { transform: rotate(-45deg) translate(3.5px,-3.5px); }
+
+        /* Mobile menu */
+        .mob-menu {
+            display: none; position: fixed; inset: 0; z-index: 49;
+            background: rgba(13,13,15,0.95);
+            backdrop-filter: blur(24px); -webkit-backdrop-filter: blur(24px);
+            padding: 80px 24px 32px;
+            flex-direction: column; gap: 4px;
+        }
+        .mob-menu.open { display: flex; }
+        .mob-menu a {
+            color: var(--text); text-decoration: none; font-size: 17px; font-weight: 600;
+            padding: 14px 20px; border-radius: 12px; transition: background .2s;
+        }
+        .mob-menu a:hover { background: rgba(255,255,255,0.05); }
+        .mob-menu .mob-cta {
+            margin-top: auto; display: flex; justify-content: center;
+            padding: 16px 28px; border-radius: 12px;
+            background: var(--accent); color: #fff; font-weight: 700;
+        }
+
+        .scroll-target { scroll-margin-top: 72px; }
+
+        /* ===== PAGE ===== */
+        .page { position: relative; z-index: 1; }
+
+        /* ===== REVEAL ===== */
+        .reveal {
+            opacity: 0; transform: translateY(32px);
+            transition: opacity .8s cubic-bezier(.16,1,.3,1), transform .8s cubic-bezier(.16,1,.3,1);
+        }
+        .reveal.visible { opacity: 1; transform: translateY(0); }
+        .stagger > .reveal:nth-child(2) { transition-delay: .08s; }
+        .stagger > .reveal:nth-child(3) { transition-delay: .16s; }
+        .stagger > .reveal:nth-child(4) { transition-delay: .24s; }
+        .stagger > .reveal:nth-child(5) { transition-delay: .32s; }
+        .stagger > .reveal:nth-child(6) { transition-delay: .40s; }
+
+        @media (prefers-reduced-motion: reduce) {
+            .reveal { opacity: 1; transform: none; transition: none; }
+            .stagger > .reveal { transition-delay: 0s !important; }
+            .hero-geo-ring { animation: none !important; }
+        }
+
+        /* ===== SECTION COMMON ===== */
+        .section { padding: 100px 48px; max-width: 1200px; margin: 0 auto; }
+        .section-eyebrow {
+            font-size: 11px; font-weight: 700; letter-spacing: 2px;
+            text-transform: uppercase; color: var(--accent-soft); margin-bottom: 16px;
+        }
+        .section-title {
+            font-family: var(--font-display);
+            font-size: clamp(28px, 3.5vw, 44px); font-weight: 700;
+            color: var(--text); letter-spacing: -1px; margin-bottom: 12px;
+            line-height: 1.1;
+        }
+        .section-desc {
+            font-size: 16px; color: var(--text-muted); max-width: 520px;
+            line-height: 1.7; margin-bottom: 56px;
+        }
+
+        /* ===== HERO ===== */
+        .hero {
+            padding: 160px 48px 80px;
+            max-width: 1200px; margin: 0 auto;
+        }
+        .hero-eyebrow {
+            display: inline-flex; align-items: center; gap: 8px;
+            padding: 8px 18px; border-radius: 100px;
+            background: rgba(255,77,0,0.08); border: 1px solid rgba(255,77,0,0.2);
+            font-size: 13px; font-weight: 600; color: var(--accent-soft);
+            margin-bottom: 28px;
+        }
+        .hero-eyebrow .dot {
+            width: 8px; height: 8px; border-radius: 50%;
+            background: var(--accent);
+            box-shadow: 0 0 12px var(--accent);
+            animation: dotPulse 2s ease-in-out infinite;
+        }
+        @keyframes dotPulse {
+            0%, 100% { opacity: 1; box-shadow: 0 0 12px var(--accent); }
+            50% { opacity: .5; box-shadow: 0 0 4px var(--accent); }
+        }
+        .hero h1 {
+            font-family: var(--font-display);
+            font-size: clamp(40px, 5.5vw, 72px); font-weight: 700;
+            line-height: 1.0; letter-spacing: -2.5px;
+            color: var(--text); margin-bottom: 24px;
+        }
+        .hero h1 em { font-style: normal; color: var(--accent); }
+        .hero-sub {
+            font-size: 17px; line-height: 1.7; color: var(--text-muted);
+            max-width: 580px; margin-bottom: 20px;
+        }
+        .hero-accent-line {
+            font-size: 17px; font-weight: 700; color: var(--accent);
+            margin-bottom: 36px;
+        }
+        .hero-buttons { display: flex; gap: 16px; flex-wrap: wrap; margin-bottom: 64px; }
+        .btn-primary {
+            display: inline-flex; align-items: center; gap: 10px;
+            padding: 18px 40px; border-radius: 14px;
+            background: var(--accent); color: #fff;
+            font-family: inherit; font-size: 15px; font-weight: 700;
+            border: none; cursor: pointer; text-decoration: none;
+            transition: transform .4s cubic-bezier(.16,1,.3,1), box-shadow .4s;
+            box-shadow: 0 8px 32px rgba(255,77,0,0.3);
+        }
+        .btn-primary:hover { transform: translateY(-3px); box-shadow: 0 14px 44px rgba(255,77,0,0.45); }
+        .btn-ghost {
+            display: inline-flex; align-items: center; gap: 10px;
+            padding: 18px 40px; border-radius: 14px;
+            background: transparent; color: var(--text-secondary);
+            border: 1px solid rgba(255,255,255,0.12);
+            font-family: inherit; font-size: 15px; font-weight: 600;
+            cursor: pointer; text-decoration: none;
+            transition: all .3s; backdrop-filter: blur(10px);
+        }
+        .btn-ghost:hover {
+            border-color: rgba(255,77,0,0.4); color: #fff;
+            background: rgba(255,77,0,0.06); transform: translateY(-2px);
+        }
+
+        /* Stat cards */
+        .stat-grid {
+            display: grid; grid-template-columns: repeat(4, 1fr); gap: 16px;
+        }
+        .stat-card {
+            background: var(--card-bg); border: 1px solid var(--card-border);
+            border-radius: 20px; padding: 28px 24px;
+            transition: transform .4s cubic-bezier(.16,1,.3,1), background .3s;
+        }
+        .stat-card:hover { transform: translateY(-3px); background: rgba(255,255,255,0.04); }
+        .stat-value {
+            font-family: var(--font-display);
+            font-size: 28px; font-weight: 700; color: var(--accent);
+            margin-bottom: 6px; line-height: 1.2;
+        }
+        .stat-label { font-size: 14px; color: var(--text-muted); line-height: 1.4; }
+
+        /* ===== WHAT WE DO ===== */
+        .what-grid {
+            display: grid; grid-template-columns: 1fr 1fr; gap: 32px;
+            margin-bottom: 48px;
+        }
+        .what-block h3 {
+            font-family: var(--font-display);
+            font-size: 18px; font-weight: 700; color: var(--text);
+            margin-bottom: 20px;
+        }
+        .what-block ul { list-style: none; display: flex; flex-direction: column; gap: 14px; }
+        .what-block ul li {
+            font-size: 15px; color: var(--text-secondary); line-height: 1.6;
+            padding-left: 20px; position: relative;
+        }
+        .what-block ul li::before {
+            content: ''; position: absolute; left: 0; top: 9px;
+            width: 6px; height: 6px; border-radius: 50%; background: var(--accent);
+        }
+        .what-block p { font-size: 15px; color: var(--text-muted); line-height: 1.7; }
+        .screenshot-strip {
+            display: grid; grid-template-columns: repeat(4, 1fr); gap: 12px;
+        }
+        .screenshot-placeholder {
+            background: var(--surface); border: 1px solid var(--card-border);
+            border-radius: 16px; padding: 48px 16px;
+            display: flex; align-items: center; justify-content: center;
+            font-size: 13px; color: var(--text-muted); text-align: center;
+        }
+
+        /* ===== WHO IT'S FOR + WHAT WE REANIMATE ===== */
+        .amber-grid {
+            display: grid; grid-template-columns: repeat(3, 1fr); gap: 16px;
+            margin-bottom: 80px;
+        }
+        .amber-card {
+            background: var(--accent); border-radius: 24px;
+            padding: 36px 28px; color: #0d0d0f;
+            transition: transform .4s cubic-bezier(.16,1,.3,1);
+        }
+        .amber-card:hover { transform: translateY(-4px); }
+        .amber-card h4 {
+            font-family: var(--font-display);
+            font-size: 20px; font-weight: 700; margin-bottom: 10px;
+        }
+        .amber-card p { font-size: 14px; line-height: 1.6; opacity: .85; }
+
+        .leads-grid {
+            display: grid; grid-template-columns: repeat(4, 1fr); gap: 16px;
+        }
+        .lead-card {
+            background: var(--card-bg); border: 1px solid var(--card-border);
+            border-radius: 20px; padding: 32px 24px;
+            transition: transform .4s cubic-bezier(.16,1,.3,1), background .3s;
+        }
+        .lead-card:hover { transform: translateY(-3px); background: rgba(255,255,255,0.04); }
+        .lead-card-num {
+            font-family: var(--font-display);
+            font-size: 48px; font-weight: 700;
+            color: rgba(255,77,0,0.12); line-height: 1;
+            margin-bottom: 12px; letter-spacing: -2px;
+        }
+        .lead-card h4 {
+            font-family: var(--font-display);
+            font-size: 16px; font-weight: 700; color: var(--text);
+            margin-bottom: 8px;
+        }
+        .lead-card p { font-size: 14px; color: var(--text-muted); line-height: 1.6; }
+
+        /* ===== HOW WE WORK ===== */
+        .steps-grid {
+            display: grid; grid-template-columns: repeat(3, 1fr); gap: 16px;
+        }
+        .step-card {
+            background: var(--card-bg); border: 1px solid var(--card-border);
+            border-radius: 20px; padding: 32px 28px;
+            transition: transform .4s cubic-bezier(.16,1,.3,1), background .3s;
+        }
+        .step-card:hover { transform: translateY(-3px); background: rgba(255,255,255,0.04); }
+        .step-pill {
+            display: inline-flex; align-items: center; justify-content: center;
+            width: 44px; height: 28px; border-radius: 100px;
+            background: var(--accent); color: #fff;
+            font-family: var(--font-display);
+            font-size: 13px; font-weight: 700;
+            margin-bottom: 20px;
+        }
+        .step-card h4 {
+            font-family: var(--font-display);
+            font-size: 16px; font-weight: 700; color: var(--text);
+            margin-bottom: 10px;
+        }
+        .step-card p { font-size: 14px; color: var(--text-muted); line-height: 1.65; }
+
+        /* ===== CALCULATOR ===== */
+        .calc-section { padding: 100px 48px; max-width: 1200px; margin: 0 auto; }
+        .calc-card {
+            background: var(--surface); border: 1px solid var(--card-border);
+            border-radius: 24px; padding: 56px 48px;
+            position: relative;
+        }
+        .calc-card::before {
+            content: ''; position: absolute; top: 0; left: 24px; right: 24px; height: 1px;
+            background: linear-gradient(90deg, transparent, rgba(255,255,255,0.06), transparent);
+        }
+        .calc-header { margin-bottom: 48px; }
+        .calc-header h2 {
+            font-family: var(--font-display);
+            font-size: clamp(28px, 3.5vw, 40px); font-weight: 700;
+            color: var(--text); letter-spacing: -1px; margin-bottom: 8px;
+        }
+        .calc-header p { font-size: 15px; color: var(--text-muted); }
+        .calc-body {
+            display: grid; grid-template-columns: 1fr 1fr; gap: 64px;
+            align-items: start;
+        }
+        .calc-sliders { display: flex; flex-direction: column; gap: 32px; }
+        .calc-slider-group { display: flex; flex-direction: column; gap: 10px; }
+        .calc-slider-head {
+            display: flex; justify-content: space-between; align-items: baseline;
+        }
+        .calc-slider-label { font-size: 14px; font-weight: 500; color: var(--text-secondary); }
+        .calc-slider-value {
+            font-family: var(--font-display); font-variant-numeric: tabular-nums;
+            font-size: 18px; font-weight: 700; color: var(--text);
+        }
+        .calc-slider-value small { font-size: 14px; font-weight: 500; color: var(--text-muted); }
+        input[type="range"] {
+            -webkit-appearance: none; appearance: none;
+            width: 100%; height: 6px; border-radius: 3px;
+            background: rgba(255,255,255,0.1); outline: none;
+            cursor: pointer;
+        }
+        input[type="range"]::-webkit-slider-thumb {
+            -webkit-appearance: none; appearance: none;
+            width: 22px; height: 22px; border-radius: 50%;
+            background: var(--accent); border: 3px solid var(--bg);
+            box-shadow: 0 0 12px rgba(255,77,0,0.4);
+            cursor: pointer;
+        }
+        input[type="range"]::-moz-range-thumb {
+            width: 22px; height: 22px; border-radius: 50%;
+            background: var(--accent); border: 3px solid var(--bg);
+            box-shadow: 0 0 12px rgba(255,77,0,0.4);
+            cursor: pointer;
+        }
+        .calc-results { display: flex; flex-direction: column; gap: 20px; }
+        .calc-result-item {
+            display: flex; flex-direction: column; gap: 4px;
+            padding-bottom: 20px;
+            border-bottom: 1px solid var(--border-color);
+        }
+        .calc-result-item:last-child { border-bottom: none; padding-bottom: 0; }
+        .calc-result-label { font-size: 13px; color: var(--text-muted); }
+        .calc-result-value {
+            font-family: var(--font-display); font-variant-numeric: tabular-nums;
+            font-size: 24px; font-weight: 700; color: var(--text);
+        }
+        .calc-result-value.big {
+            font-size: clamp(32px, 4vw, 48px); color: var(--accent);
+            letter-spacing: -1px;
+        }
+        .calc-footer {
+            margin-top: 32px; display: flex; align-items: center;
+            justify-content: space-between; gap: 24px; flex-wrap: wrap;
+        }
+        .calc-disclaimer {
+            font-size: 13px; color: var(--text-muted); max-width: 480px;
+            line-height: 1.6;
+        }
+
+        /* ===== CASES ===== */
+        .cases-grid {
+            display: grid; grid-template-columns: repeat(3, 1fr); gap: 16px;
+        }
+        .case-card {
+            background: var(--card-bg); border: 1px solid var(--card-border);
+            border-radius: 20px; padding: 32px 28px;
+            transition: transform .4s cubic-bezier(.16,1,.3,1), background .3s;
+        }
+        .case-card:hover { transform: translateY(-3px); background: rgba(255,255,255,0.04); }
+        .case-badge {
+            display: inline-block; padding: 4px 12px; border-radius: 100px;
+            background: rgba(255,77,0,0.1); border: 1px solid rgba(255,77,0,0.15);
+            font-size: 12px; font-weight: 600; color: var(--accent-soft);
+            margin-bottom: 16px;
+        }
+        .case-card h4 {
+            font-family: var(--font-display);
+            font-size: 16px; font-weight: 700; color: var(--text);
+            margin-bottom: 12px;
+        }
+        .case-card p { font-size: 14px; color: var(--text-muted); line-height: 1.6; margin-bottom: 8px; }
+        .case-result {
+            font-size: 14px; font-weight: 600; color: var(--accent-soft);
+            padding-top: 12px; border-top: 1px solid var(--border-color);
+            margin-top: 12px;
+        }
+        .case-placeholder-note {
+            text-align: center; margin-top: 24px;
+            font-size: 13px; color: var(--text-muted); font-style: italic;
+        }
+
+        /* ===== AUDIO ===== */
+        .audio-grid {
+            display: grid; grid-template-columns: repeat(2, 1fr); gap: 16px;
+        }
+        .audio-card {
+            background: var(--card-bg); border: 1px solid var(--card-border);
+            border-radius: 20px; padding: 32px 28px;
+            transition: transform .4s cubic-bezier(.16,1,.3,1), border-color .4s, box-shadow .4s;
+        }
+        .audio-card:hover {
+            transform: translateY(-4px); border-color: rgba(255,77,0,0.2);
+            box-shadow: 0 20px 60px rgba(255,77,0,0.08);
+        }
+        .audio-card-icon {
+            width: 48px; height: 48px; border-radius: 14px;
+            background: rgba(255,77,0,0.1); border: 1px solid rgba(255,77,0,0.15);
+            display: flex; align-items: center; justify-content: center;
+            margin-bottom: 16px;
+        }
+        .audio-card-icon svg { width: 24px; height: 24px; }
+        .audio-card h4 {
+            font-family: var(--font-display);
+            font-size: 17px; font-weight: 700; color: var(--text);
+            margin-bottom: 8px;
+        }
+        .audio-card .audio-desc { font-size: 14px; color: var(--text-muted); line-height: 1.6; margin-bottom: 16px; }
+        .custom-player {
+            display: flex; align-items: center; gap: 14px;
+            background: rgba(255,255,255,0.04); border: 1px solid rgba(255,255,255,0.06);
+            border-radius: 14px; padding: 12px 16px;
+        }
+        .player-play-btn {
+            width: 42px; height: 42px; min-width: 42px;
+            border-radius: 50%; border: none;
+            background: var(--accent); display: flex;
+            align-items: center; justify-content: center;
+            cursor: pointer; transition: background .2s, transform .15s;
+        }
+        .player-play-btn:hover { background: var(--accent-soft); transform: scale(1.07); }
+        .player-play-btn svg { width: 18px; height: 18px; fill: #fff; }
+        .player-play-btn .icon-pause { display: none; }
+        .audio-card.playing .player-play-btn .icon-play { display: none; }
+        .audio-card.playing .player-play-btn .icon-pause { display: block; }
+        .player-middle {
+            flex: 1; min-width: 0;
+            display: flex; flex-direction: column; gap: 6px;
+        }
+        .player-progress {
+            position: relative; width: 100%; height: 6px;
+            background: rgba(255,255,255,0.1); border-radius: 3px;
+            cursor: pointer; overflow: hidden;
+        }
+        .player-progress-fill {
+            position: absolute; left: 0; top: 0; bottom: 0;
+            width: 0%; background: var(--accent); border-radius: 3px;
+            transition: width .15s linear;
+        }
+        .player-time {
+            font-size: 13px; color: var(--text-muted);
+            font-variant-numeric: tabular-nums; white-space: nowrap;
+        }
+        .audio-card.playing {
+            border-color: rgba(255,77,0,0.25);
+            animation: cardGlow 2s ease-in-out infinite;
+        }
+        @keyframes cardGlow {
+            0%, 100% { box-shadow: 0 0 15px rgba(255,77,0,0.1); }
+            50% { box-shadow: 0 0 30px rgba(255,77,0,0.2); }
+        }
+        .audio-unavailable {
+            font-size: 13px; color: var(--text-muted); font-style: italic;
+            text-align: center; padding: 14px 0;
+        }
+
+        /* ===== FAQ ===== */
+        .faq-list {
+            max-width: 720px; margin: 0 auto;
+            display: flex; flex-direction: column; gap: 12px;
+        }
+        .faq-item {
+            background: var(--card-bg); border: 1px solid var(--card-border);
+            border-radius: 16px; overflow: hidden;
+            transition: border-color .3s;
+        }
+        .faq-item.open { border-color: rgba(255,77,0,0.2); }
+        .faq-q {
+            padding: 20px 24px; font-size: 16px; font-weight: 700;
+            cursor: pointer; display: flex; justify-content: space-between;
+            align-items: center; gap: 16px; user-select: none;
+            transition: color .2s;
+        }
+        .faq-q:hover { color: var(--accent); }
+        .faq-arrow {
+            flex-shrink: 0; width: 20px; height: 20px;
+            transition: transform .3s;
+        }
+        .faq-item.open .faq-arrow { transform: rotate(45deg); }
+        .faq-a {
+            max-height: 0; overflow: hidden;
+            transition: max-height .35s ease, padding .35s ease;
+            padding: 0 24px;
+        }
+        .faq-item.open .faq-a {
+            max-height: 300px; padding: 0 24px 20px;
+        }
+        .faq-a p { font-size: 15px; color: var(--text-muted); line-height: 1.7; }
+
+        /* ===== FORM SECTION ===== */
+        .form-section {
+            padding: 100px 48px; max-width: 1200px; margin: 0 auto;
+        }
+        .form-panel {
+            background: var(--accent); border-radius: 28px;
+            padding: 64px 48px;
+            display: grid; grid-template-columns: 1fr 1fr; gap: 56px;
+            align-items: center;
+        }
+        .form-panel-text h2 {
+            font-family: var(--font-display);
+            font-size: clamp(28px, 3.5vw, 40px); font-weight: 700;
+            color: #0d0d0f; letter-spacing: -1px; margin-bottom: 16px;
+            line-height: 1.1;
+        }
+        .form-panel-text p {
+            font-size: 16px; color: rgba(13,13,15,0.7); line-height: 1.7;
+        }
+        .form-wrap {
+            background: #0d0d0f; border-radius: 24px; padding: 40px 36px;
+        }
+        .form-fields { display: flex; flex-direction: column; gap: 18px; }
+        .form-field { display: flex; flex-direction: column; gap: 6px; }
+        .form-label { font-size: 13px; font-weight: 600; color: var(--text-secondary); }
+        .form-input {
+            width: 100%; padding: 14px 18px; border-radius: 12px;
+            border: 1.5px solid var(--input-border); background: var(--input-bg);
+            color: var(--text); font-family: inherit; font-size: 14px;
+            transition: border-color .3s, box-shadow .3s;
+        }
+        .form-input:focus {
+            outline: none; border-color: rgba(255,77,0,0.4);
+            box-shadow: 0 0 0 3px rgba(255,77,0,0.08);
+        }
+        .form-input::placeholder { color: var(--text-muted); }
+        .form-input.error { border-color: #f87171; }
+        .checkbox-row {
+            display: flex; align-items: flex-start; gap: 10px;
+            cursor: pointer; margin-top: 4px;
+        }
+        .checkbox-row input[type="checkbox"] {
+            width: 18px; height: 18px; margin-top: 2px;
+            accent-color: var(--accent); cursor: pointer; flex-shrink: 0;
+        }
+        .checkbox-row span { font-size: 13px; color: var(--text-muted); line-height: 1.5; }
+        .checkbox-row a { color: var(--accent-soft); }
+        .form-submit {
+            width: 100%; padding: 16px; margin-top: 8px;
+            background: var(--accent); color: #fff;
+            border: none; border-radius: 12px; font-family: inherit;
+            font-size: 15px; font-weight: 700; cursor: pointer;
+            transition: transform .35s cubic-bezier(.16,1,.3,1), box-shadow .35s cubic-bezier(.16,1,.3,1);
+            box-shadow: 0 6px 24px rgba(255,77,0,0.25);
+        }
+        .form-submit:hover { transform: translateY(-2px); box-shadow: 0 10px 32px rgba(255,77,0,0.4); }
+        .form-submit:disabled { opacity: .5; cursor: not-allowed; transform: none; box-shadow: none; }
+        .form-error-msg {
+            display: none; margin-top: 14px; padding: 12px 16px;
+            background: rgba(248,113,113,0.08); border: 1px solid rgba(248,113,113,0.15);
+            border-radius: 12px; color: #f87171; font-size: 13px; text-align: center;
+        }
+        .form-error-msg.show { display: block; }
+        .form-success {
+            display: none; flex-direction: column; align-items: center; gap: 16px;
+            padding: 24px 0;
+        }
+        .form-success.show { display: flex; }
+        .success-icon {
+            width: 64px; height: 64px; border-radius: 50%;
+            background: rgba(52,211,153,0.1);
+            display: flex; align-items: center; justify-content: center;
+        }
+        .success-icon svg { width: 32px; height: 32px; fill: #34d399; }
+        .form-success h3 {
+            font-family: var(--font-display);
+            font-size: 20px; font-weight: 700; color: var(--text);
+        }
+        .form-success p { font-size: 14px; color: var(--text-muted); line-height: 1.6; text-align: center; }
+        .ohnohoney { position: absolute; left: -9999px; opacity: 0; height: 0; width: 0; }
+
+        /* ===== FOOTER ===== */
+        .footer {
+            padding: 48px 48px 40px; text-align: center;
+            color: var(--text-muted); font-size: 13px;
+            border-top: 1px solid var(--border-color); margin-top: 0;
+            max-width: 1200px; margin: 0 auto;
+        }
+        .footer-top {
+            display: flex; justify-content: space-between; align-items: center;
+            flex-wrap: wrap; gap: 16px; margin-bottom: 24px;
+        }
+        .footer-company { font-size: 13px; color: var(--text-muted); text-align: left; line-height: 1.6; }
+        .footer-links { display: flex; gap: 20px; align-items: center; }
+        .footer-links a {
+            color: var(--text-dim); text-decoration: none; font-size: 13px;
+            transition: color .2s;
+        }
+        .footer-links a:hover { color: var(--text); }
+        .footer-socials { display: flex; gap: 12px; }
+        .footer-socials a {
+            width: 36px; height: 36px; border-radius: 10px;
+            background: var(--card-bg); border: 1px solid var(--card-border);
+            display: flex; align-items: center; justify-content: center;
+            color: var(--text-muted); text-decoration: none;
+            transition: background .2s, border-color .2s;
+        }
+        .footer-socials a:hover {
+            background: rgba(255,77,0,0.1); border-color: rgba(255,77,0,0.2);
+        }
+        .footer-socials a svg { width: 18px; height: 18px; fill: currentColor; }
+        .footer-bottom {
+            padding-top: 20px; border-top: 1px solid var(--border-color);
+            font-size: 13px; color: var(--text-muted);
+        }
+
+        /* ===== RESPONSIVE ===== */
+        @media (max-width: 900px) {
+            .topbar { padding: 0 24px; }
+            .topbar-center { display: none; }
+            .burger { display: flex; }
+            .hero { padding: 140px 24px 60px; }
+            .section { padding: 80px 24px; }
+            .stat-grid { grid-template-columns: repeat(2, 1fr); }
+            .what-grid { grid-template-columns: 1fr; }
+            .amber-grid { grid-template-columns: 1fr; }
+            .leads-grid { grid-template-columns: repeat(2, 1fr); }
+            .steps-grid { grid-template-columns: 1fr; }
+            .calc-section { padding: 80px 24px; }
+            .calc-card { padding: 36px 24px; }
+            .calc-body { grid-template-columns: 1fr; gap: 40px; }
+            .cases-grid { grid-template-columns: 1fr; }
+            .audio-grid { grid-template-columns: 1fr; }
+            .form-section { padding: 80px 24px; }
+            .form-panel { grid-template-columns: 1fr; padding: 40px 24px; gap: 32px; }
+            .footer { padding: 40px 24px 32px; }
+            .screenshot-strip { grid-template-columns: repeat(2, 1fr); }
+        }
+        @media (max-width: 600px) {
+            .topbar { padding: 0 16px; }
+            .hero { padding: 120px 16px 48px; }
+            .hero h1 { letter-spacing: -1.5px; }
+            .hero-buttons { flex-direction: column; }
+            .btn-primary, .btn-ghost { width: 100%; justify-content: center; }
+            .section { padding: 64px 16px; }
+            .stat-grid { grid-template-columns: 1fr 1fr; gap: 10px; }
+            .stat-card { padding: 20px 16px; }
+            .stat-value { font-size: 22px; }
+            .leads-grid { grid-template-columns: 1fr; }
+            .calc-section { padding: 64px 16px; }
+            .calc-card { padding: 28px 16px; border-radius: 20px; }
+            .calc-footer { flex-direction: column; text-align: center; }
+            .form-section { padding: 64px 16px; }
+            .form-panel { padding: 32px 16px; border-radius: 20px; }
+            .form-wrap { padding: 28px 20px; border-radius: 18px; }
+            .footer { padding: 32px 16px; }
+            .footer-top { flex-direction: column; text-align: center; }
+            .screenshot-strip { grid-template-columns: 1fr 1fr; }
+        }
+    </style>
+</head>
+<body>
+    <!-- BG glow -->
+    <div class="bg-glow"></div>
+
+    <!-- ===== TOPBAR ===== -->
+    <header class="topbar" id="topbar">
+        <a href="https://easysale.tech" class="logo">
+            <div class="logo-icon">
+                <svg viewBox="0 0 24 24"><path d="M13 10V3L4 14h7v7l9-11h-7z"/></svg>
+            </div>
+            EasySale
+        </a>
+        <nav class="topbar-center" id="topNav">
+            <a href="#sec-what">Что делаем</a>
+            <a href="#sec-how">Как работает</a>
+            <a href="#sec-calc">Калькулятор</a>
+            <a href="#sec-cases">Кейсы</a>
+            <a href="#sec-audio">Примеры звонков</a>
+        </nav>
+        <div class="topbar-right">
+            <a href="#sec-form" class="btn-top" onclick="scrollToForm(event)">Оставить заявку</a>
+            <button class="burger" id="burgerBtn" aria-label="Меню">
+                <span></span><span></span><span></span>
+            </button>
+        </div>
+    </header>
+
+    <!-- Mobile menu -->
+    <div class="mob-menu" id="mobMenu">
+        <a href="#sec-what" onclick="closeMob()">Что делаем</a>
+        <a href="#sec-how" onclick="closeMob()">Как работает</a>
+        <a href="#sec-calc" onclick="closeMob()">Калькулятор</a>
+        <a href="#sec-cases" onclick="closeMob()">Кейсы</a>
+        <a href="#sec-audio" onclick="closeMob()">Примеры звонков</a>
+        <a href="#sec-form" class="mob-cta" onclick="closeMob()">Оставить заявку</a>
+    </div>
+
+    <div class="page">
+
+        <!-- ===== 1. HERO ===== -->
+        <section class="hero">
+            <div class="hero-eyebrow reveal">
+                <span class="dot"></span>
+                Работаем с онлайн-школами по всей России
+            </div>
+            <h1 class="reveal">Возвращаем учеников вашей онлайн-школы <em>на оплату</em></h1>
+            <p class="hero-sub reveal">AI-менеджер EasySale реанимирует базу «спящих» лидов — обзванивает тех, кто не дошёл до оплаты, ушёл с вебинара или бросил заявку, и возвращает их тёплыми в вашу воронку.</p>
+            <div class="hero-accent-line reveal">Первый лид для вашей школы — бесплатно.</div>
+            <div class="hero-buttons reveal">
+                <a href="#sec-calc" class="btn-primary">Рассчитать выручку</a>
+                <a href="#sec-form" class="btn-ghost" onclick="scrollToForm(event)">Оставить заявку</a>
+            </div>
+            <div class="stat-grid stagger">
+                <div class="stat-card reveal">
+                    <div class="stat-value">7 дней</div>
+                    <div class="stat-label">до запуска обзвона</div>
+                </div>
+                <div class="stat-card reveal">
+                    <div class="stat-value">в 3 раза</div>
+                    <div class="stat-label">дешевле отдела продаж</div>
+                </div>
+                <div class="stat-card reveal">
+                    <div class="stat-value">от 2 000 ₽</div>
+                    <div class="stat-label">стоимость тёплого лида</div>
+                </div>
+                <div class="stat-card reveal">
+                    <div class="stat-value">24/7</div>
+                    <div class="stat-label">AI звонит без выходных и перерывов</div>
+                </div>
+            </div>
+        </section>
+
+        <!-- ===== 2. ЧТО МЫ ДЕЛАЕМ ===== -->
+        <section class="section scroll-target" id="sec-what">
+            <div class="section-eyebrow reveal">Что мы делаем</div>
+            <h2 class="section-title reveal">EasySale — отдел продаж на базе AI, который работает с вашей базой</h2>
+            <div class="what-grid">
+                <div class="what-block reveal">
+                    <h3>Реанимируем контакты, которые у вас уже есть</h3>
+                    <ul>
+                        <li>Обзваниваем «спящую» базу: не купившие, недозвоны, отказники</li>
+                        <li>Ведём живой голосовой диалог — это не робот-автоответчик</li>
+                        <li>Квалифицируем: выясняем интерес, бюджет, готовность купить</li>
+                        <li>Возвращаем тёплых лидов в вашу CRM и на консультации</li>
+                    </ul>
+                </div>
+                <div class="what-block reveal">
+                    <h3>Дешевле и быстрее живого отдела продаж</h3>
+                    <p>AI звонит одновременно сотням контактов, не устаёт и не сливает базу. Запуск — за 7 дней, стоимость лида в разы ниже содержания менеджеров.</p>
+                </div>
+            </div>
+            <div class="screenshot-strip stagger">
+                <div class="screenshot-placeholder reveal">Скриншот CRM</div>
+                <div class="screenshot-placeholder reveal">Скриншот кабинета</div>
+                <div class="screenshot-placeholder reveal">Скриншот аналитики</div>
+                <div class="screenshot-placeholder reveal">Скриншот звонков</div>
+            </div>
+        </section>
+
+        <!-- ===== 3. КОМУ ПОДХОДИТ + ЧТО РЕАНИМИРУЕМ ===== -->
+        <section class="section scroll-target" id="sec-who">
+            <div class="section-eyebrow reveal">Кому подходит</div>
+            <h2 class="section-title reveal">Наши клиенты — те, кто продаёт знания</h2>
+            <div class="amber-grid stagger">
+                <div class="amber-card reveal">
+                    <h4>Онлайн-школы и курсы</h4>
+                    <p>Запуски, вебинары, марафоны — у вас сотни контактов, которые не дошли до оплаты. Мы их вернём.</p>
+                </div>
+                <div class="amber-card reveal">
+                    <h4>Эксперты и блогеры</h4>
+                    <p>Собрали базу на бесплатниках, но монетизация хромает? AI обзвонит и квалифицирует каждого.</p>
+                </div>
+                <div class="amber-card reveal">
+                    <h4>Продюсерские центры</h4>
+                    <p>Продюсируете эксперта и теряете деньги на спящих лидах? Мы вернём их в воронку без лишних затрат.</p>
+                </div>
+            </div>
+
+            <h3 class="section-title reveal" style="font-size:clamp(22px,2.5vw,32px);margin-bottom:8px;">Каких лидов возвращаем</h3>
+            <p class="section-desc reveal" style="margin-bottom:40px;">Работаем с контактами, которые у вас уже есть, но не конвертировались.</p>
+            <div class="leads-grid stagger">
+                <div class="lead-card reveal">
+                    <div class="lead-card-num">01</div>
+                    <h4>Не дошли до оплаты</h4>
+                    <p>Оставили заявку или были на вебинаре, но не купили — самая горячая аудитория.</p>
+                </div>
+                <div class="lead-card reveal">
+                    <div class="lead-card-num">02</div>
+                    <h4>Ушли с вебинара</h4>
+                    <p>Зарегистрировались, но не досмотрели — возможно, просто отвлеклись.</p>
+                </div>
+                <div class="lead-card reveal">
+                    <div class="lead-card-num">03</div>
+                    <h4>Бросили заявку</h4>
+                    <p>Начали оформление, но не завершили — AI выяснит причину и вернёт.</p>
+                </div>
+                <div class="lead-card reveal">
+                    <div class="lead-card-num">04</div>
+                    <h4>Давно не отвечают</h4>
+                    <p>Старые контакты, которые «остыли» — наш основной кейс реанимации.</p>
+                </div>
+            </div>
+        </section>
+
+        <!-- ===== 4. КАК МЫ РАБОТАЕМ ===== -->
+        <section class="section scroll-target" id="sec-how">
+            <div class="section-eyebrow reveal">Как мы работаем</div>
+            <h2 class="section-title reveal">Шесть шагов — от интеграции до результата</h2>
+            <p class="section-desc reveal">Запуск обзвона вашей базы за 7 дней. Всё — на нашей стороне.</p>
+            <div class="steps-grid stagger">
+                <div class="step-card reveal">
+                    <div class="step-pill">01</div>
+                    <h4>Интеграция с вашей CRM</h4>
+                    <p>Подключаемся к amoCRM, Bitrix24 или вашей системе, без разработки на вашей стороне.</p>
+                </div>
+                <div class="step-card reveal">
+                    <div class="step-pill">02</div>
+                    <h4>Настраиваем скрипт под ваш оффер</h4>
+                    <p>Продукт, цены, отработка возражений именно вашей школы.</p>
+                </div>
+                <div class="step-card reveal">
+                    <div class="step-pill">03</div>
+                    <h4>AI обзванивает базу</h4>
+                    <p>Живым голосом, одновременно сотни контактов — без пауз и выходных.</p>
+                </div>
+                <div class="step-card reveal">
+                    <div class="step-pill">04</div>
+                    <h4>Ведём диалог и квалифицируем</h4>
+                    <p>Выясняем интерес, бюджет и готовность купить в живом разговоре.</p>
+                </div>
+                <div class="step-card reveal">
+                    <div class="step-pill">05</div>
+                    <h4>Тёплые лиды — сразу в CRM</h4>
+                    <p>С записью разговора и комментарием — ваш менеджер сразу знает контекст.</p>
+                </div>
+                <div class="step-card reveal">
+                    <div class="step-pill">06</div>
+                    <h4>Масштабируем и растим конверсию</h4>
+                    <p>Расширяем объёмы обзвона, донастраиваем скрипты, улучшаем результат.</p>
+                </div>
+            </div>
+        </section>
+
+        <!-- ===== 5. КАЛЬКУЛЯТОР ===== -->
+        <section class="calc-section scroll-target" id="sec-calc">
+            <div class="calc-card reveal">
+                <div class="calc-header">
+                    <div class="section-eyebrow">Калькулятор выручки</div>
+                    <h2>Сколько вы можете заработать</h2>
+                    <p>Двигайте ползунки — расчёт обновляется мгновенно.</p>
+                </div>
+                <div class="calc-body">
+                    <div class="calc-sliders">
+                        <div class="calc-slider-group">
+                            <div class="calc-slider-head">
+                                <span class="calc-slider-label">Размер базы, контактов</span>
+                                <div class="calc-slider-value tabular" id="baseDisplay">20 000</div>
+                            </div>
+                            <input type="range" id="baseSlider" min="1000" max="100000" step="1000" value="20000">
+                        </div>
+                        <div class="calc-slider-group">
+                            <div class="calc-slider-head">
+                                <span class="calc-slider-label">Средний чек, ₽</span>
+                                <div class="calc-slider-value tabular" id="checkDisplay">100 000<small> ₽</small></div>
+                            </div>
+                            <input type="range" id="checkSlider" min="10000" max="500000" step="5000" value="100000">
+                        </div>
+                        <div class="calc-slider-group">
+                            <div class="calc-slider-head">
+                                <span class="calc-slider-label">Конверсия базы в оплату, %</span>
+                                <div class="calc-slider-value tabular" id="convDisplay">4<small>%</small></div>
+                            </div>
+                            <input type="range" id="convSlider" min="1" max="10" step="0.5" value="4">
+                        </div>
+                    </div>
+                    <div class="calc-results">
+                        <div class="calc-result-item">
+                            <span class="calc-result-label">Контактов в обзвоне</span>
+                            <span class="calc-result-value tabular" id="resContacts">20 000</span>
+                        </div>
+                        <div class="calc-result-item">
+                            <span class="calc-result-label">Потенциальных продаж</span>
+                            <span class="calc-result-value tabular" id="resSales">800</span>
+                        </div>
+                        <div class="calc-result-item">
+                            <span class="calc-result-label">Дополнительная выручка</span>
+                            <span class="calc-result-value big tabular" id="resRevenue">80 000 000 ₽</span>
+                        </div>
+                    </div>
+                </div>
+                <div class="calc-footer">
+                    <p class="calc-disclaimer">Расчёт ориентировочный. EasySale возвращает тёплых лидов — финальная продажа зависит от вашего отдела продаж.</p>
+                    <a href="#sec-form" class="btn-primary" onclick="scrollToForm(event)" style="padding:14px 32px;font-size:14px;">Обсудить запуск</a>
+                </div>
+            </div>
+        </section>
+
+        <!-- ===== 6. КЕЙСЫ ===== -->
+        <section class="section scroll-target" id="sec-cases">
+            <div class="section-eyebrow reveal">Кейсы</div>
+            <h2 class="section-title reveal">Результаты наших клиентов</h2>
+            <p class="section-desc reveal">Реальные кейсы — цифры обновляются по мере накопления данных.</p>
+            <div class="cases-grid stagger">
+                <div class="case-card reveal">
+                    <div class="case-badge">[ЗАПОЛНИТЬ] ниша школы</div>
+                    <h4>Реанимация базы после запуска</h4>
+                    <p>База: [ЗАПОЛНИТЬ] контактов<br>Что сделали: [ЗАПОЛНИТЬ]</p>
+                    <div class="case-result">Результат: [ЗАПОЛНИТЬ] тёплых лидов · [ЗАПОЛНИТЬ] продаж · +[ЗАПОЛНИТЬ] ₽ выручки · окупаемость [ЗАПОЛНИТЬ]x</div>
+                </div>
+                <div class="case-card reveal">
+                    <div class="case-badge">[ЗАПОЛНИТЬ] ниша школы</div>
+                    <h4>Возврат ушедших с вебинара</h4>
+                    <p>База: [ЗАПОЛНИТЬ] контактов<br>Что сделали: [ЗАПОЛНИТЬ]</p>
+                    <div class="case-result">Результат: [ЗАПОЛНИТЬ] тёплых лидов · [ЗАПОЛНИТЬ] продаж · +[ЗАПОЛНИТЬ] ₽ выручки · окупаемость [ЗАПОЛНИТЬ]x</div>
+                </div>
+                <div class="case-card reveal">
+                    <div class="case-badge">[ЗАПОЛНИТЬ] ниша школы</div>
+                    <h4>Обзвон старой холодной базы</h4>
+                    <p>База: [ЗАПОЛНИТЬ] контактов<br>Что сделали: [ЗАПОЛНИТЬ]</p>
+                    <div class="case-result">Результат: [ЗАПОЛНИТЬ] тёплых лидов · [ЗАПОЛНИТЬ] продаж · +[ЗАПОЛНИТЬ] ₽ выручки · окупаемость [ЗАПОЛНИТЬ]x</div>
+                </div>
+            </div>
+            <p class="case-placeholder-note reveal">* Данные кейсов — плейсхолдеры. Заменить на реальные результаты клиентов.</p>
+        </section>
+
+        <!-- ===== 7. ПРИМЕРЫ ЗВОНКОВ ===== -->
+        <section class="section scroll-target" id="sec-audio">
+            <div class="section-eyebrow reveal">Примеры звонков</div>
+            <h2 class="section-title reveal">Послушайте, как AI ведёт диалог</h2>
+            <p class="section-desc reveal">Реальные записи разговоров AI-менеджера EasySale с лидами онлайн-школ.</p>
+            <div class="audio-grid stagger">
+                <!-- Аудио 1 -->
+                <div class="audio-card reveal" data-audio-card>
+                    <div class="audio-card-icon">
+                        <svg viewBox="0 0 24 24" fill="none" stroke="#FF6B2B" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 2a3 3 0 0 0-3 3v7a3 3 0 0 0 6 0V5a3 3 0 0 0-3-3Z"/><path d="M19 10v2a7 7 0 0 1-14 0v-2"/><line x1="12" y1="19" x2="12" y2="22"/></svg>
+                    </div>
+                    <h4>Реанимация после вебинара</h4>
+                    <p class="audio-desc">AI звонит ученику, который зарегистрировался на вебинар, но не дошёл до оплаты курса.</p>
+                    <!-- Подставить реальный путь к mp3 -->
+                    <audio preload="none" src="audio/call-1.mp3"></audio>
+                    <div class="custom-player">
+                        <button class="player-play-btn" aria-label="Воспроизвести">
+                            <svg class="icon-play" viewBox="0 0 24 24"><path d="M8 5v14l11-7z"/></svg>
+                            <svg class="icon-pause" viewBox="0 0 24 24"><path d="M6 4h4v16H6zM14 4h4v16h-4z"/></svg>
+                        </button>
+                        <div class="player-middle">
+                            <div class="player-progress"><div class="player-progress-fill"></div></div>
+                            <span class="player-time">0:00 / 0:00</span>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Аудио 2 -->
+                <div class="audio-card reveal" data-audio-card>
+                    <div class="audio-card-icon">
+                        <svg viewBox="0 0 24 24" fill="none" stroke="#FF6B2B" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 2a3 3 0 0 0-3 3v7a3 3 0 0 0 6 0V5a3 3 0 0 0-3-3Z"/><path d="M19 10v2a7 7 0 0 1-14 0v-2"/><line x1="12" y1="19" x2="12" y2="22"/></svg>
+                    </div>
+                    <h4>Возврат брошенной заявки</h4>
+                    <p class="audio-desc">AI звонит человеку, который начал оформлять заказ, но не завершил оплату.</p>
+                    <!-- Подставить реальный путь к mp3 -->
+                    <audio preload="none" src="audio/call-2.mp3"></audio>
+                    <div class="custom-player">
+                        <button class="player-play-btn" aria-label="Воспроизвести">
+                            <svg class="icon-play" viewBox="0 0 24 24"><path d="M8 5v14l11-7z"/></svg>
+                            <svg class="icon-pause" viewBox="0 0 24 24"><path d="M6 4h4v16H6zM14 4h4v16h-4z"/></svg>
+                        </button>
+                        <div class="player-middle">
+                            <div class="player-progress"><div class="player-progress-fill"></div></div>
+                            <span class="player-time">0:00 / 0:00</span>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Аудио 3 -->
+                <div class="audio-card reveal" data-audio-card>
+                    <div class="audio-card-icon">
+                        <svg viewBox="0 0 24 24" fill="none" stroke="#FF6B2B" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 2a3 3 0 0 0-3 3v7a3 3 0 0 0 6 0V5a3 3 0 0 0-3-3Z"/><path d="M19 10v2a7 7 0 0 1-14 0v-2"/><line x1="12" y1="19" x2="12" y2="22"/></svg>
+                    </div>
+                    <h4>Обзвон «остывшей» базы</h4>
+                    <p class="audio-desc">Контакт 3+ месяцев без активности. AI выясняет интерес и предлагает актуальный оффер.</p>
+                    <!-- Подставить реальный путь к mp3 -->
+                    <audio preload="none" src="audio/call-3.mp3"></audio>
+                    <div class="custom-player">
+                        <button class="player-play-btn" aria-label="Воспроизвести">
+                            <svg class="icon-play" viewBox="0 0 24 24"><path d="M8 5v14l11-7z"/></svg>
+                            <svg class="icon-pause" viewBox="0 0 24 24"><path d="M6 4h4v16H6zM14 4h4v16h-4z"/></svg>
+                        </button>
+                        <div class="player-middle">
+                            <div class="player-progress"><div class="player-progress-fill"></div></div>
+                            <span class="player-time">0:00 / 0:00</span>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Аудио 4 -->
+                <div class="audio-card reveal" data-audio-card>
+                    <div class="audio-card-icon">
+                        <svg viewBox="0 0 24 24" fill="none" stroke="#FF6B2B" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 2a3 3 0 0 0-3 3v7a3 3 0 0 0 6 0V5a3 3 0 0 0-3-3Z"/><path d="M19 10v2a7 7 0 0 1-14 0v-2"/><line x1="12" y1="19" x2="12" y2="22"/></svg>
+                    </div>
+                    <h4>Квалификация после марафона</h4>
+                    <p class="audio-desc">Участник бесплатного марафона — AI выясняет, готов ли он к основному курсу.</p>
+                    <!-- Подставить реальный путь к mp3 -->
+                    <audio preload="none" src="audio/call-4.mp3"></audio>
+                    <div class="custom-player">
+                        <button class="player-play-btn" aria-label="Воспроизвести">
+                            <svg class="icon-play" viewBox="0 0 24 24"><path d="M8 5v14l11-7z"/></svg>
+                            <svg class="icon-pause" viewBox="0 0 24 24"><path d="M6 4h4v16H6zM14 4h4v16h-4z"/></svg>
+                        </button>
+                        <div class="player-middle">
+                            <div class="player-progress"><div class="player-progress-fill"></div></div>
+                            <span class="player-time">0:00 / 0:00</span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- ===== 8. FAQ ===== -->
+        <section class="section scroll-target" id="sec-faq">
+            <div class="section-eyebrow reveal">Частые вопросы</div>
+            <h2 class="section-title reveal" style="text-align:center;">FAQ</h2>
+            <div style="height:40px;"></div>
+            <div class="faq-list">
+                <div class="faq-item reveal">
+                    <div class="faq-q" onclick="toggleFaq(this)">
+                        Не будет ли AI звучать как робот?
+                        <svg class="faq-arrow" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/></svg>
+                    </div>
+                    <div class="faq-a"><p>Нет: живой естественный голос, диалог как с менеджером. Можно послушать примеры звонков выше — это не робот-автоответчик.</p></div>
+                </div>
+                <div class="faq-item reveal">
+                    <div class="faq-q" onclick="toggleFaq(this)">
+                        С какими CRM интегрируетесь?
+                        <svg class="faq-arrow" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/></svg>
+                    </div>
+                    <div class="faq-a"><p>amoCRM, Bitrix24 и другие популярные системы. Подключение без разработки на вашей стороне — мы берём интеграцию на себя.</p></div>
+                </div>
+                <div class="faq-item reveal">
+                    <div class="faq-q" onclick="toggleFaq(this)">
+                        Сколько это стоит?
+                        <svg class="faq-arrow" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/></svg>
+                    </div>
+                    <div class="faq-a"><p>Оплата за результат — стоимость тёплого лида от 2 000 ₽. Точная смета зависит от объёма вашей базы и формата работы.</p></div>
+                </div>
+                <div class="faq-item reveal">
+                    <div class="faq-q" onclick="toggleFaq(this)">
+                        Как быстро запуск?
+                        <svg class="faq-arrow" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/></svg>
+                    </div>
+                    <div class="faq-a"><p>Обычно 7 дней от интеграции до первых звонков. Подключаем CRM, настраиваем скрипт под ваш оффер и запускаем обзвон.</p></div>
+                </div>
+                <div class="faq-item reveal">
+                    <div class="faq-q" onclick="toggleFaq(this)">
+                        Что если база старая и холодная?
+                        <svg class="faq-arrow" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/></svg>
+                    </div>
+                    <div class="faq-a"><p>Это наш основной кейс. Мы реанимируем именно «остывшие» контакты — те, которые уже давно не отвечают менеджерам.</p></div>
+                </div>
+                <div class="faq-item reveal">
+                    <div class="faq-q" onclick="toggleFaq(this)">
+                        Кто обрабатывает тёплых лидов дальше?
+                        <svg class="faq-arrow" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/></svg>
+                    </div>
+                    <div class="faq-a"><p>Мы возвращаем тёплых лидов в вашу CRM с записью разговора — дальше работает ваш отдел продаж. Если нужно, помогаем выстроить процесс.</p></div>
+                </div>
+            </div>
+        </section>
+
+        <!-- ===== 9. ФОРМА + ФУТЕР ===== -->
+        <section class="form-section scroll-target" id="sec-form">
+            <div class="form-panel reveal">
+                <div class="form-panel-text">
+                    <h2>Реанимируем базу вашей школы — начнём с бесплатного лида</h2>
+                    <p>Оставьте заявку, и мы подберём стратегию обзвона именно под вашу школу. Первый лид — бесплатно.</p>
+                </div>
+                <div class="form-wrap">
+                    <div id="formBlock">
+                        <div class="form-fields">
+                            <!-- Honeypot -->
+                            <div class="ohnohoney" aria-hidden="true">
+                                <input type="text" id="honeyField" name="website" tabindex="-1" autocomplete="off">
+                            </div>
+                            <div class="form-field">
+                                <label class="form-label" for="fieldName">Имя *</label>
+                                <input class="form-input" type="text" id="fieldName" placeholder="Ваше имя" maxlength="100" required>
+                            </div>
+                            <div class="form-field">
+                                <label class="form-label" for="fieldPhone">Телефон *</label>
+                                <input class="form-input" type="tel" id="fieldPhone" placeholder="+7 (___) ___-__-__" maxlength="18" inputmode="tel" required>
+                            </div>
+                            <div class="form-field">
+                                <label class="form-label" for="fieldSchool">Название школы *</label>
+                                <input class="form-input" type="text" id="fieldSchool" placeholder="Онлайн-школа «Название»" maxlength="200" required>
+                            </div>
+                            <label class="checkbox-row">
+                                <input type="checkbox" id="consentBox">
+                                <span>Я согласен на <a href="/landing/privacy.html" target="_blank">обработку персональных данных</a></span>
+                            </label>
+                        </div>
+                        <div class="form-error-msg" id="formError"></div>
+                        <button class="form-submit" id="formSubmitBtn" type="button" onclick="submitForm()">Оставить заявку</button>
+                    </div>
+                    <div class="form-success" id="formSuccess">
+                        <div class="success-icon">
+                            <svg viewBox="0 0 24 24"><path d="M9 16.17L4.83 12l-1.42 1.41L9 19 21 7l-1.41-1.41L9 16.17z"/></svg>
+                        </div>
+                        <h3>Заявка принята!</h3>
+                        <p>Свяжемся и подберём стратегию реанимации вашей базы.</p>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+    </div><!-- .page -->
+
+    <!-- ===== FOOTER ===== -->
+    <footer class="footer">
+        <div class="footer-top">
+            <div class="footer-company">
+                ООО «ИЗИ СЕЙЛ ТЕХНОЛОДЖИ» · ИНН 7452174083<br>
+                &copy; 2026 EasySale. Все права защищены.
+            </div>
+            <div class="footer-links">
+                <a href="/landing/privacy.html" target="_blank">Политика обработки ПД</a>
+                <a href="/landing/privacy.html" target="_blank">Договор оферты</a>
+            </div>
+            <div class="footer-socials">
+                <!-- VK -->
+                <a href="https://vk.com/easysale" target="_blank" rel="noopener" aria-label="VK">
+                    <svg viewBox="0 0 24 24"><path d="M12.785 16.241s.288-.032.436-.194c.136-.148.132-.427.132-.427s-.02-1.304.587-1.496c.596-.187 1.362 1.248 2.174 1.8.614.416 1.08.325 1.08.325l2.168-.03s1.132-.07.595-.964c-.044-.073-.314-.661-1.618-1.869-1.364-1.263-1.182-1.059.462-3.245.999-1.329 1.398-2.14 1.273-2.487-.119-.332-.856-.244-.856-.244l-2.441.015s-.18-.025-.315.056c-.131.079-.216.263-.216.263s-.387 1.028-.903 1.904c-1.09 1.85-1.525 1.947-1.703 1.833-.415-.266-.311-1.071-.311-1.642 0-1.784.272-2.527-.527-2.719-.265-.064-.461-.106-1.14-.113-.87-.009-1.606.003-2.024.207-.278.136-.493.438-.363.455.161.02.526.098.72.362.249.341.24 1.105.24 1.105s.143 2.098-.334 2.358c-.327.178-.777-.186-1.74-1.854-.493-.854-.865-1.799-.865-1.799s-.072-.176-.2-.271c-.155-.115-.372-.151-.372-.151l-2.318.015s-.348.01-.476.161c-.113.134-.009.412-.009.412s1.82 4.258 3.882 6.403c1.889 1.966 4.033 1.838 4.033 1.838h.972z"/></svg>
+                </a>
+                <!-- Telegram -->
+                <a href="https://t.me/easysale_tech" target="_blank" rel="noopener" aria-label="Telegram">
+                    <svg viewBox="0 0 24 24"><path d="M11.944 0A12 12 0 0 0 0 12a12 12 0 0 0 12 12 12 12 0 0 0 12-12A12 12 0 0 0 12 0h-.056zm4.962 7.224c.1-.002.321.023.465.14a.506.506 0 0 1 .171.325c.016.093.036.306.02.472-.18 1.898-.962 6.502-1.36 8.627-.168.9-.499 1.201-.82 1.23-.696.064-1.225-.46-1.9-.902-1.056-.693-1.653-1.124-2.678-1.8-1.185-.78-.417-1.21.258-1.91.177-.184 3.247-2.977 3.307-3.23.007-.032.014-.15-.056-.212s-.174-.041-.249-.024c-.106.024-1.793 1.14-5.061 3.345-.479.33-.913.49-1.302.48-.428-.008-1.252-.241-1.865-.44-.752-.245-1.349-.374-1.297-.789.027-.216.325-.437.893-.663 3.498-1.524 5.83-2.529 6.998-3.014 3.332-1.386 4.025-1.627 4.476-1.635z"/></svg>
+                </a>
+            </div>
+        </div>
+        <div class="footer-bottom">
+            EasySale — AI-менеджер, который реанимирует базу вашей школы и возвращает учеников на оплату.
+        </div>
+    </footer>
+
+    <script>
+    /* ==========================================================
+       BURGER MENU
+       ========================================================== */
+    (function() {
+        var burger = document.getElementById('burgerBtn');
+        var mob = document.getElementById('mobMenu');
+        burger.addEventListener('click', function() {
+            burger.classList.toggle('open');
+            mob.classList.toggle('open');
+            document.body.style.overflow = mob.classList.contains('open') ? 'hidden' : '';
+        });
+    })();
+    function closeMob() {
+        document.getElementById('burgerBtn').classList.remove('open');
+        document.getElementById('mobMenu').classList.remove('open');
+        document.body.style.overflow = '';
+    }
+
+    /* ==========================================================
+       SMOOTH SCROLL TO FORM
+       ========================================================== */
+    function scrollToForm(e) {
+        if (e) e.preventDefault();
+        var el = document.getElementById('sec-form');
+        if (el) el.scrollIntoView({ behavior: 'smooth' });
+    }
+
+    /* ==========================================================
+       REVEAL ON SCROLL
+       ========================================================== */
+    (function() {
+        var observer = new IntersectionObserver(function(entries) {
+            entries.forEach(function(entry) {
+                if (entry.isIntersecting) {
+                    entry.target.classList.add('visible');
+                    observer.unobserve(entry.target);
+                }
+            });
+        }, { threshold: 0.12 });
+        document.querySelectorAll('.reveal').forEach(function(el) {
+            observer.observe(el);
+        });
+    })();
+
+    /* ==========================================================
+       FAQ ACCORDION
+       ========================================================== */
+    function toggleFaq(el) {
+        var item = el.parentElement;
+        var wasOpen = item.classList.contains('open');
+        document.querySelectorAll('.faq-item.open').forEach(function(i) {
+            i.classList.remove('open');
+        });
+        if (!wasOpen) item.classList.add('open');
+    }
+
+    /* ==========================================================
+       CALCULATOR
+       ========================================================== */
+    (function() {
+        var baseSlider = document.getElementById('baseSlider');
+        var checkSlider = document.getElementById('checkSlider');
+        var convSlider = document.getElementById('convSlider');
+
+        function fmt(n) { return n.toLocaleString('ru-RU'); }
+
+        function calc() {
+            var base = parseInt(baseSlider.value);
+            var check = parseInt(checkSlider.value);
+            var conv = parseFloat(convSlider.value);
+            var sales = Math.round(base * conv / 100);
+            var revenue = sales * check;
+
+            document.getElementById('baseDisplay').textContent = fmt(base);
+            document.getElementById('checkDisplay').innerHTML = fmt(check) + '<small> ₽</small>';
+            document.getElementById('convDisplay').innerHTML = conv + '<small>%</small>';
+            document.getElementById('resContacts').textContent = fmt(base);
+            document.getElementById('resSales').textContent = fmt(sales);
+            document.getElementById('resRevenue').textContent = fmt(revenue) + ' ₽';
+        }
+
+        baseSlider.addEventListener('input', calc);
+        checkSlider.addEventListener('input', calc);
+        convSlider.addEventListener('input', calc);
+        calc();
+    })();
+
+    /* ==========================================================
+       PHONE MASK +7 (XXX) XXX-XX-XX
+       ========================================================== */
+    (function() {
+        var ph = document.getElementById('fieldPhone');
+        ph.addEventListener('input', function() {
+            var x = ph.value.replace(/\D/g, '');
+            if (x.length === 0) { ph.value = ''; return; }
+            if (x[0] === '8') x = '7' + x.substring(1);
+            if (x[0] !== '7') x = '7' + x;
+            var out = '+7';
+            if (x.length > 1) out += ' (' + x.substring(1, 4);
+            if (x.length >= 4) out += ') ' + x.substring(4, 7);
+            if (x.length >= 7) out += '-' + x.substring(7, 9);
+            if (x.length >= 9) out += '-' + x.substring(9, 11);
+            ph.value = out;
+        });
+        ph.addEventListener('keydown', function(e) {
+            if (e.key === 'Backspace' && ph.value.length <= 3) {
+                ph.value = ''; e.preventDefault();
+            }
+        });
+        ph.addEventListener('focus', function() {
+            if (!ph.value) ph.value = '+7';
+        });
+        ph.addEventListener('blur', function() {
+            if (ph.value === '+7' || ph.value === '+7 (') ph.value = '';
+        });
+    })();
+
+    /* ==========================================================
+       FORM SUBMIT
+       ========================================================== */
+    var _sending = false;
+    function submitForm() {
+        if (_sending) return;
+
+        var nameVal = document.getElementById('fieldName').value.trim();
+        var phoneVal = document.getElementById('fieldPhone').value.trim();
+        var schoolVal = document.getElementById('fieldSchool').value.trim();
+        var consent = document.getElementById('consentBox').checked;
+        var honey = document.getElementById('honeyField').value;
+        var errEl = document.getElementById('formError');
+
+        errEl.classList.remove('show');
+        errEl.textContent = '';
+        document.querySelectorAll('.form-input').forEach(function(i) { i.classList.remove('error'); });
+
+        // Honeypot — pretend success
+        if (honey) {
+            document.getElementById('formBlock').style.display = 'none';
+            document.getElementById('formSuccess').classList.add('show');
+            return;
+        }
+
+        if (!nameVal) {
+            errEl.textContent = 'Укажите ваше имя';
+            errEl.classList.add('show');
+            document.getElementById('fieldName').classList.add('error');
+            return;
+        }
+        var phoneDigits = phoneVal.replace(/\D/g, '');
+        if (phoneDigits.length < 11) {
+            errEl.textContent = 'Укажите корректный телефон';
+            errEl.classList.add('show');
+            document.getElementById('fieldPhone').classList.add('error');
+            return;
+        }
+        if (!schoolVal) {
+            errEl.textContent = 'Укажите название школы';
+            errEl.classList.add('show');
+            document.getElementById('fieldSchool').classList.add('error');
+            return;
+        }
+        if (!consent) {
+            errEl.textContent = 'Необходимо согласие на обработку персональных данных';
+            errEl.classList.add('show');
+            return;
+        }
+
+        _sending = true;
+        document.getElementById('formSubmitBtn').disabled = true;
+
+        var combinedName = nameVal + ' / ' + schoolVal;
+
+        fetch('https://api.easysale.tech/api/leads/offer', {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({
+                name: combinedName,
+                phone: phoneDigits,
+                source: 'school'
+            })
+        })
+        .then(function(res) {
+            return res.json().then(function(data) {
+                return { status: res.status, data: data };
+            });
+        })
+        .then(function(result) {
+            if (result.status === 200 || result.status === 201) {
+                if (typeof ym === 'function') ym(108141904, 'reachGoal', 'school_lead_submit');
+                document.getElementById('formBlock').style.display = 'none';
+                document.getElementById('formSuccess').classList.add('show');
+            } else {
+                errEl.textContent = result.data.error || 'Ошибка отправки';
+                errEl.classList.add('show');
+                _sending = false;
+                document.getElementById('formSubmitBtn').disabled = false;
+            }
+        })
+        .catch(function() {
+            errEl.textContent = 'Ошибка соединения с сервером';
+            errEl.classList.add('show');
+            _sending = false;
+            document.getElementById('formSubmitBtn').disabled = false;
+        });
+    }
+
+    /* ==========================================================
+       AUDIO PLAYER
+       ========================================================== */
+    (function() {
+        var cards = document.querySelectorAll('[data-audio-card]');
+        var currentCard = null;
+
+        cards.forEach(function(card) {
+            var audio = card.querySelector('audio');
+            var playBtn = card.querySelector('.player-play-btn');
+            var progressBar = card.querySelector('.player-progress');
+            var progressFill = card.querySelector('.player-progress-fill');
+            var timeEl = card.querySelector('.player-time');
+
+            function fmtTime(s) {
+                if (isNaN(s)) return '0:00';
+                var m = Math.floor(s / 60);
+                var sec = Math.floor(s % 60);
+                return m + ':' + (sec < 10 ? '0' : '') + sec;
+            }
+
+            playBtn.addEventListener('click', function() {
+                if (!audio.src || audio.error) return;
+
+                if (currentCard && currentCard !== card) {
+                    var prev = currentCard.querySelector('audio');
+                    prev.pause();
+                    currentCard.classList.remove('playing');
+                }
+
+                if (audio.paused) {
+                    audio.play().then(function() {
+                        card.classList.add('playing');
+                        currentCard = card;
+                    }).catch(function() {});
+                } else {
+                    audio.pause();
+                    card.classList.remove('playing');
+                }
+            });
+
+            audio.addEventListener('timeupdate', function() {
+                if (audio.duration) {
+                    var pct = (audio.currentTime / audio.duration) * 100;
+                    progressFill.style.width = pct + '%';
+                    timeEl.textContent = fmtTime(audio.currentTime) + ' / ' + fmtTime(audio.duration);
+                }
+            });
+
+            audio.addEventListener('ended', function() {
+                card.classList.remove('playing');
+                progressFill.style.width = '0%';
+                timeEl.textContent = '0:00 / ' + fmtTime(audio.duration);
+            });
+
+            progressBar.addEventListener('click', function(e) {
+                if (audio.duration) {
+                    var rect = progressBar.getBoundingClientRect();
+                    var pct = (e.clientX - rect.left) / rect.width;
+                    audio.currentTime = pct * audio.duration;
+                }
+            });
+
+            audio.addEventListener('loadedmetadata', function() {
+                timeEl.textContent = '0:00 / ' + fmtTime(audio.duration);
+            });
+        });
+    })();
+    </script>
+</body>
+</html>
