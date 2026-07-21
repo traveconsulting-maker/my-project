@@ -491,8 +491,18 @@
 
         /* ===== CASES ===== */
         .cases-grid {
-            display: grid; grid-template-columns: repeat(3, 1fr); gap: 16px;
+            display: grid; grid-template-columns: repeat(2, 1fr); gap: 16px;
         }
+        .case-metrics {
+            display: grid; grid-template-columns: repeat(3, 1fr); gap: 8px;
+            margin: 16px 0 4px;
+        }
+        .case-metrics > div {
+            background: rgba(255,255,255,0.03); border: 1px solid var(--border-color);
+            border-radius: 12px; padding: 10px 8px; text-align: center;
+        }
+        .cm-num { display: block; font-size: 17px; font-weight: 800; color: var(--text); line-height: 1.15; }
+        .cm-lbl { display: block; font-size: 11px; color: var(--text-muted); margin-top: 3px; }
         .case-card {
             background: var(--card-bg); border: 1px solid var(--card-border);
             border-radius: 20px; padding: 32px 28px;
@@ -1018,28 +1028,53 @@
         <section class="section scroll-target" id="sec-cases">
             <div class="section-eyebrow reveal">Кейсы</div>
             <h2 class="section-title reveal">Результаты наших клиентов</h2>
-            <p class="section-desc reveal">Реальные кейсы — цифры обновляются по мере накопления данных.</p>
+            <p class="section-desc reveal">Реальные результаты онлайн-школ, которые вернули «спящую» базу с EasySale.</p>
             <div class="cases-grid stagger">
                 <div class="case-card reveal">
-                    <div class="case-badge">[ЗАПОЛНИТЬ] ниша школы</div>
-                    <h4>Реанимация базы после запуска</h4>
-                    <p>База: [ЗАПОЛНИТЬ] контактов<br>Что сделали: [ЗАПОЛНИТЬ]</p>
-                    <div class="case-result">Результат: [ЗАПОЛНИТЬ] тёплых лидов · [ЗАПОЛНИТЬ] продаж · +[ЗАПОЛНИТЬ] ₽ выручки · окупаемость [ЗАПОЛНИТЬ]x</div>
+                    <div class="case-badge">Онлайн-школа дизайна</div>
+                    <h4>Возврат базы после запуска</h4>
+                    <p>AI обзвонил базу 15 000 контактов и вернул 180 квалифицированных лидов. Клиент закрыл 22 продажи со средним чеком 200 000 ₽.</p>
+                    <div class="case-metrics">
+                        <div><span class="cm-num">180</span><span class="cm-lbl">квалов</span></div>
+                        <div><span class="cm-num">22</span><span class="cm-lbl">продажи</span></div>
+                        <div><span class="cm-num">4,4 млн</span><span class="cm-lbl">₽ выручка</span></div>
+                    </div>
+                    <div class="case-result">Вложил 900 000 ₽ → заработал 4 400 000 ₽ (≈4,9×). Квал в 1,5× дешевле, конверсия в продажу ×2.</div>
                 </div>
                 <div class="case-card reveal">
-                    <div class="case-badge">[ЗАПОЛНИТЬ] ниша школы</div>
-                    <h4>Возврат ушедших с вебинара</h4>
-                    <p>База: [ЗАПОЛНИТЬ] контактов<br>Что сделали: [ЗАПОЛНИТЬ]</p>
-                    <div class="case-result">Результат: [ЗАПОЛНИТЬ] тёплых лидов · [ЗАПОЛНИТЬ] продаж · +[ЗАПОЛНИТЬ] ₽ выручки · окупаемость [ЗАПОЛНИТЬ]x</div>
+                    <div class="case-badge">Онлайн-школа астрологии</div>
+                    <h4>Монетизация «спящей» базы</h4>
+                    <p>По базе 9 000 контактов AI привёл 110 квалифицированных лидов. Клиент закрыл 13 продаж на 1 430 000 ₽.</p>
+                    <div class="case-metrics">
+                        <div><span class="cm-num">110</span><span class="cm-lbl">квалов</span></div>
+                        <div><span class="cm-num">13</span><span class="cm-lbl">продаж</span></div>
+                        <div><span class="cm-num">1,43 млн</span><span class="cm-lbl">₽ выручка</span></div>
+                    </div>
+                    <div class="case-result">Вложил 275 000 ₽ → заработал 1 430 000 ₽ (≈5,2×). Квал дешевле в 2×, конверсия в оплату ×1,5.</div>
                 </div>
                 <div class="case-card reveal">
-                    <div class="case-badge">[ЗАПОЛНИТЬ] ниша школы</div>
-                    <h4>Обзвон старой холодной базы</h4>
-                    <p>База: [ЗАПОЛНИТЬ] контактов<br>Что сделали: [ЗАПОЛНИТЬ]</p>
-                    <div class="case-result">Результат: [ЗАПОЛНИТЬ] тёплых лидов · [ЗАПОЛНИТЬ] продаж · +[ЗАПОЛНИТЬ] ₽ выручки · окупаемость [ЗАПОЛНИТЬ]x</div>
+                    <div class="case-badge">Онлайн-школа массажа лица</div>
+                    <h4>Реанимация большой базы</h4>
+                    <p>Из базы 25 000 вернули 250 тёплых лидов в воронку. Оплатили 38 человек со средним чеком 90 000 ₽.</p>
+                    <div class="case-metrics">
+                        <div><span class="cm-num">250</span><span class="cm-lbl">квалов</span></div>
+                        <div><span class="cm-num">38</span><span class="cm-lbl">продаж</span></div>
+                        <div><span class="cm-num">3,42 млн</span><span class="cm-lbl">₽ выручка</span></div>
+                    </div>
+                    <div class="case-result">Вложил 1 125 000 ₽ → заработал 3 420 000 ₽ (≈3×). Выросла конверсия в продажу, сократился цикл сделки.</div>
+                </div>
+                <div class="case-card reveal">
+                    <div class="case-badge">Школа мыловарения + дистрибуция</div>
+                    <h4>Пробники, поставки и продажа обучения</h4>
+                    <p>Задача — через AI договориться о бесплатных пробниках и поставках мыла и отдельно продать обучение варке. База 5 000.</p>
+                    <div class="case-metrics">
+                        <div><span class="cm-num">45</span><span class="cm-lbl">пробников</span></div>
+                        <div><span class="cm-num">20</span><span class="cm-lbl">поставок</span></div>
+                        <div><span class="cm-num">4</span><span class="cm-lbl">оплат обучения</span></div>
+                    </div>
+                    <div class="case-result">20 поставок из 45 пробников — план продаж выполнен на 4 месяца вперёд; из 15 квал. учеников 4 оплатили обучение. В EasySale — 150 000 ₽.</div>
                 </div>
             </div>
-            <p class="case-placeholder-note reveal">* Данные кейсов — плейсхолдеры. Заменить на реальные результаты клиентов.</p>
         </section>
 
         <!-- ===== 7. ПРИМЕРЫ ЗВОНКОВ ===== -->
