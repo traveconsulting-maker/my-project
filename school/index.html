@@ -793,24 +793,6 @@
             .footer-top { flex-direction: column; text-align: center; }
             .screenshot-strip { grid-template-columns: 1fr 1fr; }
         }
-        /* ===== METALLIC TEXTURE BACKDROP (sec-who / sec-how) ===== */
-        #sec-who, #sec-how { position: relative; z-index: 1; }
-        #sec-who::before, #sec-how::before {
-            content: '';
-            position: absolute;
-            top: 0; left: 50%;
-            width: 100vw; height: 100%;
-            transform: translateX(-50%);
-            z-index: -1; pointer-events: none;
-            background-color: var(--bg);
-            background-image:
-                radial-gradient(90% 70% at 82% 18%, rgba(255,77,0,0.10) 0%, transparent 60%),
-                linear-gradient(180deg, var(--bg) 0%, rgba(13,13,15,0.30) 14%, rgba(13,13,15,0.30) 86%, var(--bg) 100%),
-                url('texture-metal.jpg');
-            background-repeat: no-repeat;
-            background-position: center;
-            background-size: cover;
-        }
     </style>
 </head>
 <body>
@@ -867,7 +849,7 @@
             </div>
             <div class="stat-grid stagger">
                 <div class="stat-card reveal">
-                    <div class="stat-value">7 дней</div>
+                    <div class="stat-value">1 день</div>
                     <div class="stat-label">до запуска обзвона</div>
                 </div>
                 <div class="stat-card reveal">
@@ -901,14 +883,8 @@
                 </div>
                 <div class="what-block reveal">
                     <h3>Дешевле и быстрее живого отдела продаж</h3>
-                    <p>AI звонит одновременно сотням контактов, не устаёт и не сливает базу. Запуск — за 7 дней, стоимость лида в разы ниже содержания менеджеров.</p>
+                    <p>AI звонит одновременно сотням контактов, не устаёт и не сливает базу. Запуск — за 1 день, стоимость лида в разы ниже содержания менеджеров.</p>
                 </div>
-            </div>
-            <div class="screenshot-strip stagger">
-                <div class="screenshot-placeholder reveal">Скриншот CRM</div>
-                <div class="screenshot-placeholder reveal">Скриншот кабинета</div>
-                <div class="screenshot-placeholder reveal">Скриншот аналитики</div>
-                <div class="screenshot-placeholder reveal">Скриншот звонков</div>
             </div>
         </section>
 
@@ -960,38 +936,28 @@
         <!-- ===== 4. КАК МЫ РАБОТАЕМ ===== -->
         <section class="section scroll-target" id="sec-how">
             <div class="section-eyebrow reveal">Как мы работаем</div>
-            <h2 class="section-title reveal">Шесть шагов — от интеграции до результата</h2>
-            <p class="section-desc reveal">Запуск обзвона вашей базы за 7 дней. Всё — на нашей стороне.</p>
+            <h2 class="section-title reveal">Четыре шага — от интеграции до результата</h2>
+            <p class="section-desc reveal">Запуск обзвона вашей базы за 1 день. Всё — на нашей стороне.</p>
             <div class="steps-grid stagger">
                 <div class="step-card reveal">
                     <div class="step-pill">01</div>
-                    <h4>Интеграция с вашей CRM</h4>
-                    <p>Подключаемся к amoCRM, Bitrix24 или вашей системе, без разработки на вашей стороне.</p>
+                    <h4>Настраиваем ИИ под ваш оффер</h4>
+                    <p>Продукт, информация о курсах и отработка возражений именно вашей школы.</p>
                 </div>
                 <div class="step-card reveal">
                     <div class="step-pill">02</div>
-                    <h4>Настраиваем скрипт под ваш оффер</h4>
-                    <p>Продукт, цены, отработка возражений именно вашей школы.</p>
-                </div>
-                <div class="step-card reveal">
-                    <div class="step-pill">03</div>
                     <h4>AI обзванивает базу</h4>
                     <p>Живым голосом, одновременно сотни контактов — без пауз и выходных.</p>
                 </div>
                 <div class="step-card reveal">
-                    <div class="step-pill">04</div>
+                    <div class="step-pill">03</div>
                     <h4>Ведём диалог и квалифицируем</h4>
                     <p>Выясняем интерес, бюджет и готовность купить в живом разговоре.</p>
                 </div>
                 <div class="step-card reveal">
-                    <div class="step-pill">05</div>
-                    <h4>Тёплые лиды — сразу в CRM</h4>
-                    <p>С записью разговора и комментарием — ваш менеджер сразу знает контекст.</p>
-                </div>
-                <div class="step-card reveal">
-                    <div class="step-pill">06</div>
-                    <h4>Масштабируем и растим конверсию</h4>
-                    <p>Расширяем объёмы обзвона, донастраиваем скрипты, улучшаем результат.</p>
+                    <div class="step-pill">04</div>
+                    <h4>Тёплые лиды — сразу вам в компанию</h4>
+                    <p>С саммари разговора и комментарием — ваш менеджер сразу знает контекст.</p>
                 </div>
             </div>
         </section>
@@ -1016,30 +982,28 @@
                         <div class="calc-slider-group">
                             <div class="calc-slider-head">
                                 <span class="calc-slider-label">Средний чек, ₽</span>
-                                <div class="calc-slider-value tabular" id="checkDisplay">100 000<small> ₽</small></div>
+                                <div class="calc-slider-value tabular" id="checkDisplay">200 000<small> ₽</small></div>
                             </div>
-                            <input type="range" id="checkSlider" min="10000" max="500000" step="5000" value="100000">
+                            <input type="range" id="checkSlider" min="10000" max="500000" step="5000" value="200000">
                         </div>
-                        <div class="calc-slider-group">
-                            <div class="calc-slider-head">
-                                <span class="calc-slider-label">Конверсия базы в оплату, %</span>
-                                <div class="calc-slider-value tabular" id="convDisplay">4<small>%</small></div>
-                            </div>
-                            <input type="range" id="convSlider" min="1" max="10" step="0.5" value="4">
-                        </div>
+                        <p class="calc-disclaimer" style="margin-top:4px;">Считаем по нашим средним: возвращаем <b style="color:#FF4D00">2%</b> базы тёплыми лидами, из них <b style="color:#FF4D00">10%</b> доходят до оплаты. Цена квалифицированного лида — <b style="color:#FF4D00">3 000 ₽</b>.</p>
                     </div>
                     <div class="calc-results">
                         <div class="calc-result-item">
-                            <span class="calc-result-label">Контактов в обзвоне</span>
-                            <span class="calc-result-value tabular" id="resContacts">20 000</span>
+                            <span class="calc-result-label">Тёплых лидов вернём</span>
+                            <span class="calc-result-value tabular" id="resWarm">400</span>
                         </div>
                         <div class="calc-result-item">
-                            <span class="calc-result-label">Потенциальных продаж</span>
-                            <span class="calc-result-value tabular" id="resSales">800</span>
+                            <span class="calc-result-label">Уйдёт в продажу</span>
+                            <span class="calc-result-value tabular" id="resSales">40</span>
                         </div>
                         <div class="calc-result-item">
-                            <span class="calc-result-label">Дополнительная выручка</span>
-                            <span class="calc-result-value big tabular" id="resRevenue">80 000 000 ₽</span>
+                            <span class="calc-result-label">Ваша выручка</span>
+                            <span class="calc-result-value big tabular" id="resRevenue">8 000 000 ₽</span>
+                        </div>
+                        <div class="calc-result-item">
+                            <span class="calc-result-label">Стоимость EasySale</span>
+                            <span class="calc-result-value tabular" id="resCost">1 200 000 ₽</span>
                         </div>
                     </div>
                 </div>
@@ -1358,28 +1322,30 @@
     (function() {
         var baseSlider = document.getElementById('baseSlider');
         var checkSlider = document.getElementById('checkSlider');
-        var convSlider = document.getElementById('convSlider');
+        var WARM_RATE = 0.02;      // возвращаем тёплыми ~2% базы
+        var PAY_CONV = 0.10;       // из тёплых доходят до оплаты ~10%
+        var COST_PER_LEAD = 3000;  // рублей за квалифицированный лид
 
-        function fmt(n) { return n.toLocaleString('ru-RU'); }
+        function fmt(n) { return Math.round(n).toLocaleString('ru-RU'); }
 
         function calc() {
             var base = parseInt(baseSlider.value);
             var check = parseInt(checkSlider.value);
-            var conv = parseFloat(convSlider.value);
-            var sales = Math.round(base * conv / 100);
+            var warm = Math.round(base * WARM_RATE);
+            var sales = Math.round(warm * PAY_CONV);
             var revenue = sales * check;
+            var cost = warm * COST_PER_LEAD;
 
             document.getElementById('baseDisplay').textContent = fmt(base);
             document.getElementById('checkDisplay').innerHTML = fmt(check) + '<small> ₽</small>';
-            document.getElementById('convDisplay').innerHTML = conv + '<small>%</small>';
-            document.getElementById('resContacts').textContent = fmt(base);
+            document.getElementById('resWarm').textContent = fmt(warm);
             document.getElementById('resSales').textContent = fmt(sales);
             document.getElementById('resRevenue').textContent = fmt(revenue) + ' ₽';
+            document.getElementById('resCost').textContent = fmt(cost) + ' ₽';
         }
 
         baseSlider.addEventListener('input', calc);
         checkSlider.addEventListener('input', calc);
-        convSlider.addEventListener('input', calc);
         calc();
     })();
 
