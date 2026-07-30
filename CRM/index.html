@@ -248,6 +248,7 @@
         .btn:hover { background:var(--card-bg-hover); }
         .btn-primary { background:var(--accent); border-color:var(--accent); color:#fff; }
         .btn-primary:hover { opacity:.85; background:var(--accent); }
+        .blog-filter-btn.active { background:var(--accent-bg); color:var(--accent-light); border-color:var(--accent-light); }
         .btn-danger { background:var(--danger); border-color:var(--danger); color:#fff; }
         .btn-danger:hover { opacity:.85; background:var(--danger); }
         .btn-sm { padding:5px 10px; font-size:.8rem; border-radius:8px; }
@@ -1084,6 +1085,13 @@
                 Пользователи
             </div>
         </div>
+        <div class="sidebar-section">
+            <div class="sidebar-section-title">Сайт</div>
+            <div class="nav-item" data-section="blog" onclick="showSection('blog')">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M11 4H4a2 2 0 00-2 2v14a2 2 0 002 2h14a2 2 0 002-2v-7"/><path d="M18.5 2.5a2.121 2.121 0 013 3L12 15l-4 1 1-4 9.5-9.5z"/></svg>
+                Блог
+            </div>
+        </div>
         </div>
         <div class="sidebar-bottom">
             <div id="crm-user-info" style="padding:4px 12px;font-size:12px;color:var(--text-muted);overflow:hidden;text-overflow:ellipsis;white-space:nowrap;"></div>
@@ -1613,7 +1621,124 @@
             </div>
         </div>
 
+        <!-- Blog -->
+        <div id="section-blog" class="section">
+            <div class="page-header">
+                <div><div class="page-title">Блог</div><div class="page-subtitle">Управление статьями</div></div>
+                <button class="btn btn-primary" onclick="blogOpenEditor()">
+                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/></svg>
+                    Новый пост
+                </button>
+            </div>
+            <div style="display:flex;gap:8px;margin-bottom:16px;">
+                <button class="btn btn-sm blog-filter-btn active" onclick="blogFilterStatus('all',this)">Все</button>
+                <button class="btn btn-sm blog-filter-btn" onclick="blogFilterStatus('published',this)">Опубликованные</button>
+                <button class="btn btn-sm blog-filter-btn" onclick="blogFilterStatus('draft',this)">Черновики</button>
+            </div>
+            <div class="card" style="padding:0;overflow:hidden;">
+                <table>
+                    <thead><tr><th>Заголовок</th><th>Статус</th><th>Дата</th><th>Теги</th><th>Действия</th></tr></thead>
+                    <tbody id="blog-posts-table"><tr><td colspan="5" style="text-align:center;color:var(--text-muted);padding:40px;">Загрузка...</td></tr></tbody>
+                </table>
+            </div>
+        </div>
+
     </main>
+
+    <!-- Blog Editor Modal -->
+    <div class="modal-overlay" id="blog-editor-modal">
+        <div class="modal" style="max-width:900px;max-height:92vh;">
+            <div class="modal-header">
+                <div class="modal-title" id="blog-editor-title">Новый пост</div>
+                <button class="modal-close" onclick="closeModal('blog-editor-modal')">&times;</button>
+            </div>
+            <div style="max-height:75vh;overflow-y:auto;padding:4px;">
+                <div style="display:flex;flex-direction:column;gap:14px;">
+                    <div>
+                        <label style="display:block;margin-bottom:4px;font-size:.85rem;color:var(--text-secondary);">Заголовок *</label>
+                        <input type="text" id="blog-ed-title" placeholder="Заголовок статьи" oninput="blogAutoSlug()">
+                    </div>
+                    <div>
+                        <label style="display:block;margin-bottom:4px;font-size:.85rem;color:var(--text-secondary);">Слаг (URL)</label>
+                        <div style="display:flex;align-items:center;gap:6px;">
+                            <span style="font-size:.85rem;color:var(--text-muted);">/blog/</span>
+                            <input type="text" id="blog-ed-slug" placeholder="auto-generated" style="flex:1;">
+                            <span style="font-size:.85rem;color:var(--text-muted);">/</span>
+                        </div>
+                        <div id="blog-ed-slug-locked" style="display:none;font-size:.8rem;color:var(--warning);margin-top:4px;">Слаг заблокирован после публикации</div>
+                    </div>
+                    <div>
+                        <label style="display:block;margin-bottom:4px;font-size:.85rem;color:var(--text-secondary);">Обложка</label>
+                        <div style="display:flex;gap:8px;align-items:center;">
+                            <input type="text" id="blog-ed-cover" placeholder="URL обложки" style="flex:1;">
+                            <label class="btn btn-sm" style="cursor:pointer;">
+                                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" width="14" height="14"><path d="M21 15v4a2 2 0 01-2 2H5a2 2 0 01-2-2v-4"/><polyline points="17 8 12 3 7 8"/><line x1="12" y1="3" x2="12" y2="15"/></svg>
+                                Загрузить
+                                <input type="file" accept="image/*" style="display:none;" onchange="blogUploadImage(this,'blog-ed-cover')">
+                            </label>
+                        </div>
+                        <div id="blog-ed-cover-preview" style="margin-top:8px;"></div>
+                    </div>
+                    <div>
+                        <label style="display:block;margin-bottom:4px;font-size:.85rem;color:var(--text-secondary);">Краткое описание (excerpt)</label>
+                        <textarea id="blog-ed-excerpt" rows="2" placeholder="Краткое описание для списка и meta description"></textarea>
+                    </div>
+                    <div>
+                        <label style="display:block;margin-bottom:4px;font-size:.85rem;color:var(--text-secondary);">Теги</label>
+                        <div style="display:flex;gap:8px;flex-wrap:wrap;margin-bottom:8px;" id="blog-ed-tags-list"></div>
+                        <div style="display:flex;gap:8px;">
+                            <select id="blog-ed-tag-select" style="flex:1;"><option value="">Выбрать тег...</option></select>
+                            <button class="btn btn-sm" onclick="blogAddSelectedTag()">Добавить</button>
+                            <button class="btn btn-sm" onclick="blogNewTagPrompt()">Новый тег</button>
+                        </div>
+                    </div>
+                    <div>
+                        <label style="display:block;margin-bottom:4px;font-size:.85rem;color:var(--text-secondary);">Тело статьи (HTML)</label>
+                        <div id="blog-ed-toolbar" style="display:flex;gap:4px;flex-wrap:wrap;margin-bottom:8px;">
+                            <button class="btn btn-sm" onclick="blogExecCmd('bold')" title="Жирный"><b>B</b></button>
+                            <button class="btn btn-sm" onclick="blogExecCmd('italic')" title="Курсив"><i>I</i></button>
+                            <button class="btn btn-sm" onclick="blogExecCmd('formatBlock','H2')" title="H2">H2</button>
+                            <button class="btn btn-sm" onclick="blogExecCmd('formatBlock','H3')" title="H3">H3</button>
+                            <button class="btn btn-sm" onclick="blogExecCmd('formatBlock','P')" title="Параграф">P</button>
+                            <button class="btn btn-sm" onclick="blogExecCmd('insertUnorderedList')" title="Список">UL</button>
+                            <button class="btn btn-sm" onclick="blogExecCmd('insertOrderedList')" title="Нумерованный">OL</button>
+                            <button class="btn btn-sm" onclick="blogExecCmd('formatBlock','BLOCKQUOTE')" title="Цитата">❝</button>
+                            <button class="btn btn-sm" onclick="blogInsertLink()" title="Ссылка">Link</button>
+                            <label class="btn btn-sm" style="cursor:pointer;" title="Вставить изображение">
+                                IMG
+                                <input type="file" accept="image/*" style="display:none;" onchange="blogInsertImage(this)">
+                            </label>
+                            <button class="btn btn-sm" onclick="blogToggleSource()" id="blog-ed-source-btn" title="HTML-код">&lt;/&gt;</button>
+                        </div>
+                        <div id="blog-ed-body" contenteditable="true" style="min-height:300px;padding:14px;border-radius:10px;border:1px solid var(--input-border);background:var(--input-bg);color:var(--text);font-size:.9rem;line-height:1.7;outline:none;overflow-y:auto;max-height:50vh;"></div>
+                        <textarea id="blog-ed-body-source" style="display:none;min-height:300px;font-family:'JetBrains Mono',monospace;font-size:.8rem;line-height:1.5;"></textarea>
+                    </div>
+                    <details style="margin-top:8px;">
+                        <summary style="cursor:pointer;font-size:.9rem;font-weight:600;color:var(--text-secondary);">SEO-настройки</summary>
+                        <div style="display:flex;flex-direction:column;gap:12px;margin-top:12px;">
+                            <div>
+                                <label style="display:block;margin-bottom:4px;font-size:.85rem;color:var(--text-secondary);">Meta Title</label>
+                                <input type="text" id="blog-ed-meta-title" placeholder="По умолчанию: заголовок поста">
+                            </div>
+                            <div>
+                                <label style="display:block;margin-bottom:4px;font-size:.85rem;color:var(--text-secondary);">Meta Description</label>
+                                <textarea id="blog-ed-meta-desc" rows="2" placeholder="По умолчанию: краткое описание"></textarea>
+                            </div>
+                            <div>
+                                <label style="display:block;margin-bottom:4px;font-size:.85rem;color:var(--text-secondary);">OG Image</label>
+                                <input type="text" id="blog-ed-og-image" placeholder="По умолчанию: обложка поста">
+                            </div>
+                        </div>
+                    </details>
+                </div>
+            </div>
+            <div class="modal-footer" style="display:flex;gap:8px;justify-content:flex-end;margin-top:16px;">
+                <button class="btn" onclick="blogSaveDraft()">Сохранить черновик</button>
+                <button class="btn btn-primary" onclick="blogPublish()">Опубликовать</button>
+                <button class="btn" style="background:var(--input-bg);color:var(--text);border:1px solid var(--input-border);" onclick="closeModal('blog-editor-modal')">Отмена</button>
+            </div>
+        </div>
+    </div>
 
     <!-- Toast container -->
     <div class="toast-container" id="toast-container"></div>
@@ -2087,7 +2212,7 @@ let crmUserId = localStorage.getItem('crmUserId') || '';
 
 // Sections restricted to admin only (support cannot access)
 // TODO: callcenter endpoints shared with client card, hard backend protection requires endpoint refactor
-const ADMIN_ONLY_SECTIONS = ['callcenter', 'applications', 'support', 'portation', 'telephony', 'enrichment', 'referrals', 'users'];
+const ADMIN_ONLY_SECTIONS = ['callcenter', 'applications', 'support', 'portation', 'telephony', 'enrichment', 'referrals', 'users', 'blog'];
 
 function apiHeaders() {
     return { 'Content-Type': 'application/json', 'Authorization': 'Bearer ' + crmToken };
@@ -2468,6 +2593,7 @@ function renderSection(name) {
         case 'payments': renderPayments(); break;
         case 'enrichment': renderEnrichment(); break;
         case 'users': renderUsers(); break;
+        case 'blog': renderBlogSection(); break;
     }
 }
 
@@ -6595,6 +6721,372 @@ function crmLogout() {
         if (e.key === 'Escape') document.getElementById('loginForgotModal').classList.remove('active');
     });
 })();
+
+// ==================== BLOG MANAGEMENT ====================
+var blogPosts = [];
+var blogTags = [];
+var blogFilterStatusVal = 'all';
+var blogEditingId = null;
+var blogEditorSourceMode = false;
+var blogSelectedTagIds = [];
+
+function renderBlogSection() {
+    blogLoadPosts();
+    blogLoadTags();
+}
+
+function blogLoadPosts() {
+    var qs = blogFilterStatusVal !== 'all' ? '?status=' + blogFilterStatusVal + '&limit=100' : '?limit=100';
+    fetch(API_BASE + '/api/admin/posts' + qs, { headers: apiHeaders() })
+      .then(handleApiResponse)
+      .then(function(r) { return r.json(); })
+      .then(function(data) {
+          blogPosts = data.posts || [];
+          blogRenderPostsTable();
+      })
+      .catch(function(e) { if (e.message !== 'unauthorized') console.error(e); });
+}
+
+function blogLoadTags() {
+    fetch(API_BASE + '/api/admin/tags', { headers: apiHeaders() })
+      .then(handleApiResponse)
+      .then(function(r) { return r.json(); })
+      .then(function(data) { blogTags = data || []; })
+      .catch(function(e) { if (e.message !== 'unauthorized') console.error(e); });
+}
+
+function blogRenderPostsTable() {
+    var tbody = document.getElementById('blog-posts-table');
+    if (!blogPosts.length) {
+        tbody.innerHTML = '<tr><td colspan="5" style="text-align:center;color:var(--text-muted);padding:40px;">Нет постов</td></tr>';
+        return;
+    }
+    tbody.innerHTML = blogPosts.map(function(p) {
+        var statusTag = p.status === 'published'
+            ? '<span class="tag tag-success">Опубликован</span>'
+            : '<span class="tag tag-muted">Черновик</span>';
+        var date = p.published_at ? new Date(p.published_at).toLocaleDateString('ru-RU') : new Date(p.created_at).toLocaleDateString('ru-RU');
+        var tags = (p.tags || []).map(function(t) { return '<span class="tag tag-accent" style="margin-right:4px;">' + esc(t.name) + '</span>'; }).join('');
+        var actions = '<div style="display:flex;gap:4px;flex-wrap:wrap;">';
+        actions += '<button class="btn btn-sm" onclick="blogEditPost(' + p.id + ')">Ред.</button>';
+        if (p.status === 'draft') {
+            actions += '<button class="btn btn-sm btn-primary" onclick="blogPublishPost(' + p.id + ')">Опубл.</button>';
+        } else {
+            actions += '<button class="btn btn-sm" onclick="blogUnpublishPost(' + p.id + ')">Снять</button>';
+            actions += '<a class="btn btn-sm" href="https://easysale.tech/blog/' + esc(p.slug) + '/" target="_blank">↗</a>';
+        }
+        actions += '<button class="btn btn-sm btn-danger" onclick="blogDeletePost(' + p.id + ')">Удал.</button>';
+        actions += '</div>';
+        return '<tr><td style="max-width:300px;">' + esc(p.title) + '</td><td>' + statusTag + '</td><td style="white-space:nowrap;">' + date + '</td><td>' + tags + '</td><td>' + actions + '</td></tr>';
+    }).join('');
+}
+
+function blogFilterStatus(val, btn) {
+    blogFilterStatusVal = val;
+    document.querySelectorAll('.blog-filter-btn').forEach(function(b) { b.classList.remove('active'); });
+    if (btn) btn.classList.add('active');
+    blogLoadPosts();
+}
+
+function blogOpenEditor(post) {
+    blogEditingId = post ? post.id : null;
+    blogSelectedTagIds = [];
+    blogEditorSourceMode = false;
+    document.getElementById('blog-editor-title').textContent = post ? 'Редактировать пост' : 'Новый пост';
+    document.getElementById('blog-ed-title').value = post ? (post.title || '') : '';
+    document.getElementById('blog-ed-slug').value = post ? (post.slug || '') : '';
+    document.getElementById('blog-ed-slug').disabled = !!(post && post.published_at);
+    document.getElementById('blog-ed-slug-locked').style.display = (post && post.published_at) ? 'block' : 'none';
+    document.getElementById('blog-ed-cover').value = post ? (post.cover_url || '') : '';
+    document.getElementById('blog-ed-excerpt').value = post ? (post.excerpt || '') : '';
+    document.getElementById('blog-ed-body').innerHTML = post ? (post.body_html || '') : '';
+    document.getElementById('blog-ed-body-source').value = post ? (post.body_html || '') : '';
+    document.getElementById('blog-ed-body').style.display = '';
+    document.getElementById('blog-ed-body-source').style.display = 'none';
+    document.getElementById('blog-ed-meta-title').value = post ? (post.meta_title || '') : '';
+    document.getElementById('blog-ed-meta-desc').value = post ? (post.meta_desc || '') : '';
+    document.getElementById('blog-ed-og-image').value = post ? (post.og_image || '') : '';
+    blogUpdateCoverPreview();
+
+    // Tags
+    if (post && post.tags) {
+        blogSelectedTagIds = post.tags.map(function(t) { return t.id; });
+    }
+    blogRenderSelectedTags();
+    blogPopulateTagSelect();
+
+    openModal('blog-editor-modal');
+}
+
+function blogAutoSlug() {
+    if (blogEditingId) return;
+    var title = document.getElementById('blog-ed-title').value;
+    document.getElementById('blog-ed-slug').value = blogTranslitSlug(title);
+}
+
+function blogTranslitSlug(str) {
+    var map = {'а':'a','б':'b','в':'v','г':'g','д':'d','е':'e','ё':'yo','ж':'zh','з':'z','и':'i','й':'y','к':'k','л':'l','м':'m','н':'n','о':'o','п':'p','р':'r','с':'s','т':'t','у':'u','ф':'f','х':'kh','ц':'ts','ч':'ch','ш':'sh','щ':'shch','ъ':'','ы':'y','ь':'','э':'e','ю':'yu','я':'ya'};
+    return str.toLowerCase().split('').map(function(ch) { return map[ch] !== undefined ? map[ch] : ch; }).join('')
+      .replace(/[^a-z0-9-]/g, '-').replace(/-+/g, '-').replace(/^-|-$/g, '').substring(0, 120);
+}
+
+function blogUpdateCoverPreview() {
+    var url = document.getElementById('blog-ed-cover').value;
+    var el = document.getElementById('blog-ed-cover-preview');
+    if (url) {
+        el.innerHTML = '<img src="' + esc(url) + '" style="max-height:120px;border-radius:8px;border:1px solid var(--card-border);">';
+    } else {
+        el.innerHTML = '';
+    }
+}
+
+function blogUploadImage(input, targetId) {
+    if (!input.files || !input.files[0]) return;
+    var fd = new FormData();
+    fd.append('file', input.files[0]);
+    fetch(API_BASE + '/api/admin/uploads', {
+        method: 'POST',
+        headers: { 'Authorization': 'Bearer ' + crmToken },
+        body: fd
+    })
+    .then(handleApiResponse)
+    .then(function(r) { return r.json(); })
+    .then(function(data) {
+        if (data.url) {
+            document.getElementById(targetId).value = data.url;
+            if (targetId === 'blog-ed-cover') blogUpdateCoverPreview();
+            toast('Файл загружен');
+        }
+    })
+    .catch(function(e) { toast('Ошибка загрузки: ' + e.message); });
+    input.value = '';
+}
+
+function blogInsertImage(input) {
+    if (!input.files || !input.files[0]) return;
+    var fd = new FormData();
+    fd.append('file', input.files[0]);
+    fetch(API_BASE + '/api/admin/uploads', {
+        method: 'POST',
+        headers: { 'Authorization': 'Bearer ' + crmToken },
+        body: fd
+    })
+    .then(handleApiResponse)
+    .then(function(r) { return r.json(); })
+    .then(function(data) {
+        if (data.url) {
+            document.getElementById('blog-ed-body').focus();
+            document.execCommand('insertHTML', false, '<img src="' + data.url + '" alt="" loading="lazy" style="max-width:100%;">');
+            toast('Изображение вставлено');
+        }
+    })
+    .catch(function(e) { toast('Ошибка загрузки: ' + e.message); });
+    input.value = '';
+}
+
+function blogExecCmd(cmd, val) {
+    document.getElementById('blog-ed-body').focus();
+    if (cmd === 'formatBlock') {
+        document.execCommand('formatBlock', false, '<' + val + '>');
+    } else {
+        document.execCommand(cmd, false, val || null);
+    }
+}
+
+function blogInsertLink() {
+    var url = prompt('Введите URL:');
+    if (url) {
+        document.getElementById('blog-ed-body').focus();
+        document.execCommand('createLink', false, url);
+    }
+}
+
+function blogToggleSource() {
+    var visual = document.getElementById('blog-ed-body');
+    var source = document.getElementById('blog-ed-body-source');
+    if (blogEditorSourceMode) {
+        visual.innerHTML = source.value;
+        visual.style.display = '';
+        source.style.display = 'none';
+        blogEditorSourceMode = false;
+    } else {
+        source.value = visual.innerHTML;
+        source.style.display = '';
+        visual.style.display = 'none';
+        blogEditorSourceMode = true;
+    }
+}
+
+function blogGetBodyHtml() {
+    if (blogEditorSourceMode) {
+        return document.getElementById('blog-ed-body-source').value;
+    }
+    return document.getElementById('blog-ed-body').innerHTML;
+}
+
+// Tags management
+function blogPopulateTagSelect() {
+    var sel = document.getElementById('blog-ed-tag-select');
+    sel.innerHTML = '<option value="">Выбрать тег...</option>';
+    blogTags.forEach(function(t) {
+        if (blogSelectedTagIds.indexOf(t.id) === -1) {
+            sel.innerHTML += '<option value="' + t.id + '">' + esc(t.name) + '</option>';
+        }
+    });
+}
+
+function blogRenderSelectedTags() {
+    var el = document.getElementById('blog-ed-tags-list');
+    el.innerHTML = blogSelectedTagIds.map(function(tid) {
+        var tag = blogTags.find(function(t) { return t.id === tid; });
+        var name = tag ? tag.name : 'Tag #' + tid;
+        return '<span class="tag tag-accent" style="cursor:pointer;" onclick="blogRemoveTag(' + tid + ')">' + esc(name) + ' ×</span>';
+    }).join('');
+}
+
+function blogAddSelectedTag() {
+    var sel = document.getElementById('blog-ed-tag-select');
+    var val = parseInt(sel.value);
+    if (!val) return;
+    if (blogSelectedTagIds.indexOf(val) === -1) {
+        blogSelectedTagIds.push(val);
+    }
+    blogRenderSelectedTags();
+    blogPopulateTagSelect();
+}
+
+function blogRemoveTag(tid) {
+    blogSelectedTagIds = blogSelectedTagIds.filter(function(id) { return id !== tid; });
+    blogRenderSelectedTags();
+    blogPopulateTagSelect();
+}
+
+function blogNewTagPrompt() {
+    var name = prompt('Название нового тега:');
+    if (!name || !name.trim()) return;
+    fetch(API_BASE + '/api/admin/tags', {
+        method: 'POST',
+        headers: apiHeaders(),
+        body: JSON.stringify({ name: name.trim() })
+    })
+    .then(handleApiResponse)
+    .then(function(r) { return r.json(); })
+    .then(function(tag) {
+        blogTags.push(tag);
+        blogSelectedTagIds.push(tag.id);
+        blogRenderSelectedTags();
+        blogPopulateTagSelect();
+        toast('Тег создан');
+    })
+    .catch(function(e) { toast('Ошибка: ' + e.message); });
+}
+
+// Save / Publish
+function blogGetPostData() {
+    return {
+        title: document.getElementById('blog-ed-title').value.trim(),
+        slug: document.getElementById('blog-ed-slug').value.trim(),
+        excerpt: document.getElementById('blog-ed-excerpt').value.trim(),
+        body_html: blogGetBodyHtml(),
+        cover_url: document.getElementById('blog-ed-cover').value.trim(),
+        meta_title: document.getElementById('blog-ed-meta-title').value.trim(),
+        meta_desc: document.getElementById('blog-ed-meta-desc').value.trim(),
+        og_image: document.getElementById('blog-ed-og-image').value.trim(),
+        tag_ids: blogSelectedTagIds
+    };
+}
+
+function blogSaveDraft() {
+    var data = blogGetPostData();
+    if (!data.title) { toast('Введите заголовок'); return; }
+    var url = blogEditingId
+        ? API_BASE + '/api/admin/posts/' + blogEditingId
+        : API_BASE + '/api/admin/posts';
+    var method = blogEditingId ? 'PUT' : 'POST';
+    fetch(url, { method: method, headers: apiHeaders(), body: JSON.stringify(data) })
+      .then(handleApiResponse)
+      .then(function(r) { return r.json(); })
+      .then(function(post) {
+          toast('Черновик сохранён');
+          blogEditingId = post.id;
+          closeModal('blog-editor-modal');
+          blogLoadPosts();
+      })
+      .catch(function(e) { toast('Ошибка: ' + e.message); });
+}
+
+function blogPublish() {
+    var data = blogGetPostData();
+    if (!data.title) { toast('Введите заголовок'); return; }
+    if (!data.body_html || data.body_html === '<br>') { toast('Введите текст статьи'); return; }
+
+    // First save, then publish
+    var saveUrl = blogEditingId
+        ? API_BASE + '/api/admin/posts/' + blogEditingId
+        : API_BASE + '/api/admin/posts';
+    var saveMethod = blogEditingId ? 'PUT' : 'POST';
+
+    fetch(saveUrl, { method: saveMethod, headers: apiHeaders(), body: JSON.stringify(data) })
+      .then(handleApiResponse)
+      .then(function(r) { return r.json(); })
+      .then(function(post) {
+          return fetch(API_BASE + '/api/admin/posts/' + post.id + '/publish', {
+              method: 'POST', headers: apiHeaders()
+          }).then(handleApiResponse).then(function(r) { return r.json(); });
+      })
+      .then(function(result) {
+          closeModal('blog-editor-modal');
+          var msg = 'Пост опубликован!';
+          if (result.url) msg += '\n' + result.url;
+          if (result.indexNowStatus) msg += '\nIndexNow: ' + result.indexNowStatus;
+          toast(msg);
+          blogLoadPosts();
+      })
+      .catch(function(e) { toast('Ошибка: ' + e.message); });
+}
+
+function blogEditPost(id) {
+    fetch(API_BASE + '/api/admin/posts/' + id, { headers: apiHeaders() })
+      .then(handleApiResponse)
+      .then(function(r) { return r.json(); })
+      .then(function(post) {
+          blogOpenEditor(post);
+      })
+      .catch(function(e) { toast('Ошибка: ' + e.message); });
+}
+
+function blogPublishPost(id) {
+    if (!confirm('Опубликовать пост?')) return;
+    fetch(API_BASE + '/api/admin/posts/' + id + '/publish', { method: 'POST', headers: apiHeaders() })
+      .then(handleApiResponse)
+      .then(function(r) { return r.json(); })
+      .then(function(result) {
+          var msg = 'Опубликовано!';
+          if (result.url) msg += ' ' + result.url;
+          toast(msg);
+          blogLoadPosts();
+      })
+      .catch(function(e) { toast('Ошибка: ' + e.message); });
+}
+
+function blogUnpublishPost(id) {
+    if (!confirm('Снять пост с публикации?')) return;
+    fetch(API_BASE + '/api/admin/posts/' + id + '/unpublish', { method: 'POST', headers: apiHeaders() })
+      .then(handleApiResponse)
+      .then(function(r) { return r.json(); })
+      .then(function() { toast('Пост снят с публикации'); blogLoadPosts(); })
+      .catch(function(e) { toast('Ошибка: ' + e.message); });
+}
+
+function blogDeletePost(id) {
+    if (!confirm('Удалить пост? Это действие необратимо.')) return;
+    fetch(API_BASE + '/api/admin/posts/' + id, { method: 'DELETE', headers: apiHeaders() })
+      .then(handleApiResponse)
+      .then(function(r) { return r.json(); })
+      .then(function() { toast('Пост удалён'); blogLoadPosts(); })
+      .catch(function(e) { toast('Ошибка: ' + e.message); });
+}
+
 </script>
 </body>
 </html>
